@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="Tracking">
+  <DataContextMoniker Name="/TrackingActivityContext" />
+  <nestedChildShapes>
+    <classShape Id="98c51ad9-745b-4de6-9e4c-c578590da4d8" absoluteBounds="0.75, 0.5, 2, 2.5401025390625">
+      <DataClassMoniker Name="/TrackingActivityContext/Process" />
+      <nestedChildShapes>
+        <elementListCompartment Id="79f85bef-b2e7-4f72-a5ab-480ddfae3032" absoluteBounds="0.76499999999999968, 0.96, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="4ff0c725-812c-487c-b1ad-01d897501dc4" absoluteBounds="4.25, 0.5, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/TrackingActivityContext/ProcessingStep" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5b49a357-700a-404a-9248-6dac3534875e" absoluteBounds="4.265, 0.96, 1.9700000000000002, 1.7878011067708333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9e943f3f-5daf-4689-8f10-ce8f832fafac" absoluteBounds="0.875, 4.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/TrackingActivityContext/ProcessMessagingStep" />
+      <nestedChildShapes>
+        <elementListCompartment Id="56606725-3e19-450f-9def-a0da317a0fc0" absoluteBounds="0.89000000000000012, 4.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cceeaed8-16ee-4ae1-bec1-4896fe1b3258" absoluteBounds="4, 4, 2, 4.0785139973958326">
+      <DataClassMoniker Name="/TrackingActivityContext/MessagingStep" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7a78e8e6-67f3-4d6f-b5b2-5e3c95d6ae26" absoluteBounds="4.015, 4.46, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="4295b813-e093-4ba3-9406-1cfd2af8d135" absoluteBounds="8, 4.875, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/TrackingActivityContext/Context" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5f95d9b0-aaea-4852-9183-1a2694929acb" absoluteBounds="8.015, 5.335, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a4c58b8b-7f27-4dd7-9c1d-9b4b56326b5c" absoluteBounds="8, 6.75, 2, 1.3862939453125">
+      <DataClassMoniker Name="/TrackingActivityContext/Message" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6822c673-4070-4fbf-ad8e-129b7d5008ea" absoluteBounds="8.015, 7.21, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6 : 5.47199625651042); (8 : 5.47199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/TrackingActivityContext/MessagingStep/MessagingStep_Context" />
+      <nodes>
+        <classShapeMoniker Id="cceeaed8-16ee-4ae1-bec1-4896fe1b3258" />
+        <classShapeMoniker Id="4295b813-e093-4ba3-9406-1cfd2af8d135" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(6 : 7.41425699869792); (8 : 7.41425699869792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/TrackingActivityContext/MessagingStep/MessagingStep_Message" />
+      <nodes>
+        <classShapeMoniker Id="cceeaed8-16ee-4ae1-bec1-4896fe1b3258" />
+        <classShapeMoniker Id="a4c58b8b-7f27-4dd7-9c1d-9b4b56326b5c" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.8125 : 3.0401025390625); (1.8125 : 4.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/TrackingActivityContext/Process/Process_ProcessMessagingStep" />
+      <nodes>
+        <classShapeMoniker Id="98c51ad9-745b-4de6-9e4c-c578590da4d8" />
+        <classShapeMoniker Id="9e943f3f-5daf-4689-8f10-ce8f832fafac" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 1.67390055338542); (4.25 : 1.67390055338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/TrackingActivityContext/Process/Process_ProcessingStep" />
+      <nodes>
+        <classShapeMoniker Id="98c51ad9-745b-4de6-9e4c-c578590da4d8" />
+        <classShapeMoniker Id="4ff0c725-812c-487c-b1ad-01d897501dc4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4 : 5.16429768880208); (2.875 : 5.16429768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/TrackingActivityContext/MessagingStep/MessagingStep_ProcessMessagingStep" />
+      <nodes>
+        <classShapeMoniker Id="cceeaed8-16ee-4ae1-bec1-4896fe1b3258" />
+        <classShapeMoniker Id="9e943f3f-5daf-4689-8f10-ce8f832fafac" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

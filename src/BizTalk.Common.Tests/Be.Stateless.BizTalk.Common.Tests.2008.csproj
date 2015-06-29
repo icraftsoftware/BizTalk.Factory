@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7A19A988-3B56-495A-A2D4-047268479F7E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
+    <AssemblyName>Be.Stateless.BizTalk.Common.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Skip RestorePackages|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.0\lib\net35-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Bam.EventObservation, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Edi.BaseArtifacts, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Pipeline, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Streaming, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.RuleEngine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BizTalk.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BizTalk.ProcessInterface, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.RuntimeTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET35\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Message\Extensions\BaseMessageContextFixture.cs" />
+    <Compile Include="Message\Extensions\BaseMessageExFixture.cs" />
+    <Compile Include="Message\Extensions\BaseMessagePartFixture.cs" />
+    <Compile Include="Message\Extensions\SchemaBaseExtensionsFixture.cs" />
+    <Compile Include="Message\MessageFactoryFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleEngine\ContextFixture.cs" />
+    <Compile Include="RuleEngine\PolicyNameFixture.cs" />
+    <Compile Include="RuleEngine\PolicyNameConverterFixture.cs" />
+    <Compile Include="Runtime\Caching\MemoryCacheFixture.cs" />
+    <Compile Include="Streaming\XmlTranslationSetConverterFixture.cs" />
+    <Compile Include="Streaming\XmlTranslationSetFixture.cs" />
+    <Compile Include="Streaming\XmlTranslatorStreamFixture.cs" />
+    <Compile Include="Tracking\ArchiveDescriptorFixture.cs" />
+    <Compile Include="Tracking\ClaimStoreFixture.cs" />
+    <Compile Include="Schema\AnnotatedSchema.cs">
+      <DependentUpon>AnnotatedSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Schema\SchemaAnnotationsFixture.cs" />
+    <Compile Include="Schema\SchemaMetadataFixture.cs" />
+    <Compile Include="Schema\UnannotatedSchema.cs">
+      <DependentUpon>UnannotatedSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Streaming\TrackingStreamFixture.cs" />
+    <Compile Include="Streaming\CompositeStreamFixture.cs" />
+    <Compile Include="Streaming\EventingReadStreamFixture.cs" />
+    <Compile Include="Streaming\Extensions\TransformerFixture.cs" />
+    <Compile Include="Streaming\ReplicatingReadStreamFixture.cs" />
+    <Compile Include="Streaming\Extensions\ProberFixture.cs" />
+    <Compile Include="TestSetup.cs" />
+    <Compile Include="Tracking\ActivityTrackingModesFixture.cs" />
+    <Compile Include="Tracking\Messaging\ActivityFactoryFixture.cs" />
+    <Compile Include="Tracking\Messaging\MessagingStepFixture.cs" />
+    <Compile Include="Tracking\Messaging\ProcessFixture.cs" />
+    <Compile Include="Tracking\Messaging\ProcessReferenceFixture.cs" />
+    <Compile Include="Tracking\Processing\OrchestrationProcessInstallerFixture.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Transform\RegexFunctionsFixture.cs" />
+    <Compile Include="Xml\CompositeXmlReaderFixture.cs" />
+    <Compile Include="Xml\Xsl\XslCompiledTransformDescriptorFixture.cs" />
+    <Compile Include="XPath\ReactiveXPathExtractorCollectionFixture.cs" />
+    <Compile Include="XPath\XPathExtractorCollectionConverterFixture.cs" />
+    <Compile Include="XPath\XPathExtractorFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.2008.csproj">
+      <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
+      <Name>Be.Stateless.BizTalk.Common.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.2008.csproj">
+      <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.2008.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
+      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
+      <Name>Be.Stateless.BizTalk.Generated.Items.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.PipelineComponents\Be.Stateless.BizTalk.PipelineComponents.2008.csproj">
+      <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
+      <Name>Be.Stateless.BizTalk.PipelineComponents.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Policies\Be.Stateless.BizTalk.Policies.2008.csproj">
+      <Project>{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}</Project>
+      <Name>Be.Stateless.BizTalk.Policies.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.2008.btproj">
+      <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
+      <Name>Be.Stateless.BizTalk.Schemas.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Transforms\Be.Stateless.BizTalk.Transforms.2008.btproj">
+      <Project>{D0F8E1D6-2FE8-415C-9981-D08931EDC908}</Project>
+      <Name>Be.Stateless.BizTalk.Transforms.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Unit\Be.Stateless.BizTalk.Unit.2008.csproj">
+      <Project>{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}</Project>
+      <Name>Be.Stateless.BizTalk.Unit.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.2008.csproj">
+      <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
+      <Name>Be.Stateless.Common.2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\be.stateless.public.snk">
+      <Link>be.stateless.public.snk</Link>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Message\Message.xml" />
+    <EmbeddedResource Include="Schema\AnnotatedSchema.xsd" />
+    <EmbeddedResource Include="Schema\UnannotatedSchema.xsd" />
+    <EmbeddedResource Include="Streaming\Extensions\BatchContent.xml" />
+    <EmbeddedResource Include="Streaming\Message.xml" />
+    <EmbeddedResource Include="XPath\Data\UnqualifiedLetter.xml" />
+    <EmbeddedResource Include="XPath\Data\QualifiedLetter.xml" />
+    <EmbeddedResource Include="Xml\Data\BatchContent.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.2008.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

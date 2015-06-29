@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<env:Envelope xmlns:env="urn:schemas.stateless.be:envelope:2013:05">
-  <nested>
-    <document>with text</document>
-  </nested>
-</env:Envelope>

@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Be.Stateless.BizTalk.Web.Monitoring.Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="BeStatelessBizTalkMonitoringModelStoreContainer">
+          <EntitySet Name="bam_ProcessTracking_AllInstances" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.bam_ProcessTracking_AllInstances" store:Type="Views" store:Schema="dbo" store:Name="bam_ProcessTracking_AllInstances">
+            <DefiningQuery>SELECT 
+      [bam_ProcessTracking_AllInstances].[RecordID] AS [RecordID], 
+      [bam_ProcessTracking_AllInstances].[ActivityID] AS [ActivityID], 
+      [bam_ProcessTracking_AllInstances].[BeginTime] AS [BeginTime], 
+      [bam_ProcessTracking_AllInstances].[BusinessValue1] AS [BusinessValue1], 
+      [bam_ProcessTracking_AllInstances].[BusinessValue2] AS [BusinessValue2], 
+      [bam_ProcessTracking_AllInstances].[BusinessValue3] AS [BusinessValue3], 
+      [bam_ProcessTracking_AllInstances].[EndTime] AS [EndTime], 
+      [bam_ProcessTracking_AllInstances].[ProcessName] AS [ProcessName], 
+      [bam_ProcessTracking_AllInstances].[Status] AS [Status]
+      FROM [dbo].[bam_ProcessTracking_AllInstances] AS [bam_ProcessTracking_AllInstances]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="bam_ProcessingStepTracking_AllInstances" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.bam_ProcessingStepTracking_AllInstances" store:Type="Views" store:Schema="dbo" store:Name="bam_ProcessingStepTracking_AllInstances">
+            <DefiningQuery>SELECT 
+      [bam_ProcessingStepTracking_AllInstances].[RecordID] AS [RecordID], 
+      [bam_ProcessingStepTracking_AllInstances].[ActivityID] AS [ActivityID], 
+      [bam_ProcessingStepTracking_AllInstances].[BeginTime] AS [BeginTime], 
+      [bam_ProcessingStepTracking_AllInstances].[EndTime] AS [EndTime], 
+      [bam_ProcessingStepTracking_AllInstances].[ErrorDescription] AS [ErrorDescription], 
+      [bam_ProcessingStepTracking_AllInstances].[MachineName] AS [MachineName], 
+      [bam_ProcessingStepTracking_AllInstances].[ProcessActivityID] AS [ProcessActivityID], 
+      [bam_ProcessingStepTracking_AllInstances].[Status] AS [Status], 
+      [bam_ProcessingStepTracking_AllInstances].[StepName] AS [StepName]
+      FROM [dbo].[bam_ProcessingStepTracking_AllInstances] AS [bam_ProcessingStepTracking_AllInstances]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="bam_ProcessMessagingStepTracking_AllInstances" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.bam_ProcessMessagingStepTracking_AllInstances" store:Type="Views" store:Schema="dbo" store:Name="bam_ProcessMessagingStepTracking_AllInstances">
+            <DefiningQuery>SELECT 
+      [bam_ProcessMessagingStepTracking_AllInstances].[RecordID] AS [RecordID], 
+      [bam_ProcessMessagingStepTracking_AllInstances].[ActivityID] AS [ActivityID], 
+      [bam_ProcessMessagingStepTracking_AllInstances].[MessagingStepActivityID] AS [MessagingStepActivityID], 
+      [bam_ProcessMessagingStepTracking_AllInstances].[MessagingStepStatus] AS [MessagingStepStatus], 
+      [bam_ProcessMessagingStepTracking_AllInstances].[ProcessActivityID] AS [ProcessActivityID]
+      FROM [dbo].[bam_ProcessMessagingStepTracking_AllInstances] AS [bam_ProcessMessagingStepTracking_AllInstances]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="bam_MessagingStepTracking_AllInstances" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.bam_MessagingStepTracking_AllInstances" store:Type="Views" store:Schema="dbo" store:Name="bam_MessagingStepTracking_AllInstances">
+            <DefiningQuery>SELECT 
+      [bam_MessagingStepTracking_AllInstances].[RecordID] AS [RecordID], 
+      [bam_MessagingStepTracking_AllInstances].[ActivityID] AS [ActivityID], 
+      [bam_MessagingStepTracking_AllInstances].[BeginTime] AS [BeginTime], 
+      [bam_MessagingStepTracking_AllInstances].[BusinessValue1] AS [BusinessValue1], 
+      [bam_MessagingStepTracking_AllInstances].[BusinessValue2] AS [BusinessValue2], 
+      [bam_MessagingStepTracking_AllInstances].[BusinessValue3] AS [BusinessValue3], 
+      [bam_MessagingStepTracking_AllInstances].[EndTime] AS [EndTime], 
+      [bam_MessagingStepTracking_AllInstances].[ErrorCode] AS [ErrorCode], 
+      [bam_MessagingStepTracking_AllInstances].[ErrorDescription] AS [ErrorDescription], 
+      [bam_MessagingStepTracking_AllInstances].[InterchangeID] AS [InterchangeID], 
+      [bam_MessagingStepTracking_AllInstances].[MachineName] AS [MachineName], 
+      [bam_MessagingStepTracking_AllInstances].[MessageID] AS [MessageID], 
+      [bam_MessagingStepTracking_AllInstances].[MessageSize] AS [MessageSize], 
+      [bam_MessagingStepTracking_AllInstances].[MessageType] AS [MessageType], 
+      [bam_MessagingStepTracking_AllInstances].[PortName] AS [PortName], 
+      [bam_MessagingStepTracking_AllInstances].[RetryCount] AS [RetryCount], 
+      [bam_MessagingStepTracking_AllInstances].[Status] AS [Status], 
+      [bam_MessagingStepTracking_AllInstances].[TransportLocation] AS [TransportLocation], 
+      [bam_MessagingStepTracking_AllInstances].[TransportType] AS [TransportType]
+      FROM [dbo].[bam_MessagingStepTracking_AllInstances] AS [bam_MessagingStepTracking_AllInstances]</DefiningQuery>
+          </EntitySet>
+           <EntitySet Name="MessagingStepContexts" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.MessagingStepContexts" store:Type="Views">
+              <DefiningQuery>SELECT
+      [MessagingStepContexts].[MessagingStepActivityID] AS [MessagingStepActivityID],
+      [MessagingStepContexts].[EncodedContext] AS [EncodedContext]
+      FROM [dbo].[MessagingStepContexts] AS [MessagingStepContexts]</DefiningQuery>
+           </EntitySet>
+           <EntitySet Name="MessagingStepMessages" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Store.MessagingStepMessages" store:Type="Views">
+              <DefiningQuery>SELECT
+      [MessagingStepMessages].[MessagingStepActivityID] AS [MessagingStepActivityID],
+      [MessagingStepMessages].[EncodedBodyType] AS [EncodedBodyType],
+      [MessagingStepMessages].[EncodedBody] AS [EncodedBody]
+      FROM [dbo].[MessagingStepMessages] AS [MessagingStepMessages]</DefiningQuery>
+           </EntitySet>
+        </EntityContainer>
+        <EntityType Name="bam_ProcessTracking_AllInstances">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="bigint" Nullable="true" />
+          <Property Name="ActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="BeginTime" Type="datetime" />
+          <Property Name="BusinessValue1" Type="nvarchar" MaxLength="60" />
+          <Property Name="BusinessValue2" Type="nvarchar" MaxLength="60" />
+          <Property Name="BusinessValue3" Type="nvarchar" MaxLength="60" />
+          <Property Name="EndTime" Type="datetime" />
+          <Property Name="ProcessName" Type="nvarchar" MaxLength="128" />
+          <Property Name="Status" Type="nvarchar" MaxLength="9" />
+        </EntityType>
+        <EntityType Name="bam_ProcessingStepTracking_AllInstances">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="bigint" Nullable="true" />
+          <Property Name="ActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="BeginTime" Type="datetime" />
+          <Property Name="EndTime" Type="datetime" />
+          <Property Name="ErrorDescription" Type="nvarchar" MaxLength="2048" />
+          <Property Name="MachineName" Type="nvarchar" MaxLength="20" />
+          <Property Name="ProcessActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Status" Type="nvarchar" MaxLength="9" />
+          <Property Name="StepName" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="bam_ProcessMessagingStepTracking_AllInstances">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="bigint" Nullable="true" />
+          <Property Name="ActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="MessagingStepActivityID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MessagingStepStatus" Type="nvarchar" MaxLength="13" />
+          <Property Name="ProcessActivityID" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="bam_MessagingStepTracking_AllInstances">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="bigint" Nullable="true" />
+          <Property Name="ActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="BeginTime" Type="datetime" />
+          <Property Name="BusinessValue1" Type="nvarchar" MaxLength="60" />
+          <Property Name="BusinessValue2" Type="nvarchar" MaxLength="60" />
+          <Property Name="BusinessValue3" Type="nvarchar" MaxLength="60" />
+          <Property Name="EndTime" Type="datetime" />
+          <Property Name="ErrorCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="ErrorDescription" Type="nvarchar" MaxLength="2048" />
+          <Property Name="InterchangeID" Type="nvarchar" MaxLength="38" />
+          <Property Name="MachineName" Type="nvarchar" MaxLength="20" />
+          <Property Name="MessageID" Type="nvarchar" MaxLength="38" />
+          <Property Name="MessageSize" Type="int" />
+          <Property Name="MessageType" Type="nvarchar" MaxLength="256" />
+          <Property Name="PortName" Type="nvarchar" MaxLength="128" />
+          <Property Name="RetryCount" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="13" />
+          <Property Name="TransportLocation" Type="nvarchar" MaxLength="256" />
+          <Property Name="TransportType" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="MessagingStepContexts">
+          <Key>
+            <PropertyRef Name="MessagingStepActivityID" />
+          </Key>
+          <Property Name="MessagingStepActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="EncodedContext" Type="ntext" />
+        </EntityType>
+        <EntityType Name="MessagingStepMessages">
+          <Key>
+            <PropertyRef Name="MessagingStepActivityID" />
+          </Key>
+          <Property Name="MessagingStepActivityID" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="EncodedBodyType" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="EncodedBody" Type="ntext" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Be.Stateless.BizTalk.Web.Monitoring.Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="TrackingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Processes" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Process" />
+          <EntitySet Name="ProcessingSteps" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessingStep" />
+          <EntitySet Name="ProcessMessagingSteps" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessMessagingStep" />
+          <EntitySet Name="MessagingSteps" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep" />
+          <EntitySet Name="Contexts" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Context" />
+          <EntitySet Name="Messages" EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Message" />
+          <AssociationSet Name="ProcessProcessingStep" Association="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessingStep">
+            <End Role="Process" EntitySet="Processes" />
+            <End Role="ProcessingStep" EntitySet="ProcessingSteps" />
+          </AssociationSet>
+          <AssociationSet Name="ProcessProcessMessagingStep" Association="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessMessagingStep">
+            <End Role="Process" EntitySet="Processes" />
+            <End Role="ProcessMessagingStep" EntitySet="ProcessMessagingSteps" />
+          </AssociationSet>
+          <AssociationSet Name="MessagingStepProcessMessagingStep" Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepProcessMessagingStep">
+            <End Role="MessagingStep" EntitySet="MessagingSteps" />
+            <End Role="ProcessMessagingStep" EntitySet="ProcessMessagingSteps" />
+          </AssociationSet>
+          <AssociationSet Name="MessagingStepContext" Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepContext">
+            <End Role="MessagingStep" EntitySet="MessagingSteps" />
+            <End Role="Context" EntitySet="Contexts" />
+          </AssociationSet>
+          <AssociationSet Name="MessagingStepMessage" Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepMessage">
+            <End Role="MessagingStep" EntitySet="MessagingSteps" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Process">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="Int64" Nullable="true" />
+          <Property Name="ActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="BeginTime" Type="DateTime" />
+          <Property Name="EndTime" Type="DateTime" />
+          <Property Name="Key1" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="Key2" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="Key3" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="Status" Type="String" MaxLength="9" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ProcessingSteps" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessingStep" FromRole="Process" ToRole="ProcessingStep" />
+          <NavigationProperty Name="RelatedMessagingSteps" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessMessagingStep" FromRole="Process" ToRole="ProcessMessagingStep" />
+        </EntityType>
+        <EntityType Name="ProcessingStep">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="Int64" Nullable="true" />
+          <Property Name="ActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="BeginTime" Type="DateTime" />
+          <Property Name="EndTime" Type="DateTime" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="2048" Unicode="true" FixedLength="false" />
+          <Property Name="MachineName" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="ProcessActivityID" Type="String" MaxLength="128" Unicode="true" FixedLength="false" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="9" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Process" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessingStep" FromRole="ProcessingStep" ToRole="Process" />
+        </EntityType>
+        <EntityType Name="ProcessMessagingStep">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="Int64" Nullable="true" />
+          <Property Name="ActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="MessagingStepActivityID" Type="String" MaxLength="128" Unicode="true" FixedLength="false" Nullable="false" />
+          <Property Name="MessagingStepStatus" Type="String" MaxLength="13" Unicode="true" FixedLength="false" />
+          <Property Name="ProcessActivityID" Type="String" MaxLength="128" Unicode="true" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="Process" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessMessagingStep" FromRole="ProcessMessagingStep" ToRole="Process" />
+          <NavigationProperty Name="MessagingStep" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepProcessMessagingStep" FromRole="ProcessMessagingStep" ToRole="MessagingStep" />
+        </EntityType>
+        <EntityType Name="MessagingStep">
+          <Key>
+            <PropertyRef Name="ActivityID" />
+          </Key>
+          <Property Name="RecordID" Type="Int64" Nullable="true" />
+          <Property Name="ActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="BeginTime" Type="DateTime" />
+          <Property Name="EndTime" Type="DateTime" />
+          <Property Name="ErrorCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="2048" Unicode="true" FixedLength="false" />
+          <Property Name="InterchangeID" Type="String" MaxLength="38" Unicode="true" FixedLength="false" />
+          <Property Name="Key1" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="Key2" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="Key3" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
+          <Property Name="MachineName" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="MessageID" Type="String" MaxLength="38" Unicode="true" FixedLength="false" />
+          <Property Name="MessageSize" Type="Int32" />
+          <Property Name="MessageType" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="RetryCount" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="13" Unicode="true" FixedLength="false" />
+          <Property Name="TransportLocation" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+          <Property Name="TransportType" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="RelatedProcesses" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepProcessMessagingStep" FromRole="MessagingStep" ToRole="ProcessMessagingStep" />
+          <NavigationProperty Name="RawContext" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepContext" FromRole="MessagingStep" ToRole="Context" />
+          <NavigationProperty Name="RawMessage" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepMessage" FromRole="MessagingStep" ToRole="Message" />
+        </EntityType>
+        <EntityType Name="Context">
+          <Key>
+            <PropertyRef Name="MessagingStepActivityID" />
+          </Key>
+          <Property Name="MessagingStepActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="EncodedContext" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MessagingStep" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepContext" FromRole="Context" ToRole="MessagingStep" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessagingStepActivityID" />
+          </Key>
+          <Property Name="MessagingStepActivityID" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="EncodedBodyType" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="EncodedBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MessagingStep" Relationship="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepMessage" FromRole="Message" ToRole="MessagingStep" />
+        </EntityType>
+        <Association Name="ProcessProcessingStep">
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.Process" Role="Process" Multiplicity="1" />
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessingStep" Role="ProcessingStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="ActivityID" />
+            </Principal>
+            <Dependent Role="ProcessingStep">
+              <PropertyRef Name="ProcessActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProcessProcessMessagingStep">
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.Process" Role="Process" Multiplicity="1" />
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessMessagingStep" Role="ProcessMessagingStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Process">
+              <PropertyRef Name="ActivityID" />
+            </Principal>
+            <Dependent Role="ProcessMessagingStep">
+              <PropertyRef Name="ProcessActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MessagingStepProcessMessagingStep">
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep" Role="MessagingStep" Multiplicity="1" />
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessMessagingStep" Role="ProcessMessagingStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MessagingStep">
+              <PropertyRef Name="ActivityID" />
+            </Principal>
+            <Dependent Role="ProcessMessagingStep">
+              <PropertyRef Name="MessagingStepActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MessagingStepContext">
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep" Role="MessagingStep" Multiplicity="1" />
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.Context" Role="Context" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MessagingStep">
+              <PropertyRef Name="ActivityID" />
+            </Principal>
+            <Dependent Role="Context">
+              <PropertyRef Name="MessagingStepActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MessagingStepMessage">
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep" Role="MessagingStep" Multiplicity="1" />
+          <End Type="Be.Stateless.BizTalk.Web.Monitoring.Model.Message" Role="Message" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MessagingStep">
+              <PropertyRef Name="ActivityID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="MessagingStepActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BeStatelessBizTalkMonitoringModelStoreContainer" CdmEntityContainer="TrackingEntities">
+           <EntitySetMapping Name="Processes">
+              <EntityTypeMapping TypeName="Be.Stateless.BizTalk.Web.Monitoring.Model.Process">
+                 <MappingFragment StoreEntitySet="bam_ProcessTracking_AllInstances">
+                    <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                    <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+                    <ScalarProperty Name="BeginTime" ColumnName="BeginTime" />
+                    <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                    <ScalarProperty Name="Key1" ColumnName="BusinessValue1" />
+                    <ScalarProperty Name="Key2" ColumnName="BusinessValue2" />
+                    <ScalarProperty Name="Key3" ColumnName="BusinessValue3" />
+                    <ScalarProperty Name="Name" ColumnName="ProcessName" />
+                    <ScalarProperty Name="Status" ColumnName="Status" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+           <EntitySetMapping Name="ProcessingSteps">
+              <EntityTypeMapping TypeName="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessingStep">
+                 <MappingFragment StoreEntitySet="bam_ProcessingStepTracking_AllInstances">
+                    <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                    <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+                    <ScalarProperty Name="BeginTime" ColumnName="BeginTime" />
+                    <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                    <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
+                    <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                    <ScalarProperty Name="Name" ColumnName="StepName" />
+                    <ScalarProperty Name="ProcessActivityID" ColumnName="ProcessActivityID" />
+                    <ScalarProperty Name="Status" ColumnName="Status" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+           <EntitySetMapping Name="ProcessMessagingSteps">
+              <EntityTypeMapping TypeName="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessMessagingStep">
+                 <MappingFragment StoreEntitySet="bam_ProcessMessagingStepTracking_AllInstances">
+                    <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                    <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+                    <ScalarProperty Name="MessagingStepActivityID" ColumnName="MessagingStepActivityID" />
+                    <ScalarProperty Name="MessagingStepStatus" ColumnName="MessagingStepStatus" />
+                    <ScalarProperty Name="ProcessActivityID" ColumnName="ProcessActivityID" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+           <EntitySetMapping Name="MessagingSteps">
+              <EntityTypeMapping TypeName="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep">
+                 <MappingFragment StoreEntitySet="bam_MessagingStepTracking_AllInstances">
+                    <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                    <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+                    <ScalarProperty Name="BeginTime" ColumnName="BeginTime" />
+                    <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                    <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                    <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
+                    <ScalarProperty Name="InterchangeID" ColumnName="InterchangeID" />
+                    <ScalarProperty Name="Key1" ColumnName="BusinessValue1" />
+                    <ScalarProperty Name="Key2" ColumnName="BusinessValue2" />
+                    <ScalarProperty Name="Key3" ColumnName="BusinessValue3" />
+                    <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                    <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                    <ScalarProperty Name="MessageSize" ColumnName="MessageSize" />
+                    <ScalarProperty Name="MessageType" ColumnName="MessageType" />
+                    <ScalarProperty Name="Name" ColumnName="PortName" />
+                    <ScalarProperty Name="RetryCount" ColumnName="RetryCount" />
+                    <ScalarProperty Name="Status" ColumnName="Status" />
+                    <ScalarProperty Name="TransportLocation" ColumnName="TransportLocation" />
+                    <ScalarProperty Name="TransportType" ColumnName="TransportType" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+           <EntitySetMapping Name="Contexts">
+              <EntityTypeMapping TypeName="IsTypeOf(Be.Stateless.BizTalk.Web.Monitoring.Model.Context)">
+                 <MappingFragment StoreEntitySet="MessagingStepContexts">
+                    <ScalarProperty Name="EncodedContext" ColumnName="EncodedContext" />
+                    <ScalarProperty Name="MessagingStepActivityID" ColumnName="MessagingStepActivityID" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+           <EntitySetMapping Name="Messages">
+              <EntityTypeMapping TypeName="IsTypeOf(Be.Stateless.BizTalk.Web.Monitoring.Model.Message)">
+                 <MappingFragment StoreEntitySet="MessagingStepMessages">
+                    <ScalarProperty Name="EncodedBodyType" ColumnName="EncodedBodyType" />
+                <ScalarProperty Name="EncodedBody" ColumnName="EncodedBody" />
+                    <ScalarProperty Name="MessagingStepActivityID" ColumnName="MessagingStepActivityID" />
+                 </MappingFragment>
+              </EntityTypeMapping>
+           </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="TrackingModel">
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStep" Width="2" PointX="6" PointY="0.5" Height="4.8648079427083326" IsExpanded="true" />
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessingStep" Width="1.5" PointX="3.375" PointY="4.375" Height="2.9417936197916656" IsExpanded="true" />
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessMessagingStep" Width="1.875" PointX="3.375" PointY="0.5" Height="2.3648893229166661" IsExpanded="true" />
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Process" Width="2.125" PointX="0.5" PointY="0.5" Height="3.1340950520833331" IsExpanded="true" />
+        <AssociationConnector Association="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessingStep">
+          <ConnectorPoint PointX="1.5625" PointY="3.6340950520833331" />
+          <ConnectorPoint PointX="1.5625" PointY="5.8458968098958328" />
+          <ConnectorPoint PointX="3.375" PointY="5.8458968098958328" />
+        </AssociationConnector>
+        <AssociationConnector Association="Be.Stateless.BizTalk.Web.Monitoring.Model.ProcessProcessMessagingStep">
+          <ConnectorPoint PointX="2.625" PointY="1.6824446614583328" />
+          <ConnectorPoint PointX="3.375" PointY="1.6824446614583328" />
+        </AssociationConnector>
+        <AssociationConnector Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepProcessMessagingStep">
+          <ConnectorPoint PointX="6" PointY="1.6824446614583328" />
+          <ConnectorPoint PointX="5.25" PointY="1.6824446614583328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Message" Width="2" PointX="9" PointY="2.625" Height="1.4033821614583317" />
+        <EntityTypeShape EntityType="Be.Stateless.BizTalk.Web.Monitoring.Model.Context" Width="2" PointX="9" PointY="0.5" Height="1.4033821614583317" />
+        <AssociationConnector Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepContext">
+          <ConnectorPoint PointX="8" PointY="1.297841796875" />
+          <ConnectorPoint PointX="9" PointY="1.297841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="Be.Stateless.BizTalk.Web.Monitoring.Model.MessagingStepMessage">
+          <ConnectorPoint PointX="8" PointY="3.422841796875" />
+          <ConnectorPoint PointX="9" PointY="3.422841796875" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

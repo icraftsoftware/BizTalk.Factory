@@ -1,9 +1,0 @@
-﻿<ns0:Envelope xmlns:ns0="urn:schemas.stateless.be:biztalk:envelope:2013:07">
-  <ns:ReleaseBatch xmlns:ns="urn:schemas.stateless.be:biztalk:batch:2012:12">
-    <ns:EnvelopeSpecName>dummy-envelope-spec-name</ns:EnvelopeSpecName>
-  </ns:ReleaseBatch>
-  <ns:ReleaseBatch xmlns:ns="urn:schemas.stateless.be:biztalk:batch:2012:12">
-    <ns:EnvelopeSpecName>dummy-envelope-spec-name</ns:EnvelopeSpecName>
-    <ns:Partition>A</ns:Partition>
-  </ns:ReleaseBatch>
-</ns0:Envelope>

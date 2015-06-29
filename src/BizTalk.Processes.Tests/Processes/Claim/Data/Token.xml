@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ns0:CheckIn xmlns:ns0="urn:schemas.stateless.be:biztalk:claim:2013:04">
+  <ns0:CorrelationToken>correlation-token</ns0:CorrelationToken>
+  <ns0:MessageType>text-message-type</ns0:MessageType>
+  <ns0:ReceiverName>receiver-name</ns0:ReceiverName>
+  <ns0:SenderName>sender-name</ns0:SenderName>
+  <ns0:Url>payload-data-file</ns0:Url>
+  <extra-content>
+    <node>value</node>
+    <record>
+      <field1>value1</field1>
+      <field2>value2</field2>
+      <field3>value3</field3>
+    </record>
+  </extra-content>
+  <optional-content>
+    <node>value</node>
+  </optional-content>
+</ns0:CheckIn>

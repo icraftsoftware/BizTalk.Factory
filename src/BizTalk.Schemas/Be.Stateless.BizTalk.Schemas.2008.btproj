@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</ProjectGuid>
+    <ProjectTypeGuids>{EF7E3281-CD33-11D4-8326-00C04FA0CE8D};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>library</OutputType>
+    <GenericProcessing>true</GenericProcessing>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
+    <AssemblyName>Be.Stateless.BizTalk.Schemas</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <BpelCompliance>True</BpelCompliance>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Schemas.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Skip RestorePackages|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Schemas.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.0\lib\net35-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Edi.BaseArtifacts, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="ContextProperties\BtsProperties.cs" />
+    <Compile Include="ContextProperties\EdiProperties.cs" />
+    <Compile Include="ContextProperties\ErrorReportProperties.cs" />
+    <Compile Include="ContextProperties\FileProperties.cs" />
+    <Compile Include="ContextProperties\IMessageContextProperty.cs" />
+    <Compile Include="ContextProperties\MessageContextProperty.cs" />
+    <Compile Include="ContextProperties\OverridableEdiProperties.cs" />
+    <Compile Include="ContextProperties\Pop3Properties.cs" />
+    <Compile Include="ContextProperties\BizTalkFactoryProperties.cs" />
+    <Compile Include="ContextProperties\TrackingProperties.cs" />
+    <Compile Include="ContextProperties\WcfProperties.cs" />
+    <Compile Include="Message\Extensions\BaseMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Schema Include="Schemas\EdiProperties.xsd">
+      <TypeName>UnexposedEdiProperties</TypeName>
+      <Namespace>EDI</Namespace>
+    </Schema>
+    <Schema Include="Schemas\BizTalkFactoryProperties.xsd">
+      <TypeName>Properties</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.BizTalkFactory</Namespace>
+    </Schema>
+    <Schema Include="Schemas\SystemProperties.xsd">
+      <TypeName>UnexposedSystemProperties</TypeName>
+      <Namespace>BTS</Namespace>
+    </Schema>
+    <Schema Include="Schemas\TrackingProperties.xsd">
+      <TypeName>Properties</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Tracking</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Xml\Batch.xsd">
+      <TypeName>Batch</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Xml</Namespace>
+    </Schema>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\be.stateless.public.snk">
+      <Link>be.stateless.public.snk</Link>
+    </None>
+    <None Include="packages.config" />
+    <Schema Include="Schemas\Sql\Procedures\Claim\CheckIn.xsd">
+      <TypeName>CheckIn</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Sql.Procedures.Claim</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Xml\Envelope.xsd">
+      <TypeName>Envelope</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Xml</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Xml\Claim.xsd">
+      <TypeName>Claim</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Xml</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Xml\Any.xsd">
+      <TypeName>Any</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Xml</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Sql\Procedures\Batch\AddPart.xsd">
+      <TypeName>AddPart</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Sql.Procedures.Batch</Namespace>
+    </Schema>
+    <Schema Include="Schemas\Sql\Procedures\Batch\QueueControlledRelease.xsd">
+      <TypeName>QueueControlledRelease</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Sql.Procedures.Batch</Namespace>
+    </Schema>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.2008.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
+      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
+      <Name>Be.Stateless.BizTalk.Generated.Items.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.2008.csproj">
+      <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
+      <Name>Be.Stateless.Common.2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.2008.targets" />
+</Project>

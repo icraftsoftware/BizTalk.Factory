@@ -1,0 +1,67 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.ClaimStore.Agent", "BizTalk.ClaimStore.Agent\Be.Stateless.BizTalk.ClaimStore.Agent.csproj", "{875CB842-EB1E-43FA-9B68-76BA8F64FD86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.ClaimStore.Agent.Tests", "BizTalk.ClaimStore.Agent.Tests\Be.Stateless.BizTalk.ClaimStore.Agent.Tests.csproj", "{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Common", "Common\Be.Stateless.Common.csproj", "{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging", "Logging\Be.Stateless.Logging.csproj", "{8F890272-22E8-4668-9F0E-C12DD48474D2}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BizTalk.ClaimStore.Agent\\Be.Stateless.BizTalk.ClaimStore.Agent.csproj
+		SccProjectName1 = BizTalk.ClaimStore.Agent
+		SccLocalPath1 = BizTalk.ClaimStore.Agent
+		SccProjectUniqueName2 = BizTalk.ClaimStore.Agent.Tests\\Be.Stateless.BizTalk.ClaimStore.Agent.Tests.csproj
+		SccProjectName2 = BizTalk.ClaimStore.Agent.Tests
+		SccLocalPath2 = BizTalk.ClaimStore.Agent.Tests
+		SccProjectUniqueName3 = Common\\Be.Stateless.Common.csproj
+		SccProjectName3 = Common
+		SccLocalPath3 = Common
+		SccProjectUniqueName4 = Logging\\Be.Stateless.Logging.csproj
+		SccProjectName4 = Logging
+		SccLocalPath4 = Logging
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug - Skip RestorePackages|Any CPU = Debug - Skip RestorePackages|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug - Skip RestorePackages|Any CPU.ActiveCfg = Debug - Skip RestorePackages|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug - Skip RestorePackages|Any CPU.Build.0 = Debug - Skip RestorePackages|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug - Skip RestorePackages|Any CPU.ActiveCfg = Debug - Skip RestorePackages|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug - Skip RestorePackages|Any CPU.Build.0 = Debug - Skip RestorePackages|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug - Skip RestorePackages|Any CPU.ActiveCfg = Debug - Skip RestorePackages|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug - Skip RestorePackages|Any CPU.Build.0 = Debug - Skip RestorePackages|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug - Skip RestorePackages|Any CPU.ActiveCfg = Debug - Skip RestorePackages|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug - Skip RestorePackages|Any CPU.Build.0 = Debug - Skip RestorePackages|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

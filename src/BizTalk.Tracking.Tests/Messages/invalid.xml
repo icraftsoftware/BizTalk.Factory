@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- there is an XML invalid 0x19 char between invalid and xmlns -->
-<invalidxmlns:tns="urn:schemas.stateless.be:invalid:2012:11">
-  <this></that>
-</invalid>

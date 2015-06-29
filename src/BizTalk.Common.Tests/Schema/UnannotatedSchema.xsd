@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema targetNamespace='urn:schemas.stateless.be:biztalk:tests:unannotated:2013:01' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-  <xs:element name='Unannotated'>
-    <xs:complexType />
-  </xs:element>
-</xs:schema>

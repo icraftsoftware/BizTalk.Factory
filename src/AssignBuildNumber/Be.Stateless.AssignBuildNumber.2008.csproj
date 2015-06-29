@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E567B369-3EF7-40D7-9640-0868892CCB72}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Be.Stateless</RootNamespace>
+    <AssemblyName>Be.Stateless.AssignBuildNumber</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Make the build depend on ClearItemGroup -->
+    <BuildDependsOn>
+      ClearItemGroup;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <VersionFile Include="..\Version.cs">
+      <Attributes>ReadOnly</Attributes>
+      <Link>Properties\Version.cs</Link>
+    </VersionFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Interop.COMAdmin">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\Interop.COMAdmin.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.IWshRuntimeLibrary">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\Interop.IWshRuntimeLibrary.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.BizTalk">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.BizTalk.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Iis7">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Iis7.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Sql2005">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Sql2005.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Sql2008">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Sql2008.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Sql2012">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Sql2012.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.StyleCop">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.StyleCop.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Sync">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Sync.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Tfs">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Tfs.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.Tfs2010">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.Tfs2010.dll</HintPath>
+    </Reference>
+    <Reference Include="MSBuild.ExtensionPack.WindowsVirtualPC">
+      <HintPath>..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\MSBuild.ExtensionPack.WindowsVirtualPC.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.2008.targets" />
+  <Import Project="$(SolutionDir)\.imports\MSBuild.ExtensionPack.2008.tasks" />
+  <Target Name="BeforeBuild" DependsOnTargets="DetermineBuildNumber;GenerateVersionFile">
+  </Target>
+  <!--
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <!-- redefine CoreCompile and CopyFilesToOutputDirectory targets to bypass compilation without failure -->
+  <Target Name="CoreCompile" />
+  <Target Name="CopyFilesToOutputDirectory" />
+  <Target Name="GenerateVersionFile">
+    <ItemGroup>
+      <OldAssemblyVersionLines Include="\[assembly\: AssemblyFileVersion.*\]" />
+      <OldAssemblyVersionLines Include="\[assembly\: AssemblyInformationalVersion.*\]" />
+      <OldAssemblyVersionLines Include="\[assembly\: AssemblyVersion.*\]" />
+    </ItemGroup>
+    <ItemGroup>
+      <!--<NewAssemblyVersionLines Include="using System.Reflection%3B%0D%0A" />-->
+      <NewAssemblyVersionLines Include="[assembly: AssemblyFileVersion(&quot;$(BuildNumber)&quot;)]" />
+      <NewAssemblyVersionLines Include="[assembly: AssemblyInformationalVersion(&quot;$(BuildNumber)&quot;)]" />
+      <NewAssemblyVersionLines Include="[assembly: AssemblyVersion(&quot;$(AssemblyVersion)&quot;)]" />
+    </ItemGroup>
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveAttributes" Files="@(VersionFile)" ContinueOnError="true" />
+    <!--<Delete Files="@(VersionFile)" />-->
+    <!--<MSBuild.ExtensionPack.FileSystem.File TaskAction="Create" Files="@(VersionFile)" />-->
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="@(VersionFile)" Lines="@(OldAssemblyVersionLines)" />
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="@(VersionFile)" Lines="@(NewAssemblyVersionLines)" />
+  </Target>
+  <Target Name="DetermineBuildNumber">
+    <PropertyGroup>
+      <BuildNumberComputation><![CDATA[
+          int major = 1;
+          int minor = 0;
+          string build = string.Format("{0:yy}{1:000}", DateTime.Today, DateTime.Today.DayOfYear);
+          string revision = ((int) ((DateTime.Now - DateTime.Today).TotalSeconds / 1.4)).ToString();
+          assemblyVersion = string.Format("{0}.{1}.{2}.{3}", major, minor, 0, 0);
+          buildNumber = string.Format("{0}.{1}.{2}.{3}", major, minor, build, revision);
+        ]]></BuildNumberComputation>
+    </PropertyGroup>
+    <MSBuild.ExtensionPack.Framework.DynamicExecute TaskAction="Run" Code="$(BuildNumberComputation)" Outputs="string assemblyVersion, string buildNumber">
+      <Output TaskParameter="Output1" PropertyName="AssemblyVersion" />
+      <Output TaskParameter="Output2" PropertyName="BuildNumber" />
+    </MSBuild.ExtensionPack.Framework.DynamicExecute>
+  </Target>
+</Project>

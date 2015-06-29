@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{68E5CFCC-205D-4526-923C-09F5F46058E4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
+    <AssemblyName>Be.Stateless.BizTalk.Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <ExtensionTasksPath Condition=" '$(ExtensionTasksPath)' == '' ">$(MSBuildProjectDirectory)\..\packages\MSBuild.Extension.Pack.1.1.0\lib\net35\</ExtensionTasksPath>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Common.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Skip RestorePackages|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Common.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.0\lib\net35-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Bam.EventObservation, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Bam.XLANGs, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Pipeline, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Streaming, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.Tracing, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.BizTalk.XPathReader, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.RuleEngine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BizTalk.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.RuntimeTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="SSOSettingsFileReader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b9585ffc9d454e4a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="CompositeReaderState.cs" />
+    <Compile Include="EventLogSourceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EventLogSourceInstaller.Designer.cs">
+      <DependentUpon>EventLogSourceInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Logging\Appender\TracingAppender.cs" />
+    <Compile Include="Message\Base64StringMessageContent.cs" />
+    <Compile Include="Message\Extensions\BaseMessageEx.cs" />
+    <Compile Include="Message\Extensions\BaseMessageContext.cs" />
+    <Compile Include="Message\Extensions\BaseMessagePart.cs" />
+    <Compile Include="Message\Extensions\MessageDirectionExtensions.cs" />
+    <Compile Include="Message\Extensions\PortTypeExtensions.cs" />
+    <Compile Include="Message\Extensions\SchemaBaseExtensions.cs" />
+    <Compile Include="Message\MessageDirection.cs" />
+    <Compile Include="Message\MessageFactory.cs" />
+    <Compile Include="Message\PortType.cs" />
+    <Compile Include="Message\StringMessageContent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleEngine\Context.cs" />
+    <Compile Include="RuleEngine\IPolicy.cs" />
+    <Compile Include="RuleEngine\Policy.cs" />
+    <Compile Include="RuleEngine\PolicyName.cs" />
+    <Compile Include="RuleEngine\PolicyNameConverter.cs" />
+    <Compile Include="RuleEngine\RuleSetTrackingLogger.cs" />
+    <Compile Include="Runtime\Caching\Cache.cs" />
+    <Compile Include="Runtime\Caching\MemoryCache.cs" />
+    <Compile Include="Runtime\Caching\RegexCache.cs" />
+    <Compile Include="Runtime\Caching\SchemaMetadataCache.cs" />
+    <Compile Include="Runtime\Caching\TrackingContextCache.cs" />
+    <Compile Include="Runtime\Caching\XsltCache.cs" />
+    <Compile Include="Streaming\BatchDescriptor.cs" />
+    <Compile Include="Streaming\XmlTranslationModes.cs" />
+    <Compile Include="Streaming\XmlTranslationSet.cs" />
+    <Compile Include="Streaming\XmlTranslationSetConverter.cs" />
+    <Compile Include="Streaming\XmlTranslatorStream.cs" />
+    <Compile Include="Tracking\ArchiveDescriptor.cs" />
+    <Compile Include="Tracking\BatchTrackingContext.cs" />
+    <Compile Include="Tracking\ClaimStore.cs" />
+    <Compile Include="Schema\ISchemaAnnotations.cs" />
+    <Compile Include="Schema\ISchemaMetadata.cs" />
+    <Compile Include="Schema\SchemaAnnotations.cs" />
+    <Compile Include="Schema\SchemaMetadata.cs" />
+    <Compile Include="Schema\SchemaMetadataOfT.cs" />
+    <Compile Include="SsoClient\ISsoSettingsReader.cs" />
+    <Compile Include="SsoClient\SsoSettingsReader.cs" />
+    <Compile Include="BizTalkFactorySettings.cs" />
+    <Compile Include="Tracking\ActivityTrackingModes.cs" />
+    <Compile Include="Tracking\MessageBodyCaptureDescriptor.cs" />
+    <Compile Include="Tracking\MessageBodyCaptureMode.cs" />
+    <Compile Include="Streaming\CompositeStream.cs" />
+    <Compile Include="Streaming\EventingReadStream.cs" />
+    <Compile Include="Streaming\Extensions\StreamExtensions.cs" />
+    <Compile Include="Streaming\Extensions\IProbeStream.cs" />
+    <Compile Include="Streaming\ReplicatingReadStream.cs" />
+    <Compile Include="Streaming\Extensions\Prober.cs" />
+    <Compile Include="Streaming\XPathMutatorStreamFactory.cs" />
+    <Compile Include="Tracking\Messaging\BatchReleaseProcess.cs" />
+    <Compile Include="Tracking\Messaging\BatchReleaseProcessReference.cs" />
+    <Compile Include="Tracking\Messaging\MessagingStepReference.cs" />
+    <Compile Include="Tracking\Messaging\ProcessReference.cs" />
+    <Compile Include="Tracking\Processing\OrchestrationProcessInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tracking\ProcessInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Streaming\TrackingStream.cs" />
+    <Compile Include="Tracking\ActivityId.cs" />
+    <Compile Include="Tracking\Messaging\ActivityFactory.cs" />
+    <Compile Include="Tracking\Messaging\IActivityFactory.cs" />
+    <Compile Include="Component\Extensions\PipelineContextExtensions.cs" />
+    <Compile Include="Tracking\Messaging\MessagingStep.cs" />
+    <Compile Include="Tracking\Messaging\Process.cs" />
+    <Compile Include="Tracking\Messaging\Tracking.Designer.cs" />
+    <Compile Include="Tracking\Processing\MessagingStep.cs" />
+    <Compile Include="Tracking\Processing\ProcessingStep.cs" />
+    <Compile Include="Tracking\Processing\Process.cs" />
+    <Compile Include="Tracking\Processing\Tracking.Designer.cs" />
+    <Compile Include="Tracking\TrackingContext.cs" />
+    <Compile Include="Tracking\TrackingStatus.cs" />
+    <Compile Include="Transform\BaseMessageContextFunctions.cs" />
+    <Compile Include="Transform\CustomBtxMessage.cs" />
+    <Compile Include="Streaming\Extensions\ITransformStream.cs" />
+    <Compile Include="Transform\OperatorFunctions.cs" />
+    <Compile Include="Transform\RegexFunctions.cs" />
+    <Compile Include="Streaming\Extensions\Transformer.cs" />
+    <Compile Include="Transform\XslCompiledTransformHelper.cs" />
+    <Compile Include="Xml\CompositeXmlReader.cs" />
+    <Compile Include="Xml\ValidatingXmlReader.cs" />
+    <Compile Include="Xml\ValidatingXmlReaderSettings.cs" />
+    <Compile Include="Xml\XmlNamespaceTranslation.cs" />
+    <Compile Include="Xml\XmlReaderWrapper.cs" />
+    <Compile Include="Xml\Xsl\ExtensionRequirements.cs" />
+    <Compile Include="Xml\Xsl\Extensions\TransformBaseExtensions.cs" />
+    <Compile Include="Xml\Xsl\Extensions\XslCompiledTransformExtensions.cs" />
+    <Compile Include="Xml\Xsl\XslCompiledTransformDescriptor.cs" />
+    <Compile Include="XPath\ReactiveXPathExtractorCollection.cs" />
+    <Compile Include="XPath\XPathExtractor.cs" />
+    <Compile Include="XPath\XPathExtractorCollection.cs" />
+    <Compile Include="XPath\XPathExtractorCollectionConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EventLogSourceInstaller.resx">
+      <DependentUpon>EventLogSourceInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.2008.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
+      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
+      <Name>Be.Stateless.BizTalk.Generated.Items.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.2008.btproj">
+      <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
+      <Name>Be.Stateless.BizTalk.Schemas.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.2008.csproj">
+      <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
+      <Name>Be.Stateless.Common.2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Be.Stateless.Logging.2008.csproj">
+      <Project>{8F890272-22E8-4668-9F0E-C12DD48474D2}</Project>
+      <Name>Be.Stateless.Logging.2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\be.stateless.public.snk">
+      <Link>be.stateless.public.snk</Link>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Tracking\ActivityModel\ActivityModel.xml" />
+    <None Include="Tracking\ActivityModel\ActivityModelToTypedApi.xslt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <UsingTask AssemblyFile="$(SolutionDir)\.imports\v3.5\nxslt\XmlLab.NxsltTasks.MSBuild.dll" TaskName="XmlLab.NxsltTasks.MSBuild.Nxslt" />
+  <Target Name="GenerateTypedBamApi" Inputs="$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModel.xml;$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModelToTypedApi.xslt" Outputs="$(MSBuildProjectDirectory)\Tracking\Messaging\Tracking.Designer.cs;$(MSBuildProjectDirectory)\Tracking\Processing\Tracking.Designer.cs">
+    <Message Text="Generating Tracking\Messaging\Tracking.Designer.cs" />
+    <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Checkout" ItemPath="$(MSBuildProjectDirectory)\Tracking\Messaging\Tracking.Designer.cs" />
+    <XmlLab.NxsltTasks.MSBuild.Nxslt Style="$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModelToTypedApi.xslt" In="$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModel.xml" Out="$(MSBuildProjectDirectory)\Tracking\Messaging\Tracking.Designer.cs" Parameters="&lt;Parameter Name='EventStreamType' Value='Buffered'/&gt;&lt;Parameter Name='TargetNamespace' Value='Be.Stateless.BizTalk.Tracking.Messaging'/&gt;" />
+    <Message Text="Generating Tracking\Processing\Tracking.Designer.cs" />
+    <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Checkout" ItemPath="$(MSBuildProjectDirectory)\Tracking\Processing\Tracking.Designer.cs" />
+    <XmlLab.NxsltTasks.MSBuild.Nxslt Style="$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModelToTypedApi.xslt" In="$(MSBuildProjectDirectory)\Tracking\ActivityModel\ActivityModel.xml" Out="$(MSBuildProjectDirectory)\Tracking\Processing\Tracking.Designer.cs" Parameters="&lt;Parameter Name='EventStreamType' Value='Orchestration'/&gt;&lt;Parameter Name='TargetNamespace' Value='Be.Stateless.BizTalk.Tracking.Processing'/&gt;" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>-->
+  <Target Name="BeforeBuild" DependsOnTargets="GenerateTypedBamApi">
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\nuget.2008.targets" />
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
+</Project>

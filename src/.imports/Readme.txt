@@ -1,0 +1,1 @@
+﻿Please copy Microsoft.BizTalk.PipelineOM.dll in the v3.5 (BizTalk 2009) or v4.0 (BizTalk 2010) folder to allow build of pipeline DSL assemblies.

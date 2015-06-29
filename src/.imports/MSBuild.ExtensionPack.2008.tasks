@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildFolder>MSBuild.Extension.Pack.1.1.0</MSBuildFolder>
+  </PropertyGroup>
+  <UsingTask AssemblyFile="$(MSBuildProjectDirectory)\..\packages\$(MSBuildFolder)\lib\net35\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.FileSystem.File" />
+  <UsingTask AssemblyFile="$(MSBuildProjectDirectory)\..\packages\$(MSBuildFolder)\lib\net35\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.DynamicExecute" />
+</Project>
