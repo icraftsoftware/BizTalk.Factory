@@ -1,0 +1,31 @@
+﻿@*
+ * Copyright © 2012 - 2013 François Chabot, Yves Dierick
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Models
+@using MvcContrib.UI.Grid
+@model Be.Stateless.BizTalk.Monitoring.Model.Process
+
+@{
+	ViewBag.Title = "BizTalk Process";
+}
+
+@Html.Partial("_Details", Model)
+<h3>Processing Steps</h3>
+@Html.Grid(Model.ProcessingSteps.OrderBy(s => s.BeginTime)).WithModel(new ProcessingStepGridModel(Html))
+<h3>Messaging Steps</h3>
+@Html.Grid(Model.MessagingSteps.OrderBy(s => s.BeginTime)).WithModel(new MessagingStepGridModel(Html))
+<p> @Html.ActionLink("Back to Processes", "Index") </p>
+@Html.Partial("_GridStepIntoContextMenu")

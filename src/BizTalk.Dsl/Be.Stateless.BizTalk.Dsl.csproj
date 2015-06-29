@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{46E0347E-7978-4F76-86D7-7D31201D856D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
+    <AssemblyName>Be.Stateless.BizTalk.Dsl</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Dsl.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - Skip RestorePackages|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Dsl.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.B2B.PartnerManagement, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.B2B.PartnerManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Deployment, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.ExplorerOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Pipeline">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.PipelineOM">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.PipelineOM.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Studio.Extensibility">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Studio.Extensibility.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.RuleEngine">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BaseTypes">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BizTalk.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BizTalk.ProcessInterface, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.ProcessInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="PipelineObjects">
+      <HintPath>..\..\lib\BizTalk 2013 R2\PipelineObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Dsl\Binding\Adapter\AdapterBase.cs" />
+    <Compile Include="Dsl\Binding\ApplicationBinding.cs" />
+    <Compile Include="Dsl\Binding\ApplicationBindingBase.cs" />
+    <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensions.cs" />
+    <Compile Include="Dsl\Binding\CodeDom\BtxServiceTypeExtensions.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ApplicationBinding.cs" />
+    <Compile Include="Dsl\Binding\ApplicationBindingSerializer.cs" />
+    <Compile Include="Dsl\Binding\ApplicationBindingVisitor.cs" />
+    <Compile Include="Dsl\Binding\ComponentBinding.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ILocationMessageFormat.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ILocationMessageName.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IMessageFormatMemento.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IMessageNameMemento.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IPartyMemento.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IReceivePortNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ISendPortNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\MessageFormat.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\NamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceiveLocationNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceivePortNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\SendPortNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\INamingConvention.cs" />
+    <Compile Include="Dsl\Binding\BindingException.cs" />
+    <Compile Include="Dsl\Binding\Convention\ISupportNamingConvention.cs" />
+    <Compile Include="Dsl\Binding\Convention\NamingConventionException.cs" />
+    <Compile Include="Dsl\Binding\Convention\NamingConventionThunk.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\RetryPolicy.cs" />
+    <Compile Include="Dsl\Binding\Diagnostics\IProvideSourceFileInformation.cs" />
+    <Compile Include="Dsl\Binding\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
+    <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
+    <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
+    <Compile Include="Dsl\Binding\IOrchestrationBinding.cs" />
+    <Compile Include="Dsl\Binding\IOrchestrationBindingCollection.cs" />
+    <Compile Include="Dsl\Binding\IOrchestrationPortBinding.cs" />
+    <Compile Include="Dsl\Binding\ISupportEnvironmentDeploymentPredicate.cs" />
+    <Compile Include="Dsl\Binding\ISupportEnvironmentOverride.cs" />
+    <Compile Include="Dsl\Binding\ISupportEnvironmentSensitivity.cs" />
+    <Compile Include="Dsl\Binding\Interop\PropertyBag.cs" />
+    <Compile Include="Dsl\Binding\Interop\TrackingPropertyBag.cs" />
+    <Compile Include="Dsl\Binding\IObjectBinding.cs" />
+    <Compile Include="Dsl\Binding\IReceiveLocation.cs" />
+    <Compile Include="Dsl\Binding\IReceiveLocationCollection.cs" />
+    <Compile Include="Dsl\Binding\IReceivePort.cs" />
+    <Compile Include="Dsl\Binding\IReceivePortCollection.cs" />
+    <Compile Include="Dsl\Binding\ISendPort.cs" />
+    <Compile Include="Dsl\Binding\ISendPortCollection.cs" />
+    <Compile Include="Dsl\Binding\ISupportValidation.cs" />
+    <Compile Include="Dsl\Binding\OrchestrationBindingBase.cs" />
+    <Compile Include="Dsl\Binding\OrchestrationBindingCollection.cs" />
+    <Compile Include="Dsl\Binding\PipelineBindingBuilderVisitor.cs" />
+    <Compile Include="Dsl\Binding\PipelineBindingSerializer.cs" />
+    <Compile Include="Dsl\Binding\PipelineObjectModel.cs" />
+    <Compile Include="Dsl\Binding\Priority.cs" />
+    <Compile Include="Dsl\Binding\ReceiveLocation.cs" />
+    <Compile Include="Dsl\Binding\ReceiveLocationBase.cs" />
+    <Compile Include="Dsl\Binding\ReceiveLocationCollection.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceiveLocation.cs" />
+    <Compile Include="Dsl\Binding\ReceiveLocationTransport.cs" />
+    <Compile Include="Dsl\Binding\ReceivePipeline.cs" />
+    <Compile Include="Dsl\Binding\ReceivePort.cs" />
+    <Compile Include="Dsl\Binding\ReceivePortBase.cs" />
+    <Compile Include="Dsl\Binding\ReceivePortCollection.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceivePort.cs" />
+    <Compile Include="Dsl\Binding\RetryPolicy.cs" />
+    <Compile Include="Dsl\Binding\Schedule.cs" />
+    <Compile Include="Dsl\Binding\SendPipeline.cs" />
+    <Compile Include="Dsl\Binding\Diagnostics\SourceFileInformationProvider.cs" />
+    <Compile Include="Dsl\Binding\SendPort.cs" />
+    <Compile Include="Dsl\Binding\SendPortBase.cs" />
+    <Compile Include="Dsl\Binding\SendPortCollection.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\SendPort.cs" />
+    <Compile Include="Dsl\Binding\SendPortTransport.cs" />
+    <Compile Include="Dsl\Binding\ServiceWindow.cs" />
+    <Compile Include="Dsl\Binding\Subscription\Filter.cs" />
+    <Compile Include="Dsl\Binding\Subscription\FilterTranslator.cs" />
+    <Compile Include="Dsl\Binding\Time.cs" />
+    <Compile Include="Dsl\Binding\TransportBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\CopyMode.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Credentials.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Extensions\AdapterPropertyBagExtensions.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileRemovingSettings.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IInboundAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\InboundFileAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IOutboundAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterBindingSerializerFactory.cs" />
+    <Compile Include="Dsl\Binding\Adapter\OutboundFileAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Extensions\RegistryExtensions.cs" />
+    <Compile Include="Dsl\Binding\Adapter\AdapterBindingSerializer.cs" />
+    <Compile Include="Dsl\IHideObjectMembers.cs" />
+    <Compile Include="Dsl\ITypeDescriptor.cs" />
+    <Compile Include="Dsl\IVisitable.cs" />
+    <Compile Include="Dsl\Pipeline\ComponentList.cs" />
+    <Compile Include="Dsl\Pipeline\ConfigurableComponent.cs" />
+    <Compile Include="Dsl\Pipeline\IComponentList.cs" />
+    <Compile Include="Dsl\Pipeline\IConfigurableComponent.cs" />
+    <Compile Include="Dsl\Pipeline\IPipelineComponentDescriptor.cs" />
+    <Compile Include="Dsl\IDslSerializer.cs" />
+    <Compile Include="Dsl\Pipeline\IPipelineSerializerFactory.cs" />
+    <Compile Include="Dsl\Pipeline\IPipelineStageList.cs" />
+    <Compile Include="Dsl\Pipeline\IPipelineVisitor.cs" />
+    <Compile Include="Dsl\Pipeline\IReceivePipelineStageList.cs" />
+    <Compile Include="Dsl\Pipeline\ISendPipelineStageList.cs" />
+    <Compile Include="Dsl\Pipeline\IStage.cs" />
+    <Compile Include="Dsl\Pipeline\Pipeline.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineCompiler.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineCompilerVisitor.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineComponentExtensions.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineComponentDescriptor.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineDesignerDocumentSerializer.cs" />
+    <Compile Include="Dsl\Pipeline\PipelineDesignerDocumentBuilderVisitor.cs" />
+    <Compile Include="Dsl\Pipeline\ReceivePipeline.cs" />
+    <Compile Include="Dsl\Pipeline\ReceivePipelineStageList.cs" />
+    <Compile Include="Dsl\Pipeline\SendPipeline.cs" />
+    <Compile Include="Dsl\Pipeline\SendPipelineStageList.cs" />
+    <Compile Include="Dsl\Pipeline\Stage.cs" />
+    <Compile Include="Dsl\Pipeline\StageCategory.cs" />
+    <Compile Include="Dsl\Pipeline\StageList.cs" />
+    <Compile Include="Dsl\Policy.cs" />
+    <Compile Include="Dsl\RuleEngine\IRuleList.cs" />
+    <Compile Include="Dsl\RuleEngine\RuleList.cs" />
+    <Compile Include="Dsl\RuleEngine\Antecedent.cs" />
+    <Compile Include="Dsl\RuleEngine\Consequent.cs" />
+    <Compile Include="Dsl\RuleEngine\ProcessNameAttribute.cs" />
+    <Compile Include="Dsl\RuleEngine\Rule.cs" />
+    <Compile Include="Dsl\RuleEngine\RuleSet.cs" />
+    <Compile Include="Dsl\Schema.cs" />
+    <Compile Include="Dsl\Transform.cs" />
+    <Compile Include="Dsl\Pipeline\Interpreters\ReceivePipelineInterpreter.cs" />
+    <Compile Include="Dsl\Pipeline\Interpreters\SendPipelineInterpreter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Install\RuleSetInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Dsl\RuleEngine\RuleTranslator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\be.stateless.public.snk">
+      <Link>be.stateless.public.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
+      <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
+      <Name>Be.Stateless.BizTalk.Pipeline.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
+      <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
+      <Name>Be.Stateless.BizTalk.Schemas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
+      <Project>{3b226253-7a9c-46eb-a1d8-11b1a6f634a8}</Project>
+      <Name>Be.Stateless.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
+      <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
+      <Name>Be.Stateless.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace='urn:schemas.stateless.be:biztalk:tests:annotated:2013:01' xmlns:san='urn:schemas.stateless.be:biztalk:annotations:2013:01' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+  <xs:element name='Annotated'>
+    <xs:annotation>
+      <xs:appinfo>
+        <san:EnvelopeMapSpecName>Be.Stateless.BizTalk.Unit.Transform.IdentityTransform, Be.Stateless.BizTalk.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3707daa0b119fc14</san:EnvelopeMapSpecName>
+        <san:Properties xmlns:s0='urn:schemas.stateless.be:biztalk:properties:tracking:2012:04'>
+          <s0:Value1 xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Id']" />
+        </san:Properties>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType />
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,218 @@
+﻿/*!
+ * Copyright © 2012 François Chabot, Yves Dierick
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+body {
+	font-family: Verdana, Tahoma, Arial, Helvetica, Sans-Serif;
+	font-size: .75em;
+}
+
+/* PRIMARY LAYOUT ELEMENTS
+----------------------------------------------------------*/
+
+.page {
+	width: 92%;
+}
+
+header h1, #header h1 {
+	padding: 10px 0;
+}
+
+nav, #menucontainer {
+	margin-top: 15px;
+}
+
+#logindisplay {
+	margin: 15px 0px;
+}
+
+div.pagination {
+	margin-top: 20px;
+}
+
+/* FORM LAYOUT ELEMENTS
+----------------------------------------------------------*/
+
+input, select {
+	font-size: 1em;
+}
+
+input[type="submit"], input[type="button"] {
+	font-size: 1em;
+	min-width: 60px;
+	padding: 5px;
+	white-space: normal;
+}
+
+/* DISPLAY HELPERS
+----------------------------------------------------------*/
+
+.display-label, .editor-label {
+	float: left;
+	width: 140px;
+}
+
+.display-field, .editor-field {
+	margin: 1em 0 0 0;
+}
+
+/* ACCORDIONS
+----------------------------------------------------------*/
+
+div.ui-accordion-content {
+	padding-right: 12px !important;
+}
+
+/* TABS
+----------------------------------------------------------*/
+
+div#tab-2.ui-tabs-panel, div#tab-4.ui-tabs-panel {
+	max-height: 600px;
+	overflow: auto;
+}
+
+/* TABLES
+----------------------------------------------------------*/
+
+table {
+	border-width: 2px;
+	overflow: hidden;
+	table-layout: fixed;
+	width: 100%;
+	word-wrap: break-word;
+}
+
+table td {
+	vertical-align: top;
+}
+
+table th {
+	font-weight: bold;
+	position: relative;
+	text-align: left;
+}
+
+/* NESTED TABLES
+----------------------------------------------------------*/
+
+table.processing-step-details tr > th:first-child, table.messaging-step-details tr > th:first-child {
+	width: 25%;
+}
+
+table.context col.promoted {
+	text-align: center;
+	width: 30px;
+}
+
+table.context col.property {
+	width: 25%;
+}
+
+/* TABLE SORTABLE COLUMNS' HEADERS
+ *
+ * see http://nicolasgallagher.com/css-background-image-hacks/
+ * see http://cssglobe.com/post/6089/3-easy-and-fast-css-techniques-for-faux-image
+ * see http://www.noobcube.com/tutorials/html-css/horizontal-and-vertical-centering-using-css-a-beginners-guide-/
+----------------------------------------------------------*/
+
+section#main > table th {
+	position: relative;
+}
+
+section#main > table th > a {
+	display: block;
+}
+
+section#main > table th.sort_asc > a, table th.sort_desc > a {
+	padding-right: 16px;
+}
+
+section#main > table th.sort_asc > span, table th.sort_desc > span {
+	background-image: url(themes/base/images/ui-icons_222222_256x240.png);
+	height: 16px;
+	position: absolute;
+	right: 2px;
+	top: 6px;
+	width: 16px;
+}
+
+section#main > table th.sort_asc > span {
+	background-position: 0px -16px;
+}
+
+section#main > table th.sort_desc > span {
+	background-position: -64px -16px;
+}
+
+/* ASYNC CONTENT
+----------------------------------------------------------*/
+
+.dynamic {
+	display: none;
+}
+
+div.throbber {
+	background-image: url(images/throbber.gif);
+	background-position: center;
+	background-repeat: no-repeat;
+	display: none;
+	min-height: 64px;
+}
+
+/* jQuery.contextMenu styles
+----------------------------------------------------------*/
+
+.contextMenu {
+	background: #EEE;
+	border: solid 1px #CCC;
+	display: none;
+	position: absolute;
+	width: 120px;
+	z-index: 99999;
+}
+
+.contextMenu LI {
+	list-style: none;
+}
+
+.contextMenu A {
+	background-position: 6px center;
+	background-repeat: no-repeat;
+	color: #333;
+	display: block;
+	height: 20px;
+	line-height: 20px;
+	outline: none;
+	padding: 1px 5px;
+	padding-left: 28px;
+	text-decoration: none;
+}
+
+.contextMenu LI.hover A {
+	background-color: #3399FF;
+	color: #FFF;
+}
+
+.contextMenu LI.disabled A {
+	color: #AAA;
+	cursor: default;
+}
+
+.contextMenu LI.hover.disabled A {
+	background-color: transparent;
+}
+
+.contextMenu LI.separator {
+	border-top: solid 1px #CCC;
+}

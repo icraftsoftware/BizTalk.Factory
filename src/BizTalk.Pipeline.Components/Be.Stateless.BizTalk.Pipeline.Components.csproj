@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6791C30D-4390-46CA-9CF4-BEF953817756}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
+    <AssemblyName>Be.Stateless.BizTalk.Pipeline.Components</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Pipeline.Components.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - Skip RestorePackages|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Pipeline.Components.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.GlobalPropertySchemas.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Pipeline">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Pipeline.Components">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Streaming">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Streaming.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.XPathReader">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.XPathReader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.RuleEngine">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BaseTypes">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Component\BatchTrackerComponent.cs" />
+    <Compile Include="Component\ContextPropertyExtractorComponent.cs" />
+    <Compile Include="Component\ExtensiblePipelineComponent.cs" />
+    <Compile Include="Component\IContextBuilder.cs" />
+    <Compile Include="Component\IMessageFactory.cs" />
+    <Compile Include="Component\MessageFactoryComponent.cs" />
+    <Compile Include="Component\EnvelopeBuilderComponent.cs" />
+    <Compile Include="Component\FailedMessageRoutingEnablerComponent.cs" />
+    <Compile Include="Component\Interop\PropertyBag.cs" />
+    <Compile Include="Component\MessageConsumerComponent.cs" />
+    <Compile Include="Component\ActivityTrackerComponent.cs" />
+    <Compile Include="Component\PipelineComponent.cs" />
+    <Compile Include="Component\ContextBuilderComponent.cs" />
+    <Compile Include="Component\PluginExecutionMode.cs" />
+    <Compile Include="Component\PolicyRunnerComponent.cs" />
+    <Compile Include="Component\XmlTranslatorComponent.cs" />
+    <Compile Include="Component\XsltRunnerComponent.cs" />
+    <Compile Include="Component\ZipDecoderComponent.cs" />
+    <Compile Include="Component\ZipEncoderComponent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tracking\Messaging\ActivityTracker.cs" />
+    <Compile Include="Tracking\Messaging\BatchReleaseProcessActivityTracker.cs" />
+    <Compile Include="Tracking\Messaging\MessageBodyTracker.cs" />
+    <Compile Include="Tracking\TrackingResolver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Component\PipelineComponent.resx">
+      <DependentUpon>PipelineComponent.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
+      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
+      <Name>Be.Stateless.BizTalk.Generated.Items</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
+      <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
+      <Name>Be.Stateless.BizTalk.Schemas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Transforms\Be.Stateless.BizTalk.Transforms.btproj">
+      <Project>{D0F8E1D6-2FE8-415C-9981-D08931EDC908}</Project>
+      <Name>Be.Stateless.BizTalk.Transforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
+      <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
+      <Name>Be.Stateless.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
+      <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
+      <Name>Be.Stateless.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Be.Stateless.Logging.csproj">
+      <Project>{8F890272-22E8-4668-9F0E-C12DD48474D2}</Project>
+      <Name>Be.Stateless.Logging</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\be.stateless.public.snk">
+      <Link>be.stateless.public.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

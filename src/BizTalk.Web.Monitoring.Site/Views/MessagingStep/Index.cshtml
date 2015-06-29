@@ -1,0 +1,47 @@
+﻿@*
+ * Copyright © 2012 - 2013 François Chabot, Yves Dierick
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Models
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Models.Filters
+@using MvcContrib.UI.Grid
+@using MvcContrib.UI.Pager
+@model Be.Stateless.BizTalk.Web.Monitoring.Site.Models.Filters.MessagingStepViewModel
+
+@{
+	ViewBag.Title = "BizTalk Messages";
+}
+
+@using (Html.BeginForm("Index", "MessagingStep", FormMethod.Get)) {
+	<div>
+		<fieldset>
+			<legend>Search Criteria</legend>
+			<p>
+				@Html.DropDownListFor(m => m.Filiation, MessagingStepViewModel.FiliationOptions)
+				messages with @Html.DropDownListFor(m => m.Status, MessagingStepViewModel.StatusOptions)
+				status within @Html.DropDownListFor(m => m.Within, MessagingStepViewModel.WithinOptions)
+				with a key like @Html.TextBoxFor(m => m.Value)
+			</p>
+			<input type="submit" value="Search" />
+			@Html.ActionButton("Reset", "Reset", "MessagingStep")
+		</fieldset>
+	</div>
+}
+
+
+@Html.Grid(Model.MessagingSteps).WithModel(new MessagingStepGridModel(Html, Model.Filiation.Value, GridFilteringModes.Sort | GridFilteringModes.StepInto)).Sort(Model)
+@Html.Pager(Model.MessagingSteps)
+@Html.Partial("_GridFilteringContextMenu")

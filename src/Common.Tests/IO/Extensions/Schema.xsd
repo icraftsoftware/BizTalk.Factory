@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ns0="http://schemas.microsoft.com/BizTalk/2003/system-properties" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" targetNamespace="http://schemas.microsoft.com/BizTalk/2003/system-properties" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:appinfo>
+      <b:schemaInfo schema_type="property" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" />
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ActualRetryCount" type="xs:integer">
+    <xs:annotation>
+      <xs:appinfo>
+        <b:fieldInfo propertyGuid="cbe7e987-6fbf-4298-8eaf-befb35adc14c" />
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="RouteMessageOnFailure" type="xs:boolean">
+    <xs:annotation>
+      <xs:appinfo>
+        <b:fieldInfo propertyGuid="9f727ae6-0438-4e25-86d8-d92cac7256b4" />
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="WasSolicitResponse" type="xs:boolean">
+    <xs:annotation>
+      <xs:appinfo>
+        <b:fieldInfo propertyGuid="4051d2d2-0642-42e6-9407-d1e96917c66f" />
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>
