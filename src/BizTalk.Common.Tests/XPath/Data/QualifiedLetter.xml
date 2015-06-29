@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s1:letter xmlns:s1='urn-one' xmlns:s2='urn-two' xmlns:s6='urn-six' xmlns:s0='urn-ten'>
+  <s2:headers>
+    <s6:subject>inquiry</s6:subject>
+    <s6:from>info@world.com</s6:from>
+    <s6:to>francois.chabot@gmail.com</s6:to>
+  </s2:headers>
+  <s2:body>
+    <s0:paragraph>paragraph-one</s0:paragraph>
+    <s0:paragraph>paragraph-two</s0:paragraph>
+    <s0:paragraph>paragraph-six</s0:paragraph>
+  </s2:body>
+  <s2:footers>
+    <s6:salutations>King regards,</s6:salutations>
+    <s6:signature>John Doe</s6:signature>
+  </s2:footers>
+</s1:letter>

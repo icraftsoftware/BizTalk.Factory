@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ns0:services ns1:mustUnderstand='1' xmlns:ns1='http://schemas.xmlsoap.org/soap/envelope/' xmlns:ns0='http://schemas.biztalk.org/btf-2-0/services'>
+  <ns0:deliveryReceiptRequest>
+    <ns0:sendTo>
+      <ns0:address />
+    </ns0:sendTo>
+    <ns0:sendBy>2012-04-12T12:13:14</ns0:sendBy>
+  </ns0:deliveryReceiptRequest>
+  <ns0:commitmentReceiptRequest>
+    <ns0:sendTo>
+      <ns0:address />
+    </ns0:sendTo>
+    <ns0:sendBy>2012-04-12T23:22:21</ns0:sendBy>
+  </ns0:commitmentReceiptRequest>
+</ns0:services>

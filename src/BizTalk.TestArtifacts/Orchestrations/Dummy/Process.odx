@@ -1,0 +1,482 @@
+﻿#if __DESIGNER_DATA
+#error Do not define __DESIGNER_DATA.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<om:MetaModel MajorVersion="1" MinorVersion="3" Core="2b131234-7959-458d-834f-2dc0769ce683" ScheduleModel="66366196-361d-448d-976f-cab5e87496d2" xmlns:om="http://schemas.microsoft.com/BizTalk/2003/DesignerData">
+    <om:Element Type="Module" OID="d717d660-c329-4dee-a064-7afa5871fd35" LowerBound="1.1" HigherBound="92.1">
+        <om:Property Name="ReportToAnalyst" Value="True" />
+        <om:Property Name="Name" Value="Be.Stateless.BizTalk.Orchestrations.Dummy" />
+        <om:Property Name="Signal" Value="False" />
+        <om:Element Type="PortType" OID="137366c5-8fc6-4d91-9ff8-d391ae37f764" ParentLink="Module_PortType" LowerBound="8.1" HigherBound="15.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="ReceivePortType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="f4f27244-21f5-453a-9025-0db7ac7222b5" ParentLink="PortType_OperationDeclaration" LowerBound="10.1" HigherBound="14.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="ReceiveOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="2b6b2739-36dc-46c7-91da-a978c8973459" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="12.13" HigherBound="12.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="c36d9bd0-72c4-4205-a8d1-983c0f3888c5" ParentLink="Module_PortType" LowerBound="15.1" HigherBound="22.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="SendPortType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="7afe28e0-2b48-4e46-a6b0-3c4ec9351c17" ParentLink="PortType_OperationDeclaration" LowerBound="17.1" HigherBound="21.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="8b3366f1-5774-47ec-be8e-2e5dd75c70f9" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="19.13" HigherBound="19.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="db9e617f-0ca3-41b0-99e6-e2fe21ae2be7" ParentLink="Module_PortType" LowerBound="22.1" HigherBound="29.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="SolicitResponsePortType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="fe6d332b-f82c-4e83-a381-972f4ab0c4c3" ParentLink="PortType_OperationDeclaration" LowerBound="24.1" HigherBound="28.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SolicitResponseOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="7636fca9-c363-4405-8175-088c819a1eb1" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="26.13" HigherBound="26.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="8460819f-b200-42a9-82f6-2e361258b738" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="26.32" HigherBound="26.49">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="943baaf7-fa0d-4582-85b3-141590c555ec" ParentLink="Module_PortType" LowerBound="29.1" HigherBound="36.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="RequestResponsePortType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="13309cfd-6b4d-42e3-8082-6c7562a23016" ParentLink="PortType_OperationDeclaration" LowerBound="31.1" HigherBound="35.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestResponseOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="fcf8093b-59b9-4676-b0bd-8bddade7fcea" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="33.13" HigherBound="33.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="e1ca90c9-80fb-4706-a7dd-65cc399b8524" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="33.32" HigherBound="33.49">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="cff72106-e801-4d5c-8f93-9212947a192d" ParentLink="Module_PortType" LowerBound="36.1" HigherBound="43.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="DirectSendPortType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="7d2ee069-fd5e-41cc-8eba-bb05bb549a9d" ParentLink="PortType_OperationDeclaration" LowerBound="38.1" HigherBound="42.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="DirectSendOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="99be568d-f064-41a3-bca0-39bc08c4ef7c" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="40.13" HigherBound="40.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="692abb58-def1-4fd4-a855-a40378cce70a" ParentLink="Module_PortType" LowerBound="43.1" HigherBound="50.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="DirectReceivePortType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="59045ed1-fc3b-4243-b816-c6bff832319f" ParentLink="PortType_OperationDeclaration" LowerBound="45.1" HigherBound="49.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="DirectReceiveOperation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="6b65d059-315f-4ea2-b084-77805e8cfb87" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="47.13" HigherBound="47.30">
+                    <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="MultipartMessageType" OID="2640e5d8-08b8-4ebe-97bd-bca8679e459c" ParentLink="Module_MessageType" LowerBound="4.1" HigherBound="8.1">
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="OpaqueMessageType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="PartDeclaration" OID="5a9095b2-e3b1-4320-b596-6a168fd4d1dd" ParentLink="MultipartMessageType_PartDeclaration" LowerBound="6.1" HigherBound="7.1">
+                <om:Property Name="ClassName" Value="System.Xml.XmlDocument" />
+                <om:Property Name="IsBodyPart" Value="True" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Body" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+        </om:Element>
+        <om:Element Type="ServiceDeclaration" OID="780aa078-aa2c-404c-b1d7-0d5b8148e846" ParentLink="Module_ServiceDeclaration" LowerBound="54.1" HigherBound="91.1">
+            <om:Property Name="InitializedTransactionType" Value="False" />
+            <om:Property Name="IsInvokable" Value="False" />
+            <om:Property Name="TypeModifier" Value="Public" />
+            <om:Property Name="ReportToAnalyst" Value="False" />
+            <om:Property Name="AnalystComments" Value="Some useless orchestration only to exercise and demonstrate orchestation binding DSL." />
+            <om:Property Name="Name" Value="Process" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="ServiceBody" OID="ee530af6-1584-43a1-8244-fb866a0fa907" ParentLink="ServiceDeclaration_ServiceBody">
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="Receive" OID="5a39c599-bf3c-4965-8785-efab934a67c8" ParentLink="ServiceBody_Statement" LowerBound="73.1" HigherBound="75.1">
+                    <om:Property Name="Activate" Value="True" />
+                    <om:Property Name="PortName" Value="DirectReceivePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="DirectReceiveOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ReceiveFromDirectReceivePort" />
+                    <om:Property Name="Signal" Value="True" />
+                    <om:Element Type="DNFPredicate" OID="cf843a56-9795-4562-97ec-f16c68b0d2e6" ParentLink="Receive_DNFPredicate">
+                        <om:Property Name="LHS" Value="Be.Stateless.BizTalk.Schemas.BizTalkFactory.SenderName" />
+                        <om:Property Name="RHS" Value="&quot;BizTalkFactory.Sender&quot;" />
+                        <om:Property Name="Grouping" Value="AND" />
+                        <om:Property Name="Operator" Value="Equals" />
+                        <om:Property Name="Signal" Value="False" />
+                    </om:Element>
+                </om:Element>
+                <om:Element Type="Send" OID="4a07c854-65c3-4d8b-b710-95776160af2a" ParentLink="ServiceBody_Statement" LowerBound="75.1" HigherBound="77.1">
+                    <om:Property Name="PortName" Value="SendPort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="SendOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="SendToSendPort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Receive" OID="1720cea0-0d03-4669-b929-637e22dadef1" ParentLink="ServiceBody_Statement" LowerBound="77.1" HigherBound="79.1">
+                    <om:Property Name="Activate" Value="False" />
+                    <om:Property Name="PortName" Value="ReceivePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="ReceiveOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ReceiveFromReceivePort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Send" OID="42e7ce8f-01e3-4ed1-915b-ed877ef7f54e" ParentLink="ServiceBody_Statement" LowerBound="79.1" HigherBound="81.1">
+                    <om:Property Name="PortName" Value="DirectSendPort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="DirectSendOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="SendToDirectSendPort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Receive" OID="ed9db303-a73f-48ab-9430-0b5d1cd48cc7" ParentLink="ServiceBody_Statement" LowerBound="81.1" HigherBound="83.1">
+                    <om:Property Name="Activate" Value="False" />
+                    <om:Property Name="PortName" Value="RequestResponsePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="RequestResponseOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ReceiveFromSolicitResponsePort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Send" OID="dd632474-9c65-4086-a019-8e48575fb200" ParentLink="ServiceBody_Statement" LowerBound="83.1" HigherBound="85.1">
+                    <om:Property Name="PortName" Value="SolicitResponsePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="SolicitResponseOperation" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="SendToRequestResponsePort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Receive" OID="8e6effde-851b-4f18-8583-d63a969c216e" ParentLink="ServiceBody_Statement" LowerBound="85.1" HigherBound="87.1">
+                    <om:Property Name="Activate" Value="False" />
+                    <om:Property Name="PortName" Value="SolicitResponsePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="SolicitResponseOperation" />
+                    <om:Property Name="OperationMessageName" Value="Response" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ReceiveFromRequestResponsePort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Send" OID="e371c138-a81f-4265-ae87-74c3346ab3d7" ParentLink="ServiceBody_Statement" LowerBound="87.1" HigherBound="89.1">
+                    <om:Property Name="PortName" Value="RequestResponsePort" />
+                    <om:Property Name="MessageName" Value="OpaqueMessage" />
+                    <om:Property Name="OperationName" Value="RequestResponseOperation" />
+                    <om:Property Name="OperationMessageName" Value="Response" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="SendToSolicitResponsePort" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="bb1413c2-08c3-42c8-834b-8d85f5149eee" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="57.1" HigherBound="59.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Left" />
+                <om:Property Name="PortIndex" Value="-1" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.DirectReceivePortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="DirectReceivePort" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="DirectBindingAttribute" OID="3dc62b21-5ecc-40e9-a77c-80a8800cd02e" ParentLink="PortDeclaration_CLRAttribute" LowerBound="57.1" HigherBound="58.1">
+                    <om:Property Name="DirectBindingType" Value="MessageBox" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="34e4a324-3e28-4709-baf1-089cb881795f" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="59.1" HigherBound="61.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="15" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.SolicitResponsePortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SolicitResponsePort" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="92ee12d9-7c75-4f33-8e1d-399463eb0d51" ParentLink="PortDeclaration_CLRAttribute" LowerBound="59.1" HigherBound="60.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="97ec84a0-bac5-4e32-9343-b0a1547e2ab6" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="61.1" HigherBound="63.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="10" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.DirectSendPortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="DirectSendPort" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="DirectBindingAttribute" OID="73a5610d-18b9-4b07-bbc2-dff8e55c6297" ParentLink="PortDeclaration_CLRAttribute" LowerBound="61.1" HigherBound="62.1">
+                    <om:Property Name="DirectBindingType" Value="MessageBox" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="954507ed-e671-449d-9148-bbda75fca320" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="63.1" HigherBound="65.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="4" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.SendPortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendPort" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="2f36dfaf-36ba-47b2-bb85-1e988eab7652" ParentLink="PortDeclaration_CLRAttribute" LowerBound="63.1" HigherBound="64.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="7d415c53-a0f7-4d82-941b-6cc313184dc4" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="65.1" HigherBound="67.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Left" />
+                <om:Property Name="PortIndex" Value="6" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.ReceivePortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="ReceivePort" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="d6346e03-87ea-4e0a-865a-345b19a1ac84" ParentLink="PortDeclaration_CLRAttribute" LowerBound="65.1" HigherBound="66.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="f6bdb5ce-dd21-445b-80fd-c716d83a6a94" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="67.1" HigherBound="69.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Left" />
+                <om:Property Name="PortIndex" Value="10" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.RequestResponsePortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestResponsePort" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="368d9258-f265-4339-8e6d-f3ed0bd61c0a" ParentLink="PortDeclaration_CLRAttribute" LowerBound="67.1" HigherBound="68.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="325da421-9d82-40d7-9b2a-385970cc407c" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="70.1" HigherBound="71.1">
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.OpaqueMessageType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="OpaqueMessage" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="CorrelationDeclaration" OID="4dafd062-ff71-4a57-9573-e51af90dc587" ParentLink="ServiceDeclaration_CorrelationDeclaration" LowerBound="69.1" HigherBound="70.1">
+                <om:Property Name="Type" Value="Be.Stateless.BizTalk.Orchestrations.Dummy.CorrelationType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Correlation" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="StatementRef" OID="13f0d606-9602-4a6c-b006-ae6dd9a878f5" ParentLink="CorrelationDeclaration_StatementRef" LowerBound="76.58" HigherBound="76.80">
+                    <om:Property Name="Initializes" Value="True" />
+                    <om:Property Name="Ref" Value="4a07c854-65c3-4d8b-b710-95776160af2a" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="StatementRef_2" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="StatementRef" OID="95253e1b-3675-45a5-968e-a5f539801a0f" ParentLink="CorrelationDeclaration_StatementRef" LowerBound="78.67" HigherBound="78.78">
+                    <om:Property Name="Initializes" Value="False" />
+                    <om:Property Name="Ref" Value="1720cea0-0d03-4669-b929-637e22dadef1" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="StatementRef_1" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="StatementRef" OID="82d255d0-ae94-4634-b6ed-e866d404974c" ParentLink="CorrelationDeclaration_StatementRef" LowerBound="82.83" HigherBound="82.94">
+                    <om:Property Name="Initializes" Value="False" />
+                    <om:Property Name="Ref" Value="ed9db303-a73f-48ab-9430-0b5d1cd48cc7" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="StatementRef_3" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="CorrelationType" OID="37ba20e0-892a-4989-8297-23d3de8bc459" ParentLink="Module_CorrelationType" LowerBound="50.1" HigherBound="54.1">
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="CorrelationType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="PropertyRef" OID="958220b3-1d8f-4576-9d5c-dec85bd566df" ParentLink="CorrelationType_PropertyRef" LowerBound="52.9" HigherBound="52.69">
+                <om:Property Name="Ref" Value="Be.Stateless.BizTalk.Schemas.BizTalkFactory.CorrelationToken" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="PropertyRef_1" />
+                <om:Property Name="Signal" Value="False" />
+            </om:Element>
+        </om:Element>
+    </om:Element>
+</om:MetaModel>
+#endif // __DESIGNER_DATA
+[Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+module Be.Stateless.BizTalk.Orchestrations.Dummy
+{
+    internal messagetype OpaqueMessageType
+    {
+        body System.Xml.XmlDocument Body;
+    };
+    internal porttype ReceivePortType
+    {
+        oneway ReceiveOperation
+        {
+            OpaqueMessageType
+        };
+    };
+    internal porttype SendPortType
+    {
+        oneway SendOperation
+        {
+            OpaqueMessageType
+        };
+    };
+    internal porttype SolicitResponsePortType
+    {
+        requestresponse SolicitResponseOperation
+        {
+            OpaqueMessageType, OpaqueMessageType
+        };
+    };
+    internal porttype RequestResponsePortType
+    {
+        requestresponse RequestResponseOperation
+        {
+            OpaqueMessageType, OpaqueMessageType
+        };
+    };
+    internal porttype DirectSendPortType
+    {
+        oneway DirectSendOperation
+        {
+            OpaqueMessageType
+        };
+    };
+    internal porttype DirectReceivePortType
+    {
+        oneway DirectReceiveOperation
+        {
+            OpaqueMessageType
+        };
+    };
+    internal correlationtype CorrelationType
+    {
+        Be.Stateless.BizTalk.Schemas.BizTalkFactory.CorrelationToken
+    };
+    [Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+    public service Process
+    {
+        [Microsoft.XLANGs.BaseTypes.DirectBinding()]
+        port implements DirectReceivePortType DirectReceivePort;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses SolicitResponsePortType SolicitResponsePort;
+        [Microsoft.XLANGs.BaseTypes.DirectBinding()]
+        port uses DirectSendPortType DirectSendPort;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses SendPortType SendPort;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port implements ReceivePortType ReceivePort;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port implements RequestResponsePortType RequestResponsePort;
+        correlation CorrelationType Correlation;
+        message OpaqueMessageType OpaqueMessage;
+        body ()
+        {
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("5a39c599-bf3c-4965-8785-efab934a67c8")]
+            activate ((Be.Stateless.BizTalk.Schemas.BizTalkFactory.SenderName == "BizTalkFactory.Sender"))receive (DirectReceivePort.DirectReceiveOperation, OpaqueMessage);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("4a07c854-65c3-4d8b-b710-95776160af2a")]
+            send (SendPort.SendOperation, OpaqueMessage, initialize Correlation);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("1720cea0-0d03-4669-b929-637e22dadef1")]
+            receive (ReceivePort.ReceiveOperation, OpaqueMessage, Correlation);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("42e7ce8f-01e3-4ed1-915b-ed877ef7f54e")]
+            send (DirectSendPort.DirectSendOperation, OpaqueMessage);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("ed9db303-a73f-48ab-9430-0b5d1cd48cc7")]
+            receive (RequestResponsePort.RequestResponseOperation, OpaqueMessage, Correlation);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("dd632474-9c65-4086-a019-8e48575fb200")]
+            send (SolicitResponsePort.SolicitResponseOperation, OpaqueMessage);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("8e6effde-851b-4f18-8583-d63a969c216e")]
+            receive (SolicitResponsePort.SolicitResponseOperation, OpaqueMessage);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("e371c138-a81f-4265-ae87-74c3346ab3d7")]
+            send (RequestResponsePort.RequestResponseOperation, OpaqueMessage);
+        }
+    }
+}
+

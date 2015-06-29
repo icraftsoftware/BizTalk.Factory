@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:services.stateless.be:unit:calculator" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" elementFormDefault="qualified" targetNamespace="urn:services.stateless.be:unit:calculator" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="CalculatorRequest">
+    <xs:annotation>
+      <xs:appinfo>
+        <b:recordInfo rootTypeName="Request" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Arguments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Term" type="xs:int" />
+              <xs:element name="Term" type="xs:int" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CalculatorResponse">
+    <xs:annotation>
+      <xs:appinfo>
+        <b:recordInfo rootTypeName="Response" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Result" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- the following element is there to experience with various and alternate ways of declaring XML schema elements and how they behave through IXmlSchemaProvider.ProvideSchema() -->
+  <xs:element name="LaxArguments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Term" type="xs:int" />
+        <xs:element name="Term" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

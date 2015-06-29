@@ -1,0 +1,392 @@
+﻿#region Copyright & License
+
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#endregion
+
+using System;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Orchestrations.Dummy;
+using Be.Stateless.BizTalk.Pipelines;
+using Microsoft.BizTalk.Deployment.Binding;
+using Microsoft.BizTalk.ExplorerOM;
+using Moq;
+using NUnit.Framework;
+
+namespace Be.Stateless.BizTalk.Dsl.Binding
+{
+	/*
+	 * TODO https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx
+	 * TODO https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.serviceportref.aspx
+	 * 
+	 * TODO Modifier in <Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
+	 * TODO BindingOption in <Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
+	 * TODO Type in <Host Name="BiMI_PxHost" Type="1" Trusted="false" />
+	 * 
+	 * TODO Support multiple assemblies with orchestrations, i.e. multiple ModuleRef
+	 * 
+	 * TODO ISupportEnvironmentSensitivity should be a ModuleRef level and not OrchestrationBindingBase one
+	 * 
+	<ModuleRef Name="Net.Ores.Bimi.AT.Orchestrations" Version="1.2.0.0" Culture="neutral" PublicKeyToken="e08b1081243611df" FullName="Net.Ores.Bimi.AT.Orchestrations, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e08b1081243611df">
+		<Services>
+			<Service Name="Net.Ores.Bimi.AT.Orchestrations.RequestEAN.Process" State="Unenlisted" TrackingOption="None">
+				<Ports>
+					<Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
+						<SendPortRef xsi:nil="true" />
+						<DistributionListRef xsi:nil="true" />
+						<ReceivePortRef Name="AT.RP1.Uniwall" />
+					</Port>
+					<Port Name="SendNewEANRequestPort" Modifier="1" BindingOption="1">
+						<!-- #if GetProperty("TargetEnvironment") == "DEV" || GetProperty("TargetEnvironment") == "BLD" -->
+						<SendPortRef Name="AT.SP1.Indexis.BusinessMasterData.FILE" />
+						<!-- #endif -->
+						<!-- #if GetProperty("TargetEnvironment") == "ACC" || GetProperty("TargetEnvironment") == "PRD" -->
+						<SendPortRef Name="AT.SP1.Indexis.BusinessMasterData.MQSC" />
+						<!-- #endif -->
+						<DistributionListRef xsi:nil="true" />
+						<ReceivePortRef xsi:nil="true" />
+					</Port>
+				</Ports>
+				<Roles />
+				<Host Name="BiMI_PxHost" Type="1" Trusted="false" />
+			</Service>
+ 	 */
+
+	[TestFixture]
+	public class ApplicationBindingVisitorFixture
+	{
+		[Test]
+		public void CreateBindingInfo()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(new TestApplication());
+			var binding = visitor.BindingInfo;
+
+			Assert.That(binding.BindingParameters.BindingActions, Is.EqualTo(BindingParameters.BindingActionTypes.Bind));
+			Assert.That(binding.BindingParameters.BindingItems, Is.EqualTo(BindingParameters.BindingItemTypes.All));
+			Assert.That(binding.BindingParameters.BindingScope, Is.EqualTo(BindingParameters.BindingScopeType.Application));
+			Assert.That(binding.BindingParameters.BindingSetState, Is.EqualTo(BindingParameters.BindingSetStateType.UseServiceState));
+			Assert.That(binding.BindingParameters.BindingsSourceVersion.ToString(), Is.EqualTo(new BindingInfo().Version));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless Test Application"));
+			Assert.That(binding.ModuleRefCollection.Count, Is.EqualTo(1));
+			Assert.That(binding.ModuleRefCollection[0].Name, Is.EqualTo("[Application:TestApplication]"));
+		}
+
+		[Test]
+		public void CreateModuleRef()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			// initialize BindingInfo
+			visitor.VisitApplicationBinding(new TestApplication());
+
+			var binding = visitor.CreateModuleRef(new ProcessOrchestrationBinding());
+
+			Assert.That(binding.FullName, Is.EqualTo(typeof(Process).Assembly.FullName));
+		}
+
+		[Test]
+		public void CreateReceiveLocationOneWay()
+		{
+			var dsl = new TestApplication.OneWayReceiveLocation();
+
+			var visitor = ApplicationBindingVisitor.Create();
+			var binding = visitor.CreateReceiveLocation(dsl);
+
+			Assert.That(binding.Name, Is.EqualTo("OneWayReceiveLocation"));
+			Assert.That(binding.Address, Is.EqualTo(@"c:\files\drops\*.xml"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless One-Way Test Receive Location"));
+			Assert.That(binding.Enable, Is.False);
+			Assert.That(binding.EndDate, Is.EqualTo(dsl.Transport.Schedule.StopDate));
+			Assert.That(binding.EndDateEnabled, Is.True);
+			Assert.That(binding.FromTime, Is.EqualTo((DateTime) dsl.Transport.Schedule.ServiceWindow.StartTime));
+			Assert.That(binding.ReceiveHandler.Name, Is.EqualTo("Receive Host Name"));
+			Assert.That(binding.ReceivePipeline.Name, Is.EqualTo(typeof(PassThruReceive).FullName));
+			Assert.That(binding.ReceivePipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruReceive).AssemblyQualifiedName));
+			Assert.That(binding.ReceivePipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.ReceiveHandler.TransportType.Name, Is.EqualTo("Test Dummy"));
+			Assert.That(binding.ReceivePipeline.Type, Is.EqualTo(PipelineRef.ReceivePipelineRef().Type));
+			Assert.That(binding.ReceivePipelineData, Is.Not.Null.And.Not.Empty);
+			Assert.That(binding.SendPipeline, Is.Null);
+			Assert.That(binding.SendPipelineData, Is.Null);
+			Assert.That(binding.ServiceWindowEnabled, Is.True);
+			Assert.That(binding.StartDate, Is.EqualTo(dsl.Transport.Schedule.StartDate));
+			Assert.That(binding.StartDateEnabled, Is.True);
+			Assert.That(binding.ToTime, Is.EqualTo((DateTime) dsl.Transport.Schedule.ServiceWindow.StopTime));
+		}
+
+		[Test]
+		public void CreateReceiveLocationTwoWay()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			var binding = visitor.CreateReceiveLocation(new TestApplication.TwoWayReceiveLocation());
+
+			Assert.That(binding.Name, Is.EqualTo("TwoWayReceiveLocation"));
+			Assert.That(binding.Address, Is.EqualTo(@"c:\files\drops\*.xml"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless Two-Way Test Receive Location"));
+			Assert.That(binding.Enable, Is.False);
+			Assert.That(binding.EndDate, Is.EqualTo(Schedule.None.StopDate));
+			Assert.That(binding.EndDateEnabled, Is.False);
+			Assert.That(binding.FromTime, Is.EqualTo((DateTime) ServiceWindow.None.StartTime));
+			Assert.That(binding.ReceiveHandler.Name, Is.EqualTo("Receive Host Name"));
+			Assert.That(binding.ReceivePipeline.Name, Is.EqualTo(typeof(PassThruReceive).FullName));
+			Assert.That(binding.ReceivePipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruReceive).AssemblyQualifiedName));
+			Assert.That(binding.ReceivePipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.ReceiveHandler.TransportType.Name, Is.EqualTo("Test Dummy"));
+			Assert.That(binding.ReceivePipeline.Type, Is.EqualTo(PipelineRef.ReceivePipelineRef().Type));
+			Assert.That(binding.ReceivePipelineData, Is.Empty);
+			Assert.That(binding.SendPipeline.Name, Is.EqualTo(typeof(PassThruTransmit).FullName));
+			Assert.That(binding.SendPipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruTransmit).AssemblyQualifiedName));
+			Assert.That(binding.SendPipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.SendPipeline.Type, Is.EqualTo(PipelineRef.TransmitPipelineRef().Type));
+			Assert.That(binding.SendPipelineData, Is.Not.Null.And.Not.Empty);
+			Assert.That(binding.ServiceWindowEnabled, Is.False);
+			Assert.That(binding.StartDate, Is.EqualTo(Schedule.None.StartDate));
+			Assert.That(binding.StartDateEnabled, Is.False);
+			Assert.That(binding.ToTime, Is.EqualTo((DateTime) ServiceWindow.None.StopTime));
+		}
+
+		[Test]
+		public void CreateReceivePortOneWay()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			// initialize ApplicationBindingVisitor.ApplicationName
+			visitor.VisitApplicationBinding(new TestApplication());
+			var binding = visitor.CreateReceivePort(new TestApplication.OneWayReceivePort());
+
+			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless One-Way Test Receive Port"));
+			Assert.That(binding.IsTwoWay, Is.False);
+			Assert.That(binding.Name, Is.EqualTo("OneWayReceivePort"));
+			Assert.That(binding.ReceiveLocations.Count, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CreateReceivePortTwoWay()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			// initialize ApplicationBindingVisitor.ApplicationName
+			visitor.VisitApplicationBinding(new TestApplication());
+			var binding = visitor.CreateReceivePort(new TestApplication.TwoWayReceivePort());
+
+			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless Two-Way Test Receive Port"));
+			Assert.That(binding.IsTwoWay, Is.True);
+			Assert.That(binding.Name, Is.EqualTo("TwoWayReceivePort"));
+			Assert.That(binding.ReceiveLocations.Count, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void CreateSendPortOneWay()
+		{
+			var dsl = new TestApplication.OneWaySendPort();
+
+			var visitor = ApplicationBindingVisitor.Create();
+			// initialize ApplicationBindingVisitor.ApplicationName
+			visitor.VisitApplicationBinding(new TestApplication());
+			var binding = visitor.CreateSendPort(dsl);
+
+			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless One-Way Test Send Port"));
+			Assert.That(binding.Filter, Is.Not.Null.And.Not.Empty);
+			Assert.That(binding.IsDynamic, Is.False);
+			Assert.That(binding.IsStatic, Is.True);
+			Assert.That(binding.IsTwoWay, Is.False);
+			Assert.That(binding.Name, Is.EqualTo("OneWaySendPort"));
+			Assert.That(binding.OrderedDelivery, Is.True);
+			Assert.That(binding.PrimaryTransport.Address, Is.EqualTo(@"c:\files\drops\*.xml"));
+			Assert.That(binding.PrimaryTransport.FromTime, Is.EqualTo((DateTime) dsl.Transport.ServiceWindow.StartTime));
+			Assert.That(binding.PrimaryTransport.OrderedDelivery, Is.True);
+			Assert.That(binding.PrimaryTransport.Primary, Is.True);
+			Assert.That(binding.PrimaryTransport.RetryCount, Is.EqualTo(dsl.Transport.RetryPolicy.Count));
+			Assert.That(binding.PrimaryTransport.RetryInterval, Is.EqualTo(dsl.Transport.RetryPolicy.Interval.TotalMinutes));
+			Assert.That(binding.PrimaryTransport.SendHandler.Name, Is.EqualTo("Send Host Name"));
+			Assert.That(binding.PrimaryTransport.SendHandler.TransportType.Name, Is.EqualTo("Test Dummy"));
+			Assert.That(binding.PrimaryTransport.ServiceWindowEnabled, Is.True);
+			Assert.That(binding.PrimaryTransport.ToTime, Is.EqualTo((DateTime) dsl.Transport.ServiceWindow.StopTime));
+			Assert.That(binding.Priority, Is.EqualTo(1));
+			Assert.That(binding.ReceivePipeline, Is.Null);
+			Assert.That(binding.ReceivePipelineData, Is.Null);
+			Assert.That(binding.SecondaryTransport, Is.Null);
+			Assert.That(binding.SendPipelineData, Is.Not.Null.And.Not.Empty);
+			Assert.That(binding.StopSendingOnFailure, Is.True);
+			Assert.That(binding.TransmitPipeline.Name, Is.EqualTo(typeof(PassThruTransmit).FullName));
+			Assert.That(binding.TransmitPipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruTransmit).AssemblyQualifiedName));
+			Assert.That(binding.TransmitPipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.TransmitPipeline.Type, Is.EqualTo(PipelineRef.TransmitPipelineRef().Type));
+		}
+
+		[Test]
+		public void CreateSendPortTwoWay()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+			// initialize ApplicationBindingVisitor.ApplicationName
+			visitor.VisitApplicationBinding(new TestApplication());
+			var binding = visitor.CreateSendPort(new TestApplication.TwoWaySendPort());
+
+			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
+			Assert.That(binding.Description, Is.EqualTo("Some Useless Two-Way Test Send Port"));
+			Assert.That(binding.Filter, Is.Null);
+			Assert.That(binding.IsDynamic, Is.False);
+			Assert.That(binding.IsStatic, Is.True);
+			Assert.That(binding.IsTwoWay, Is.True);
+			Assert.That(binding.Name, Is.EqualTo("TwoWaySendPort"));
+			Assert.That(binding.PrimaryTransport.FromTime, Is.EqualTo((DateTime) ServiceWindow.None.StartTime));
+			Assert.That(binding.PrimaryTransport.Primary, Is.True);
+			Assert.That(binding.PrimaryTransport.RetryCount, Is.EqualTo(RetryPolicy.None.Count));
+			Assert.That(binding.PrimaryTransport.RetryInterval, Is.EqualTo(RetryPolicy.None.Interval.TotalMinutes));
+			Assert.That(binding.PrimaryTransport.SendHandler.Name, Is.EqualTo("Send Host Name"));
+			Assert.That(binding.PrimaryTransport.SendHandler.TransportType.Name, Is.EqualTo("Test Dummy"));
+			Assert.That(binding.PrimaryTransport.ServiceWindowEnabled, Is.False);
+			Assert.That(binding.PrimaryTransport.ToTime, Is.EqualTo((DateTime) ServiceWindow.None.StopTime));
+			Assert.That(binding.ReceivePipeline.Name, Is.EqualTo(typeof(PassThruReceive).FullName));
+			Assert.That(binding.ReceivePipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruReceive).AssemblyQualifiedName));
+			Assert.That(binding.ReceivePipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.ReceivePipeline.Type, Is.EqualTo(PipelineRef.ReceivePipelineRef().Type));
+			Assert.That(binding.ReceivePipelineData, Is.Not.Null.And.Not.Empty);
+			Assert.That(binding.SecondaryTransport, Is.Null);
+			Assert.That(binding.SendPipelineData, Is.Empty);
+			Assert.That(binding.TransmitPipeline.Name, Is.EqualTo(typeof(PassThruTransmit).FullName));
+			Assert.That(binding.TransmitPipeline.FullyQualifiedName, Is.EqualTo(typeof(PassThruTransmit).AssemblyQualifiedName));
+			Assert.That(binding.TransmitPipeline.TrackingOption, Is.EqualTo(PipelineTrackingTypes.None));
+			Assert.That(binding.TransmitPipeline.Type, Is.EqualTo(PipelineRef.TransmitPipelineRef().Type));
+		}
+
+		[Test]
+		public void CreateServiceRef()
+		{
+			var visitor = ApplicationBindingVisitor.Create();
+
+			var orchestrationBinding = new ProcessOrchestrationBinding {
+				Description = "Some Useless Orchestration.",
+				Host = "Processing Host Name",
+				ReceivePort = new TestApplication.OneWayReceivePort(),
+				RequestResponsePort = new TestApplication.TwoWayReceivePort(),
+				SendPort = new TestApplication.OneWaySendPort(),
+				SolicitResponsePort = new TestApplication.TwoWaySendPort()
+			};
+			var binding = visitor.CreateServiceRef(orchestrationBinding);
+
+			Assert.That(binding.Description, Is.EqualTo("Some Useless Orchestration."));
+			Assert.That(binding.Host.Name, Is.EqualTo("Processing Host Name"));
+			Assert.That(binding.Host.Trusted, Is.False);
+			Assert.That(binding.Host.Type, Is.EqualTo((int) HostType.Invalid));
+			Assert.That(binding.Name, Is.EqualTo(typeof(Process).FullName));
+			Assert.That(binding.State, Is.EqualTo(ServiceRef.ServiceRefState.Enlisted));
+			Assert.That(binding.TrackingOption, Is.EqualTo(OrchestrationTrackingTypes.None));
+			Assert.That(binding.Ports.Count, Is.EqualTo(4));
+
+			Assert.That(binding.Ports[0].Modifier, Is.EqualTo(((int) PortModifier.Import)));
+			Assert.That(binding.Ports[0].Name, Is.EqualTo("SendPort"));
+			Assert.That(binding.Ports[0].ReceivePortRef, Is.Null);
+			Assert.That(binding.Ports[0].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.OneWaySendPort()).Name));
+			Assert.That(binding.Ports[1].Modifier, Is.EqualTo(((int) PortModifier.Export)));
+
+			Assert.That(binding.Ports[1].Name, Is.EqualTo("ReceivePort"));
+			Assert.That(binding.Ports[1].ReceivePortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.OneWayReceivePort()).Name));
+			Assert.That(binding.Ports[1].SendPortRef, Is.Null);
+
+			Assert.That(binding.Ports[2].Modifier, Is.EqualTo(((int) PortModifier.Export)));
+			Assert.That(binding.Ports[2].Name, Is.EqualTo("RequestResponsePort"));
+			Assert.That(binding.Ports[2].ReceivePortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWayReceivePort()).Name));
+			Assert.That(binding.Ports[2].SendPortRef, Is.Null);
+
+			Assert.That(binding.Ports[3].Modifier, Is.EqualTo(((int) PortModifier.Import)));
+			Assert.That(binding.Ports[3].Name, Is.EqualTo("SolicitResponsePort"));
+			Assert.That(binding.Ports[3].ReceivePortRef, Is.Null);
+			Assert.That(binding.Ports[3].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWaySendPort()).Name));
+		}
+
+		[Test]
+		public void VisitApplicationBindingAppliesEnvironmentOverrides()
+		{
+			var applicationBindingMock = new Mock<IApplicationBinding<object>>();
+			var environmentSensitiveApplicationBindingMock = applicationBindingMock.As<ISupportEnvironmentOverride>();
+			applicationBindingMock.As<ISupportNamingConvention>();
+			applicationBindingMock.As<ISupportValidation>();
+
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(applicationBindingMock.Object);
+
+			environmentSensitiveApplicationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+		}
+
+		[Test]
+		public void VisitOrchestrationAppliesEnvironmentOverrides()
+		{
+			var applicationBinding = new TestApplication();
+			var orchestrationBindingMock = new Mock<IOrchestrationBinding> { CallBase = true };
+			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentSensitivity>();
+			orchestrationBindingMock.Setup(ob => ob.Type).Returns(typeof(Process));
+			environmentSensitiveOrchestrationBindingMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(applicationBinding);
+			visitor.VisitOrchestration(orchestrationBindingMock.Object);
+
+			environmentSensitiveOrchestrationBindingMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
+			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+		}
+
+		[Test]
+		public void VisitReceiveLocationAppliesEnvironmentOverrides()
+		{
+			var applicationBinding = new TestApplication();
+			var receivePort = new TestApplication.OneWayReceivePort();
+			var receiveLocationMock = new Mock<TestApplication.OneWayReceiveLocation> { CallBase = true };
+			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentSensitivity>();
+
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(applicationBinding);
+			visitor.VisitReceivePort(receivePort);
+			visitor.VisitReceiveLocation(receiveLocationMock.Object);
+
+			environmentSensitiveReceiveLocationMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
+			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+		}
+
+		[Test]
+		public void VisitReceivePortAppliesEnvironmentOverrides()
+		{
+			var applicationBinding = new TestApplication();
+			var receivePortMock = new Mock<IReceivePort<object>>();
+			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentSensitivity>();
+			receivePortMock.As<ISupportNamingConvention>();
+			receivePortMock.As<ISupportValidation>();
+			environmentSensitiveReceivePortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(applicationBinding);
+			visitor.VisitReceivePort(receivePortMock.Object);
+
+			environmentSensitiveReceivePortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
+			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+		}
+
+		[Test]
+		public void VisitSendPortAppliesEnvironmentOverrides()
+		{
+			var applicationBinding = new TestApplication();
+			var sendPortMock = new Mock<TestApplication.OneWaySendPort> { CallBase = true };
+			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentSensitivity>();
+
+			var visitor = ApplicationBindingVisitor.Create();
+			visitor.VisitApplicationBinding(applicationBinding);
+			visitor.VisitSendPort(sendPortMock.Object);
+
+			environmentSensitiveSendPortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
+			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+		}
+	}
+}

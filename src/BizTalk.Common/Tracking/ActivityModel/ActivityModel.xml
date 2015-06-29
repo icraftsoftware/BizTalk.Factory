@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+// Copyright © 2012 François Chabot, Yves Dierick
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+-->
+<BAMDefinition xmlns="http://schemas.microsoft.com/BizTalkServer/2004/10/BAM">
+  <Activity Name="Process" ID="ID03202A1770FE42D397FDE49740598DAD">
+    <Checkpoint Name="BeginTime" ID="IDE74CA98EA2C14D408F1965CAFCD5F86F" DataType="DATETIME" />
+    <Checkpoint Name="EndTime" ID="ID15C79225E12E4D328E2BD52225FC2F65" DataType="DATETIME" />
+    <Checkpoint Name="InterchangeID" ID="ID94EF015940C34E148A688B299F23AA95" DataType="NVARCHAR" DataLength="32" />
+    <Checkpoint Name="ProcessName" ID="ID01349A12014F4530B7F98DB3453B2C18" DataType="NVARCHAR" DataLength="128" />
+    <Checkpoint Name="Status" ID="ID6408DB3765E247ABB472F06C4CA3AF6B" DataType="NVARCHAR" DataLength="9" />
+    <Checkpoint Name="Value1" ID="IDFD5940FE6D9342D1B049B09D33926A56" DataType="NVARCHAR" DataLength="60" />
+    <Checkpoint Name="Value2" ID="ID385D9D03EFAD431DA4741881C5B10E2B" DataType="NVARCHAR" DataLength="60" />
+    <Checkpoint Name="Value3" ID="IDB514460881F445788DAE3D0B87247139" DataType="NVARCHAR" DataLength="60" />
+  </Activity>
+  <Activity Name="ProcessingStep" ID="IDCDD4CFA536344B8CB42BA39778A88357">
+    <Checkpoint Name="BeginTime" ID="ID752CE9A9E7294782A934A33FBE8E3691" DataType="DATETIME" />
+    <Checkpoint Name="EndTime" ID="IDD39AD0EE955248A98B60F9C9602376DB" DataType="DATETIME" />
+    <Checkpoint Name="ErrorDescription" ID="ID39D333E1365A4AA9B50BB8B92C7A7928" DataType="NVARCHAR" DataLength="2048" />
+    <Checkpoint Name="MachineName" ID="IDEA47D6F93D254DFD96D6E4FB5FAD9BB0" DataType="NVARCHAR" DataLength="20" />
+    <Checkpoint Name="ProcessActivityID" ID="IDB9059AF38F5A49458D7A51036C5C4B10" DataType="NVARCHAR" DataLength="32" />
+    <Checkpoint Name="Status" ID="ID05F94EE8EAC64C0F8086622C5E9EE28B" DataType="NVARCHAR" DataLength="9" />
+    <Checkpoint Name="StepName" ID="IDF6477FC307934F9992A5C6487834C74B" DataType="NVARCHAR" DataLength="128" />
+  </Activity>
+  <Activity Name="ProcessMessagingStep" ID="ID5B1BB8743A424D659A2E134A08E2F676">
+    <Checkpoint Name="MessagingStepActivityID" ID="IDC7B4AC42F9BF4B2A8810D467F4657E81" DataType="NVARCHAR" DataLength="32" />
+    <Checkpoint Name="MessagingStepStatus" ID="ID9B98FB162AEE427FBAC6182565ECF38D" DataType="NVARCHAR" DataLength="13" />
+    <Checkpoint Name="ProcessActivityID" ID="ID55F431F2D9334B85B210780272CEDE5D" DataType="NVARCHAR" DataLength="32" />
+  </Activity>
+  <Activity Name="MessagingStep" ID="ID30E9F831C4E34106B29F33B52CE3B20E">
+    <Checkpoint Name="ErrorCode" ID="IDF68B58B4E00C45A28486B9BA62FBD4FB" DataType="NVARCHAR" DataLength="20" />
+    <Checkpoint Name="ErrorDescription" ID="ID7D19D3F1BB8A4032B353DC83F605C3D5" DataType="NVARCHAR" DataLength="2048" />
+    <Checkpoint Name="InterchangeID" ID="ID0B84DEE830E247FB923591BA0C05BBE8" DataType="NVARCHAR" DataLength="32" />
+    <Checkpoint Name="MachineName" ID="ID4C65FCB0BCE74AAE98E22FC5023FD398" DataType="NVARCHAR" DataLength="20" />
+    <Checkpoint Name="MessageID" ID="ID7D831182D9D849C9BCF735A4EB090E7D" DataType="NVARCHAR" DataLength="32" />
+    <Checkpoint Name="MessageSize" ID="ID68FDE00B51AA476884FD91F7C4CB61DA" DataType="INT" />
+    <Checkpoint Name="MessageType" ID="IDF8661013E0E74F8DB0C2A5C992697C28" DataType="NVARCHAR" DataLength="256" />
+    <Checkpoint Name="PortName" ID="IDD97FC9B79B3D43F1824DD09E19111314" DataType="NVARCHAR" DataLength="128" />
+    <Checkpoint Name="RetryCount" ID="ID3A4B0A04831A47238996F2D118D01F39" DataType="INT" />
+    <Checkpoint Name="Status" ID="ID8A5A56296FA1455AB7456BCB639DB5D7" DataType="NVARCHAR" DataLength="13" />
+    <Checkpoint Name="Time" ID="IDC0046045E6EC41F698F50EC237CD4549" DataType="DATETIME" />
+    <Checkpoint Name="TransportLocation" ID="ID42A8F2925DDA4C00A8A06FE49ED9D149" DataType="NVARCHAR" DataLength="256" />
+    <Checkpoint Name="TransportType" ID="ID37CFD6835C21444FB08236373B36F5A8" DataType="NVARCHAR" DataLength="30" />
+    <Checkpoint Name="Value1" ID="ID84243A14360B4896B394693EE2204513" DataType="NVARCHAR" DataLength="60" />
+    <Checkpoint Name="Value2" ID="ID8F29C019BDBB4DE492E533F01EC3A8CC" DataType="NVARCHAR" DataLength="60" />
+    <Checkpoint Name="Value3" ID="IDB15C174316B34D5AB63D40317628D50A" DataType="NVARCHAR" DataLength="60" />
+  </Activity>
+</BAMDefinition>

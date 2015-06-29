@@ -1,0 +1,475 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D0E24B7A-4E30-4D5E-9F38-64B86FE546E6}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{BBC37FFE-556C-420B-9E22-5EA324D405A8}"
+	ProjectSection(SolutionItems) = preProject
+		Deployment\BizTalk.Factory.Deployment.btdfproj = Deployment\BizTalk.Factory.Deployment.btdfproj
+		Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets = Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets
+		Deployment\BizTalk.Factory.Deployment.targets = Deployment\BizTalk.Factory.Deployment.targets
+		Deployment\BizTalk.Factory.ItemGroups.Common.proj = Deployment\BizTalk.Factory.ItemGroups.Common.proj
+		Deployment\BizTalk.Factory.ItemGroups.proj = Deployment\BizTalk.Factory.ItemGroups.proj
+		Deployment\BizTalk.Factory.PortBindingsMaster.xml = Deployment\BizTalk.Factory.PortBindingsMaster.xml
+		Deployment\BizTalk.Factory.tasks = Deployment\BizTalk.Factory.tasks
+		BTSNTSvc.log4net.template.config = BTSNTSvc.log4net.template.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{63B38B7E-7227-4A0B-A473-186196E68E33}"
+	ProjectSection(SolutionItems) = preProject
+		..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryMgmtDb.sql = ..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryMgmtDb.sql
+		..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryMgmtDbObjects.sql = ..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryMgmtDbObjects.sql
+		..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryTransientStateDb.sql = ..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryTransientStateDb.sql
+		..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryTransientStateDbObjects.sql = ..\data\scripts\BizTalk.Factory.CreateBizTalkFactoryTransientStateDbObjects.sql
+		..\data\scripts\BizTalk.Factory.DropBizTalkFactoryMgmtDb.sql = ..\data\scripts\BizTalk.Factory.DropBizTalkFactoryMgmtDb.sql
+		..\data\scripts\BizTalk.Factory.DropBizTalkFactoryTransientStateDb.sql = ..\data\scripts\BizTalk.Factory.DropBizTalkFactoryTransientStateDb.sql
+		..\data\scripts\CreateBAMPrimaryImportObjects.sql = ..\data\scripts\CreateBAMPrimaryImportObjects.sql
+		..\data\scripts\CreateBamTrackingActivitiesMaintenanceJob.sql = ..\data\scripts\CreateBamTrackingActivitiesMaintenanceJob.sql
+		..\data\scripts\CreateBizTalkServerOperator.sql = ..\data\scripts\CreateBizTalkServerOperator.sql
+		..\data\scripts\DropBAMPrimaryImportObjects.sql = ..\data\scripts\DropBAMPrimaryImportObjects.sql
+		..\data\scripts\DropBamTrackingActivitiesMaintenanceJob.sql = ..\data\scripts\DropBamTrackingActivitiesMaintenanceJob.sql
+		..\data\scripts\DropBizTalkServerOperator.sql = ..\data\scripts\DropBizTalkServerOperator.sql
+		..\data\scripts\TurnOffGlobalTracking.sql = ..\data\scripts\TurnOffGlobalTracking.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EnvironmentSettings", "EnvironmentSettings", "{3D9EB7EA-9319-48CA-BFF1-CA68FF6FFE8A}"
+	ProjectSection(SolutionItems) = preProject
+		Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml = Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml
+		Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml = Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".imports", ".imports", "{6C89C8ED-26CF-480E-9FBF-5724F039681D}"
+	ProjectSection(SolutionItems) = preProject
+		.imports\Be.Stateless.BizTalk.targets = .imports\Be.Stateless.BizTalk.targets
+		.imports\Be.Stateless.Dsl.targets = .imports\Be.Stateless.Dsl.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging", "Logging\Be.Stateless.Logging.csproj", "{8F890272-22E8-4668-9F0E-C12DD48474D2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D73E3CF5-25E6-4059-A50F-268287F9D148} = {D73E3CF5-25E6-4059-A50F-268287F9D148}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging.Tests", "Logging.Tests\Be.Stateless.Logging.Tests.csproj", "{419F432B-325C-4D50-A0F3-1D1B2AF40223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Common", "Common\Be.Stateless.Common.csproj", "{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Common.Tests", "Common.Tests\Be.Stateless.Common.Tests.csproj", "{C2F31534-053E-49B9-BA13-B4285E405592}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Common", "BizTalk.Common\Be.Stateless.BizTalk.Common.csproj", "{68E5CFCC-205D-4526-923C-09F5F46058E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Schemas", "BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj", "{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Common.Tests", "BizTalk.Common.Tests\Be.Stateless.BizTalk.Common.Tests.csproj", "{7A19A988-3B56-495A-A2D4-047268479F7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Unit", "BizTalk.Unit\Be.Stateless.BizTalk.Unit.csproj", "{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Unit.Tests", "BizTalk.Unit.Tests\Be.Stateless.BizTalk.Unit.Tests.csproj", "{70C6FFB9-B567-4C44-BD58-236D0593B743}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Policies", "BizTalk.Policies\Be.Stateless.BizTalk.Policies.csproj", "{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Policies.Tests", "BizTalk.Policies.Tests\Be.Stateless.BizTalk.Policies.Tests.csproj", "{07665FE2-0C8D-49CC-B40A-4A7CE1665726}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipeline.Components", "BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj", "{6791C30D-4390-46CA-9CF4-BEF953817756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipeline.Components.Tests", "BizTalk.Pipeline.Components.Tests\Be.Stateless.BizTalk.Pipeline.Components.Tests.csproj", "{C3357548-BA1B-4A90-BD46-2551A8BFF281}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl", "BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj", "{46E0347E-7978-4F76-86D7-7D31201D856D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Tests", "BizTalk.Dsl.Tests\Be.Stateless.BizTalk.Dsl.Tests.csproj", "{DF6F0133-E4A1-4518-BDD0-192D8C399C02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Generated.Items", "BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj", "{D73E3CF5-25E6-4059-A50F-268287F9D148}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipelines", "BizTalk.Pipelines\Be.Stateless.BizTalk.Pipelines.btproj", "{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{85926527-0807-4521-ACDD-74554DCDEC85} = {85926527-0807-4521-ACDD-74554DCDEC85}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Schemas.Tests", "BizTalk.Schemas.Tests\Be.Stateless.BizTalk.Schemas.Tests.csproj", "{AD389997-300E-4C75-B742-B0C41BAB495B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Monitoring", "BizTalk.Monitoring\Be.Stateless.BizTalk.Monitoring.csproj", "{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Transforms", "BizTalk.Transforms\Be.Stateless.BizTalk.Transforms.btproj", "{D0F8E1D6-2FE8-415C-9981-D08931EDC908}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Transforms.Tests", "BizTalk.Transforms.Tests\Be.Stateless.BizTalk.Transforms.Tests.csproj", "{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.ServiceModel", "ServiceModel\Be.Stateless.ServiceModel.csproj", "{DB31AA9F-DD05-471C-A214-722D755D3D7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.ServiceModel.Tests", "ServiceModel.Tests\Be.Stateless.ServiceModel.Tests.csproj", "{56F8C3CA-BA31-4AA7-A09B-138659FA2058}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.MSBuild", "BizTalk.Dsl.MSBuild\Be.Stateless.BizTalk.Dsl.MSBuild.csproj", "{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipeline.Definitions", "BizTalk.Pipeline.Definitions\Be.Stateless.BizTalk.Pipeline.Definitions.csproj", "{85926527-0807-4521-ACDD-74554DCDEC85}"
+	ProjectSection(ProjectDependencies) = postProject
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0} = {40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipelines.Tests", "BizTalk.Pipelines.Tests\Be.Stateless.BizTalk.Pipelines.Tests.csproj", "{8989B132-F574-4EA7-A72A-CD4A83E5BE00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.ClaimStore.Agent", "BizTalk.ClaimStore.Agent\Be.Stateless.BizTalk.ClaimStore.Agent.csproj", "{875CB842-EB1E-43FA-9B68-76BA8F64FD86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.ClaimStore.Agent.Tests", "BizTalk.ClaimStore.Agent.Tests\Be.Stateless.BizTalk.ClaimStore.Agent.Tests.csproj", "{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Monitoring.Tests", "BizTalk.Monitoring.Tests\Be.Stateless.BizTalk.Monitoring.Tests.csproj", "{B196BD14-402B-40CA-BDEC-6CD731596523}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Processes.Tests", "BizTalk.Processes.Tests\Be.Stateless.BizTalk.Processes.Tests.csproj", "{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Explorer", "BizTalk.Explorer\Be.Stateless.BizTalk.Explorer.csproj", "{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Extensions", "Extensions\Be.Stateless.Extensions.csproj", "{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Extensions.Tests", "Extensions.Tests\Be.Stateless.Extensions.Tests.csproj", "{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{829B85A2-4DDB-4DE3-BCA2-3F27B3AC550F}"
+	ProjectSection(SolutionItems) = preProject
+		..\utils\Deployment Tools\BizTalk.Factory.IncludeCustomDatabaseInOtherBackupDatabases.sql = ..\utils\Deployment Tools\BizTalk.Factory.IncludeCustomDatabaseInOtherBackupDatabases.sql
+		..\utils\Deployment Tools\BizTalk.Factory.RemoveCustomDatabaseFromOtherBackupDatabases.sql = ..\utils\Deployment Tools\BizTalk.Factory.RemoveCustomDatabaseFromOtherBackupDatabases.sql
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestArtifacts", "BizTalk.TestArtifacts\Be.Stateless.BizTalk.TestArtifacts.btproj", "{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Binding", "BizTalk.Binding\Be.Stateless.BizTalk.Binding.csproj", "{C788BF6D-9229-4578-8E29-87143846A4F9}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 36
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BizTalk.Common.Tests\\Be.Stateless.BizTalk.Common.Tests.csproj
+		SccProjectName1 = BizTalk.Common.Tests
+		SccLocalPath1 = BizTalk.Common.Tests
+		SccProjectUniqueName2 = BizTalk.Common\\Be.Stateless.BizTalk.Common.csproj
+		SccProjectName2 = BizTalk.Common
+		SccLocalPath2 = BizTalk.Common
+		SccProjectUniqueName3 = BizTalk.Schemas\\Be.Stateless.BizTalk.Schemas.btproj
+		SccProjectName3 = BizTalk.Schemas
+		SccLocalPath3 = BizTalk.Schemas
+		SccProjectUniqueName4 = BizTalk.Unit.Tests\\Be.Stateless.BizTalk.Unit.Tests.csproj
+		SccProjectName4 = BizTalk.Unit.Tests
+		SccLocalPath4 = BizTalk.Unit.Tests
+		SccProjectUniqueName5 = BizTalk.Unit\\Be.Stateless.BizTalk.Unit.csproj
+		SccProjectName5 = BizTalk.Unit
+		SccLocalPath5 = BizTalk.Unit
+		SccProjectUniqueName6 = Common.Tests\\Be.Stateless.Common.Tests.csproj
+		SccProjectName6 = Common.Tests
+		SccLocalPath6 = Common.Tests
+		SccProjectUniqueName7 = Common\\Be.Stateless.Common.csproj
+		SccProjectName7 = Common
+		SccLocalPath7 = Common
+		SccProjectUniqueName8 = Logging.Tests\\Be.Stateless.Logging.Tests.csproj
+		SccProjectName8 = Logging.Tests
+		SccLocalPath8 = Logging.Tests
+		SccProjectUniqueName9 = Logging\\Be.Stateless.Logging.csproj
+		SccProjectName9 = Logging
+		SccLocalPath9 = Logging
+		SccProjectUniqueName10 = BizTalk.Policies\\Be.Stateless.BizTalk.Policies.csproj
+		SccProjectName10 = BizTalk.Policies
+		SccLocalPath10 = BizTalk.Policies
+		SccProjectUniqueName11 = BizTalk.Policies.Tests\\Be.Stateless.BizTalk.Policies.Tests.csproj
+		SccProjectName11 = BizTalk.Policies.Tests
+		SccLocalPath11 = BizTalk.Policies.Tests
+		SccProjectUniqueName12 = BizTalk.Dsl\\Be.Stateless.BizTalk.Dsl.csproj
+		SccProjectName12 = BizTalk.Dsl
+		SccLocalPath12 = BizTalk.Dsl
+		SccProjectUniqueName13 = BizTalk.Dsl.Tests\\Be.Stateless.BizTalk.Dsl.Tests.csproj
+		SccProjectName13 = BizTalk.Dsl.Tests
+		SccLocalPath13 = BizTalk.Dsl.Tests
+		SccProjectUniqueName14 = BizTalk.Pipelines\\Be.Stateless.BizTalk.Pipelines.btproj
+		SccProjectName14 = BizTalk.Pipelines
+		SccLocalPath14 = BizTalk.Pipelines
+		SccProjectUniqueName15 = BizTalk.Schemas.Tests\\Be.Stateless.BizTalk.Schemas.Tests.csproj
+		SccProjectName15 = BizTalk.Schemas.Tests
+		SccLocalPath15 = BizTalk.Schemas.Tests
+		SccProjectUniqueName16 = BizTalk.Monitoring\\Be.Stateless.BizTalk.Monitoring.csproj
+		SccProjectName16 = BizTalk.Monitoring
+		SccLocalPath16 = BizTalk.Monitoring
+		SccProjectUniqueName17 = BizTalk.Transforms\\Be.Stateless.BizTalk.Transforms.btproj
+		SccProjectName17 = BizTalk.Transforms
+		SccLocalPath17 = BizTalk.Transforms
+		SccProjectUniqueName18 = BizTalk.Transforms.Tests\\Be.Stateless.BizTalk.Transforms.Tests.csproj
+		SccProjectName18 = BizTalk.Transforms.Tests
+		SccLocalPath18 = BizTalk.Transforms.Tests
+		SccProjectUniqueName19 = ServiceModel\\Be.Stateless.ServiceModel.csproj
+		SccProjectName19 = ServiceModel
+		SccLocalPath19 = ServiceModel
+		SccProjectUniqueName20 = ServiceModel.Tests\\Be.Stateless.ServiceModel.Tests.csproj
+		SccProjectName20 = ServiceModel.Tests
+		SccLocalPath20 = ServiceModel.Tests
+		SccProjectUniqueName21 = BizTalk.Dsl.MSBuild\\Be.Stateless.BizTalk.Dsl.MSBuild.csproj
+		SccProjectName21 = BizTalk.Dsl.MSBuild
+		SccLocalPath21 = BizTalk.Dsl.MSBuild
+		SccProjectUniqueName22 = BizTalk.Pipeline.Definitions\\Be.Stateless.BizTalk.Pipeline.Definitions.csproj
+		SccProjectName22 = BizTalk.Pipeline.Definitions
+		SccLocalPath22 = BizTalk.Pipeline.Definitions
+		SccProjectUniqueName23 = BizTalk.Pipelines.Tests\\Be.Stateless.BizTalk.Pipelines.Tests.csproj
+		SccProjectName23 = BizTalk.Pipelines.Tests
+		SccLocalPath23 = BizTalk.Pipelines.Tests
+		SccProjectUniqueName24 = BizTalk.ClaimStore.Agent\\Be.Stateless.BizTalk.ClaimStore.Agent.csproj
+		SccProjectName24 = BizTalk.ClaimStore.Agent
+		SccLocalPath24 = BizTalk.ClaimStore.Agent
+		SccProjectUniqueName25 = BizTalk.ClaimStore.Agent.Tests\\Be.Stateless.BizTalk.ClaimStore.Agent.Tests.csproj
+		SccProjectName25 = BizTalk.ClaimStore.Agent.Tests
+		SccLocalPath25 = BizTalk.ClaimStore.Agent.Tests
+		SccProjectUniqueName26 = BizTalk.Monitoring.Tests\\Be.Stateless.BizTalk.Monitoring.Tests.csproj
+		SccProjectName26 = BizTalk.Monitoring.Tests
+		SccLocalPath26 = BizTalk.Monitoring.Tests
+		SccProjectUniqueName27 = BizTalk.Processes.Tests\\Be.Stateless.BizTalk.Processes.Tests.csproj
+		SccProjectName27 = BizTalk.Processes.Tests
+		SccLocalPath27 = BizTalk.Processes.Tests
+		SccProjectUniqueName28 = BizTalk.Explorer\\Be.Stateless.BizTalk.Explorer.csproj
+		SccProjectName28 = BizTalk.Explorer
+		SccLocalPath28 = BizTalk.Explorer
+		SccProjectUniqueName29 = BizTalk.Generated.Items\\Be.Stateless.BizTalk.Generated.Items.csproj
+		SccProjectName29 = BizTalk.Generated.Items
+		SccLocalPath29 = BizTalk.Generated.Items
+		SccProjectUniqueName30 = Extensions\\Be.Stateless.Extensions.csproj
+		SccProjectName30 = Extensions
+		SccLocalPath30 = Extensions
+		SccProjectUniqueName31 = Extensions.Tests\\Be.Stateless.Extensions.Tests.csproj
+		SccProjectName31 = Extensions.Tests
+		SccLocalPath31 = Extensions.Tests
+		SccProjectUniqueName32 = BizTalk.TestArtifacts\\Be.Stateless.BizTalk.TestArtifacts.btproj
+		SccProjectName32 = BizTalk.TestArtifacts
+		SccLocalPath32 = BizTalk.TestArtifacts
+		SccProjectUniqueName33 = BizTalk.Binding\\Be.Stateless.BizTalk.Binding.csproj
+		SccProjectName33 = BizTalk.Binding
+		SccLocalPath33 = BizTalk.Binding
+		SccProjectUniqueName34 = BizTalk.Pipeline.Components.Tests\\Be.Stateless.BizTalk.Pipeline.Components.Tests.csproj
+		SccProjectName34 = BizTalk.Pipeline.Components.Tests
+		SccLocalPath34 = BizTalk.Pipeline.Components.Tests
+		SccProjectUniqueName35 = BizTalk.Pipeline.Components\\Be.Stateless.BizTalk.Pipeline.Components.csproj
+		SccProjectName35 = BizTalk.Pipeline.Components
+		SccLocalPath35 = BizTalk.Pipeline.Components
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F890272-22E8-4668-9F0E-C12DD48474D2}.Release|x86.ActiveCfg = Release|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419F432B-325C-4D50-A0F3-1D1B2AF40223}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2F31534-053E-49B9-BA13-B4285E405592}.Release|x86.ActiveCfg = Release|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A19A988-3B56-495A-A2D4-047268479F7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C6FFB9-B567-4C44-BD58-236D0593B743}.Release|x86.ActiveCfg = Release|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07665FE2-0C8D-49CC-B40A-4A7CE1665726}.Release|x86.ActiveCfg = Release|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6791C30D-4390-46CA-9CF4-BEF953817756}.Release|x86.ActiveCfg = Release|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3357548-BA1B-4A90-BD46-2551A8BFF281}.Release|x86.ActiveCfg = Release|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E0347E-7978-4F76-86D7-7D31201D856D}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|x86.ActiveCfg = Release|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD389997-300E-4C75-B742-B0C41BAB495B}.Release|x86.ActiveCfg = Release|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}.Release|x86.ActiveCfg = Release|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F8E1D6-2FE8-415C-9981-D08931EDC908}.Release|x86.ActiveCfg = Release|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B4D356-E410-4C7D-8C25-4FBE5F1AEA1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB31AA9F-DD05-471C-A214-722D755D3D7C}.Release|x86.ActiveCfg = Release|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56F8C3CA-BA31-4AA7-A09B-138659FA2058}.Release|x86.ActiveCfg = Release|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40D0C5EF-9A8F-4786-A4AC-3A67BA8A16E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85926527-0807-4521-ACDD-74554DCDEC85}.Release|x86.ActiveCfg = Release|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8989B132-F574-4EA7-A72A-CD4A83E5BE00}.Release|x86.ActiveCfg = Release|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875CB842-EB1E-43FA-9B68-76BA8F64FD86}.Release|x86.ActiveCfg = Release|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB4756D-4EF6-41B4-A7FB-2A0B83610FD2}.Release|x86.ActiveCfg = Release|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B196BD14-402B-40CA-BDEC-6CD731596523}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE91E0D4-68DD-44CD-9EDC-F167719F56F3}.Release|x86.ActiveCfg = Release|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}.Release|x86.ActiveCfg = Release|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C23F661-3ED2-4FCC-BEB1-17C7AB0BAD73}.Release|x86.ActiveCfg = Release|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DF4664B-9BC4-47C8-BCC1-870F267D42F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{63B38B7E-7227-4A0B-A473-186196E68E33} = {BBC37FFE-556C-420B-9E22-5EA324D405A8}
+		{3D9EB7EA-9319-48CA-BFF1-CA68FF6FFE8A} = {BBC37FFE-556C-420B-9E22-5EA324D405A8}
+		{829B85A2-4DDB-4DE3-BCA2-3F27B3AC550F} = {BBC37FFE-556C-420B-9E22-5EA324D405A8}
+	EndGlobalSection
+EndGlobal

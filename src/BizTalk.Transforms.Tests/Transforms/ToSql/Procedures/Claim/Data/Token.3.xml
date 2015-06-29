@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ns0:CheckIn xmlns:ns0="urn:schemas.stateless.be:biztalk:claim:2013:04">
+  <ns0:CorrelationToken>embedded-correlation-token</ns0:CorrelationToken>
+  <ns0:MessageType>embedded-claimed-message-type</ns0:MessageType>
+  <ns0:SenderName>embedded-sender-name</ns0:SenderName>
+  <ns0:Url>CBE1B9B8B15C4FCFB380AA3B858449F1</ns0:Url>
+  <parent>
+    <child>one</child>
+    <child>two</child>
+  </parent>
+  <parent>
+    <child>six</child>
+    <child>ten</child>
+  </parent>
+</ns0:CheckIn>

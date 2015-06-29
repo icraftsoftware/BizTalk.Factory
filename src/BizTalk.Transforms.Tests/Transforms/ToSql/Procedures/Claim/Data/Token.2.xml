@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ns0:CheckIn xmlns:ns0="urn:schemas.stateless.be:biztalk:claim:2013:04">
+  <ns0:Url>D4414FE5FBD942A88133BD78C085CD23</ns0:Url>
+  <parent>
+    <child>one</child>
+    <child>two</child>
+  </parent>
+  <parent>
+    <child>six</child>
+    <child>ten</child>
+  </parent>
+</ns0:CheckIn>

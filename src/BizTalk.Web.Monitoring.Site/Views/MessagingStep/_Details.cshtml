@@ -1,0 +1,100 @@
+﻿@*
+ * Copyright © 2012 - 2013 François Chabot, Yves Dierick
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
+@using Be.Stateless.BizTalk.Web.Monitoring.Site.Models
+@using Be.Stateless.Extensions
+@using MvcContrib.UI.Grid
+@model Be.Stateless.BizTalk.Monitoring.Model.MessagingStep
+
+<div class="tabs">
+	<ul>
+		<li><a href="#tab-1">Messaging Details</a></li>
+		<li><a href="#tab-2">Message Body</a></li>
+		<li><a href="#tab-3">Message Context</a></li>
+		<li><a href="#tab-4">Pipeline Data</a></li>
+	</ul>
+	<div id="tab-1">
+		<table class="messaging-step-details">
+			<thead>
+				<tr>
+					<th>Property</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gridrow">
+					<td>Error Code</td>
+					<td>@Model.ErrorCode</td>
+				</tr>
+				<tr class="gridrow_alternate">
+					<td>Error Description</td>
+					<td>@Model.ErrorDescription</td>
+				</tr>
+				<tr class="gridrow">
+					<td>Interchange ID</td>
+					<td>@Model.InterchangeID</td>
+				</tr>
+				<tr class="gridrow_alternate">
+					<td>Machine Name</td>
+					<td>@Model.MachineName</td>
+				</tr>
+				<tr class="gridrow">
+					<td>Message ID</td>
+					<td>@Model.MessageID</td>
+				</tr>
+				<tr class="gridrow_alternate">
+					<td>Message Type</td>
+					<td>@Model.MessageType</td>
+				</tr>
+				<tr class="gridrow">
+					<td>Mime Type</td>
+					<td>@Model.Message.IfNotNull(m => m.MimeType)</td>
+				</tr>
+				<tr class="gridrow_alternate">
+					<td>Retry Count</td>
+					<td>@Model.RetryCount</td>
+				</tr>
+				<tr class="gridrow">
+					<td>Transport Location</td>
+					<td>@Model.TransportLocation</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="tab-2">
+		@Html.DisplayFor(Model.Message)
+	</div>
+	<div id="tab-3">
+		<div class="accordion">
+			@foreach (var properties in Html.MessageContextPropertiesGroupedByNamespace(Model.Context.Properties)) {
+				<h3><a href="#">@properties.Key</a></h3>
+				<div>
+					@Html.Grid(properties).WithModel(new MessageContextGridModel(Html))
+				</div>
+			}
+		</div>
+	</div>
+	<div id="tab-4">
+		<div class="accordion">
+			@foreach (var properties in Html.MessageContextPipelineDataByNamespace(Model.Context.Properties)) {
+				<h3><a href="#">@properties.Key</a></h3>
+				<div>
+					@Html.Grid(properties).WithModel(new PipelineContextGridModel(Html))
+				</div>
+			}
+		</div>
+	</div>
+</div>

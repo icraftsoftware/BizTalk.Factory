@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ns:ReleaseBatch xmlns:ns="urn:schemas.stateless.be:biztalk:batch:2012:12">
+  <ns:EnvelopeSpecName>Be.Stateless.BizTalk.Schemas.Xml.EnvelopeOne, Be.Stateless.BizTalk.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3707daa0b119fc14</ns:EnvelopeSpecName>
+  <ns:Partition>A</ns:Partition>
+</ns:ReleaseBatch>
