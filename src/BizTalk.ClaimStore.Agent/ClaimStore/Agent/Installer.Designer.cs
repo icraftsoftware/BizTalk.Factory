@@ -47,8 +47,8 @@
 			// Installer
 			// 
 			this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.serviceProcessInstaller,
-            this.serviceInstaller});
+				this.serviceProcessInstaller,
+				this.serviceInstaller});
 
 		}
 
