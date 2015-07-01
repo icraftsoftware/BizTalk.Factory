@@ -85,14 +85,41 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		}
 
 		[Test]
-		public void LockingAlreadyLockedDataFileIsInvalid()
+		public void LockTransitionsToAwaitingRetryDataFileWhenOperationFails()
 		{
-			var sut = new LockedDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked");
-			var messageBodyMock = new Mock<MessageBody>(sut);
+			var servantMock = new Mock<DataFileServant>();
+			DataFileServant.Instance = servantMock.Object;
 
-			Assert.That(
-				() => sut.Lock(messageBodyMock.Object),
-				Throws.InvalidOperationException);
+			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked";
+			var sut = new LockedDataFile(filePath);
+			var messageBodyMock = new Mock<MessageBody>(sut);
+			messageBodyMock.SetupAllProperties();
+
+			servantMock.Setup(s => s.TryMoveFile(filePath, It.IsAny<string>())).Returns(false);
+
+			sut.Lock(messageBodyMock.Object);
+
+			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<AwaitingRetryDataFile>());
+		}
+
+		[Test]
+		public void LockTransitionsToNewLockedDataFileWhenOperationSucceeds()
+		{
+			var servantMock = new Mock<DataFileServant>();
+			DataFileServant.Instance = servantMock.Object;
+
+			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked";
+			var sut = new LockedDataFile(filePath);
+			var messageBodyMock = new Mock<MessageBody>(sut);
+			messageBodyMock.SetupAllProperties();
+
+			servantMock.Setup(s => s.TryMoveFile(filePath, It.IsAny<string>())).Returns(true);
+
+			sut.Lock(messageBodyMock.Object);
+
+			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<LockedDataFile>());
+			Assert.That(messageBodyMock.Object.DataFile, Is.Not.SameAs(sut));
+			Assert.That(sut.Path.Tokenize().LockTime < messageBodyMock.Object.DataFile.Path.Tokenize().LockTime);
 		}
 
 		[Test]

@@ -24,7 +24,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 {
 	internal class LockedDataFile : DataFile
 	{
-		public LockedDataFile(string filePath) : base(filePath)
+		internal LockedDataFile(string filePath) : base(filePath)
 		{
 			var state = Path.Tokenize().State;
 			if (state != STATE_TOKEN)
@@ -35,6 +35,8 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 						state.IsNullOrEmpty() ? "undefined" : state));
 		}
 
+		internal LockedDataFile(DataFile dataFile) : base(dataFile.Path.NewNameForState(STATE_TOKEN)) { }
+
 		#region Base Class Member Overrides
 
 		internal override void Gather(MessageBody messageBody, string gatheringDirectory)
@@ -44,21 +46,28 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Gathering {0}.", this);
 
 			var claimStoreAbsolutePath = System.IO.Path.Combine(gatheringDirectory, ClaimStoreRelativePath);
-			var gatheredFilePath = Path.Tokenize().UnlockedFilePath + "." + NewTimestamp() + "." + GatheredDataFile.STATE_TOKEN;
+			var gatheredDataFile = new GatheredDataFile(this);
 			// message body is not moved but copied to central claim store; it will be deleted only after it has been
 			// successfully gathered and released
 			var result = DataFileServant.Instance.TryCreateDirectory(claimStoreAbsolutePath)
 				&& DataFileServant.Instance.TryCopyFile(Path, claimStoreAbsolutePath)
-				&& DataFileServant.Instance.TryMoveFile(Path, gatheredFilePath);
+				&& DataFileServant.Instance.TryMoveFile(Path, gatheredDataFile.Path);
 			messageBody.DataFile = result
-				? (DataFile) new GatheredDataFile(gatheredFilePath)
-				// make sure data file will be unlocked and ownership relinquished so that it can be processed again during next collection
+				? (DataFile) gatheredDataFile
+				// make sure will try to unlock and relinquish ownership during this collection without waiting for lock to
+				// timeout as it would be the case if it transitioned to AwaitingRetryDataFile instead
 				: this;
 		}
 
 		internal override void Lock(MessageBody messageBody)
 		{
-			throw new InvalidOperationException();
+			// take a new lock ---update timestamp while staying in locked state--- so that this agent instance get
+			// exclusive ownership of the data file should there be another remote agent instance working concurrently
+			var lockedDataFile = new LockedDataFile(this);
+			var result = DataFileServant.Instance.TryMoveFile(Path, lockedDataFile.Path);
+			messageBody.DataFile = result
+				? (DataFile) lockedDataFile
+				: new AwaitingRetryDataFile(this);
 		}
 
 		internal override void Release(MessageBody messageBody)
@@ -70,13 +79,12 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		{
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Unlocking {0}.", this);
 
-			// try to revert file name to what it was before locking, i.e. remove .timestamp.locked extension from file
-			// name to release exclusive ownership and reflect this file has yet to be processed
-			var unlockedFilePath = Path.Tokenize().UnlockedFilePath;
-			var result = DataFileServant.Instance.TryMoveFile(Path, unlockedFilePath);
+			// revert file name to what it was before locking to release exclusive ownership
+			var unlockedDataFile = new UnlockedDataFile(this);
+			var result = DataFileServant.Instance.TryMoveFile(Path, unlockedDataFile.Path);
 			messageBody.DataFile = result
-				? (DataFile) new UnlockedDataFile(unlockedFilePath)
-				: new AwaitingRetryDataFile(Path);
+				? (DataFile) unlockedDataFile
+				: new AwaitingRetryDataFile(this);
 		}
 
 		#endregion

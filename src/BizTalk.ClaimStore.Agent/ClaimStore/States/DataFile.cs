@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 		#endregion
 
-		internal protected string ClaimStoreRelativePath
+		protected internal string ClaimStoreRelativePath
 		{
 			get
 			{
@@ -62,8 +62,6 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 				return System.IO.Path.Combine(tokens.CaptureDate, tokens.Id);
 			}
 		}
-
-		protected string Path { get; private set; }
 
 		internal DateTime CreationTime
 		{
@@ -75,15 +73,12 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			get { return Path.Tokenize().LockTime; }
 		}
 
+		internal string Path { get; private set; }
+
 		internal string TrackingMode
 		{
 			// TODO ?? return Be.Stateless.BizTalk.Tracking.ActivityTrackingModes instead ??
 			get { return Path.Tokenize().TrackingMode; }
-		}
-
-		protected string NewTimestamp()
-		{
-			return DateTime.UtcNow.ToString(DataFileNameTokenizer.LOCK_TIMESTAMP_FORMAT);
 		}
 
 		internal abstract void Lock(MessageBody messageBody);

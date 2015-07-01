@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		[Test]
 		public void GatherDoesNotTransitionToNewState()
 		{
-			var sut = new AwaitingRetryDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk");
+			var sut = new AwaitingRetryDataFile(new UnlockedDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk"));
 			var messageBodyMock = new Mock<MessageBody>(sut);
 			messageBodyMock.SetupAllProperties();
 
@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		[Test]
 		public void LockDoesNotTransitionToNewState()
 		{
-			var sut = new AwaitingRetryDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk");
+			var sut = new AwaitingRetryDataFile(new UnlockedDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk"));
 			var messageBodyMock = new Mock<MessageBody>(sut);
 			messageBodyMock.SetupAllProperties();
 
@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		[Test]
 		public void ReleaseDoesNotTransitionToNewState()
 		{
-			var sut = new AwaitingRetryDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk");
+			var sut = new AwaitingRetryDataFile(new UnlockedDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk"));
 			var messageBodyMock = new Mock<MessageBody>(sut);
 			messageBodyMock.SetupAllProperties();
 
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		[Test]
 		public void UnlockDoesNotTransitionToNewState()
 		{
-			var sut = new AwaitingRetryDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk");
+			var sut = new AwaitingRetryDataFile(new UnlockedDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.trk"));
 			var messageBodyMock = new Mock<MessageBody>(sut);
 			messageBodyMock.SetupAllProperties();
 

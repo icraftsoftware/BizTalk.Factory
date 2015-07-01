@@ -25,7 +25,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 {
 	internal class GatheredDataFile : DataFile
 	{
-		public GatheredDataFile(string filePath) : base(filePath)
+		internal GatheredDataFile(string filePath) : base(filePath)
 		{
 			var state = Path.Tokenize().State;
 			if (state != STATE_TOKEN)
@@ -36,36 +36,46 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 						state.IsNullOrEmpty() ? "undefined" : state));
 		}
 
+		internal GatheredDataFile(DataFile dataFile) : base(dataFile.Path.NewNameForState(STATE_TOKEN)) { }
+
 		#region Base Class Member Overrides
 
 		internal override void Gather(MessageBody messageBody, string gatheringDirectory)
 		{
-			throw new InvalidOperationException();
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("Skipping gathering transition of already gathered data file for {0}.", this);
 		}
 
 		internal override void Lock(MessageBody messageBody)
 		{
-			throw new InvalidOperationException();
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("Locking {0}.", this);
+
+			// take a new lock ---update timestamp while staying in gathered state--- so that this agent instance get
+			// exclusive ownership of the data file should there be another remote agent instance working concurrently
+			var gatheredDataFile = new GatheredDataFile(this);
+			var result = DataFileServant.Instance.TryMoveFile(Path, gatheredDataFile.Path);
+			messageBody.DataFile = result
+				? (DataFile) gatheredDataFile
+				: new AwaitingRetryDataFile(this);
 		}
 
 		internal override void Release(MessageBody messageBody)
 		{
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Releasing {0}.", this);
 
-			var releasedFilePath = Path.Tokenize().UnlockedFilePath + "." + NewTimestamp() + "." + ReleasedDataFile.STATE_TOKEN;
+			var releasedDataFile = new ReleasedDataFile(this);
 			// release claim token from database and transition to ReleasedDataFile (i.e. rename data file) within a transaction scope
 			using (var tx = new TransactionScope())
 			{
 				var result = DataFileServant.Instance.TryReleaseToken(ClaimStoreRelativePath)
-					&& DataFileServant.Instance.TryMoveFile(Path, releasedFilePath);
+					&& DataFileServant.Instance.TryMoveFile(Path, releasedDataFile.Path);
 				if (result)
 				{
-					messageBody.DataFile = new ReleasedDataFile(releasedFilePath);
+					messageBody.DataFile = releasedDataFile;
 					tx.Complete();
 				}
 				else
 				{
-					messageBody.DataFile = new AwaitingRetryDataFile(Path);
+					messageBody.DataFile = new AwaitingRetryDataFile(this);
 				}
 			}
 		}
@@ -76,7 +86,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 			// if gathered without needing to be released then data file has to be deleted
 			var result = DataFileServant.Instance.TryDeleteFile(Path);
-			if (!result) messageBody.DataFile = new AwaitingRetryDataFile(Path);
+			if (!result) messageBody.DataFile = new AwaitingRetryDataFile(this);
 		}
 
 		#endregion

@@ -29,28 +29,28 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 	/// </remarks>
 	internal class AwaitingRetryDataFile : DataFile
 	{
-		public AwaitingRetryDataFile(string filePath) : base(filePath) { }
+		internal AwaitingRetryDataFile(DataFile dataFile) : base(dataFile.Path) { }
 
 		#region Base Class Member Overrides
 
 		internal override void Gather(MessageBody messageBody, string gatheringDirectory)
 		{
-			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping gathering for {0}.", this);
+			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping gathering transition and awaiting retry for {0}.", this);
 		}
 
 		internal override void Lock(MessageBody messageBody)
 		{
-			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping locking for {0}.", this);
+			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping locking transition and awaiting retry for {0}.", this);
 		}
 
 		internal override void Release(MessageBody messageBody)
 		{
-			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping releasing for {0}.", this);
+			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping releasing transition and awaiting retry for {0}.", this);
 		}
 
 		internal override void Unlock(MessageBody messageBody)
 		{
-			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping unlocking for {0}.", this);
+			if (_logger.IsFineEnabled) _logger.FineFormat("Skipping unlocking transition and awaiting retry for {0}.", this);
 		}
 
 		#endregion

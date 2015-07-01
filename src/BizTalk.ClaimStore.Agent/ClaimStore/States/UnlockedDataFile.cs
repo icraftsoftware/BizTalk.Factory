@@ -24,7 +24,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 {
 	internal class UnlockedDataFile : DataFile
 	{
-		public UnlockedDataFile(string filePath) : base(filePath)
+		internal UnlockedDataFile(string filePath) : base(filePath)
 		{
 			var state = Path.Tokenize().State;
 			if (!state.IsNullOrEmpty())
@@ -34,6 +34,8 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 						GetType().Name,
 						state));
 		}
+
+		internal UnlockedDataFile(DataFile dataFile) : base(dataFile.Path.Tokenize().UnlockedFilePath) { }
 
 		#region Base Class Member Overrides
 
@@ -48,11 +50,11 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 			// try to add a .timestamp.locked extension to file name to get exclusive ownership should there be another
 			// Claim Store Agent working concurrently from another computer
-			var lockedFilePath = Path + "." + NewTimestamp() + "." + LockedDataFile.STATE_TOKEN;
-			var result = DataFileServant.Instance.TryMoveFile(Path, lockedFilePath);
+			var lockedDataFile = new LockedDataFile(this);
+			var result = DataFileServant.Instance.TryMoveFile(Path, lockedDataFile.Path);
 			messageBody.DataFile = result
-				? (DataFile) new LockedDataFile(lockedFilePath)
-				: new AwaitingRetryDataFile(Path);
+				? (DataFile) lockedDataFile
+				: new AwaitingRetryDataFile(this);
 		}
 
 		internal override void Release(MessageBody messageBody)

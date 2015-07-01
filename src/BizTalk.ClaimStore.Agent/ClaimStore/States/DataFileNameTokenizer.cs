@@ -82,6 +82,15 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			return Regex.IsMatch(filePath, _pattern);
 		}
 
+		internal static string NewNameForState(this string filePath, string stateToken)
+		{
+			return string.Format(
+				"{0}.{1}.{2}",
+				filePath.Tokenize().UnlockedFilePath,
+				DateTime.UtcNow.ToString(LOCK_TIMESTAMP_FORMAT),
+				stateToken);
+		}
+
 		internal static Tokens Tokenize(this string filePath)
 		{
 			if (filePath.IsNullOrEmpty()) throw new ArgumentNullException("filePath");

@@ -24,7 +24,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 {
 	internal class ReleasedDataFile : DataFile
 	{
-		public ReleasedDataFile(string filePath) : base(filePath)
+		internal ReleasedDataFile(string filePath) : base(filePath)
 		{
 			var state = Path.Tokenize().State;
 			if (state != STATE_TOKEN)
@@ -35,21 +35,31 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 						state.IsNullOrEmpty() ? "undefined" : state));
 		}
 
+		internal ReleasedDataFile(DataFile dataFile) : base(dataFile.Path.NewNameForState(STATE_TOKEN)) { }
+
 		#region Base Class Member Overrides
 
 		internal override void Gather(MessageBody messageBody, string gatheringDirectory)
 		{
-			throw new InvalidOperationException();
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("Skipping gathering transition of already released data file for {0}.", this);
 		}
 
 		internal override void Lock(MessageBody messageBody)
 		{
-			throw new InvalidOperationException();
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("Locking {0}.", this);
+
+			// take a new lock ---update timestamp while staying in released state--- so that this agent instance get
+			// exclusive ownership of the data file should there be another remote agent instance working concurrently
+			var releasedDataFile = new ReleasedDataFile(this);
+			var result = DataFileServant.Instance.TryMoveFile(Path, releasedDataFile.Path);
+			messageBody.DataFile = result
+				? (DataFile) releasedDataFile
+				: new AwaitingRetryDataFile(this);
 		}
 
 		internal override void Release(MessageBody messageBody)
 		{
-			throw new InvalidOperationException();
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("Skipping releasing transition of already released data file for {0}.", this);
 		}
 
 		internal override void Unlock(MessageBody messageBody)
@@ -58,7 +68,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 			// if gathered and released then data file has to be deleted
 			var result = DataFileServant.Instance.TryDeleteFile(Path);
-			if (!result) messageBody.DataFile = new AwaitingRetryDataFile(Path);
+			if (!result) messageBody.DataFile = new AwaitingRetryDataFile(this);
 		}
 
 		#endregion

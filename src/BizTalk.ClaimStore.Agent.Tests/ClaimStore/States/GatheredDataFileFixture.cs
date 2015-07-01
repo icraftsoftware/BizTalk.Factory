@@ -26,25 +26,53 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 	public class GatheredDataFileFixture
 	{
 		[Test]
-		public void GatheringAlreadyGatheredDataFileIsInvalid()
+		public void GatherDoesNotTransitionToNewState()
 		{
 			var sut = new GatheredDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered");
 			var messageBodyMock = new Mock<MessageBody>(sut);
+			messageBodyMock.SetupAllProperties();
 
-			Assert.That(
-				() => sut.Gather(messageBodyMock.Object, Path.GetTempPath()),
-				Throws.InvalidOperationException);
+			sut.Gather(messageBodyMock.Object, Path.GetTempPath());
+
+			Assert.That(messageBodyMock.Object.DataFile, Is.SameAs(sut));
 		}
 
 		[Test]
-		public void LockingGatheredDataFileIsInvalid()
+		public void LockTransitionsToAwaitingRetryDataFileWhenOperationFails()
 		{
-			var sut = new GatheredDataFile("201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered");
-			var messageBodyMock = new Mock<MessageBody>(sut);
+			var servantMock = new Mock<DataFileServant>();
+			DataFileServant.Instance = servantMock.Object;
 
-			Assert.That(
-				() => sut.Lock(messageBodyMock.Object),
-				Throws.InvalidOperationException);
+			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered";
+			var sut = new GatheredDataFile(filePath);
+			var messageBodyMock = new Mock<MessageBody>(sut);
+			messageBodyMock.SetupAllProperties();
+
+			servantMock.Setup(s => s.TryMoveFile(filePath, It.IsAny<string>())).Returns(false);
+
+			sut.Lock(messageBodyMock.Object);
+
+			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<AwaitingRetryDataFile>());
+		}
+
+		[Test]
+		public void LockTransitionsToNewGatheredDataFileWhenOperationSucceeds()
+		{
+			var servantMock = new Mock<DataFileServant>();
+			DataFileServant.Instance = servantMock.Object;
+
+			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered";
+			var sut = new GatheredDataFile(filePath);
+			var messageBodyMock = new Mock<MessageBody>(sut);
+			messageBodyMock.SetupAllProperties();
+
+			servantMock.Setup(s => s.TryMoveFile(filePath, It.IsAny<string>())).Returns(true);
+
+			sut.Lock(messageBodyMock.Object);
+
+			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<GatheredDataFile>());
+			Assert.That(messageBodyMock.Object.DataFile, Is.Not.SameAs(sut));
+			Assert.That(sut.Path.Tokenize().LockTime < messageBodyMock.Object.DataFile.Path.Tokenize().LockTime);
 		}
 
 		[Test]
@@ -74,7 +102,6 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered";
 			var sut = new GatheredDataFile(filePath);
 			var messageBodyMock = new Mock<MessageBody>(sut);
-
 			messageBodyMock.SetupAllProperties();
 
 			servantMock.Setup(s => s.TryReleaseToken(sut.ClaimStoreRelativePath)).Returns(true);
@@ -94,7 +121,6 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.gathered";
 			var sut = new GatheredDataFile(filePath);
 			var messageBodyMock = new Mock<MessageBody>(sut);
-
 			messageBodyMock.SetupAllProperties();
 
 			servantMock.Setup(s => s.TryReleaseToken(sut.ClaimStoreRelativePath)).Returns(true);
@@ -103,6 +129,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			sut.Release(messageBodyMock.Object);
 
 			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<ReleasedDataFile>());
+			Assert.That(sut.Path.Tokenize().LockTime < messageBodyMock.Object.DataFile.Path.Tokenize().LockTime);
 		}
 
 		[Test]
