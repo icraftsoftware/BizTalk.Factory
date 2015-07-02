@@ -45,7 +45,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		}
 
 		[Test]
-		public void GatherDoesNotTransitionToNewStateWhenOperationFails()
+		public void GatherTransitionsToAwaitingRetryDataFileWhenOperationFails()
 		{
 			var servantMock = new Mock<DataFileServant>();
 			DataFileServant.Instance = servantMock.Object;
@@ -61,7 +61,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 			sut.Gather(messageBodyMock.Object, Path.GetTempPath());
 
-			Assert.That(messageBodyMock.Object.DataFile, Is.SameAs(sut));
+			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<AwaitingRetryDataFile>());
 		}
 
 		[Test]
@@ -134,56 +134,15 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		}
 
 		[Test]
-		public void UnlockRenamesLocalDataFile()
+		public void UnlockingLockedDataFileIsInvalid()
 		{
-			var servantMock = new Mock<DataFileServant>();
-			DataFileServant.Instance = servantMock.Object;
-
 			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked";
 			var sut = new LockedDataFile(filePath);
 			var messageBodyMock = new Mock<MessageBody>(sut);
 
-			servantMock.Setup(s => s.TryMoveFile(filePath, It.Is<string>(path => filePath.Tokenize().UnlockedFilePath == path))).Returns(true).Verifiable();
-
-			sut.Unlock(messageBodyMock.Object);
-
-			servantMock.VerifyAll();
-		}
-
-		[Test]
-		public void UnlockTransitionsToAwaitingRetryDataFileWhenOperationFails()
-		{
-			var servantMock = new Mock<DataFileServant>();
-			DataFileServant.Instance = servantMock.Object;
-
-			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked";
-			var sut = new LockedDataFile(filePath);
-			var messageBodyMock = new Mock<MessageBody>(sut);
-			messageBodyMock.SetupAllProperties();
-
-			servantMock.Setup(s => s.TryMoveFile(filePath, It.Is<string>(path => filePath.Tokenize().UnlockedFilePath == path))).Returns(false);
-
-			sut.Unlock(messageBodyMock.Object);
-
-			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<AwaitingRetryDataFile>());
-		}
-
-		[Test]
-		public void UnlockTransitionsToUnlockedDataFileWhenOperationSucceeds()
-		{
-			var servantMock = new Mock<DataFileServant>();
-			DataFileServant.Instance = servantMock.Object;
-
-			const string filePath = "201306158F341A2D6FD7416B87073A0132DD51AE.chk.20150627111406.locked";
-			var sut = new LockedDataFile(filePath);
-			var messageBodyMock = new Mock<MessageBody>(sut);
-			messageBodyMock.SetupAllProperties();
-
-			servantMock.Setup(s => s.TryMoveFile(filePath, It.Is<string>(path => filePath.Tokenize().UnlockedFilePath == path))).Returns(true);
-
-			sut.Unlock(messageBodyMock.Object);
-
-			Assert.That(messageBodyMock.Object.DataFile, Is.TypeOf<UnlockedDataFile>());
+			Assert.That(
+				() => sut.Unlock(messageBodyMock.Object),
+				Throws.InvalidOperationException);
 		}
 	}
 }

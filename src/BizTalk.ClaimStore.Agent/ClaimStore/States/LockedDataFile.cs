@@ -54,9 +54,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 				&& DataFileServant.Instance.TryMoveFile(Path, gatheredDataFile.Path);
 			messageBody.DataFile = result
 				? (DataFile) gatheredDataFile
-				// make sure will try to unlock and relinquish ownership during this collection without waiting for lock to
-				// timeout as it would be the case if it transitioned to AwaitingRetryDataFile instead
-				: this;
+				: new AwaitingRetryDataFile(this);
 		}
 
 		internal override void Lock(MessageBody messageBody)
@@ -77,14 +75,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 
 		internal override void Unlock(MessageBody messageBody)
 		{
-			if (_logger.IsDebugEnabled) _logger.DebugFormat("Unlocking {0}.", this);
-
-			// revert file name to what it was before locking to release exclusive ownership
-			var unlockedDataFile = new UnlockedDataFile(this);
-			var result = DataFileServant.Instance.TryMoveFile(Path, unlockedDataFile.Path);
-			messageBody.DataFile = result
-				? (DataFile) unlockedDataFile
-				: new AwaitingRetryDataFile(this);
+			throw new InvalidOperationException();
 		}
 
 		#endregion

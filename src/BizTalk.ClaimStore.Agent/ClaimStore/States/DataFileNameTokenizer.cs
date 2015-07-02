@@ -97,7 +97,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			var match = Regex.Match(filePath, _pattern);
 			if (!match.Success)
 				throw new ArgumentException(
-					string.Format("Claim Store Agent does not recognized the message body's data file path: '{0}'.", filePath),
+					string.Format("Claim Store Agent does not recognize the message body's data file path: '{0}'.", filePath),
 					"filePath");
 			return new Tokens(match.Groups);
 		}

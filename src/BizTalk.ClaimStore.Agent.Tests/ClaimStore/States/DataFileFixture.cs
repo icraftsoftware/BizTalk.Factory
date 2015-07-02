@@ -46,8 +46,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		{
 			Assert.That(
 				() => DataFile.Create("201306158F341A2D6FD7416B87073A0132DD51AE.thk"),
-				Throws.ArgumentException
-					.With.Message.StartsWith("Claim Store Agent does not recognized the message body's data file path: '201306158F341A2D6FD7416B87073A0132DD51AE.thk'."));
+				Throws.ArgumentException);
 		}
 
 		[Test]

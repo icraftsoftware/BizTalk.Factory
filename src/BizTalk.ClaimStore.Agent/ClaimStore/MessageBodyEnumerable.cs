@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.ClaimStore
 			{
 				var lockTime = messageBody.DataFile.LockTime;
 				var now = DateTime.UtcNow;
-				var lockDuration = lockTime.HasValue ? now - lockTime.Value : TimeSpan.FromMinutes(0);
+				var lockDuration = lockTime.HasValue ? now - lockTime.Value : TimeSpan.Zero;
 				if (lockDuration > troublesomeLockTimeout && _logger.IsWarnEnabled)
 					_logger.WarnFormat(
 						"Lock on message body's data file '{0}' has been acquired {1} minutes ago and ClaimStore.Agent was not able to pursue its processing since then.",
@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.ClaimStore
 
 				// if just locked or lock timed out, i.e lock not acquired in time range ]0 ; FileLockTimeout], which means
 				// the file might have been locked by a remote Claim Store Agent that is still busy working
-				if (TimeSpan.FromMinutes(0) == lockDuration || lockDuration > fileLockTimeout)
+				if (TimeSpan.Zero == lockDuration || lockDuration > fileLockTimeout)
 				{
 					yield return messageBody;
 				}
