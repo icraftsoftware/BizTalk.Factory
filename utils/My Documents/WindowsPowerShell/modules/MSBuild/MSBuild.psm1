@@ -385,12 +385,11 @@ function Get-VisualStudioVersionNumbers
         $installedVisualStudioVersionNumbers = Get-ChildItem -Path $path |
             Where-Object { $_.GetValue('InstallDir') } |
             Select-Object -ExpandProperty PSChildName |
-            Where-Object { $_ -match '^\d+\.\d+$' } |
-            Sort-Object { [float]$_ } -Descending:$Descending
+            Where-Object { $_ -match '^\d+\.\d+$' }
         $installedVisualStudioVersionNumbers = @($installedVisualStudioVersionNumbers)
         $MyInvocation.MyCommand.Module.PrivateData['InstalledVisualStudioVersionNumbers'] = $installedVisualStudioVersionNumbers
     }
-    $installedVisualStudioVersionNumbers
+    $installedVisualStudioVersionNumbers | Sort-Object { [float]$_ } -Descending:$Descending
 }
 
 <#
