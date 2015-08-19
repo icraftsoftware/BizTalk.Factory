@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.Linq.Extensions;
@@ -71,7 +72,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			// Notice that ProcessOrchestrationBinding.Designer.cs is indeed included twice, in both Compile and
 			// EmbeddedResource ItemGroups, both linking to Be.Stateless.Binding project's item. However Visual Studio's
 			// Solution Explorer does only display the first occurrence in the .csproj file of the included item.
-			Assert.That(builder.ToString(), Is.EqualTo(ResourceManager.LoadString("Data.ProcessOrchestrationBinding.Designer.cs")));
+			Assert.That(
+				// being resilient to runtime version in CodeDom heading comment
+				Regex.Replace(builder.ToString(), @"(//\s+)Runtime Version:\d\.\d\.\d+\.\d+", @"$1Runtime Version:4.0.30319.34209", RegexOptions.Multiline),
+				Is.EqualTo(ResourceManager.LoadString("Data.ProcessOrchestrationBinding.Designer.cs")));
 		}
 	}
 }

@@ -54,7 +54,7 @@ namespace Be.Stateless.BizTalk.XPath
 
 			Assert.That(
 				sut.ConvertFrom(xml),
-				Is.EquivalentTo(
+				Is.EqualTo(
 					new XPathExtractorCollection {
 						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
 						new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
