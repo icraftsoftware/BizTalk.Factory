@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ using System.Text;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Unit.Component;
 using Be.Stateless.BizTalk.XPath;
@@ -47,20 +48,88 @@ namespace Be.Stateless.BizTalk.Component
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType("urn-one#letter"))
 				.Returns(Schema<Any>.DocumentSpec);
+
+			_schemaMetadataFactory = SchemaBaseExtensions.SchemaMetadataFactory;
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			SchemaBaseExtensions.SchemaMetadataFactory = _schemaMetadataFactory;
 		}
 
 		#endregion
 
 		[Test]
-		public void DoesNothingCannotFindDocumentSpecification()
+		public void BuildExtractorCollectionDoesNothing()
+		{
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
+
+				var sut = CreatePipelineComponent();
+				sut.Extractors = new XPathExtractorCollection {
+					new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+					new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+				};
+				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(extractors, Is.SameAs(sut.Extractors));
+			}
+		}
+
+		[Test]
+		public void BuildExtractorCollectionGivesPrecedenceToSchemaExtractorsOverPipelineExtractors()
+		{
+			SchemaMetadata = new Mock<ISchemaMetadata>();
+			SchemaBaseExtensions.SchemaMetadataFactory = type => SchemaMetadata.Object;
+
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
+
+				var sut = CreatePipelineComponent();
+				sut.Extractors = new XPathExtractorCollection {
+					new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+					new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+				};
+
+				var annotationsMock = new Mock<ISchemaAnnotations>();
+				annotationsMock.Setup(am => am.Extractors).Returns(
+					new XPathExtractorCollection {
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
+						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write)
+					});
+				SchemaMetadata.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
+
+				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(
+					extractors,
+					Is.EqualTo(
+						new XPathExtractorCollection {
+							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
+							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
+							new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+						}));
+			}
+		}
+
+		[Test]
+		public void DoesNothingWhenCannotFindDocumentSpecification()
 		{
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<unknown></unknown>")))
 			{
 				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#unknown");
 
 				var sut = CreatePipelineComponent();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
+				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
 
 				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
@@ -74,12 +143,13 @@ namespace Be.Stateless.BizTalk.Component
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
 				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
 
 				var sut = CreatePipelineComponent();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
-				//Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
-				//PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
+				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
 
 				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
@@ -127,14 +197,14 @@ namespace Be.Stateless.BizTalk.Component
 			}
 		}
 
+		private Mock<ISchemaMetadata> SchemaMetadata { get; set; }
+
+		private Func<Type, ISchemaMetadata> _schemaMetadataFactory;
+
 		static ContextPropertyExtractorComponentFixture()
 		{
 			// PipelineComponentFixture<ContextPropertyExtractorComponent> assumes and needs the following converter
-			TypeDescriptor.AddAttributes(
-				typeof(XPathExtractorCollection),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(XPathExtractorCollectionConverter))
-				});
+			TypeDescriptor.AddAttributes(typeof(XPathExtractorCollection), new TypeConverterAttribute(typeof(XPathExtractorCollectionConverter)));
 		}
 
 		protected override object GetValueForProperty(string name)

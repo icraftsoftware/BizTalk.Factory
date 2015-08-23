@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ namespace Be.Stateless.BizTalk.Component
 			Extractors = XPathExtractorCollection.Empty;
 		}
 
-		#region IBaseComponent members
+		#region Base Class Member Overrides
 
 		/// <summary>
 		/// Description of the pipeline component.
@@ -144,9 +144,23 @@ namespace Be.Stateless.BizTalk.Component
 			get { return "Promotes or writes properties in context by extracting values out of messages using XPath expressions."; }
 		}
 
-		#endregion
-
-		#region IPersistPropertyBag members
+		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
+		{
+			var extractors = BuildExtractorCollection(pipelineContext, message);
+			// ReSharper disable PossibleMultipleEnumeration
+			if (extractors.Any())
+			{
+				// setup a stream that will invoke our callback whenever an XPathExtractor's XPath expression is matched
+				message.BodyPart.WrapOriginalDataStream(
+					originalStream => XPathMutatorStreamFactory.Create(
+						originalStream,
+						extractors,
+						(propertyName, value, extractionMode) => OnMatch(message.Context, propertyName, value, extractionMode)),
+					pipelineContext.ResourceTracker);
+			}
+			// ReSharper restore PossibleMultipleEnumeration
+			return message;
+		}
 
 		/// <summary>
 		/// Gets class ID of component for usage from unmanaged code.
@@ -179,28 +193,6 @@ namespace Be.Stateless.BizTalk.Component
 
 		#endregion
 
-		#region Base Class Member Overrides
-
-		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
-		{
-			var extractors = BuildExtractorCollection(pipelineContext, message);
-			// ReSharper disable PossibleMultipleEnumeration
-			if (extractors.Any())
-			{
-				// setup a stream that will invoke our callback whenever an XPathExtractor's XPath expression is matched
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => XPathMutatorStreamFactory.Create(
-						originalStream,
-						extractors,
-						(propertyName, value, extractionMode) => OnMatch(message.Context, propertyName, value, extractionMode)),
-					pipelineContext.ResourceTracker);
-			}
-			// ReSharper restore PossibleMultipleEnumeration
-			return message;
-		}
-
-		#endregion
-
 		/// <summary>
 		/// XPath expressions used to extract values out of XML message and either promote or write them in the context.
 		/// </summary>
@@ -209,7 +201,7 @@ namespace Be.Stateless.BizTalk.Component
 		[TypeConverter(typeof(XPathExtractorCollectionConverter))]
 		public XPathExtractorCollection Extractors { get; set; }
 
-		private IEnumerable<XPathExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
+		internal IEnumerable<XPathExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
 		{
 			var messageType = message.GetProperty(BtsProperties.MessageType);
 			if (messageType.IsNullOrEmpty())
@@ -222,12 +214,14 @@ namespace Be.Stateless.BizTalk.Component
 			if (messageType.IsNullOrEmpty()) return Extractors;
 
 			var schemaMetadata = pipelineContext.GetSchemaMetadataByType(messageType, false);
-			var extractorAnnotations = schemaMetadata.Annotations.Extractors;
+			var schemaAnnotations = schemaMetadata.Annotations.Extractors;
 
 			// TODO take extractorPrecedence into account, right now precedence is always given to schema annotations if they exist
 
-			// merge configured and schema-annotated extractors so as to give precedence to schema annotations.
-			return extractorAnnotations.Union(Extractors);
+			return schemaAnnotations.Any()
+				// merge configured and schema-annotated extractors so as to give precedence to schema annotations.
+				? schemaAnnotations.Union(Extractors)
+				: Extractors;
 		}
 
 		private void OnMatch(IBaseMessageContext messageContext, XmlQualifiedName propertyName, string value, ExtractionMode extractionMode)
