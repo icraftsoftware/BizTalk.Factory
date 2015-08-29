@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,10 +40,6 @@ namespace Be.Stateless.BizTalk.Unit.Component
 	/// </typeparam>
 	public abstract class PipelineComponentFixture<T> where T : PipelineComponent, new()
 	{
-		protected Be.Stateless.BizTalk.Unit.Message.Mock<IBaseMessage> MessageMock { get; set; }
-
-		protected Mock<IPipelineContext> PipelineContextMock { get; set; }
-
 		protected virtual IEnumerable<PropertyInfo> BrowsableProperties
 		{
 			get
@@ -58,6 +54,10 @@ namespace Be.Stateless.BizTalk.Unit.Component
 					.ToArray();
 			}
 		}
+
+		protected Message.Mock<IBaseMessage> MessageMock { get; set; }
+
+		protected Mock<IPipelineContext> PipelineContextMock { get; set; }
 
 		protected T CreatePipelineComponent()
 		{
@@ -76,7 +76,7 @@ namespace Be.Stateless.BizTalk.Unit.Component
 		[SetUp]
 		public void SetUp()
 		{
-			MessageMock = new Be.Stateless.BizTalk.Unit.Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
+			MessageMock = new Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
 			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };
 			// default behaviour analogous to actual IPipelineContext implementation
 			PipelineContextMock
@@ -164,8 +164,7 @@ namespace Be.Stateless.BizTalk.Unit.Component
 		public void AllPropertiesConvertToStringAndBack()
 		{
 			var sut = CreatePipelineComponent();
-			BrowsableProperties.Each(
-				p => new BaggableProperty(p, GetValueForProperty).EnsureConvertToStringAndBack(p.GetValue(sut, null)));
+			BrowsableProperties.Each(p => new BaggableProperty(p, GetValueForProperty).EnsureConvertToStringAndBack(p.GetValue(sut, null)));
 		}
 
 		[Test]
