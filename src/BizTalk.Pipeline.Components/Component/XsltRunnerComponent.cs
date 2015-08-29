@@ -53,7 +53,6 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	// TODO derive from ActivityTrackerComponent
 	public class XsltRunnerComponent : ExtensiblePipelineComponent<TransformBase>
 	{
 		public XsltRunnerComponent()
