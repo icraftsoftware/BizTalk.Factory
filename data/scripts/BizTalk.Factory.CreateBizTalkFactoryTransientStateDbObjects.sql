@@ -733,13 +733,13 @@ BEGIN
    DECLARE @envelopeSpecName nvarchar(256) = NULL;
    DECLARE @partition nvarchar(128) = NULL;
    DECLARE @processActivityId nvarchar(32) = NULL;
-   DECLARE @rowCount int = NULL;
+   DECLARE @rowCount int = 0;
    SELECT
       @envelopeId = EnvelopeId,
       @envelopeSpecName = EnvelopeSpecName,
       @partition = [Partition],
       @processActivityId = ProcessActivityId,
-      @rowCount = ItemCountLimit
+      @rowCount = ISNULL(ItemCountLimit, 0)
    -- an XLOCK ROWLOCK on batch_Envelopes row is set by the view to prevent concurrent release attempts
    FROM vw_batch_NextAvailableBatch
 
