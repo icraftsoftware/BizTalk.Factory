@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -69,7 +70,7 @@ namespace Be.Stateless.BizTalk.Component
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
 
 				var sut = CreatePipelineComponent();
-				sut.Extractors = new XPathExtractorCollection {
+				sut.Extractors = new[] {
 					new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
 					new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
 				};
@@ -91,14 +92,14 @@ namespace Be.Stateless.BizTalk.Component
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
 
 				var sut = CreatePipelineComponent();
-				sut.Extractors = new XPathExtractorCollection {
+				sut.Extractors = new[] {
 					new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
 					new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
 				};
 
 				var annotationsMock = new Mock<ISchemaAnnotations>();
 				annotationsMock.Setup(am => am.Extractors).Returns(
-					new XPathExtractorCollection {
+					new[] {
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
 						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write)
 					});
@@ -109,7 +110,7 @@ namespace Be.Stateless.BizTalk.Component
 				Assert.That(
 					extractors,
 					Is.EqualTo(
-						new XPathExtractorCollection {
+						new[] {
 							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
 							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
 							new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
@@ -169,7 +170,7 @@ namespace Be.Stateless.BizTalk.Component
 				MessageMock.Object.BodyPart.Data = inputStream;
 
 				var sut = CreatePipelineComponent();
-				sut.Extractors = new XPathExtractorCollection {
+				sut.Extractors = new[] {
 					new XPathExtractor(TrackingProperties.ProcessName.QName, "/*[local-name()='letter']/*/*[local-name()='subject']", ExtractionMode.Promote),
 				};
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -188,7 +189,7 @@ namespace Be.Stateless.BizTalk.Component
 				MessageMock.Object.BodyPart.Data = inputStream;
 
 				var sut = CreatePipelineComponent();
-				sut.Extractors = new XPathExtractorCollection {
+				sut.Extractors = new[] {
 					new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
 				};
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -204,7 +205,7 @@ namespace Be.Stateless.BizTalk.Component
 		static ContextPropertyExtractorComponentFixture()
 		{
 			// PipelineComponentFixture<ContextPropertyExtractorComponent> assumes and needs the following converter
-			TypeDescriptor.AddAttributes(typeof(XPathExtractorCollection), new TypeConverterAttribute(typeof(XPathExtractorCollectionConverter)));
+			TypeDescriptor.AddAttributes(typeof(IEnumerable<XPathExtractor>), new TypeConverterAttribute(typeof(XPathExtractorEnumerableConverter)));
 		}
 
 		protected override object GetValueForProperty(string name)
@@ -212,7 +213,7 @@ namespace Be.Stateless.BizTalk.Component
 			switch (name)
 			{
 				case "Extractors":
-					return new XPathExtractorCollection {
+					return new[] {
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
 						new XPathExtractor(BizTalkFactoryProperties.ReceiverName.QName, "/letter/*/to", ExtractionMode.Promote),
 						new XPathExtractor(TrackingProperties.ProcessName.QName, "/letter/*/subject", ExtractionMode.Write),

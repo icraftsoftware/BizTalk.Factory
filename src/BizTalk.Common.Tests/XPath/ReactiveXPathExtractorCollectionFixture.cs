@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void Match()
 		{
-			var extractors = new XPathExtractorCollection {
+			var extractors = new[] {
 				new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
 				new XPathExtractor(BizTalkFactoryProperties.ReceiverName.QName, "/letter/*/to", ExtractionMode.Promote),
 				new XPathExtractor(TrackingProperties.ProcessName.QName, "/letter/*/subject", ExtractionMode.Write),
@@ -75,7 +75,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void MatchForGroup()
 		{
-			var extractors = new XPathExtractorCollection {
+			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/paragraph", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph", ExtractionMode.Write),
@@ -101,7 +101,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void MatchQualified()
 		{
-			var extractors = new XPathExtractorCollection {
+			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.ProcessName.QName, "/*[local-name()='letter']/*/*[local-name()='subject']", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value1.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph']", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value3.QName, "/*[local-name()='letter']/*/*[local-name()='signature']", ExtractionMode.Write),
@@ -127,7 +127,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void MatchQualifiedWithPosition()
 		{
-			var extractors = new XPathExtractorCollection {
+			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.Value1.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph'][1]", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph'][2]", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value3.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph'][3]", ExtractionMode.Write)
@@ -147,7 +147,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void MatchWithPositions()
 		{
-			var extractors = new XPathExtractorCollection {
+			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph[1]", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/paragraph[2]", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph[3]", ExtractionMode.Write),

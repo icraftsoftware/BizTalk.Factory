@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -50,6 +51,11 @@ namespace Be.Stateless.BizTalk.Unit.Component
 
 			GenerateValue(seedValue);
 			var deserializedValue = ConvertFromString();
+
+			var actualEnumerable = ActualValue as IEnumerable;
+			var deserializedEnumerable = deserializedValue as IEnumerable;
+			if (actualEnumerable != null && deserializedEnumerable != null && SequenceEqual(actualEnumerable, deserializedEnumerable)) return;
+
 			if (!ActualValue.Equals(deserializedValue)) // TODO check if ActualValue is IEquatable<T>
 				throw new NotSupportedException(
 					string.Format(
@@ -187,6 +193,18 @@ namespace Be.Stateless.BizTalk.Unit.Component
 						_property.PropertyType.Name,
 						_property.Name));
 			return complexValue;
+		}
+
+		private bool SequenceEqual(IEnumerable actualEnumerable, IEnumerable deserializedEnumerable)
+		{
+			var e1 = actualEnumerable.GetEnumerator();
+			var e2 = deserializedEnumerable.GetEnumerator();
+			while (e1.MoveNext())
+			{
+				if (!(e2.MoveNext() && e1.Current.Equals(e2.Current))) return false;
+			}
+			if (e2.MoveNext()) return false;
+			return true;
 		}
 
 		private readonly TypeConverter _converter;

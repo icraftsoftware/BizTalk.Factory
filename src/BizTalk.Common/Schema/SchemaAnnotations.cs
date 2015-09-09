@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ namespace Be.Stateless.BizTalk.Schema
 	/// </example>
 	public class SchemaAnnotations : ISchemaAnnotations
 	{
-		#region Nested type: EmptySchemaAnnotations
+		#region Nested Type: EmptySchemaAnnotations
 
 		internal class EmptySchemaAnnotations : ISchemaAnnotations
 		{
@@ -84,9 +84,9 @@ namespace Be.Stateless.BizTalk.Schema
 				get { return null; }
 			}
 
-			public XPathExtractorCollection Extractors
+			public IEnumerable<XPathExtractor> Extractors
 			{
-				get { return XPathExtractorCollection.Empty; }
+				get { return Enumerable.Empty<XPathExtractor>(); }
 			}
 
 			#endregion
@@ -113,7 +113,7 @@ namespace Be.Stateless.BizTalk.Schema
 
 			var extractors = annotations
 				.SingleOrDefault(e => e.Name.LocalName == "Properties")
-				.IfNotNull(p => XPathExtractorCollectionConverter.ConvertFrom(p)) ?? XPathExtractorCollection.Empty;
+				.IfNotNull(p => ((IEnumerable<XPathExtractor>) new XPathExtractorEnumerableConverter().ConvertFrom(p))) ?? Enumerable.Empty<XPathExtractor>();
 			// ReSharper restore PossibleMultipleEnumeration
 
 			return new SchemaAnnotations {
@@ -142,7 +142,7 @@ namespace Be.Stateless.BizTalk.Schema
 
 		public Type EnvelopingMap { get; private set; }
 
-		public XPathExtractorCollection Extractors { get; private set; }
+		public IEnumerable<XPathExtractor> Extractors { get; private set; }
 
 		#endregion
 

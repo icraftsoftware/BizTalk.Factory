@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Streaming
 {
 #pragma warning disable 1584,1711,1572,1581,1580
 	/// <summary>
-	/// <see cref="XPathMutatorStream"/> factory that goes along with <see cref="XPathExtractorCollection"/> and <see
+	/// <see cref="XPathMutatorStream"/> factory that goes along with <see
 	/// cref="T:Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent"/>.
 	/// </summary>
 #pragma warning restore 1584,1711,1572,1581,1580

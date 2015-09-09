@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.XPath;
 using Microsoft.BizTalk.Message.Interop;
@@ -37,6 +38,6 @@ namespace Be.Stateless.BizTalk.Schema
 		/// Collection of <see cref="XPathExtractor"/>s to be used to extract values of context properties from an <see
 		/// cref="IBaseMessagePart"/>'s payload while being processed through the pipelines.
 		/// </summary>
-		XPathExtractorCollection Extractors { get; }
+		IEnumerable<XPathExtractor> Extractors { get; }
 	}
 }

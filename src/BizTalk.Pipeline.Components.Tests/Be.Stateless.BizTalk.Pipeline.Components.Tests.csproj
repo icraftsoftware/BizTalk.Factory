@@ -100,6 +100,7 @@
     <Compile Include="Component\FailedMessageRoutingEnablerComponentFixture.cs" />
     <Compile Include="Component\MessageConsumerComponentFixture.cs" />
     <Compile Include="Component\ActivityTrackerComponentFixture.cs" />
+    <Compile Include="Component\MicroPipelineFixture.cs" />
     <Compile Include="Component\PipelineComponentFixture.cs" />
     <Compile Include="Component\ContextBuilderComponentFixture.cs" />
     <Compile Include="Component\PolicyRunnerComponentFixture.cs" />
@@ -164,6 +165,9 @@
     <EmbeddedResource Include="Component\Data\BatchContent.xml" />
     <EmbeddedResource Include="Component\Data\BatchContentWithTransform.xml" />
     <EmbeddedResource Include="Component\Data\AnyToText.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

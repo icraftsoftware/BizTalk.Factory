@@ -111,6 +111,12 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Component\MicroPipelineComponentDedicatedXmlWriter.cs" />
+    <Compile Include="Component\Extensions\MicroPipelineComponentExtensions.cs" />
+    <Compile Include="Component\Extensions\MicroPipelineComponentXmlReaderExtensions.cs" />
+    <Compile Include="Xml\XmlWriterWrapper.cs" />
+    <Compile Include="Component\IMicroPipelineComponent.cs" />
+    <Compile Include="Component\MicroPipelineComponentEnumerableConverter.cs" />
     <Compile Include="CompositeReaderState.cs" />
     <Compile Include="EventLogSourceInstaller.cs">
       <SubType>Component</SubType>
@@ -212,8 +218,7 @@
     <Compile Include="Xml\Xsl\XslCompiledTransformDescriptor.cs" />
     <Compile Include="XPath\ReactiveXPathExtractorCollection.cs" />
     <Compile Include="XPath\XPathExtractor.cs" />
-    <Compile Include="XPath\XPathExtractorCollection.cs" />
-    <Compile Include="XPath\XPathExtractorCollectionConverter.cs" />
+    <Compile Include="XPath\XPathExtractorEnumerableConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EventLogSourceInstaller.resx">

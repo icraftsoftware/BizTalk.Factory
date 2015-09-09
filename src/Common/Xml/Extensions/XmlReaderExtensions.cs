@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,38 @@ namespace Be.Stateless.Xml.Extensions
 			if (reader.IsStartElement(name)) return;
 			var info = (IXmlLineInfo) reader;
 			throw new XmlException(string.Format("Element '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		/// <summary>
+		/// Tests if the current content node is an end tag whose <see cref="XmlReader.Name"/> matches the given <paramref
+		/// name="name"/> argument; throws otherwise.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The qualified name of the element.
+		/// </param>
+		public static void AssertEndElement(this XmlReader reader, string name)
+		{
+			if (reader.NodeType == XmlNodeType.EndElement && reader.Name == name) return;
+			var info = (IXmlLineInfo) reader;
+			throw new XmlException(string.Format("End element '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		/// <summary>
+		/// Tests if the current content node is an end tag whose <see cref="XmlReader.Name"/> matches the given <paramref
+		/// name="name"/> argument.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The qualified name of the element.
+		/// </param>
+		public static bool IsEndElement(this XmlReader reader, string name)
+		{
+			return reader.NodeType == XmlNodeType.EndElement && reader.Name == name;
 		}
 
 		/// <summary>

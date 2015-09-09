@@ -30,6 +30,7 @@ using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Extensions;
+using Be.Stateless.Linq;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -38,6 +39,14 @@ using Microsoft.BizTalk.XPath;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	public enum ExtractorPrecedence
+	{
+		Schema,
+		SchemaOnly,
+		Pipeline,
+		PipelineOnly
+	}
+
 	/// <summary>
 	/// This component allows to promote or write properties in the message context whose values are extracted out of an
 	/// XML message by defining less restrictive XPath expressions than the traditional canonical XPath expressions
@@ -121,7 +130,6 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	// TODO derive from ActivityTrackerComponent
 	public class ContextPropertyExtractorComponent : PipelineComponent
 	{
 		/// <summary>
@@ -129,7 +137,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// </summary>
 		public ContextPropertyExtractorComponent()
 		{
-			Extractors = XPathExtractorCollection.Empty;
+			Extractors = Enumerable.Empty<XPathExtractor>();
 		}
 
 		#region Base Class Member Overrides
@@ -179,7 +187,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// <param name="propertyBag">Configuration property bag</param>
 		protected override void Load(IPropertyBag propertyBag)
 		{
-			propertyBag.ReadProperty("Extractors", value => Extractors = XPathExtractorCollectionConverter.Deserialize(value));
+			propertyBag.ReadProperty("Extractors", value => Extractors = XPathExtractorEnumerableConverter.Deserialize(value));
 		}
 
 		/// <summary>
@@ -188,7 +196,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// <param name="propertyBag">Configuration property bag</param>
 		protected override void Save(IPropertyBag propertyBag)
 		{
-			propertyBag.WriteProperty("Extractors", XPathExtractorCollectionConverter.Serialize(Extractors));
+			propertyBag.WriteProperty("Extractors", XPathExtractorEnumerableConverter.Serialize(Extractors));
 		}
 
 		#endregion
@@ -198,8 +206,8 @@ namespace Be.Stateless.BizTalk.Component
 		/// </summary>
 		[Browsable(true)]
 		[Description("Pipeline's configuration of the properties to extract out of the current message.")]
-		[TypeConverter(typeof(XPathExtractorCollectionConverter))]
-		public XPathExtractorCollection Extractors { get; set; }
+		[TypeConverter(typeof(XPathExtractorEnumerableConverter))]
+		public IEnumerable<XPathExtractor> Extractors { get; set; }
 
 		internal IEnumerable<XPathExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
 		{
@@ -218,10 +226,14 @@ namespace Be.Stateless.BizTalk.Component
 
 			// TODO take extractorPrecedence into account, right now precedence is always given to schema annotations if they exist
 
+			// ReSharper disable PossibleMultipleEnumeration
 			return schemaAnnotations.Any()
 				// merge configured and schema-annotated extractors so as to give precedence to schema annotations.
-				? schemaAnnotations.Union(Extractors)
+				// Union enumerates first and second in that order and yields each element that has not already been
+				// yielded, see http://msdn.microsoft.com/en-us/library/bb358407(v=VS.90)
+				? schemaAnnotations.Union(Extractors).Union(Extractors, new LambdaComparer<XPathExtractor>((le, re) => le.PropertyName == re.PropertyName))
 				: Extractors;
+			// ReSharper restore PossibleMultipleEnumeration
 		}
 
 		private void OnMatch(IBaseMessageContext messageContext, XmlQualifiedName propertyName, string value, ExtractionMode extractionMode)
