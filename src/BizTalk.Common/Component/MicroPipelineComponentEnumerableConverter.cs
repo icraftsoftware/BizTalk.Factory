@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -31,15 +32,31 @@ using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	/// <summary>
+	/// Converts an <see cref="IEnumerable{T}"/> of <see cref="IMicroPipelineComponent"/>s back and forth to an XML <see
+	/// cref="string"/>.
+	/// </summary>
 	public class MicroPipelineComponentEnumerableConverter : ExpandableObjectConverter
 	{
+		/// <summary>
+		/// Deserializes an <see cref="IEnumerable{T}"/> of <see cref="IMicroPipelineComponent"/>s from its XML
+		/// serialization <see cref="string"/>.
+		/// </summary>
+		/// <param name="xml">
+		/// A <see cref="string"/> denoting the XML serialization of an <see cref="IEnumerable{T}"/> of <see
+		/// cref="IMicroPipelineComponent"/>s.
+		/// </param>
+		/// <returns>
+		/// The deserialized <see cref="IEnumerable{T}"/> of <see cref="IMicroPipelineComponent"/>s.
+		/// </returns>
+		/// <seealso cref="Serialize"/>
 		public static IEnumerable<IMicroPipelineComponent> Deserialize(string xml)
 		{
 			if (xml.IsNullOrEmpty()) return Enumerable.Empty<IMicroPipelineComponent>();
 
 			try
 			{
-				using (var reader = XmlReader.Create(new StringReader(xml)))
+				using (var reader = XmlReader.Create(new StringReader(xml), new XmlReaderSettings { IgnoreWhitespace = true, IgnoreComments = true }))
 				{
 					reader.AssertStartElement("mComponents");
 					reader.ReadStartElement();
@@ -59,16 +76,27 @@ namespace Be.Stateless.BizTalk.Component
 			}
 		}
 
+		/// <summary>
+		/// Serializes an <see cref="IEnumerable{T}"/> of <see cref="IMicroPipelineComponent"/>s to its XML <see
+		/// cref="string"/> representation.
+		/// </summary>
+		/// <param name="components">
+		/// The <see cref="IEnumerable{T}"/> of <see cref="IMicroPipelineComponent"/>s to serialize.
+		/// </param>
+		/// <returns>
+		/// A <see cref="string"/> that represents the <see cref="IEnumerable{T}"/> of <see
+		/// cref="IMicroPipelineComponent"/>s.
+		/// </returns>
+		/// <seealso cref="Deserialize"/>
+		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		public static string Serialize(IEnumerable<IMicroPipelineComponent> components)
 		{
-			// ReSharper disable once PossibleMultipleEnumeration
 			if (!components.Any()) return null;
 
 			var builder = new StringBuilder();
 			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
 				writer.WriteStartElement("mComponents");
-				// ReSharper disable once PossibleMultipleEnumeration
 				foreach (var component in components)
 				{
 					component.Serialize(writer);
@@ -137,9 +165,7 @@ namespace Be.Stateless.BizTalk.Component
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
 			var xml = value as string;
-			if (value == null || xml != null) return Deserialize(xml);
-
-			return base.ConvertFrom(context, culture, value);
+			return value == null || xml != null ? Deserialize(xml) : base.ConvertFrom(context, culture, value);
 		}
 
 		/// <summary>

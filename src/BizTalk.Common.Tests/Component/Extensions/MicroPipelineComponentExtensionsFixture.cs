@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion
@@ -79,7 +79,7 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion
@@ -93,7 +93,7 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 
 			public void ReadXml(XmlReader reader)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			public void WriteXml(XmlWriter writer) { }

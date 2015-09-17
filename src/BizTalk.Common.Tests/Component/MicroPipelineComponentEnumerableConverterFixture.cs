@@ -18,11 +18,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Linq;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -51,17 +53,20 @@ namespace Be.Stateless.BizTalk.Component
 		public void ConvertFrom()
 		{
 			var xml = string.Format(
-				"<mComponents>"
-					+ "<mComponent name=\"{0}\">"
-					+ "<Property-One>1</Property-One><Property-Two>2</Property-Two>"
-					+ "</mComponent>"
-					+ "<mComponent name=\"{1}\">"
-					+ "<Property-Six>6</Property-Six><Property-Ten>9</Property-Ten>"
-					+ "</mComponent>"
-					+ "<mComponent name=\"{2}\">"
-					+ "<Index>10</Index><Name>DummyTen</Name>"
-					+ "</mComponent>"
-					+ "</mComponents>",
+				@"<mComponents>
+  <mComponent name=""{0}"">
+    <Property-One>1</Property-One>
+    <Property-Two>2</Property-Two>
+  </mComponent>
+  <mComponent name=""{1}"" >
+    <Property-Six>6</Property-Six>
+    <Property-Ten>9</Property-Ten>
+  </mComponent>
+  <mComponent name=""{2}"">
+    <Index>10</Index>
+    <Name>DummyTen</Name>
+  </mComponent>
+</mComponents>",
 				typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName,
 				typeof(MicroPipelineComponentDummyTwo).AssemblyQualifiedName,
 				typeof(MicroPipelineComponentDummyTen).AssemblyQualifiedName);
@@ -145,13 +150,108 @@ namespace Be.Stateless.BizTalk.Component
 		[Test]
 		public void DeserializeComplexType()
 		{
-			Assert.Fail("TODO");
+			var xml = string.Format(
+				@"<mComponents>
+  <mComponent name=""{0}"">
+    <Enabled>true</Enabled>
+    <Extractors>
+      <s0:Properties xmlns:s0=""urn:schemas.stateless.be:biztalk:annotations:2013:01"" xmlns:s1=""urn"">
+        <s1:Property1 xpath=""*/some-node"" />
+        <s1:Property2 promoted=""true"" xpath=""*/other-node"" />
+      </s0:Properties>
+    </Extractors>
+  </mComponent>
+  <mComponent name=""{1}"">
+    <Property-One>1</Property-One>
+    <Property-Two>2</Property-Two>
+  </mComponent>
+</mComponents>",
+				typeof(DummyContextPropertyExtractorComponent).AssemblyQualifiedName,
+				typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName
+				);
+
+			var sut = new MicroPipelineComponentEnumerableConverter();
+
+			var deserialized = sut.ConvertFrom(xml) as IMicroPipelineComponent[];
+
+			Assert.That(
+				deserialized,
+				Is.EquivalentTo(
+					new IMicroPipelineComponent[] {
+						new DummyContextPropertyExtractorComponent(),
+						new MicroPipelineComponentDummyOne()
+					})
+					.Using(new LambdaComparer<IMicroPipelineComponent>((lmc, rmc) => lmc.GetType() == rmc.GetType())));
+
+			// ReSharper disable once PossibleNullReferenceException
+			var extractorComponent = deserialized[0] as DummyContextPropertyExtractorComponent;
+			Assert.That(extractorComponent, Is.Not.Null);
+			// ReSharper disable once PossibleNullReferenceException
+			Assert.That(extractorComponent.Enabled);
+			Assert.That(
+				extractorComponent.Extractors,
+				Is.EqualTo(
+					new[] {
+						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+						new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
+					}));
 		}
 
 		[Test]
 		public void SerializeComplexType()
 		{
-			Assert.Fail("TODO");
+			var component = new DummyContextPropertyExtractorComponent {
+				Enabled = true,
+				Extractors = new[] {
+					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+					new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
+				}
+			};
+
+			var sut = new MicroPipelineComponentEnumerableConverter();
+
+			Assert.That(
+				sut.ConvertTo(new IMicroPipelineComponent[] { component }, typeof(string)),
+				Is.EqualTo(
+					string.Format(
+						"<mComponents>"
+							+ "<mComponent name=\"{0}\">"
+							+ "<Enabled>true</Enabled>"
+							+ "<Extractors>"
+							+ "<s0:Properties xmlns:s0=\"urn:schemas.stateless.be:biztalk:annotations:2013:01\" xmlns:s1=\"urn\">"
+							+ "<s1:Property1 xpath=\"*/some-node\" />"
+							+ "<s1:Property2 promoted=\"true\" xpath=\"*/other-node\" />"
+							+ "</s0:Properties>"
+							+ "</Extractors>"
+							+ "</mComponent>"
+							+ "</mComponents>",
+						typeof(DummyContextPropertyExtractorComponent).AssemblyQualifiedName)));
+		}
+
+		public class DummyContextPropertyExtractorComponent : IMicroPipelineComponent
+		{
+			#region IMicroPipelineComponent Members
+
+			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
+			{
+				throw new NotSupportedException();
+			}
+
+			#endregion
+
+			public bool Enabled { get; set; }
+
+			[XmlIgnore]
+			public IEnumerable<XPathExtractor> Extractors { get; set; }
+
+			[Browsable(false)]
+			[EditorBrowsable(EditorBrowsableState.Never)]
+			[XmlElement("Extractors")]
+			public XPathExtractorEnumerableSerializer ExtractorsSerializer
+			{
+				get { return new XPathExtractorEnumerableSerializer(Extractors); }
+				set { Extractors = value.Extractors; }
+			}
 		}
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Required by XML serialization")]
@@ -162,7 +262,7 @@ namespace Be.Stateless.BizTalk.Component
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion
@@ -205,7 +305,7 @@ namespace Be.Stateless.BizTalk.Component
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion
@@ -250,7 +350,7 @@ namespace Be.Stateless.BizTalk.Component
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion

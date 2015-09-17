@@ -32,13 +32,40 @@ namespace Be.Stateless.Xml.Extensions
 		/// An <see cref="XmlReader"/> object.
 		/// </param>
 		/// <param name="name">
-		/// The qualified name of the element.
+		/// The string to match against the <see cref="XmlReader.Name"/> property of the element found.
 		/// </param>
 		public static void AssertStartElement(this XmlReader reader, string name)
 		{
 			if (reader.IsStartElement(name)) return;
 			var info = (IXmlLineInfo) reader;
 			throw new XmlException(string.Format("Element '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		/// <summary>
+		/// Calls <see cref="XmlReader.MoveToContent"/> and tests if the current content node is a start tag or empty
+		/// element tag whose <see cref="XmlReader.LocalName"/> and <see cref="XmlReader.NamespaceURI"/> properties match
+		/// the given <paramref name="name"/> and <param name="ns"/> arguments; throws otherwise.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The string to match against the <see cref="XmlReader.LocalName"/> property of the element found.
+		/// </param>
+		/// <param name="ns">
+		/// The string to match against the <see cref="XmlReader.NamespaceURI"/> property of the element found.
+		/// </param>
+		public static void AssertStartElement(this XmlReader reader, string name, string ns)
+		{
+			if (reader.IsStartElement(name, ns)) return;
+			var info = (IXmlLineInfo) reader;
+			throw new XmlException(
+				string.Format(
+					"Element '{0}' with namespace name '{1}' was not found. Line {2}, position {3}.",
+					name,
+					ns,
+					info.LineNumber,
+					info.LinePosition));
 		}
 
 		/// <summary>
@@ -49,13 +76,40 @@ namespace Be.Stateless.Xml.Extensions
 		/// An <see cref="XmlReader"/> object.
 		/// </param>
 		/// <param name="name">
-		/// The qualified name of the element.
+		/// The string to match against the <see cref="XmlReader.Name"/> property of the element found.
 		/// </param>
 		public static void AssertEndElement(this XmlReader reader, string name)
 		{
-			if (reader.NodeType == XmlNodeType.EndElement && reader.Name == name) return;
+			if (reader.IsEndElement(name)) return;
 			var info = (IXmlLineInfo) reader;
 			throw new XmlException(string.Format("End element '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		/// <summary>
+		/// Tests if the current content node is an end tag whose <see cref="XmlReader.LocalName"/> and <see
+		/// cref="XmlReader.NamespaceURI"/> match the given <paramref name="name"/> and <param name="ns"/> arguments;
+		/// throws otherwise.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The string to match against the <see cref="XmlReader.LocalName"/> property of the element found.
+		/// </param>
+		/// <param name="ns">
+		/// The string to match against the <see cref="XmlReader.NamespaceURI"/> property of the element found.
+		/// </param>
+		public static void AssertEndElement(this XmlReader reader, string name, string ns)
+		{
+			if (reader.IsEndElement(name, ns)) return;
+			var info = (IXmlLineInfo) reader;
+			throw new XmlException(
+				string.Format(
+					"End element '{0}' with namespace name '{1}' was not found. Line {2}, position {3}.",
+					name,
+					ns,
+					info.LineNumber,
+					info.LinePosition));
 		}
 
 		/// <summary>
@@ -66,11 +120,30 @@ namespace Be.Stateless.Xml.Extensions
 		/// An <see cref="XmlReader"/> object.
 		/// </param>
 		/// <param name="name">
-		/// The qualified name of the element.
+		/// The string to match against the <see cref="XmlReader.Name"/> property of the element found.
 		/// </param>
 		public static bool IsEndElement(this XmlReader reader, string name)
 		{
 			return reader.NodeType == XmlNodeType.EndElement && reader.Name == name;
+		}
+
+		/// <summary>
+		/// Tests if the current content node is an end tag whose <see cref="XmlReader.LocalName"/> and <see
+		/// cref="XmlReader.NamespaceURI"/> properties match the given <paramref name="name"/> and <paramref name="ns"/>
+		/// arguments.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The string to match against the <see cref="XmlReader.LocalName"/> property of the element found.
+		/// </param>
+		/// <param name="ns">
+		/// The string to match against the <see cref="XmlReader.NamespaceURI"/> property of the element found.
+		/// </param>
+		public static bool IsEndElement(this XmlReader reader, string name, string ns)
+		{
+			return reader.NodeType == XmlNodeType.EndElement && reader.LocalName == name && reader.NamespaceURI == ns;
 		}
 
 		/// <summary>
@@ -97,6 +170,41 @@ namespace Be.Stateless.Xml.Extensions
 			if (reader.MoveToAttribute(name)) return reader.Value;
 			var info = (IXmlLineInfo) reader;
 			throw new XmlException(string.Format("Attribute '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		/// <summary>
+		/// Checks that the current content node is an element with the given <param name="name"/> and advances the reader
+		/// to the next node.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The qualified name of the element.
+		/// </param>
+		public static void ReadEndElement(this XmlReader reader, string name)
+		{
+			reader.AssertEndElement(name);
+			reader.ReadEndElement();
+		}
+
+		/// <summary>
+		/// Checks that the current content node is an element with the given <see cref="XmlReader.LocalName"/> and <see
+		/// cref="XmlReader.NamespaceURI"/> and advances the reader to the next node.
+		/// </summary>
+		/// <param name="reader">
+		/// An <see cref="XmlReader"/> object.
+		/// </param>
+		/// <param name="name">
+		/// The local name of the element.
+		/// </param>
+		/// <param name="ns">
+		/// The namespace URI of the element.
+		/// </param>
+		public static void ReadEndElement(this XmlReader reader, string name, string ns)
+		{
+			reader.AssertEndElement(name, ns);
+			reader.ReadEndElement();
 		}
 	}
 }

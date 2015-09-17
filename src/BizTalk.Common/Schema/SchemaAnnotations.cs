@@ -113,7 +113,8 @@ namespace Be.Stateless.BizTalk.Schema
 
 			var extractors = annotations
 				.SingleOrDefault(e => e.Name.LocalName == "Properties")
-				.IfNotNull(p => ((IEnumerable<XPathExtractor>) new XPathExtractorEnumerableConverter().ConvertFrom(p))) ?? Enumerable.Empty<XPathExtractor>();
+				.IfNotNull(p => XPathExtractorEnumerableSerializer.Deserialize(p))
+				?? Enumerable.Empty<XPathExtractor>();
 			// ReSharper restore PossibleMultipleEnumeration
 
 			return new SchemaAnnotations {

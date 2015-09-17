@@ -39,14 +39,6 @@ using Microsoft.BizTalk.XPath;
 
 namespace Be.Stateless.BizTalk.Component
 {
-	public enum ExtractorPrecedence
-	{
-		Schema,
-		SchemaOnly,
-		Pipeline,
-		PipelineOnly
-	}
-
 	/// <summary>
 	/// This component allows to promote or write properties in the message context whose values are extracted out of an
 	/// XML message by defining less restrictive XPath expressions than the traditional canonical XPath expressions

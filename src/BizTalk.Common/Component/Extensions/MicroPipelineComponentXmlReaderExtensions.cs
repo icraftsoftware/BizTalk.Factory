@@ -37,23 +37,29 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 						microPipelineComponentType.AssemblyQualifiedName,
 						typeof(IMicroPipelineComponent).Name));
 
-			var overrides = new XmlAttributeOverrides();
-			overrides.Add(microPipelineComponentType, new XmlAttributes { XmlRoot = new XmlRootAttribute("mComponent") });
+			// reset position to an element as required to call ReadSubtree()
+			reader.MoveToElement();
+			var microPipelineComponentXmlSubtree = reader.ReadSubtree();
+
+			IMicroPipelineComponent component;
 			if (typeof(IXmlSerializable).IsAssignableFrom(microPipelineComponentType))
 			{
-				var component = (IXmlSerializable) Activator.CreateInstance(microPipelineComponentType);
+				component = (IMicroPipelineComponent) Activator.CreateInstance(microPipelineComponentType);
 				// relieve micro pipeline components from having to deal with surrounding mComponent XML element
+				microPipelineComponentXmlSubtree.MoveToContent();
 				reader.ReadStartElement("mComponent");
-				component.ReadXml(reader);
-				if (reader.IsEndElement("mComponent")) reader.ReadEndElement();
-				return (IMicroPipelineComponent) component;
+				((IXmlSerializable) component).ReadXml(microPipelineComponentXmlSubtree);
 			}
 			else
 			{
+				var overrides = new XmlAttributeOverrides();
+				overrides.Add(microPipelineComponentType, new XmlAttributes { XmlRoot = new XmlRootAttribute("mComponent") });
 				var serializer = new XmlSerializer(microPipelineComponentType, overrides);
-				var component = (IMicroPipelineComponent) serializer.Deserialize(reader);
-				return component;
+				component = (IMicroPipelineComponent) serializer.Deserialize(microPipelineComponentXmlSubtree);
 			}
+
+			reader.Skip();
+			return component;
 		}
 
 		internal static bool IsMicroPipelineComponent(this XmlReader reader)

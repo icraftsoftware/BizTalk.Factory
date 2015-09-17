@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,14 @@ namespace Be.Stateless.BizTalk.XPath
 		Write = 0
 	}
 
+	public enum ExtractorPrecedence
+	{
+		Schema,
+		SchemaOnly,
+		Pipeline,
+		PipelineOnly
+	}
+
 	/// <summary>
 	/// Denotes a context property whose value will be extracted from an <see cref="IBaseMessagePart"/>'s payload while
 	/// being processed by the <c>Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent</c> pipeline
@@ -39,6 +47,8 @@ namespace Be.Stateless.BizTalk.XPath
 	/// </summary>
 	public class XPathExtractor : IEquatable<XPathExtractor>
 	{
+		#region Operators
+
 		public static bool operator ==(XPathExtractor left, XPathExtractor right)
 		{
 			return Equals(left, right);
@@ -48,6 +58,8 @@ namespace Be.Stateless.BizTalk.XPath
 		{
 			return !Equals(left, right);
 		}
+
+		#endregion
 
 		public XPathExtractor(XmlQualifiedName propertyName, string xpathExpression, ExtractionMode extractionMode)
 		{
