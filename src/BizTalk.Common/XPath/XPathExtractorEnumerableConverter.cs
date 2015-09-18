@@ -23,6 +23,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Be.Stateless.Extensions;
 
@@ -77,9 +78,13 @@ namespace Be.Stateless.BizTalk.XPath
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		public static string Serialize(IEnumerable<XPathExtractor> extractors)
 		{
-			return !extractors.Any()
-				? null
-				: new XPathExtractorEnumerableSerializer(extractors).ToString();
+			if (!extractors.Any()) return null;
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			{
+				new XPathExtractorEnumerableSerializer(extractors).WriteXml(writer);
+			}
+			return builder.ToString();
 		}
 
 		#region Base Class Member Overrides

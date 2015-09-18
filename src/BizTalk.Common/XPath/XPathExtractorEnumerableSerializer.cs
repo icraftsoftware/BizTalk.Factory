@@ -29,6 +29,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.Extensions;
+using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.BizTalk.XPath
@@ -61,20 +62,18 @@ namespace Be.Stateless.BizTalk.XPath
 		/// <returns>
 		/// The deserialized <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
 		/// </returns>
-		/// <seealso cref="Serialize"/>
 		internal static IEnumerable<XPathExtractor> Deserialize(XElement propertiesElement)
 		{
 			// TODO use XmlReader API, see ReadXmlProperties
 
 			try
 			{
-				// TODO deserialize all values of ExtractorPrecedence (@extractorPrecedence)
-				// TODO deserialize all values of ExtractionMode
-
+				// TODO deserialize all values of ExtractorPrecedence (@precedence)
 				var extractors = propertiesElement.Elements().Select(
 					pe => new XPathExtractor(
 						new XmlQualifiedName(pe.Name.LocalName, pe.Name.NamespaceName),
 						pe.Attribute("xpath").Value,
+						// TODO deserialize all values of ExtractionMode (@mode)
 						pe.Attribute("promoted").IfNotNull(p => bool.Parse(p.Value)) ? ExtractionMode.Promote : ExtractionMode.Write))
 					.ToArray();
 
@@ -142,23 +141,7 @@ namespace Be.Stateless.BizTalk.XPath
 		/// </param>
 		public void WriteXml(XmlWriter writer)
 		{
-			if (Extractors.Any()) Serialize(Extractors).WriteTo(writer);
-		}
-
-		#endregion
-
-		#region Base Class Member Overrides
-
-		/// <summary>
-		/// Serializes the <see cref="Extractors"/> state property to an XML <see cref="string"/>.
-		/// </summary>
-		/// <returns>
-		/// The <see cref="string"/> corresponding to the XML serialization format of the <see cref="Extractors"/> state
-		/// property.
-		/// </returns>
-		public override string ToString()
-		{
-			return Serialize(Extractors).ToString(SaveOptions.DisableFormatting);
+			if (Extractors.Any()) WriteXmlProperties(writer);
 		}
 
 		#endregion
@@ -174,11 +157,11 @@ namespace Be.Stateless.BizTalk.XPath
 			var list = new List<XPathExtractor>();
 			while (!reader.IsEndElement("Properties", SchemaAnnotations.NAMESPACE))
 			{
+				// TODO deserialize all values of ExtractorPrecedence (@precedence)
 				var extractor = new XPathExtractor(
 					new XmlQualifiedName(reader.LocalName, reader.NamespaceURI),
 					reader.GetMandatoryAttribute("xpath"),
-					// TODO deserialize all values of ExtractorPrecedence (@extractorPrecedence)
-					// TODO deserialize all values of ExtractionMode
+					// TODO deserialize all values of ExtractionMode (@mode)
 					Convert.ToBoolean(reader.GetAttribute("promoted")) ? ExtractionMode.Promote : ExtractionMode.Write);
 				list.Add(extractor);
 				reader.Read();
@@ -187,42 +170,33 @@ namespace Be.Stateless.BizTalk.XPath
 			Extractors = list.ToArray();
 		}
 
-		/// <summary>
-		/// Serializes an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s to an <see cref="XElement"/>.
-		/// </summary>
-		/// <param name="extractors">
-		/// The <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s to serialize to an <see cref="XElement"/>.
-		/// </param>
-		/// <returns>
-		/// The <see cref="XElement"/> corresponding to the serialized <see cref="IEnumerable{T}"/> of <see
-		/// cref="XPathExtractor"/>s.
-		/// </returns>
-		/// <seealso cref="Deserialize"/>
-		private XElement Serialize(IEnumerable<XPathExtractor> extractors)
+		private void WriteXmlProperties(XmlWriter writer)
 		{
-			// TODO use XmlWriter API
-
-			// cache xmlns while constructing xml infoset...
+			// so as to declare ns prefixes at the root element level to minimize xml string size
 			var nsCache = new XmlDictionary();
-			var xElement = new XElement(
-				XName.Get("Properties", nsCache.Add(SchemaAnnotations.NAMESPACE).Value),
-				extractors.Select(
-					p => new XElement(
-						XName.Get(p.PropertyName.Name, nsCache.Add(p.PropertyName.Namespace).Value),
-						// TODO serialize all values of ExtractorPrecedence (@extractorPrecedence)
-						// TODO serialize all values of ExtractionMode
-						p.ExtractionMode == ExtractionMode.Promote ? new XAttribute("promoted", true) : null,
-						new XAttribute("xpath", p.XPathExpression.XPath))
-					)
-				);
+			nsCache.Add(SchemaAnnotations.NAMESPACE);
+			Extractors.Each(e => nsCache.Add(e.PropertyName.Namespace));
 
-			// ... and declare/alias all of them at the root element level to minimize xml string size
 			XmlDictionaryString xds;
+			writer.WriteStartElement("s0", "Properties", SchemaAnnotations.NAMESPACE);
+			// TODO serialize all values of ExtractorPrecedence (@precedence)
 			for (var i = 0; nsCache.TryLookup(i, out xds); i++)
 			{
-				xElement.Add(new XAttribute(XNamespace.Xmlns + "s" + xds.Key.ToString(CultureInfo.InvariantCulture), xds.Value));
+				// see https://msdn.microsoft.com/en-us/library/system.xml.xmltextwriter(v=vs.110).aspx
+				// - XmlTextWriter maintains a namespace stack corresponding to all the namespaces defined in the current element stack
+				// - XmlTextWriter also allows you to override the current namespace declaration
+				// ReSharper disable once AssignNullToNotNullAttribute
+				writer.WriteAttributeString("xmlns", "s" + (xds.Key).ToString(CultureInfo.InvariantCulture), null, xds.Value);
 			}
-			return xElement;
+			Extractors.Each(
+				e => {
+					writer.WriteStartElement(e.PropertyName.Name, e.PropertyName.Namespace);
+					// TODO serialize all values of ExtractionMode (@mode)
+					if (e.ExtractionMode == ExtractionMode.Promote) writer.WriteAttributeString("promoted", "true");
+					writer.WriteAttributeString("xpath", e.XPathExpression.XPath);
+					writer.WriteEndElement();
+				});
+			writer.WriteEndElement();
 		}
 
 		#region Validators
