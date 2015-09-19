@@ -40,7 +40,7 @@ namespace Be.Stateless.IO
 	/// Transactional NTFS</a>.
 	/// </para>
 	/// <para>
-	/// <a href="https://transactionalfilemgr.codeplex.com/">.NET Transactional File Manager</a>.
+	/// <see href="https://transactionalfilemgr.codeplex.com/">.NET Transactional File Manager</see>.
 	/// </para>
 	/// </remarks>
 	public static class FileTransacted

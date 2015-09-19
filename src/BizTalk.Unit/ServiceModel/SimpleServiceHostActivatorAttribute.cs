@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		/// The address at which to expose the single endpoint.
 		/// </param>
 		/// <remarks>
-		/// Don't forget to <a href="http://msdn.microsoft.com/en-us/library/ms733768.aspx">configure HTTP</a>:
+		/// Don't forget to <see href="http://msdn.microsoft.com/en-us/library/ms733768.aspx">configure HTTP</see>:
 		/// <code><![CDATA[netsh http add urlacl url=http://+:8001/calculator user=$env:USERDOMAIN\$env:USERNAME]]>!</code>
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/library/ms733768.aspx"/>
@@ -86,7 +86,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		/// exception.
 		/// </param>
 		/// <remarks>
-		/// Don't forget to <a href="http://msdn.microsoft.com/en-us/library/ms733768.aspx">configure HTTP</a>:
+		/// Don't forget to <see href="http://msdn.microsoft.com/en-us/library/ms733768.aspx">configure HTTP</see>:
 		/// <code><![CDATA[netsh http add urlacl url=http://+:8001/calculator user=$env:USERDOMAIN\$env:USERNAME]]>!</code>
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/library/ms733768.aspx"/>
