@@ -87,8 +87,7 @@ namespace Be.Stateless.BizTalk.XPath
 				{
 					ReadXmlProperties(reader);
 				}
-				CheckExtractorsValidity(Extractors);
-				CheckExtractorsUnicity(Extractors);
+				ValidateExtractors();
 			}
 			catch (Microsoft.BizTalk.XPath.XPathException exception)
 			{
@@ -166,14 +165,12 @@ namespace Be.Stateless.BizTalk.XPath
 			writer.WriteEndElement();
 		}
 
-		#region Validators
-
 		[Conditional("DEBUG")]
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
-		private static void CheckExtractorsValidity(IEnumerable<XPathExtractor> extractors)
+		private void ValidateExtractors()
 		{
-			// ensure each property to extract is associated to a property schema's namespace and has a non empty XPath expression
-			var invalidExtractors = extractors
+			// ensure each property to extract is associated to a property schema's namespace
+			var invalidExtractors = Extractors
 				.Where(e => e.PropertyName.Namespace.IsNullOrEmpty());
 
 			if (invalidExtractors.Any())
@@ -181,26 +178,19 @@ namespace Be.Stateless.BizTalk.XPath
 					string.Format(
 						"The following properties are not associated with the target namespace URI of some property schema: [{0}].",
 						string.Join("], [", invalidExtractors.Select(ie => ie.PropertyName.ToString()).ToArray())));
-		}
 
-		[Conditional("DEBUG")]
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
-		private static void CheckExtractorsUnicity(IEnumerable<XPathExtractor> extractors)
-		{
 			// ensure no property is extracted multiple times (irrespectively of XPaths)
-			var duplicates = extractors
+			var duplicateExtractors = Extractors
 				.GroupBy(ex => ex.PropertyName)
 				.Where(g => g.Count() > 1)
 				.Select(g => g.Key);
 
-			if (duplicates.Any())
+			if (duplicateExtractors.Any())
 				throw new XmlException(
 					string.Format(
 						"The following properties are declared multiple times: [{0}].",
-						string.Join("], [", duplicates.Select(p => p.ToString()).ToArray())));
+						string.Join("], [", duplicateExtractors.Select(p => p.ToString()).ToArray())));
 		}
-
-		#endregion
 
 		private const string MESSAGE = @"Invalid schema annotations or pipeline configuration, it must be an XML string structured as follows:
 <san:Properties xmlns:s0='urn0' xmlns:s1='urn1' xmlns:san='" + SchemaAnnotations.NAMESPACE + @"'>
