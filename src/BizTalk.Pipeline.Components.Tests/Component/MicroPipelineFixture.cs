@@ -53,10 +53,21 @@ namespace Be.Stateless.BizTalk.Component
 					microComponentMockTwo.Object
 				}
 			};
-			sut.Execute(pipelineContextMock.Object, messageMock1.Object);
+
+			Assert.That(sut.Execute(pipelineContextMock.Object, messageMock1.Object), Is.SameAs(messageMock3.Object));
 
 			microComponentMockOne.VerifyAll();
 			microComponentMockTwo.VerifyAll();
+		}
+
+		[Test]
+		public void ExecuteNoMicroComponents()
+		{
+			var messageMock = new Unit.Message.Mock<IBaseMessage>();
+
+			var sut = new MicroPipeline();
+
+			Assert.That(sut.Execute(new Mock<IPipelineContext>().Object, messageMock.Object), Is.SameAs(messageMock.Object));
 		}
 
 		[Test]
