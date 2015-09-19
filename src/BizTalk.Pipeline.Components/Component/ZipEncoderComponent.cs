@@ -18,12 +18,9 @@
 
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.InteropServices;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -42,6 +39,11 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_Encoder)]
 	public class ZipEncoderComponent : PipelineComponent
 	{
+		public ZipEncoderComponent()
+		{
+			_microComponent = new ZipEncoder();
+		}
+
 		#region Base Class Member Overrides
 
 		[Browsable(false)]
@@ -52,23 +54,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			var location = message.GetProperty(BizTalkFactoryProperties.OutboundTransportLocation);
-			if (location.IsNullOrEmpty()) throw new InvalidOperationException("BizTalkFactoryProperties.OutboundTransportLocation has to be set in context in order to determine zip entry name.");
-
-			// TODO instead of SharpZipLib's ZipOutputStream use BCL's System.IO.Compression.ZipArchive or System.IO.Compression.GZipStream or System.IO.Compression.DeflateStream as only one zip entry is supported
-			message.BodyPart.WrapOriginalDataStream(
-				originalStream => {
-					if (_logger.IsDebugEnabled) _logger.Debug("Wrapping message stream in a zip-compressing stream.");
-					var zipEntryName = Path.GetFileName(location);
-					return new ZipOutputStream(originalStream, zipEntryName);
-				},
-				pipelineContext.ResourceTracker);
-
-			// ReSharper disable once AssignNullToNotNullAttribute
-			var zipLocation = Path.Combine(Path.GetDirectoryName(location), Path.GetFileNameWithoutExtension(location) + ".zip");
-			message.SetProperty(BizTalkFactoryProperties.OutboundTransportLocation, zipLocation);
-
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		public override void GetClassID(out Guid classId)
@@ -84,5 +70,6 @@ namespace Be.Stateless.BizTalk.Component
 
 		private const string CLASS_ID = "0895f316-1e7b-46c4-ba19-7d357d5ac116";
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ZipEncoderComponent));
+		private readonly ZipEncoder _microComponent;
 	}
 }

@@ -110,6 +110,10 @@
     <Compile Include="Component\ZipDecoderComponent.cs" />
     <Compile Include="Component\ZipEncoderComponent.cs" />
     <Compile Include="MicroComponent\ContextPropertyExtractor.cs" />
+    <Compile Include="MicroComponent\FailedMessageRoutingEnabler.cs" />
+    <Compile Include="MicroComponent\MessageConsumer.cs" />
+    <Compile Include="MicroComponent\ZipDecoder.cs" />
+    <Compile Include="MicroComponent\ZipEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tracking\Messaging\ActivityTracker.cs" />
     <Compile Include="Tracking\Messaging\BatchReleaseProcessActivityTracker.cs" />

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,46 +16,11 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Unit.Component;
-using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
 {
 	[TestFixture]
-	public class FailedMessageRoutingEnablerComponentFixture : PipelineComponentFixture<FailedMessageRoutingEnablerComponent>
-	{
-		[Test]
-		public void FailedMessageRoutingCanBeDisabled()
-		{
-			var sut = CreatePipelineComponent();
-			sut.EnableFailedMessageRouting = sut.SuppressRoutingFailureReport = false;
-
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			MessageMock.Verify(
-				m => m.SetProperty(BtsProperties.RouteMessageOnFailure, true),
-				Times.Never());
-			MessageMock.Verify(
-				m => m.SetProperty(BtsProperties.SuppressRoutingFailureDiagnosticInfo, true),
-				Times.Never());
-		}
-
-		[Test]
-		public void FailedMessageRoutingIsEnabledByDefault()
-		{
-			var sut = CreatePipelineComponent();
-
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			MessageMock.Verify(
-				m => m.SetProperty(BtsProperties.RouteMessageOnFailure, true),
-				Times.Once());
-			MessageMock.Verify(
-				m => m.SetProperty(BtsProperties.SuppressRoutingFailureDiagnosticInfo, true),
-				Times.Once());
-		}
-	}
+	public class FailedMessageRoutingEnablerComponentFixture : PipelineComponentFixture<FailedMessageRoutingEnablerComponent> { }
 }

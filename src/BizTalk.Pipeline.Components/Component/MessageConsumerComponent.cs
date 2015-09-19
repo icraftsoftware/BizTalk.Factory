@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,21 +19,26 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.IO.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	/// <summary>
+	/// Drain and consume the pipeline message.
+	/// </summary>
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	// TODO derive from MessageTrackerComponent
 	public class MessageConsumerComponent : PipelineComponent
 	{
-		#region IBaseComponent members
+		public MessageConsumerComponent()
+		{
+			_microComponent = new MessageConsumer();
+		}
+
+		#region Base Class Member Overrides
 
 		/// <summary>
 		/// Description of the component
@@ -44,9 +49,10 @@ namespace Be.Stateless.BizTalk.Component
 			get { return "Drain and consume the pipeline message."; }
 		}
 
-		#endregion
-
-		#region IPersistPropertyBag members
+		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
+		{
+			return _microComponent.Execute(pipelineContext, message);
+		}
 
 		/// <summary>
 		/// Gets class ID of component for usage from unmanaged code.
@@ -65,20 +71,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		#endregion
 
-		#region Base Class Member Overrides
-
-		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
-		{
-			// drain the message
-			message.BodyPart.GetOriginalDataStream().Drain();
-			// because of absorption, ensure no ack is generated should one be required
-			message.SetProperty(BtsProperties.AckRequired, false);
-			// absorb the message
-			return null;
-		}
-
-		#endregion
-
 		private const string CLASS_ID = "bf843dd6-b68f-444f-890d-a0f648d788db";
+		private readonly MessageConsumer _microComponent;
 	}
 }

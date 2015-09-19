@@ -43,7 +43,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// </summary>
 		public ContextPropertyExtractorComponent()
 		{
-			_extractionEngine = new ContextPropertyExtractor();
+			_microComponent = new ContextPropertyExtractor();
 		}
 
 		#region Base Class Member Overrides
@@ -60,7 +60,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			return _extractionEngine.Execute(pipelineContext, message);
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		/// <summary>
@@ -102,11 +102,11 @@ namespace Be.Stateless.BizTalk.Component
 		[TypeConverter(typeof(XPathExtractorEnumerableConverter))]
 		public IEnumerable<XPathExtractor> Extractors
 		{
-			get { return _extractionEngine.Extractors; }
-			set { _extractionEngine.Extractors = value; }
+			get { return _microComponent.Extractors; }
+			set { _microComponent.Extractors = value; }
 		}
 
 		private const string CLASS_ID = "7428622e-9b6a-4b2b-b895-56271d6d557c";
-		private readonly ContextPropertyExtractor _extractionEngine;
+		private readonly ContextPropertyExtractor _microComponent;
 	}
 }

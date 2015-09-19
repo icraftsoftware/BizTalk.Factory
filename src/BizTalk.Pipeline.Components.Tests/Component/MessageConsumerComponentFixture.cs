@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,37 +16,11 @@
 
 #endregion
 
-using System.IO;
-using System.Text;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Unit.Component;
-using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
 {
 	[TestFixture]
-	public class MessageConsumerComponentFixture : PipelineComponentFixture<MessageConsumerComponent>
-	{
-		[Test]
-		public void MessageIsDrainedAndAbsorbed()
-		{
-			MessageMock.Object.BodyPart.Data = new MemoryStream(_content);
-
-			var sut = CreatePipelineComponent();
-
-			Assert.That(MessageMock.Object.BodyPart.GetOriginalDataStream().Position, Is.EqualTo(0));
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-			// message has been drained
-			Assert.That(MessageMock.Object.BodyPart.GetOriginalDataStream().Position, Is.EqualTo(_content.Length));
-
-			// generation of ack message has been discarded
-			MessageMock.Verify(
-				m => m.SetProperty(BtsProperties.AckRequired, false),
-				Times.Once());
-		}
-
-		private readonly byte[] _content = Encoding.Unicode.GetBytes("Hello there.");
-	}
+	public class MessageConsumerComponentFixture : PipelineComponentFixture<MessageConsumerComponent> { }
 }

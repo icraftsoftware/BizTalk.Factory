@@ -18,7 +18,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
@@ -27,8 +26,6 @@ using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.IO.Extensions;
-using Microsoft.BizTalk.Component.Interop;
-using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.Streaming;
 using Moq;
 using NUnit.Framework;
@@ -36,20 +33,13 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.MicroComponent
 {
 	[TestFixture]
-	public class ContextPropertyExtractorFixture
+	public class ContextPropertyExtractorFixture : MicroPipelineComponentFixture
 	{
 		#region Setup/Teardown
 
 		[SetUp]
 		public void SetUp()
 		{
-			MessageMock = new Unit.Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
-
-			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };
-			// default behaviour analogous to actual IPipelineContext implementation
-			PipelineContextMock
-				.Setup(pc => pc.GetDocumentSpecByType(It.IsAny<string>()))
-				.Callback<string>(t => { throw new COMException("Could not locate document specification with type: " + t); });
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
 				.Returns(Schema<Any>.DocumentSpec);
@@ -207,10 +197,6 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.TypeOf<XPathMutatorStream>());
 			}
 		}
-
-		private Mock<IPipelineContext> PipelineContextMock { get; set; }
-
-		private Unit.Message.Mock<IBaseMessage> MessageMock { get; set; }
 
 		private Mock<ISchemaMetadata> SchemaMetadataMock { get; set; }
 

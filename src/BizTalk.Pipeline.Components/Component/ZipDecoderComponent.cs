@@ -19,9 +19,8 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -38,6 +37,11 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_Decoder)]
 	public class ZipDecoderComponent : PipelineComponent
 	{
+		public ZipDecoderComponent()
+		{
+			_microComponent = new ZipDecoder();
+		}
+
 		#region Base Class Member Overrides
 
 		[Browsable(false)]
@@ -48,16 +52,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			// TODO instead of SharpZipLib's ZipInputStream use BCL's System.IO.Compression.ZipArchive or System.IO.Compression.GZipStream or System.IO.Compression.DeflateStream as only one zip entry is supported
-			message.BodyPart.WrapOriginalDataStream(
-				originalStream => {
-					if (_logger.IsDebugEnabled) _logger.Debug("Wrapping message stream in a zip-decompressing stream.");
-					var substitutionStream = new ZipInputStream(originalStream);
-					substitutionStream.GetNextEntry();
-					return substitutionStream;
-				},
-				pipelineContext.ResourceTracker);
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		public override void GetClassID(out Guid classId)
@@ -72,6 +67,6 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		private const string CLASS_ID = "0a05a00f-e797-4b00-8af2-08c4263e7d39";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ZipDecoderComponent));
+		private readonly ZipDecoder _microComponent;
 	}
 }

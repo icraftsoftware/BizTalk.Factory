@@ -110,6 +110,11 @@
     <Compile Include="Component\ZipDecoderComponentFixture.cs" />
     <Compile Include="Component\ZipEncoderComponentFixture.cs" />
     <Compile Include="MicroComponent\ContextPropertyExtractorFixture.cs" />
+    <Compile Include="MicroComponent\FailedMessageRoutingEnablerFixture.cs" />
+    <Compile Include="MicroComponent\MessageConsumerFixture.cs" />
+    <Compile Include="MicroComponent\MicroPipelineComponentFixture.cs" />
+    <Compile Include="MicroComponent\ZipDecoderFixture.cs" />
+    <Compile Include="MicroComponent\ZipEncoderFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tracking\Messaging\ActivityTrackerFixture.cs" />
     <Compile Include="Tracking\Messaging\BatchReleaseProcessActivityTrackerFixture.cs" />
@@ -121,7 +126,7 @@
       <Link>be.stateless.public.snk</Link>
     </None>
     <None Include="App.config" />
-    <EmbeddedResource Include="Component\Data\message.zip" />
+    <EmbeddedResource Include="MicroComponent\Data\message.zip" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +165,10 @@
     <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
       <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
       <Name>Be.Stateless.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
+      <Project>{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}</Project>
+      <Name>Be.Stateless.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

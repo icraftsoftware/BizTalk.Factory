@@ -17,37 +17,10 @@
 #endregion
 
 using Be.Stateless.BizTalk.Unit.Component;
-using Be.Stateless.BizTalk.Unit.Resources;
-using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.BizTalk.Message.Interop;
-using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
 {
 	[TestFixture]
-	public class ZipDecoderComponentFixture : PipelineComponentFixture<ZipDecoderComponent>
-	{
-		#region Setup/Teardown
-
-		[SetUp]
-		public void Initialize()
-		{
-			var bodyPart = new Mock<IBaseMessagePart>();
-			bodyPart.Setup(p => p.GetOriginalDataStream()).Returns(ResourceManager.Load("Data.message.zip"));
-			bodyPart.SetupProperty(p => p.Data);
-			MessageMock.Setup(m => m.BodyPart).Returns(bodyPart.Object);
-		}
-
-		#endregion
-
-		[Test]
-		public void WrapsMessageStreamInZipInputStream()
-		{
-			var sut = CreatePipelineComponent();
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			Assert.IsInstanceOf<ZipInputStream>(MessageMock.Object.BodyPart.Data);
-		}
-	}
+	public class ZipDecoderComponentFixture : PipelineComponentFixture<ZipDecoderComponent> { }
 }
