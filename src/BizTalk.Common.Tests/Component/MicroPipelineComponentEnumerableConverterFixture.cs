@@ -247,9 +247,9 @@ namespace Be.Stateless.BizTalk.Component
 			[Browsable(false)]
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("Extractors")]
-			public XPathExtractorEnumerableSerializer ExtractorsSerializer
+			public XPathExtractorSerializerSurrogate ExtractorSerializerSurrogate
 			{
-				get { return new XPathExtractorEnumerableSerializer(Extractors); }
+				get { return new XPathExtractorSerializerSurrogate(Extractors); }
 				set { Extractors = value.Extractors; }
 			}
 		}

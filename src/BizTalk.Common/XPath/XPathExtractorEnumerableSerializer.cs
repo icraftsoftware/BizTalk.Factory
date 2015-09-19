@@ -73,20 +73,11 @@ namespace Be.Stateless.BizTalk.XPath
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> to deserialize the <see cref="Extractors"/> state property from.
 		/// </param>
-		public void ReadXml(XmlReader reader)
+		public virtual void ReadXml(XmlReader reader)
 		{
 			try
 			{
-				if (reader.IsStartElement("Extractors"))
-				{
-					reader.ReadStartElement();
-					ReadXmlProperties(reader);
-					reader.ReadEndElement("Extractors");
-				}
-				else
-				{
-					ReadXmlProperties(reader);
-				}
+				ReadXmlProperties(reader);
 				ValidateExtractors();
 			}
 			catch (Microsoft.BizTalk.XPath.XPathException exception)
@@ -119,9 +110,9 @@ namespace Be.Stateless.BizTalk.XPath
 
 		private void ReadXmlProperties(XmlReader reader)
 		{
-			reader.ReadStartElement("Properties", SchemaAnnotations.NAMESPACE);
 			var list = new List<XPathExtractor>();
-			while (!reader.IsEndElement("Properties", SchemaAnnotations.NAMESPACE))
+			reader.ReadStartElement("Properties", SchemaAnnotations.NAMESPACE);
+			while (reader.NodeType == XmlNodeType.Element)
 			{
 				// TODO deserialize all values of ExtractorPrecedence (@precedence)
 				var extractor = new XPathExtractor(
@@ -132,36 +123,39 @@ namespace Be.Stateless.BizTalk.XPath
 				list.Add(extractor);
 				reader.Read();
 			}
-			reader.ReadEndElement("Properties", SchemaAnnotations.NAMESPACE);
+			if (reader.IsEndElement("Properties", SchemaAnnotations.NAMESPACE)) reader.ReadEndElement();
 			Extractors = list.ToArray();
 		}
 
 		private void WriteXmlProperties(XmlWriter writer)
 		{
-			// so as to declare ns prefixes at the root element level to minimize xml string size
+			writer.WriteStartElement("s0", "Properties", SchemaAnnotations.NAMESPACE);
+			// TODO serialize all values of ExtractorPrecedence (@precedence)
+
+			// declare all the namespaces and their prefixes at the parent element
 			var nsCache = new XmlDictionary();
 			nsCache.Add(SchemaAnnotations.NAMESPACE);
 			Extractors.Each(e => nsCache.Add(e.PropertyName.Namespace));
-
 			XmlDictionaryString xds;
-			writer.WriteStartElement("s0", "Properties", SchemaAnnotations.NAMESPACE);
-			// TODO serialize all values of ExtractorPrecedence (@precedence)
 			for (var i = 0; nsCache.TryLookup(i, out xds); i++)
 			{
 				// see https://msdn.microsoft.com/en-us/library/system.xml.xmltextwriter(v=vs.110).aspx
-				// - XmlTextWriter maintains a namespace stack corresponding to all the namespaces defined in the current element stack
 				// - XmlTextWriter also allows you to override the current namespace declaration
 				// ReSharper disable once AssignNullToNotNullAttribute
 				writer.WriteAttributeString("xmlns", "s" + (xds.Key).ToString(CultureInfo.InvariantCulture), null, xds.Value);
 			}
+
 			Extractors.Each(
 				e => {
+					// see https://msdn.microsoft.com/en-us/library/system.xml.xmltextwriter(v=vs.110).aspx
+					// - XmlTextWriter maintains a namespace stack corresponding to all the namespaces defined in the current element stack
 					writer.WriteStartElement(e.PropertyName.Name, e.PropertyName.Namespace);
 					// TODO serialize all values of ExtractionMode (@mode)
 					if (e.ExtractionMode == ExtractionMode.Promote) writer.WriteAttributeString("promoted", "true");
 					writer.WriteAttributeString("xpath", e.XPathExpression.XPath);
 					writer.WriteEndElement();
 				});
+
 			writer.WriteEndElement();
 		}
 

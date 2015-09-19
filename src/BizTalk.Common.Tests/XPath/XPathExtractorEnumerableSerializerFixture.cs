@@ -117,9 +117,6 @@ namespace Be.Stateless.BizTalk.XPath
 		}
 
 		[Test]
-#if !DEBUG
-		[Ignore("Only to be run in DEBUG configuration.")]
-#endif
 		public void ReadXmlThrowsWhenPropertyToExtractHasNoXPath()
 		{
 			var xml = string.Format(
@@ -193,6 +190,19 @@ namespace Be.Stateless.BizTalk.XPath
 					Throws.TypeOf<ConfigurationErrorsException>()
 						.With.InnerException.TypeOf<XmlException>()
 						.With.InnerException.Message.EqualTo(expected));
+			}
+		}
+
+		[Test]
+		public void ReadXmlWithoutProperties()
+		{
+			var xml = string.Format("<san:Properties xmlns:s0='urn' xmlns:san='{0}' />", SchemaAnnotations.NAMESPACE);
+
+			using (var reader = XmlReader.Create(new StringReader(xml)))
+			{
+				var sut = new XPathExtractorEnumerableSerializer();
+				sut.ReadXml(reader);
+				Assert.That(sut.Extractors, Is.Empty);
 			}
 		}
 
