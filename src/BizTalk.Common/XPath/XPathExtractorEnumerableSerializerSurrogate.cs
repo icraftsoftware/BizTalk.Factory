@@ -24,11 +24,11 @@ using Be.Stateless.Xml.Extensions;
 namespace Be.Stateless.BizTalk.XPath
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization")]
-	public class XPathExtractorSerializerSurrogate : XPathExtractorEnumerableSerializer
+	public class XPathExtractorEnumerableSerializerSurrogate : XPathExtractorEnumerableSerializer
 	{
-		public XPathExtractorSerializerSurrogate() { }
+		public XPathExtractorEnumerableSerializerSurrogate() { }
 
-		public XPathExtractorSerializerSurrogate(IEnumerable<XPathExtractor> extractors) : base(extractors) { }
+		public XPathExtractorEnumerableSerializerSurrogate(IEnumerable<XPathExtractor> extractors) : base(extractors) { }
 
 		#region Base Class Member Overrides
 
