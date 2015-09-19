@@ -18,9 +18,12 @@
 
 using System;
 using Be.Stateless.BizTalk.Component;
+using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Unit.Resources;
+using Be.Stateless.BizTalk.XPath;
 using Microsoft.BizTalk.Component;
 using NUnit.Framework;
 
@@ -30,14 +33,19 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 	public class PipelineDesignerDocumentSerializerFixture
 	{
 		[Test]
-		public void ToXml()
+		public void SerializeMicroPipeline()
+		{
+			var pipelineDocument = ((IPipelineSerializerFactory) new XmlMicroPipeline()).GetPipelineDesignerDocumentSerializer();
+			Assert.That(pipelineDocument.Serialize(), Is.EqualTo(ResourceManager.LoadString("Data.XmlMicroPipelineDocument.xml")));
+		}
+
+		[Test]
+		public void SerializeRegularPipeline()
 		{
 			var pipelineDocument = ((IPipelineSerializerFactory) new TrackingXmlReceive()).GetPipelineDesignerDocumentSerializer();
 			// see http://msdn.microsoft.com/en-us/library/system.xml.linq.xnode.deepequals.aspx as an alternative
 			// comparison method, but not so helpful when there are differences
-			Assert.That(
-				pipelineDocument.Serialize(),
-				Is.EqualTo(ResourceManager.LoadString("Data.TrackingXmlReceivePipelineDocument.xml")));
+			Assert.That(pipelineDocument.Serialize(), Is.EqualTo(ResourceManager.LoadString("Data.TrackingXmlReceivePipelineDocument.xml")));
 		}
 
 		private class TrackingXmlReceive : ReceivePipeline
@@ -58,6 +66,32 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 						});
 				Stages.Disassemble
 					.AddComponent(new XmlDasmComp());
+			}
+		}
+
+		private class XmlMicroPipeline : ReceivePipeline
+		{
+			public XmlMicroPipeline()
+			{
+				Description = "XML micro receive pipeline with tracking.";
+				Version = new Version(1, 0);
+				Stages.Decode
+					.AddComponent(
+						new MicroPipeline {
+							Enabled = true,
+							Components = new[] {
+								new ContextPropertyExtractor {
+									Extractors = new[] {
+										new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+										new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+									}
+								}
+							}
+						});
+				Stages.Disassemble
+					.AddComponent(new XmlDasmComp());
+				Stages.Validate
+					.AddComponent(new MicroPipeline { Enabled = true });
 			}
 		}
 	}
