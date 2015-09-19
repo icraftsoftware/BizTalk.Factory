@@ -24,7 +24,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Schema;
@@ -53,38 +52,6 @@ namespace Be.Stateless.BizTalk.XPath
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization")]
 	public class XPathExtractorEnumerableSerializer : IXmlSerializable
 	{
-		/// <summary>
-		/// Deserializes an <see cref="XElement"/> into an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
-		/// </summary>
-		/// <param name="propertiesElement">
-		/// The <see cref="XElement"/> to deserialize into an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
-		/// </param>
-		/// <returns>
-		/// The deserialized <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
-		/// </returns>
-		internal static IEnumerable<XPathExtractor> Deserialize(XElement propertiesElement)
-		{
-			// TODO use XmlReader API, see ReadXmlProperties
-
-			try
-			{
-				// TODO deserialize all values of ExtractorPrecedence (@precedence)
-				var extractors = propertiesElement.Elements().Select(
-					pe => new XPathExtractor(
-						new XmlQualifiedName(pe.Name.LocalName, pe.Name.NamespaceName),
-						pe.Attribute("xpath").Value,
-						// TODO deserialize all values of ExtractionMode (@mode)
-						pe.Attribute("promoted").IfNotNull(p => bool.Parse(p.Value)) ? ExtractionMode.Promote : ExtractionMode.Write))
-					.ToArray();
-
-				return extractors;
-			}
-			catch (XmlException exception)
-			{
-				throw new ConfigurationErrorsException(MESSAGE, exception);
-			}
-		}
-
 		public XPathExtractorEnumerableSerializer() { }
 
 		public XPathExtractorEnumerableSerializer(IEnumerable<XPathExtractor> extractors)

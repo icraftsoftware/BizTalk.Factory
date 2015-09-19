@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -94,13 +95,13 @@ namespace Be.Stateless.BizTalk.Schema
 
 		#endregion
 
+		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "annotations only contains one or two items.")]
 		public static ISchemaAnnotations Create(ISchemaMetadata metadata)
 		{
 			if (metadata == null) throw new ArgumentNullException("metadata");
 
 			if (metadata.Type.Assembly.FullName.StartsWith("Microsoft.", StringComparison.Ordinal)) return Empty;
 
-			// ReSharper disable PossibleMultipleEnumeration
 			var annotations = SelectAnnotations(metadata);
 			if (!annotations.Any()) return Empty;
 
@@ -113,9 +114,13 @@ namespace Be.Stateless.BizTalk.Schema
 
 			var extractors = annotations
 				.SingleOrDefault(e => e.Name.LocalName == "Properties")
-				.IfNotNull(p => XPathExtractorEnumerableSerializer.Deserialize(p))
+				.IfNotNull(
+					p => {
+						var xpathExtractorEnumerableSerializer = new XPathExtractorEnumerableSerializer();
+						xpathExtractorEnumerableSerializer.ReadXml(p.CreateReader());
+						return xpathExtractorEnumerableSerializer.Extractors;
+					})
 				?? Enumerable.Empty<XPathExtractor>();
-			// ReSharper restore PossibleMultipleEnumeration
 
 			return new SchemaAnnotations {
 				EnvelopingMap = envelopeMap,
