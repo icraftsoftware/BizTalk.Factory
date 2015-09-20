@@ -16,10 +16,21 @@
 
 #endregion
 
-using NUnit.Framework;
+using Be.Stateless.BizTalk.Component;
+using Microsoft.BizTalk.Component.Interop;
+using Microsoft.BizTalk.Message.Interop;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
-	[TestFixture]
-	public class EnvelopeBuilderComponentFixture : XsltRunnerComponentFixture { }
+	public class BatchTracker : IMicroPipelineComponent
+	{
+		#region IMicroPipelineComponent Members
+
+		public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+	}
 }

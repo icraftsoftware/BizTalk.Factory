@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,21 +18,21 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.Extensions;
 using Be.Stateless.Text;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	/// <summary>
+	/// This component moves elements (and optionally attributes) from one namespace to another in the XML stream
+	/// constituting the body of the message.
+	/// </summary>
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Decoder)]
 	[ComponentCategory(CategoryTypes.CATID_Encoder)]
@@ -41,35 +41,10 @@ namespace Be.Stateless.BizTalk.Component
 	{
 		public XmlTranslatorComponent()
 		{
-			Modes = XmlTranslationModes.Default;
-			Encoding = new UTF8Encoding();
-			Translations = XmlTranslationSet.Empty;
+			_microComponent = new XmlTranslator();
 		}
 
 		#region Base Class Member Overrides
-
-		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
-		{
-			var replacementList = BuildReplacementSet(message);
-			if (replacementList.Items.Any())
-			{
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => {
-						var substitutionStream = new XmlTranslatorStream(
-							new XmlTextReader(originalStream),
-							Encoding,
-							replacementList.Items,
-							Modes);
-						return substitutionStream;
-					},
-					pipelineContext.ResourceTracker);
-			}
-			return message;
-		}
-
-		#endregion
-
-		#region IBaseComponent members
 
 		/// <summary>
 		/// Description of the component
@@ -80,9 +55,10 @@ namespace Be.Stateless.BizTalk.Component
 			get { return "This component moves elements (and optionally attributes) from one namespace to another in the XML stream constituting the body of the message."; }
 		}
 
-		#endregion
-
-		#region IPersistPropertyBag members
+		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
+		{
+			return _microComponent.Execute(pipelineContext, message);
+		}
 
 		/// <summary>
 		/// Gets class ID of component for usage from unmanaged code.
@@ -128,30 +104,30 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("Encoding to use for output and, if Unicode, whether to emit a byte order mark.")]
 		[TypeConverter(typeof(EncodingConverter))]
-		public Encoding Encoding { get; set; }
+		public Encoding Encoding
+		{
+			get { return _microComponent.Encoding; }
+			set { _microComponent.Encoding = value; }
+		}
+
+		[Browsable(true)]
+		[Description("The replacement Modes.")]
+		public XmlTranslationModes Modes
+		{
+			get { return _microComponent.Modes; }
+			set { _microComponent.Modes = value; }
+		}
 
 		[Browsable(true)]
 		[Description("Collection of translations.")]
 		[TypeConverter(typeof(XmlTranslationSetConverter))]
-		public XmlTranslationSet Translations { get; set; }
-
-		[Browsable(true)]
-		[Description("The replacement Modes.")]
-		public XmlTranslationModes Modes { get; set; }
-
-		#region XmlNamespaceTranslation
-
-		internal XmlTranslationSet BuildReplacementSet(IBaseMessage message)
+		public XmlTranslationSet Translations
 		{
-			var translations = message.GetProperty(BizTalkFactoryProperties.XmlTranslations);
-			if (translations.IsNullOrEmpty()) return Translations;
-
-			var contextReplacements = XmlTranslationSetConverter.Deserialize(translations);
-			return contextReplacements.Union(Translations);
+			get { return _microComponent.Translations; }
+			set { _microComponent.Translations = value; }
 		}
 
-		#endregion
-
 		private const string CLASS_ID = "9c260659-9675-4f99-9f96-71d10a46c41d";
+		private readonly XmlTranslator _microComponent;
 	}
 }

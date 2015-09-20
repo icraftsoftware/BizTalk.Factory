@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 				Version = new Version(1, 0);
 				Stages.Decode
 					.AddComponent(
-						new MicroPipeline {
+						new MicroPipelineComponent {
 							Enabled = true,
 							Components = new[] {
 								new ContextPropertyExtractor {
@@ -91,7 +91,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 				Stages.Disassemble
 					.AddComponent(new XmlDasmComp());
 				Stages.Validate
-					.AddComponent(new MicroPipeline { Enabled = true });
+					.AddComponent(new MicroPipelineComponent { Enabled = true });
 			}
 		}
 	}

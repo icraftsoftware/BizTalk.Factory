@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.Extensions;

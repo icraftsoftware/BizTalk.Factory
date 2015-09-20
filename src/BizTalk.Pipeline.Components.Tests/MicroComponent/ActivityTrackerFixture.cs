@@ -18,8 +18,15 @@
 
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	[TestFixture]
-	public class EnvelopeBuilderComponentFixture : XsltRunnerComponentFixture { }
+	public class ActivityTrackerFixture : MicroPipelineComponentFixture
+	{
+		[Test]
+		public void TestMethod()
+		{
+			Assert.Fail("TODO");
+		}
+	}
 }

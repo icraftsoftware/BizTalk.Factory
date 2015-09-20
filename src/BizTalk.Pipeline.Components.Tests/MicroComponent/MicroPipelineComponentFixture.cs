@@ -33,7 +33,6 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		public void MicroPipelineComponentFixtureSetUp()
 		{
 			MessageMock = new Unit.Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
-
 			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };
 			// default behaviour analogous to actual IPipelineContext implementation
 			PipelineContextMock

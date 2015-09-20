@@ -24,52 +24,57 @@ using Be.Stateless.Logging;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.XLANGs.BaseTypes;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <typeparam name="TPlugin">The runtime type that the plugin instance is expected to support.</typeparam>
-	public abstract class ExtensiblePipelineComponent<TPlugin> : PipelineComponent
-		where TPlugin : class
+	internal static class PluginResolutionExtensions
 	{
-		protected TPlugin ResolvePlugin<T>(IBaseMessage message, MessageContextProperty<T, string> pluginTypeNameContextProperty, Type configuredPluginType)
+		public static Type ResolvePluginType<T>(this IBaseMessage message, MessageContextProperty<T, string> messageContextProperty, Type configuredPluginType)
 			where T : MessageContextPropertyBase, new()
 		{
-			var pluginType = ResolvePluginType(message, pluginTypeNameContextProperty, configuredPluginType);
-			return pluginType != null ? (TPlugin) Activator.CreateInstance(pluginType) : default(TPlugin);
-		}
-
-		protected Type ResolvePluginType<T>(IBaseMessage message, MessageContextProperty<T, string> pluginTypeNameContextProperty, Type configuredPluginType)
-			where T : MessageContextPropertyBase, new()
-		{
-			Type pluginType = null;
 			// look after plugin type name in message context
-			var pluginTypeName = message.GetProperty(pluginTypeNameContextProperty);
+			var pluginTypeName = message.GetProperty(messageContextProperty);
 			if (!pluginTypeName.IsNullOrEmpty())
 			{
 				// remove plugin type name from context to ensure no one else will use it too
-				message.DeleteProperty(pluginTypeNameContextProperty);
+				message.DeleteProperty(messageContextProperty);
 				if (_logger.IsDebugEnabled) _logger.DebugFormat("Using message context's plugin type '{0}'.", pluginTypeName);
-				pluginType = Type.GetType(pluginTypeName, true);
+				return Type.GetType(pluginTypeName, true);
 			}
 
-			if (pluginType == null && configuredPluginType != null)
+			// use plugin type configured at pipeline level if no one found in context
+			if (configuredPluginType != null)
 			{
-				// use default plugin type if no one found in context
 				if (_logger.IsDebugEnabled) _logger.DebugFormat("Using configured plugin type '{0}'.", configuredPluginType.AssemblyQualifiedName);
-				pluginType = configuredPluginType;
+				return configuredPluginType;
 			}
 
-			if (pluginType != null && !typeof(TPlugin).IsAssignableFrom(pluginType))
+			return null;
+		}
+
+		public static T AsPlugin<T>(this Type type)
+		{
+			if (type == null) return default(T);
+
+			if (!typeof(T).IsAssignableFrom(type))
 				throw new InvalidOperationException(
 					string.Format(
 						"The plugin type '{0}' does not support the type '{1}'.",
-						pluginType.AssemblyQualifiedName,
-						typeof(TPlugin).AssemblyQualifiedName));
-			return pluginType;
+						type.AssemblyQualifiedName,
+						typeof(T).AssemblyQualifiedName));
+			return (T) Activator.CreateInstance(type);
 		}
 
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ExtensiblePipelineComponent<TPlugin>));
+		public static Type OfPluginType<T>(this Type type)
+		{
+			if (type != null && !typeof(T).IsAssignableFrom(type))
+				throw new InvalidOperationException(
+					string.Format(
+						"The plugin type '{0}' does not support the type '{1}'.",
+						type.AssemblyQualifiedName,
+						typeof(T).AssemblyQualifiedName));
+			return type;
+		}
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(PluginResolutionExtensions));
 	}
 }

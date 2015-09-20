@@ -17,30 +17,37 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Streaming.Extensions;
-using Moq;
+using System.ComponentModel;
+using System.Configuration;
+using System.Text;
+using Be.Stateless.BizTalk.Unit.Component;
+using Be.Stateless.Text;
+using Microsoft.XLANGs.BaseTypes;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
 {
 	[TestFixture]
-	public class XsltRunnerComponentFixture : XsltRunnerComponentFixtureBase<XsltRunnerComponent>
+	public class XsltRunnerComponentFixture : PipelineComponentFixture<XsltRunnerComponent>
 	{
-		[Test]
-		public void DoesNothingWhenNoXslt()
+		static XsltRunnerComponentFixture()
 		{
-			var probeStreamMock = new Mock<IProbeStream>();
-			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
-			var transformStreamMock = new Mock<ITransformStream>();
-			StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
+			// PipelineComponentFixture<XsltRunnerComponent> assumes and needs the following converters
+			TypeDescriptor.AddAttributes(typeof(Encoding), new TypeConverterAttribute(typeof(EncodingConverter)));
+			TypeDescriptor.AddAttributes(typeof(Type), new TypeConverterAttribute(typeof(TypeNameConverter)));
+		}
 
-			var sut = CreatePipelineComponent();
-			Assert.That(sut.Map, Is.Null);
-			Assert.That(sut.Enabled);
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			probeStreamMock.VerifyGet(ps => ps.MessageType, Times.Never());
-			transformStreamMock.Verify(ps => ps.Apply(It.IsAny<Type>()), Times.Never());
+		protected override object GetValueForProperty(string name)
+		{
+			switch (name)
+			{
+				case "Encoding":
+					return Encoding.GetEncoding("iso-8859-1");
+				case "Map":
+					return typeof(TransformBase);
+				default:
+					return base.GetValueForProperty(name);
+			}
 		}
 	}
 }

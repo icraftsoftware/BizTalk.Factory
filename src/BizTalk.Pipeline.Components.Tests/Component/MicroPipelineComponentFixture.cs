@@ -28,7 +28,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Component
 {
 	[TestFixture]
-	public class MicroPipelineFixture : PipelineComponentFixture<MicroPipeline>
+	public class MicroPipelineComponentFixture : PipelineComponentFixture<MicroPipelineComponent>
 	{
 		[Test]
 		public void ExecuteMicroComponents()
@@ -47,7 +47,7 @@ namespace Be.Stateless.BizTalk.Component
 				.Setup(mc => mc.Execute(pipelineContextMock.Object, messageMock2.Object)).Returns(messageMock3.Object)
 				.Verifiable();
 
-			var sut = new MicroPipeline {
+			var sut = new MicroPipelineComponent {
 				Components = new[] {
 					microComponentMockOne.Object,
 					microComponentMockTwo.Object
@@ -65,7 +65,7 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			var messageMock = new Unit.Message.Mock<IBaseMessage>();
 
-			var sut = new MicroPipeline();
+			var sut = new MicroPipelineComponent();
 
 			Assert.That(sut.Execute(new Mock<IPipelineContext>().Object, messageMock.Object), Is.SameAs(messageMock.Object));
 		}
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Component
 			propertyBag.Add("Enabled", true);
 			propertyBag.Add("Components", MicroPipelineComponentEnumerableConverter.Serialize(microPipelineComponents));
 
-			var sut = new MicroPipeline();
+			var sut = new MicroPipelineComponent();
 			sut.Load(propertyBag, 0);
 
 			Assert.That(sut.Components, Is.EqualTo(microPipelineComponents));
@@ -98,15 +98,15 @@ namespace Be.Stateless.BizTalk.Component
 
 			var propertyBag = new PropertyBag();
 
-			var sut = new MicroPipeline { Components = microPipelineComponents };
+			var sut = new MicroPipelineComponent { Components = microPipelineComponents };
 			sut.Save(propertyBag, true, true);
 
 			Assert.That(propertyBag.Read("Components"), Is.EqualTo(MicroPipelineComponentEnumerableConverter.Serialize(microPipelineComponents)));
 		}
 
-		static MicroPipelineFixture()
+		static MicroPipelineComponentFixture()
 		{
-			// PipelineComponentFixture<MicroPipeline> assumes and needs the following converter
+			// PipelineComponentFixture<MicroPipelineComponent> assumes and needs the following converter
 			TypeDescriptor.AddAttributes(typeof(IEnumerable<IMicroPipelineComponent>), new TypeConverterAttribute(typeof(MicroPipelineComponentEnumerableConverter)));
 		}
 

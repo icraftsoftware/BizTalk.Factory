@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -157,11 +158,11 @@ namespace Be.Stateless.IO
 		/// buffer because of availability shortage. Notice that no byte will be lost, and that the first buffer in the
 		/// <see cref="IEnumerable{T}"/> of byte-array buffers might be a subset of what it was initially.
 		/// </returns>
+		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		public IEnumerable<byte[]> Append(IEnumerable<byte[]> buffers)
 		{
 			if (buffers == null) throw new ArgumentNullException("buffers");
 
-			// ReSharper disable PossibleMultipleEnumeration
 			while (_availability > 0 && buffers.Any())
 			{
 				var backlog = Append(buffers.First());
@@ -172,7 +173,6 @@ namespace Be.Stateless.IO
 				}
 			}
 			return buffers;
-			// ReSharper restore PossibleMultipleEnumeration
 		}
 
 		/// <summary>

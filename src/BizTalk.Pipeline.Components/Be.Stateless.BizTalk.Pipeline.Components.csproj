@@ -91,27 +91,36 @@
     </Compile>
     <Compile Include="Component\BatchTrackerComponent.cs" />
     <Compile Include="Component\ContextPropertyExtractorComponent.cs" />
-    <Compile Include="Component\ExtensiblePipelineComponent.cs" />
-    <Compile Include="Component\IContextBuilder.cs" />
-    <Compile Include="Component\IMessageFactory.cs" />
+    <Compile Include="MicroComponent\Extensions\PluginResolutionExtensions.cs" />
+    <Compile Include="MicroComponent\IContextBuilder.cs" />
+    <Compile Include="MicroComponent\IMessageFactory.cs" />
     <Compile Include="Component\MessageFactoryComponent.cs" />
     <Compile Include="Component\EnvelopeBuilderComponent.cs" />
     <Compile Include="Component\FailedMessageRoutingEnablerComponent.cs" />
     <Compile Include="Component\Interop\PropertyBag.cs" />
     <Compile Include="Component\MessageConsumerComponent.cs" />
     <Compile Include="Component\ActivityTrackerComponent.cs" />
-    <Compile Include="Component\MicroPipeline.cs" />
+    <Compile Include="Component\MicroPipelineComponent.cs" />
     <Compile Include="Component\PipelineComponent.cs" />
     <Compile Include="Component\ContextBuilderComponent.cs" />
-    <Compile Include="Component\PluginExecutionMode.cs" />
+    <Compile Include="MicroComponent\PluginExecutionMode.cs" />
     <Compile Include="Component\PolicyRunnerComponent.cs" />
     <Compile Include="Component\XmlTranslatorComponent.cs" />
     <Compile Include="Component\XsltRunnerComponent.cs" />
     <Compile Include="Component\ZipDecoderComponent.cs" />
     <Compile Include="Component\ZipEncoderComponent.cs" />
+    <Compile Include="MicroComponent\ActivityTracker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MicroComponent\BatchTracker.cs" />
+    <Compile Include="MicroComponent\ContextBuilder.cs" />
     <Compile Include="MicroComponent\ContextPropertyExtractor.cs" />
+    <Compile Include="MicroComponent\EnvelopeBuilder.cs" />
     <Compile Include="MicroComponent\FailedMessageRoutingEnabler.cs" />
     <Compile Include="MicroComponent\MessageConsumer.cs" />
+    <Compile Include="MicroComponent\MessageBodyStreamFactory.cs" />
+    <Compile Include="MicroComponent\XmlTranslator.cs" />
+    <Compile Include="MicroComponent\XsltRunner.cs" />
     <Compile Include="MicroComponent\ZipDecoder.cs" />
     <Compile Include="MicroComponent\ZipEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -161,6 +170,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

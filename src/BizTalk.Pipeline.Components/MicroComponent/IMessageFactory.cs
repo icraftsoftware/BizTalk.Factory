@@ -19,7 +19,7 @@
 using System.IO;
 using Microsoft.BizTalk.Message.Interop;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	public interface IMessageFactory
 	{

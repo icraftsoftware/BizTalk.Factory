@@ -74,7 +74,7 @@ namespace Be.Stateless.BizTalk.Unit.Component
 		}
 
 		[SetUp]
-		public void SetUp()
+		public void PipelineComponentFixtureOfTSetUp()
 		{
 			MessageMock = new Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
 			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };

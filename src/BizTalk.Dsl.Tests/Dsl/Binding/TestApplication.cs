@@ -22,6 +22,7 @@ using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;

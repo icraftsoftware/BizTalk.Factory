@@ -27,9 +27,8 @@ namespace Be.Stateless.Extensions
 		public void RangeOfNullArray()
 		{
 			byte[] array = null;
-			// ReSharper disable ExpressionIsAlwaysNull
+			// ReSharper disable once ExpressionIsAlwaysNull
 			Assert.That(array.Subarray(2), Is.Null);
-			// ReSharper restore ExpressionIsAlwaysNull
 		}
 
 		[Test]

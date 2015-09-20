@@ -21,21 +21,26 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.Streaming;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.Extensions;
-using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	/// <summary>
+	/// Delegates building of message context to a pluggable <see cref="IContextBuilder"/> component.
+	/// </summary>
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	public class ContextBuilderComponent : ExtensiblePipelineComponent<IContextBuilder>
+	public class ContextBuilderComponent : PipelineComponent
 	{
+		public ContextBuilderComponent()
+		{
+			_microComponent = new ContextBuilder();
+		}
+
 		#region Base Class Member Overrides
 
 		[Browsable(false)]
@@ -46,30 +51,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			ResolvePlugin(message, BizTalkFactoryProperties.ContextBuilderTypeName, Builder)
-				.IfNotNull(
-					contextBuilder => {
-						if (ExecutionMode == PluginExecutionMode.Deferred)
-						{
-							if (_logger.IsDebugEnabled) _logger.DebugFormat("Scheduling builder plugin '{0}' for deferred execution.", Builder.ToString());
-							message.BodyPart.WrapOriginalDataStream(
-								originalStream => {
-									var substitutionStream = new EventingReadStream(originalStream);
-									substitutionStream.AfterLastReadEvent += (src, args) => {
-										if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing builder plugin '{0}' that was scheduled for deferred execution.", Builder.ToString());
-										contextBuilder.Execute(message.Context);
-									};
-									return substitutionStream;
-								},
-								pipelineContext.ResourceTracker);
-						}
-						else
-						{
-							if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing builder plugin '{0}' that is scheduled for immediate execution.", Builder.ToString());
-							contextBuilder.Execute(message.Context);
-						}
-					});
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		public override void GetClassID(out Guid classId)
@@ -97,16 +79,24 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("The type name of the context builder plugin that will be called upon.")]
 		[TypeConverter(typeof(TypeNameConverter))]
-		public Type Builder { get; set; }
+		public Type Builder
+		{
+			get { return _microComponent.BuilderType; }
+			set { _microComponent.BuilderType = value; }
+		}
 
 		/// <summary>
 		/// The plugin execution mode, either <see cref="PluginExecutionMode.Immediate"/> or <see cref="PluginExecutionMode.Deferred"/>.
 		/// </summary>
 		[Browsable(true)]
 		[Description("The plugin execution mode, either Immediate or Deferred.")]
-		public PluginExecutionMode ExecutionMode { get; set; }
+		public PluginExecutionMode ExecutionMode
+		{
+			get { return _microComponent.ExecutionMode; }
+			set { _microComponent.ExecutionMode = value; }
+		}
 
 		private const string CLASS_ID = "6ecc3f2a-27a1-432b-a715-6ea7110b0f18";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ContextBuilderComponent));
+		private readonly ContextBuilder _microComponent;
 	}
 }

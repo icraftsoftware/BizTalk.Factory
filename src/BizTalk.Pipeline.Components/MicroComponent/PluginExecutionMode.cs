@@ -16,16 +16,18 @@
 
 #endregion
 
-namespace Be.Stateless.BizTalk.Component
+using Be.Stateless.BizTalk.Component;
+
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	/// <summary>
 	/// The moment at which a pipeline component's plugin will be executed. A plugin can take various forms ranging, for
 	/// instance, from the Business Rule Policy that is configured for a <see cref="PolicyRunnerComponent"/> to the <see
-	/// cref="IContextBuilder"/> that is configured for a <see cref="ContextBuilderComponent"/>.
+	/// cref="IContextBuilder"/> that is configured for a <see cref="ContextBuilder"/>.
 	/// </summary>
 	/// <remarks>
 	/// The execution mode can either be <see cref="Immediate"/>, in which case the plugin will be executed as soon as
-	/// its hosting pipeline component &#8212;e.g. the <see cref="ContextBuilderComponent"/> or the <see
+	/// its hosting pipeline component &#8212;e.g. the <see cref="ContextBuilder"/> or the <see
 	/// cref="PolicyRunnerComponent"/>&#8212; starts being executed, or <see cref="Deferred"/>, in which case the
 	/// plugin's hosting component will wait for the message stream to have been exhausted to execute it.
 	/// </remarks>

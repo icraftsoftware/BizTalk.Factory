@@ -18,6 +18,7 @@
 
 using System.IO;
 using System.Text;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Unit.Component;
 using Be.Stateless.IO.Extensions;

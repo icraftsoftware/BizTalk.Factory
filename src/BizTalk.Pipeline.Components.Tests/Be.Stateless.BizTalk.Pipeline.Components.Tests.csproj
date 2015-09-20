@@ -91,28 +91,34 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Component\AnyToText.cs" />
+    <Compile Include="MicroComponent\AnyToText.cs" />
     <Compile Include="Component\BatchTrackerComponentFixture.cs" />
     <Compile Include="Component\ContextPropertyExtractorComponentFixture.cs" />
-    <Compile Include="Component\ExtensiblePipelineComponentFixture.cs" />
+    <Compile Include="MicroComponent\Extensions\PluginResolutionExtensionsFixture.cs" />
     <Compile Include="Component\MessageFactoryComponentFixture.cs" />
     <Compile Include="Component\EnvelopeBuilderComponentFixture.cs" />
     <Compile Include="Component\FailedMessageRoutingEnablerComponentFixture.cs" />
     <Compile Include="Component\MessageConsumerComponentFixture.cs" />
     <Compile Include="Component\ActivityTrackerComponentFixture.cs" />
-    <Compile Include="Component\MicroPipelineFixture.cs" />
+    <Compile Include="Component\MicroPipelineComponentFixture.cs" />
     <Compile Include="Component\PipelineComponentFixture.cs" />
     <Compile Include="Component\ContextBuilderComponentFixture.cs" />
     <Compile Include="Component\PolicyRunnerComponentFixture.cs" />
     <Compile Include="Component\XmlTranslatorComponentFixture.cs" />
     <Compile Include="Component\XsltRunnerComponentFixture.cs" />
-    <Compile Include="Component\XsltRunnerComponentFixtureBase.cs" />
     <Compile Include="Component\ZipDecoderComponentFixture.cs" />
     <Compile Include="Component\ZipEncoderComponentFixture.cs" />
+    <Compile Include="MicroComponent\ActivityTrackerFixture.cs" />
+    <Compile Include="MicroComponent\BatchTrackerFixture.cs" />
+    <Compile Include="MicroComponent\ContextBuilderFixture.cs" />
     <Compile Include="MicroComponent\ContextPropertyExtractorFixture.cs" />
+    <Compile Include="MicroComponent\EnvelopeBuilderFixture.cs" />
     <Compile Include="MicroComponent\FailedMessageRoutingEnablerFixture.cs" />
+    <Compile Include="MicroComponent\MessageBodyStreamFactoryFixture.cs" />
     <Compile Include="MicroComponent\MessageConsumerFixture.cs" />
     <Compile Include="MicroComponent\MicroPipelineComponentFixture.cs" />
+    <Compile Include="MicroComponent\XmlTranslatorFixture.cs" />
+    <Compile Include="MicroComponent\XsltRunnerFixture.cs" />
     <Compile Include="MicroComponent\ZipDecoderFixture.cs" />
     <Compile Include="MicroComponent\ZipEncoderFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -172,12 +178,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Component\Data\BatchContent.xml" />
-    <EmbeddedResource Include="Component\Data\BatchContentWithTransform.xml" />
-    <EmbeddedResource Include="Component\Data\AnyToText.xslt" />
+    <EmbeddedResource Include="MicroComponent\Data\BatchContent.xml" />
+    <EmbeddedResource Include="MicroComponent\Data\BatchContentWithTransform.xml" />
+    <EmbeddedResource Include="MicroComponent\Data\AnyToText.xslt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Component\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

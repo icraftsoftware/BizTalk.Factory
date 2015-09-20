@@ -34,9 +34,9 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	public class MicroPipeline : PipelineComponent
+	public class MicroPipelineComponent : PipelineComponent
 	{
-		public MicroPipeline()
+		public MicroPipelineComponent()
 		{
 			Components = Enumerable.Empty<IMicroPipelineComponent>();
 		}
@@ -100,6 +100,6 @@ namespace Be.Stateless.BizTalk.Component
 		public IEnumerable<IMicroPipelineComponent> Components { get; set; }
 
 		private const string CLASS_ID = "02dd03e8-9509-4799-a196-a8c68e02d933";
-		// TODO private static readonly ILog _logger = LogManager.GetLogger(typeof(MicroPipeline));
+		// TODO private static readonly ILog _logger = LogManager.GetLogger(typeof(MicroPipelineComponent));
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@
 using System;
 using System.ComponentModel;
 using System.Text;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Unit.Component;
 using Be.Stateless.BizTalk.Xml;
@@ -32,82 +30,10 @@ namespace Be.Stateless.BizTalk.Component
 	[TestFixture]
 	public class XmlTranslatorComponentFixture : PipelineComponentFixture<XmlTranslatorComponent>
 	{
-		[Test]
-		public void BuildReplacementSetWithNoReplacementInContext()
-		{
-			var sut = CreatePipelineComponent();
-			sut.Translations = new XmlTranslationSet {
-				Override = false,
-				Items = new[] {
-					new XmlNamespaceTranslation("sourceUrn1", "urn:test1"),
-					new XmlNamespaceTranslation("sourceUrn5", "urn:test5")
-				}
-			};
-
-			Assert.That(
-				sut.BuildReplacementSet(MessageMock.Object),
-				Is.EqualTo(
-					new XmlTranslationSet {
-						Override = false,
-						Items = new[] {
-							new XmlNamespaceTranslation("sourceUrn1", "urn:test1"),
-							new XmlNamespaceTranslation("sourceUrn5", "urn:test5")
-						}
-					}));
-		}
-
-		[Test]
-		public void BuildReplacementSetWithReplacementInContext()
-		{
-			MessageMock.Setup(c => c.GetProperty(BizTalkFactoryProperties.XmlTranslations))
-				.Returns(
-					XmlTranslationSetConverter.Serialize(
-						new XmlTranslationSet {
-							Override = true,
-							Items = new[] {
-								new XmlNamespaceTranslation("sourceUrn5", "urn05")
-							}
-						}));
-
-			var sut = CreatePipelineComponent();
-			sut.Translations = new XmlTranslationSet {
-				Override = false,
-				Items = new[] {
-					new XmlNamespaceTranslation("sourceUrn1", "urn:test1"),
-					new XmlNamespaceTranslation("sourceUrn2", "urn:test2")
-				}
-			};
-
-			Assert.That(
-				sut.BuildReplacementSet(MessageMock.Object),
-				Is.EqualTo(
-					new XmlTranslationSet {
-						Override = true,
-						Items = new[] {
-							new XmlNamespaceTranslation("sourceUrn5", "urn05")
-						}
-					}));
-		}
-
-		[Test]
-		public void ReplacementsDefaultValue()
-		{
-			var sut = CreatePipelineComponent();
-			Assert.That(sut.Translations, Is.EqualTo(XmlTranslationSet.Empty));
-		}
-
 		static XmlTranslatorComponentFixture()
 		{
-			TypeDescriptor.AddAttributes(
-				typeof(Encoding),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(EncodingConverter))
-				});
-			TypeDescriptor.AddAttributes(
-				typeof(XmlTranslationSet),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(XmlTranslationSetConverter))
-				});
+			TypeDescriptor.AddAttributes(typeof(Encoding), new TypeConverterAttribute(typeof(EncodingConverter)));
+			TypeDescriptor.AddAttributes(typeof(XmlTranslationSet), new TypeConverterAttribute(typeof(XmlTranslationSetConverter)));
 		}
 
 		protected override object GetValueForProperty(string name)

@@ -111,6 +111,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Xml\EncodingXmlSerializer.cs" />
+    <Compile Include="Xml\RuntimeTypeXmlSerializer.cs" />
     <Compile Include="Component\MicroPipelineComponentDedicatedXmlWriter.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentExtensions.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentXmlReaderExtensions.cs" />

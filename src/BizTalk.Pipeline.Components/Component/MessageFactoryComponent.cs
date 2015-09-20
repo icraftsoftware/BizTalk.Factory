@@ -19,10 +19,10 @@
 using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -30,14 +30,20 @@ using Microsoft.BizTalk.Message.Interop;
 namespace Be.Stateless.BizTalk.Component
 {
 	/// <summary>
-	/// Pipeline component that replaces the current message's <see cref="IBaseMessage.BodyPart"/> by a new one whose
-	/// creation is delegated to either a contextual or configurable message factory.
+	/// Micro pipeline component that replaces the <see cref="Stream"/> of the current message's <see
+	/// cref="IBaseMessage.BodyPart"/> by a new one whose creation is delegated to either a contextual or statically
+	/// configurable <see cref="IMessageFactory"/> plugin.
 	/// </summary>
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	public class MessageFactoryComponent : ExtensiblePipelineComponent<IMessageFactory>
+	public class MessageFactoryComponent : PipelineComponent
 	{
+		public MessageFactoryComponent()
+		{
+			_microComponent = new MessageBodyStreamFactory();
+		}
+
 		#region Base Class Member Overrides
 
 		[Browsable(false)]
@@ -48,9 +54,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			ResolvePlugin(message, BizTalkFactoryProperties.MessageFactoryTypeName, Factory)
-				.IfNotNull(messageFactory => message.BodyPart.SetDataStream(messageFactory.CreateMessage(message), pipelineContext.ResourceTracker));
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		public override void GetClassID(out Guid classId)
@@ -71,13 +75,19 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		/// <summary>
-		/// The type name of the message factory that will be called to create the message.
+		/// The type of the <see cref="IMessageFactory"/> plugin that will be called to create the <see cref="Stream"/> of
+		/// the message's <see cref="IBaseMessage.BodyPart"/>.
 		/// </summary>
 		[Browsable(true)]
 		[Description("The type name of the BizTalk message factory.")]
 		[TypeConverter(typeof(TypeNameConverter))]
-		public Type Factory { get; set; }
+		public Type Factory
+		{
+			get { return _microComponent.FactoryType; }
+			set { _microComponent.FactoryType = value; }
+		}
 
 		private const string CLASS_ID = "86117eff-8636-4eb9-a491-2d83c449c8d2";
+		private readonly MessageBodyStreamFactory _microComponent;
 	}
 }

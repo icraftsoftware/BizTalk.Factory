@@ -21,31 +21,25 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.Streaming.Extensions;
-using Be.Stateless.BizTalk.Xml.Xsl.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.Extensions;
-using Be.Stateless.Logging;
 using Be.Stateless.Text;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
-using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Component
 {
 	/// <summary>
-	/// Pipeline component that applies an XSL Transformation on pipeline messages.
+	/// Pipeline component that applies an XSL Transformation on messages along their way in the pipeline.
 	/// </summary>
 	/// <remarks>
 	/// Contrary to maps statically-configured at the receive or send port level, <see cref="XsltRunnerComponent"/>
 	/// allows for:
 	/// <list type="bullet">
 	/// <item>the transform to be dynamically chosen;</item>
-	/// <item>the transform to be executed anywhere in the pipeline. This is particularly important, as we can choose to
-	/// place it before or after an XML assembler/disassembler;</item>
+	/// <item>the transform to be executed anywhere in the pipeline. This is particularly interesting, as we can choose
+	/// to place it before or after an XML assembler/disassembler;</item>
 	/// <item>the execution to be conditional;</item>
 	/// <item>arguments to be dynamically supplied to the transform.</item>
 	/// </list>
@@ -53,11 +47,16 @@ namespace Be.Stateless.BizTalk.Component
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
-	public class XsltRunnerComponent : ExtensiblePipelineComponent<TransformBase>
+	public class XsltRunnerComponent : PipelineComponent
 	{
 		public XsltRunnerComponent()
 		{
-			Encoding = new UTF8Encoding();
+			_microComponent = new XsltRunner();
+		}
+
+		protected XsltRunnerComponent(XsltRunner xsltRunner)
+		{
+			_microComponent = xsltRunner;
 		}
 
 		#region Base Class Member Overrides
@@ -74,38 +73,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			var map = ResolvePluginType(message, BizTalkFactoryProperties.MapTypeName, Map);
-			if (map != null)
-			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Applying '{0}' XSL Transform to message.", map.AssemblyQualifiedName);
-				var markableForwardOnlyEventingReadStream = message.BodyPart.WrapOriginalDataStream(
-					originalStream => originalStream
-						.Transform()
-						.ExtendWith(message.Context)
-						.Apply(map, Encoding)
-						.AsMarkable(),
-					pipelineContext.ResourceTracker);
-
-				if (map.GetOutputSettings().OutputMethod == XmlOutputMethod.Xml)
-				{
-					if (_logger.IsDebugEnabled) _logger.DebugFormat("Probing output of '{0}' XSL Transform for a new message type.", map.AssemblyQualifiedName);
-					var messageType = markableForwardOnlyEventingReadStream.Probe().MessageType;
-					var docSpec = pipelineContext.GetDocumentSpecByType(messageType);
-					message.Promote(BtsProperties.MessageType, docSpec.DocType);
-					message.Promote(BtsProperties.SchemaStrongName, docSpec.DocSpecStrongName);
-				}
-				else if (_logger.IsDebugEnabled)
-				{
-					_logger.DebugFormat("Skipping probing of '{0}' XSL Transform output for a new message type as its OutputMethod is not XML.", map.AssemblyQualifiedName);
-				}
-
-				markableForwardOnlyEventingReadStream.StopMarking();
-			}
-			else
-			{
-				if (_logger.IsDebugEnabled) _logger.Debug("No XSL Transform was found in message context or configured to apply to message.");
-			}
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		/// <summary>
@@ -150,7 +118,11 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("Encoding to use for output and, if Unicode, whether to emit a byte order mark.")]
 		[TypeConverter(typeof(EncodingConverter))]
-		public Encoding Encoding { get; set; }
+		public Encoding Encoding
+		{
+			get { return _microComponent.Encoding; }
+			set { _microComponent.Encoding = value; }
+		}
 
 		/// <summary>
 		/// The type name of the BizTalk Map to apply on the pipeline message.
@@ -158,9 +130,13 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("The type name of the BizTalk Map to apply.")]
 		[TypeConverter(typeof(TypeNameConverter))]
-		public Type Map { get; set; }
+		public Type Map
+		{
+			get { return _microComponent.MapType; }
+			set { _microComponent.MapType = value; }
+		}
 
 		private const string CLASS_ID = "2b3d21e9-af69-451a-b35b-f582f42affe8";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(XsltRunnerComponent));
+		private readonly XsltRunner _microComponent;
 	}
 }

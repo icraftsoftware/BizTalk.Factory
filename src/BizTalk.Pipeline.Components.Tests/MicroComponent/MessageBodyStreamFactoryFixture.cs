@@ -16,47 +16,47 @@
 
 #endregion
 
-using System;
-using System.ComponentModel;
-using System.Configuration;
 using System.IO;
-using Be.Stateless.BizTalk.MicroComponent;
-using Be.Stateless.BizTalk.Unit.Component;
+using Be.Stateless.BizTalk.Component;
 using Microsoft.BizTalk.Message.Interop;
+using Moq;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	[TestFixture]
-	public class MessageFactoryComponentFixture : PipelineComponentFixture<MessageFactoryComponent>
+	public class MessageBodyStreamFactoryFixture : MicroPipelineComponentFixture
 	{
-		protected override object GetValueForProperty(string name)
+		[Test]
+		public void MessageFactoryPluginIsExecuted()
 		{
-			switch (name)
-			{
-				case "Factory":
-					return typeof(MessageFactoryMockWrapper);
-				default:
-					return base.GetValueForProperty(name);
-			}
-		}
+			var sut = new MessageBodyStreamFactory { FactoryType = typeof(MessageFactoryMockWrapper) };
 
-		static MessageFactoryComponentFixture()
-		{
-			// PipelineComponentFixture<CreateMessageComponent> assumes and needs the following converters
-			TypeDescriptor.AddAttributes(typeof(Type), new TypeConverterAttribute(typeof(TypeNameConverter)));
+			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+			MessageFactoryMockWrapper.MessageFactoryMock.Verify(m => m.CreateMessage(It.IsAny<IBaseMessage>()), Times.Once());
 		}
 
 		private class MessageFactoryMockWrapper : IMessageFactory
 		{
+			static MessageFactoryMockWrapper()
+			{
+				MessageFactoryMock = new Mock<IMessageFactory>();
+				MessageFactoryMock
+					.Setup(m => m.CreateMessage(It.IsAny<IBaseMessage>()))
+					.Returns(new MemoryStream());
+			}
+
 			#region IMessageFactory Members
 
 			public Stream CreateMessage(IBaseMessage message)
 			{
-				throw new NotSupportedException();
+				return MessageFactoryMock.Object.CreateMessage(message);
 			}
 
 			#endregion
+
+			public static readonly Mock<IMessageFactory> MessageFactoryMock;
 		}
 	}
 }

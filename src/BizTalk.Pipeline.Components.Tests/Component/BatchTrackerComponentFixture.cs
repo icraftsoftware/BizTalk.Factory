@@ -41,7 +41,8 @@ namespace Be.Stateless.BizTalk.Component
 		[SetUp]
 		public new void SetUp()
 		{
-			_dataStream = ResourceManager.Load("Data.BatchContent.xml");
+			// TODO _dataStream = ResourceManager.Load("Data.BatchContent.xml");
+			_dataStream = ResourceManager.Load("Be.Stateless.BizTalk.MicroComponent.Data.BatchContent.xml");
 			MessageMock.Object.BodyPart.Data = _dataStream;
 
 			PipelineContextMock

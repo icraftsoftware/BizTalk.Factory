@@ -21,9 +21,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Be.Stateless.BizTalk.Streaming;
+using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Linq;
 using Microsoft.BizTalk.Component.Interop;
@@ -54,22 +57,26 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			var xml = string.Format(
 				@"<mComponents>
-  <mComponent name=""{0}"">
+  <mComponent name='{0}'>
     <Property-One>1</Property-One>
     <Property-Two>2</Property-Two>
   </mComponent>
-  <mComponent name=""{1}"" >
+  <mComponent name='{1}' >
     <Property-Six>6</Property-Six>
     <Property-Ten>9</Property-Ten>
   </mComponent>
-  <mComponent name=""{2}"">
+  <mComponent name='{2}'>
+    <Encoding>utf-8</Encoding>
     <Index>10</Index>
+    <Modes>Default</Modes>
     <Name>DummyTen</Name>
+    <Plugin>{3}</Plugin>
   </mComponent>
 </mComponents>",
 				typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName,
 				typeof(MicroPipelineComponentDummyTwo).AssemblyQualifiedName,
-				typeof(MicroPipelineComponentDummyTen).AssemblyQualifiedName);
+				typeof(MicroPipelineComponentDummyTen).AssemblyQualifiedName,
+				typeof(DummyXmlTranslatorComponent).AssemblyQualifiedName);
 
 			var sut = new MicroPipelineComponentEnumerableConverter();
 			var result = sut.ConvertFrom(xml);
@@ -84,6 +91,12 @@ namespace Be.Stateless.BizTalk.Component
 						new MicroPipelineComponentDummyTen()
 					})
 					.Using(new LambdaComparer<IMicroPipelineComponent>((lmc, rmc) => lmc.GetType() == rmc.GetType())));
+
+			// ReSharper disable once PossibleNullReferenceException
+			var microPipelineComponentDummyTen = ((MicroPipelineComponentDummyTen) ((IMicroPipelineComponent[]) result)[2]);
+			Assert.That(microPipelineComponentDummyTen.Encoding, Is.EqualTo(new UTF8Encoding(false)));
+			Assert.That(microPipelineComponentDummyTen.Modes, Is.EqualTo(XmlTranslationModes.Default));
+			Assert.That(microPipelineComponentDummyTen.Plugin, Is.EqualTo(typeof(DummyXmlTranslatorComponent)));
 		}
 
 		[Test]
@@ -129,12 +142,17 @@ namespace Be.Stateless.BizTalk.Component
 							+ "<Property-Six>six</Property-Six><Property-Ten>ten</Property-Ten>"
 							+ "</mComponent>"
 							+ "<mComponent name=\"{2}\">"
-							+ "<Index>10</Index><Name>DummyTen</Name>"
+							+ "<Encoding>utf-8 with signature</Encoding>"
+							+ "<Index>10</Index>"
+							+ "<Modes>AbsorbXmlDeclaration TranslateAttributeNamespace</Modes>"
+							+ "<Name>DummyTen</Name>"
+							+ "<Plugin>{3}</Plugin>"
 							+ "</mComponent>"
 							+ "</mComponents>",
 						typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName,
 						typeof(MicroPipelineComponentDummyTwo).AssemblyQualifiedName,
-						typeof(MicroPipelineComponentDummyTen).AssemblyQualifiedName)));
+						typeof(MicroPipelineComponentDummyTen).AssemblyQualifiedName,
+						typeof(DummyContextPropertyExtractorComponent).AssemblyQualifiedName)));
 		}
 
 		[Test]
@@ -148,20 +166,20 @@ namespace Be.Stateless.BizTalk.Component
 		}
 
 		[Test]
-		public void DeserializeComplexType()
+		public void DeserializeComplexTypeWithCustomXmlSerialization()
 		{
 			var xml = string.Format(
 				@"<mComponents>
-  <mComponent name=""{0}"">
+  <mComponent name='{0}'>
     <Enabled>true</Enabled>
     <Extractors>
-      <s0:Properties xmlns:s0=""urn:schemas.stateless.be:biztalk:annotations:2013:01"" xmlns:s1=""urn"">
-        <s1:Property1 xpath=""*/some-node"" />
-        <s1:Property2 promoted=""true"" xpath=""*/other-node"" />
+      <s0:Properties xmlns:s0='urn:schemas.stateless.be:biztalk:annotations:2013:01' xmlns:s1='urn'>
+        <s1:Property1 xpath='*/some-node' />
+        <s1:Property2 promoted='true' xpath='*/other-node' />
       </s0:Properties>
     </Extractors>
   </mComponent>
-  <mComponent name=""{1}"">
+  <mComponent name='{1}'>
     <Property-One>1</Property-One>
     <Property-Two>2</Property-Two>
   </mComponent>
@@ -185,7 +203,6 @@ namespace Be.Stateless.BizTalk.Component
 
 			// ReSharper disable once PossibleNullReferenceException
 			var extractorComponent = deserialized[0] as DummyContextPropertyExtractorComponent;
-			Assert.That(extractorComponent, Is.Not.Null);
 			// ReSharper disable once PossibleNullReferenceException
 			Assert.That(extractorComponent.Enabled);
 			Assert.That(
@@ -198,7 +215,48 @@ namespace Be.Stateless.BizTalk.Component
 		}
 
 		[Test]
-		public void SerializeComplexType()
+		public void DeserializeComplexTypeWithDefaultXmlSerialization()
+		{
+			var xml = string.Format(
+				@"<mComponents>
+  <mComponent name='{0}'>
+    <Enabled>true</Enabled>
+    <xt:Translations override='false' xmlns:xt='urn:schemas.stateless.be:biztalk:translations:2013:07'>
+      <xt:NamespaceTranslation matchingPattern='sourceUrn1' replacementPattern='urn:test1' />
+      <xt:NamespaceTranslation matchingPattern='sourceUrn5' replacementPattern='urn:test5' />
+    </xt:Translations>
+  </mComponent>
+</mComponents>",
+				typeof(DummyXmlTranslatorComponent).AssemblyQualifiedName);
+
+			var sut = new MicroPipelineComponentEnumerableConverter();
+
+			var deserialized = sut.ConvertFrom(xml) as IMicroPipelineComponent[];
+
+			Assert.That(
+				deserialized,
+				Is.EquivalentTo(
+					new IMicroPipelineComponent[] { new DummyXmlTranslatorComponent() })
+					.Using(new LambdaComparer<IMicroPipelineComponent>((lmc, rmc) => lmc.GetType() == rmc.GetType())));
+
+			// ReSharper disable once PossibleNullReferenceException
+			var extractorComponent = deserialized[0] as DummyXmlTranslatorComponent;
+			// ReSharper disable once PossibleNullReferenceException
+			Assert.That(extractorComponent.Enabled);
+			Assert.That(
+				extractorComponent.Translations,
+				Is.EqualTo(
+					new XmlTranslationSet {
+						Override = false,
+						Items = new[] {
+							new XmlNamespaceTranslation("sourceUrn1", "urn:test1"),
+							new XmlNamespaceTranslation("sourceUrn5", "urn:test5")
+						}
+					}));
+		}
+
+		[Test]
+		public void SerializeComplexTypeWithCustomXmlSerialization()
 		{
 			var component = new DummyContextPropertyExtractorComponent {
 				Enabled = true,
@@ -228,6 +286,38 @@ namespace Be.Stateless.BizTalk.Component
 						typeof(DummyContextPropertyExtractorComponent).AssemblyQualifiedName)));
 		}
 
+		[Test]
+		public void SerializeComplexTypeWithDefaultXmlSerialization()
+		{
+			var component = new DummyXmlTranslatorComponent {
+				Enabled = true,
+				Translations = new XmlTranslationSet {
+					Override = false,
+					Items = new[] {
+						new XmlNamespaceTranslation("sourceUrn1", "urn:test1"),
+						new XmlNamespaceTranslation("sourceUrn5", "urn:test5")
+					}
+				}
+			};
+
+			var sut = new MicroPipelineComponentEnumerableConverter();
+
+			Assert.That(
+				sut.ConvertTo(new IMicroPipelineComponent[] { component }, typeof(string)),
+				Is.EqualTo(
+					string.Format(
+						"<mComponents>"
+							+ "<mComponent name=\"{0}\">"
+							+ "<Enabled>true</Enabled>"
+							+ "<Translations override=\"false\" xmlns=\"urn:schemas.stateless.be:biztalk:translations:2013:07\">"
+							+ "<NamespaceTranslation matchingPattern=\"sourceUrn1\" replacementPattern=\"urn:test1\" />"
+							+ "<NamespaceTranslation matchingPattern=\"sourceUrn5\" replacementPattern=\"urn:test5\" />"
+							+ "</Translations>"
+							+ "</mComponent>"
+							+ "</mComponents>",
+						typeof(DummyXmlTranslatorComponent).AssemblyQualifiedName)));
+		}
+
 		public class DummyContextPropertyExtractorComponent : IMicroPipelineComponent
 		{
 			#region IMicroPipelineComponent Members
@@ -252,6 +342,23 @@ namespace Be.Stateless.BizTalk.Component
 				get { return new XPathExtractorEnumerableSerializerSurrogate(Extractors); }
 				set { Extractors = value.Extractors; }
 			}
+		}
+
+		public class DummyXmlTranslatorComponent : IMicroPipelineComponent
+		{
+			#region IMicroPipelineComponent Members
+
+			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
+			{
+				throw new NotSupportedException();
+			}
+
+			#endregion
+
+			public bool Enabled { get; set; }
+
+			[XmlElement("Translations", Namespace = XmlTranslationSet.NAMESPACE)]
+			public XmlTranslationSet Translations { get; set; }
 		}
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Required by XML serialization")]
@@ -342,8 +449,11 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			public MicroPipelineComponentDummyTen()
 			{
+				Encoding = new UTF8Encoding(true);
 				Index = 10;
+				Modes = XmlTranslationModes.AbsorbXmlDeclaration | XmlTranslationModes.TranslateAttributeNamespace;
 				Name = "DummyTen";
+				Plugin = typeof(DummyContextPropertyExtractorComponent);
 			}
 
 			#region IMicroPipelineComponent Members
@@ -355,9 +465,17 @@ namespace Be.Stateless.BizTalk.Component
 
 			#endregion
 
+			[XmlElement(typeof(EncodingXmlSerializer))]
+			public Encoding Encoding { get; set; }
+
 			public int Index { get; set; }
 
+			public XmlTranslationModes Modes { get; set; }
+
 			public string Name { get; set; }
+
+			[XmlElement(typeof(RuntimeTypeXmlSerializer))]
+			public Type Plugin { get; set; }
 		}
 	}
 }

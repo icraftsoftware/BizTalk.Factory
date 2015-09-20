@@ -19,12 +19,9 @@
 using System;
 using System.ComponentModel;
 using System.Configuration;
-using System.IO;
-using System.Text;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Unit.Component;
-using Be.Stateless.IO.Extensions;
 using Microsoft.BizTalk.Message.Interop;
-using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
@@ -32,51 +29,12 @@ namespace Be.Stateless.BizTalk.Component
 	[TestFixture]
 	public class ContextBuilderComponentFixture : PipelineComponentFixture<ContextBuilderComponent>
 	{
-		#region Setup/Teardown
-
-		[SetUp]
-		public new void SetUp()
-		{
-			_builderMock = new Mock<IContextBuilder>();
-		}
-
-		#endregion
-
-		[Test]
-		public void ContextBuilderPluginExecutionIsDeferred()
-		{
-			MessageMock.Object.BodyPart.Data = new MemoryStream(_content);
-
-			var sut = new Mock<ContextBuilderComponent> { CallBase = true };
-			sut.Object.ExecutionMode = PluginExecutionMode.Deferred;
-			sut.Object.Builder = typeof(DummyBuilder);
-
-			sut.Object.Execute(PipelineContextMock.Object, MessageMock.Object);
-			_builderMock.Verify(pc => pc.Execute(It.IsAny<IBaseMessageContext>()), Times.Never());
-
-			MessageMock.Object.BodyPart.Data.Drain();
-			_builderMock.Verify(pc => pc.Execute(It.IsAny<IBaseMessageContext>()), Times.Once());
-		}
-
-		[Test]
-		public void ContextBuilderPluginExecutionIsImmediate()
-		{
-			var sut = new Mock<ContextBuilderComponent> { CallBase = true };
-			sut.Object.Builder = typeof(DummyBuilder);
-
-			sut.Object.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			_builderMock.Verify(pc => pc.Execute(It.IsAny<IBaseMessageContext>()), Times.Once());
-		}
-
 		static ContextBuilderComponentFixture()
 		{
 			// PipelineComponentFixture<PluginFactoryComponent> assumes and needs the following converters
 			TypeDescriptor.AddAttributes(
 				typeof(Type),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(TypeNameConverter))
-				});
+				new TypeConverterAttribute(typeof(TypeNameConverter)));
 		}
 
 		protected override object GetValueForProperty(string name)
@@ -96,13 +54,10 @@ namespace Be.Stateless.BizTalk.Component
 
 			public void Execute(IBaseMessageContext context)
 			{
-				_builderMock.Object.Execute(context);
+				throw new NotSupportedException();
 			}
 
 			#endregion
 		}
-
-		private readonly byte[] _content = Encoding.Unicode.GetBytes(new string('A', 512));
-		private static Mock<IContextBuilder> _builderMock;
 	}
 }

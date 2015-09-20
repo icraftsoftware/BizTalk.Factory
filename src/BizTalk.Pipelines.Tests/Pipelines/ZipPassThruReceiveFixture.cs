@@ -22,6 +22,7 @@ using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Be.Stateless.BizTalk.Dsl.Pipeline.Interpreters;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Microsoft.BizTalk.Message.Interop;
 using NUnit.Framework;

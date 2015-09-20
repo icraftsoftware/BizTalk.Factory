@@ -1,6 +1,6 @@
-#region Copyright & License
+ï»¿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright Â© 2012 - 2015 FranÃ§ois Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -27,37 +25,24 @@ using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Streaming.Extensions;
-using Be.Stateless.BizTalk.Unit.Component;
 using Be.Stateless.BizTalk.Unit.Transform;
 using Be.Stateless.IO;
 using Be.Stateless.Reflection;
-using Be.Stateless.Text;
 using Microsoft.BizTalk.Streaming;
 using Microsoft.XLANGs.BaseTypes;
 using Moq;
 using NUnit.Framework;
-using Any = Be.Stateless.BizTalk.Schemas.Xml.Any;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	[TestFixture]
-	public abstract class XsltRunnerComponentFixtureBase<T> : PipelineComponentFixture<T> where T : XsltRunnerComponent, new()
+	public class XsltRunnerFixture : MicroPipelineComponentFixture
 	{
 		#region Setup/Teardown
 
 		[SetUp]
 		public void Backup()
 		{
-			_dataStream = new StringStream("<root xmlns='urn:ns'></root>");
-			MessageMock.Object.BodyPart.Data = _dataStream;
-
-			PipelineContextMock
-				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
-				.Returns(Schema<Any>.DocumentSpec);
-			PipelineContextMock
-				.Setup(pc => pc.GetDocumentSpecByType("urn-one#letter"))
-				.Returns(Schema<Any>.DocumentSpec);
-
 			_proberFactory = StreamExtensions.StreamProberFactory;
 			_transformerFactory = StreamExtensions.StreamTransformerFactory;
 		}
@@ -65,8 +50,6 @@ namespace Be.Stateless.BizTalk.Component
 		[TearDown]
 		public void Restore()
 		{
-			_dataStream.Dispose();
-
 			StreamExtensions.StreamProberFactory = _proberFactory;
 			StreamExtensions.StreamTransformerFactory = _transformerFactory;
 		}
@@ -74,29 +57,51 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		[Test]
+		public void DoesNothingWhenNoXslt()
+		{
+			var probeStreamMock = new Mock<IProbeStream>();
+			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+			var transformStreamMock = new Mock<ITransformStream>();
+			StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
+
+			// CAUTION! does not call CreateXsltRunner() as this test does not concern XsltRunner-derived classes
+			var sut = new XsltRunner();
+			Assert.That(sut.MapType, Is.Null);
+			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+			probeStreamMock.VerifyGet(ps => ps.MessageType, Times.Never());
+			transformStreamMock.Verify(ps => ps.Apply(It.IsAny<Type>()), Times.Never());
+		}
+
+		[Test]
 		public void EncodingDefaultsToUtf8WithoutSignature()
 		{
-			var sut = CreatePipelineComponent();
+			var sut = CreateXsltRunner();
 			Assert.That(sut.Encoding, Is.EqualTo(new UTF8Encoding()));
 		}
 
 		[Test]
 		public void ReplacesMessageOriginalDataStreamWithTransformResult()
 		{
-			var sut = CreatePipelineComponent();
-			sut.Enabled = true;
-			sut.Encoding = Encoding.UTF8;
-			sut.Map = typeof(IdentityTransform);
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
+				.Returns(Schema<Schemas.Xml.Any>.DocumentSpec);
 
-			using (var transformedStream = _dataStream.Transform().Apply(sut.Map))
+			var sut = CreateXsltRunner();
+			sut.Encoding = Encoding.UTF8;
+			sut.MapType = typeof(IdentityTransform);
+
+			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			using (var transformedStream = dataStream.Transform().Apply(sut.MapType))
 			{
+				MessageMock.Object.BodyPart.Data = dataStream;
 				var transformStreamMock = new Mock<ITransformStream>(MockBehavior.Strict);
 				StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
 				transformStreamMock
 					.Setup(ts => ts.ExtendWith(MessageMock.Object.Context))
 					.Returns(transformStreamMock.Object);
 				transformStreamMock
-					.Setup(ts => ts.Apply(sut.Map, sut.Encoding))
+					.Setup(ts => ts.Apply(sut.MapType, sut.Encoding))
 					.Returns(transformedStream)
 					.Verifiable();
 
@@ -113,16 +118,19 @@ namespace Be.Stateless.BizTalk.Component
 		[Test]
 		public void XsltEntailsMessageTypeIsPromoted()
 		{
-			var sut = CreatePipelineComponent();
-			sut.Enabled = true;
-			sut.Encoding = Encoding.UTF8;
-			sut.Map = typeof(IdentityTransform);
-
 			PipelineContextMock
 				.Setup(m => m.GetDocumentSpecByType("urn:ns#root"))
 				.Returns(Schema<Batch.Content>.DocumentSpec);
 
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			var sut = CreateXsltRunner();
+			sut.Encoding = Encoding.UTF8;
+			sut.MapType = typeof(IdentityTransform);
+
+			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			}
 
 			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType));
 			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName));
@@ -131,16 +139,19 @@ namespace Be.Stateless.BizTalk.Component
 		[Test]
 		public void XsltEntailsMessageTypeIsPromotedOnlyIfOutputMethodIsXml()
 		{
-			var sut = CreatePipelineComponent();
-			sut.Enabled = true;
-			sut.Encoding = Encoding.UTF8;
-			sut.Map = typeof(AnyToText);
-
 			PipelineContextMock
 				.Setup(m => m.GetDocumentSpecByType("urn:ns#root"))
 				.Returns(Schema<Batch.Content>.DocumentSpec);
 
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			var sut = CreateXsltRunner();
+			sut.Encoding = Encoding.UTF8;
+			sut.MapType = typeof(AnyToText);
+
+			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			}
 
 			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType), Times.Never());
 			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName), Times.Never());
@@ -149,15 +160,19 @@ namespace Be.Stateless.BizTalk.Component
 		[Test]
 		public void XsltFromContextHasPrecedenceOverConfiguredOne()
 		{
-			var sut = CreatePipelineComponent();
-			sut.Enabled = true;
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
+				.Returns(Schema<Schemas.Xml.Any>.DocumentSpec);
+
+			var sut = CreateXsltRunner();
 			sut.Encoding = Encoding.UTF8;
-			sut.Map = typeof(TransformBase);
+			sut.MapType = typeof(TransformBase);
 
-			var transform = typeof(IdentityTransform);
-
-			using (var transformedStream = _dataStream.Transform().Apply(transform))
+			var mapType = typeof(IdentityTransform);
+			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			using (var transformedStream = dataStream.Transform().Apply(mapType))
 			{
+				MessageMock.Object.BodyPart.Data = dataStream;
 				MessageMock
 					.Setup(m => m.GetProperty(BizTalkFactoryProperties.MapTypeName))
 					.Returns(Transform<IdentityTransform>.MapTypeName);
@@ -168,48 +183,23 @@ namespace Be.Stateless.BizTalk.Component
 					.Setup(ts => ts.ExtendWith(MessageMock.Object.Context))
 					.Returns(transformStreamMock.Object);
 				transformStreamMock
-					.Setup(ts => ts.Apply(transform, sut.Encoding))
+					.Setup(ts => ts.Apply(mapType, sut.Encoding))
 					.Returns(transformedStream)
 					.Verifiable();
 
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
-				// ReSharper disable once ImplicitlyCapturedClosure
-				transformStreamMock.Verify(ts => ts.Apply(sut.Map, sut.Encoding), Times.Never());
+				transformStreamMock.Verify(ts => ts.Apply(sut.MapType, sut.Encoding), Times.Never());
 				transformStreamMock.VerifyAll();
 			}
 		}
 
-		static XsltRunnerComponentFixtureBase()
+		protected virtual XsltRunner CreateXsltRunner()
 		{
-			// PipelineComponentFixture<XsltRunnerComponent> assumes and needs the following converters
-			TypeDescriptor.AddAttributes(
-				typeof(Encoding),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(EncodingConverter))
-				});
-			TypeDescriptor.AddAttributes(
-				typeof(Type),
-				new Attribute[] {
-					new TypeConverterAttribute(typeof(TypeNameConverter))
-				});
+			return new XsltRunner();
 		}
 
-		protected override object GetValueForProperty(string name)
-		{
-			switch (name)
-			{
-				case "Encoding":
-					return Encoding.GetEncoding("iso-8859-1");
-				case "Map":
-					return typeof(TransformBase);
-				default:
-					return base.GetValueForProperty(name);
-			}
-		}
-
-		private Func<MarkableForwardOnlyEventingReadStream, IProbeStream> _proberFactory;
+		protected Func<MarkableForwardOnlyEventingReadStream, IProbeStream> _proberFactory;
 		private Func<Stream[], ITransformStream> _transformerFactory;
-		private Stream _dataStream;
 	}
 }

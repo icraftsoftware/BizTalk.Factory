@@ -25,6 +25,7 @@ using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Pipelines;
 using Be.Stateless.BizTalk.Schemas.Xml;

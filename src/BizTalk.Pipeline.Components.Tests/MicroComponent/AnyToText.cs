@@ -19,7 +19,7 @@
 using Be.Stateless.BizTalk.Unit.Resources;
 using Microsoft.XLANGs.BaseTypes;
 
-namespace Be.Stateless.BizTalk.Component
+namespace Be.Stateless.BizTalk.MicroComponent
 {
 	[SchemaReference(@"Be.Stateless.BizTalk.Schemas.Xml.Any", typeof(Schemas.Xml.Any))]
 	internal class AnyToText : TransformBase
