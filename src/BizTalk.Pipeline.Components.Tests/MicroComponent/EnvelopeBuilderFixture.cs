@@ -36,74 +36,40 @@ using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.MicroComponent
 {
-	[TestFixture]
 	public class EnvelopeBuilderFixture : XsltRunnerFixture
 	{
-		#region Setup/Teardown
-
-		[SetUp]
-		public void SetUp()
-		{
-			//var _dataStream = new StringStream("<root xmlns='urn:ns'></root>");
-			//MessageMock.Object.BodyPart.Data = _dataStream;
-
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
-			//	.Returns(Schema<Schemas.Xml.Any>.DocumentSpec);
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("urn-one#letter"))
-			//	.Returns(Schema<Schemas.Xml.Any>.DocumentSpec);
-
-			var probeStreamMock = new Mock<IProbeStream>();
-			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
-			probeStreamMock
-				.Setup(ps => ps.MessageType)
-				.Returns(Schema<Envelope>.MessageType);
-			probeBatchContentStreamMock
-				.Setup(ps => ps.BatchDescriptor)
-				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName });
-			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
-
-			//_dataStream = ResourceManager.Load("Data.BatchContent.xml");
-			//MessageMock.Object.BodyPart.Data = _dataStream;
-
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("http://schemas.microsoft.com/BizTalk/2003/aggschema#Root"))
-			//	.Returns(Schema<Batch.Content>.DocumentSpec);
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType(Schema<Batch.Content>.MessageType))
-			//	.Returns(Schema<Batch.Content>.DocumentSpec);
-			PipelineContextMock
-				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
-				.Returns(Schema<Envelope>.DocumentSpec);
-		}
-
-		#endregion
-
 		[Test]
 		public void BatchContentIsTransformedToSpecificEnvelope()
 		{
-			var _dataStream = ResourceManager.Load("Data.BatchContent.xml");
-			MessageMock.Object.BodyPart.Data = _dataStream;
+			string actualEnvelopeContent;
+			string expectedEnvelopeContent;
+			var sut = new EnvelopeBuilder();
 
-			var sut = CreateXsltRunner();
-
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			var envelope = MessageFactory.CreateEnvelope<Envelope>().OuterXml;
-			var envelopeStream = new StringStream(envelope);
-			var batch = MessageFactory.CreateMessage<Batch.Content>(ResourceManager.LoadString("Data.BatchContent.xml")).OuterXml;
-			var batchStream = new StringStream(batch);
+			var envelopeStream = new StringStream(MessageFactory.CreateEnvelope<Envelope>().OuterXml);
+			var batchStream = new StringStream(MessageFactory.CreateMessage<Batch.Content>(ResourceManager.LoadString("Data.BatchContent.xml")).OuterXml);
 			var transformedStream = new Stream[] { envelopeStream, batchStream }.Transform().Apply(sut.MapType, sut.Encoding);
 			using (var expectedReader = XmlReader.Create(transformedStream, new XmlReaderSettings { CloseInput = true }))
-			using (var actualReader = XmlReader.Create(MessageMock.Object.BodyPart.Data, new XmlReaderSettings { CloseInput = true, IgnoreWhitespace = true }))
 			{
 				expectedReader.Read();
-				var expected = expectedReader.ReadOuterXml();
-				actualReader.Read();
-				var actual = actualReader.ReadOuterXml();
-				Assert.That(actual, Is.EqualTo(expected));
+				expectedEnvelopeContent = expectedReader.ReadOuterXml();
 			}
+
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Envelope>.DocumentSpec);
+
+			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+				using (var actualReader = XmlReader.Create(MessageMock.Object.BodyPart.Data, new XmlReaderSettings { CloseInput = true, IgnoreWhitespace = true }))
+				{
+					actualReader.Read();
+					actualEnvelopeContent = actualReader.ReadOuterXml();
+				}
+			}
+
+			Assert.That(actualEnvelopeContent, Is.EqualTo(expectedEnvelopeContent));
 		}
 
 		[Test]
@@ -115,7 +81,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			var transformStreamMock = new Mock<ITransformStream>();
 			StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
 
-			var sut = CreateXsltRunner();
+			var sut = new EnvelopeBuilder();
 
 			Assert.That(
 				() => sut.Execute(PipelineContextMock.Object, MessageMock.Object),
@@ -128,30 +94,32 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void MapDefaultsToBatchContentToAnyEnvelope()
 		{
-			var sut = CreateXsltRunner();
-
-			Assert.That(sut.MapType, Is.SameAs(typeof(BatchContentToAnyEnvelope)));
+			Assert.That(new EnvelopeBuilder().MapType, Is.SameAs(typeof(BatchContentToAnyEnvelope)));
 		}
 
 		[Test]
 		public void MessageIsProbedForBatchDescriptor()
 		{
-			var sut = CreateXsltRunner();
-
 			var probeStreamMock = new Mock<IProbeStream>();
 			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
 			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
 			probeStreamMock
 				.Setup(ps => ps.MessageType)
-				.Returns(Schema<Envelope>.MessageType);
+				.Returns(Schema<Envelope>.MessageType)
+				.Verifiable();
 			probeBatchContentStreamMock
 				.Setup(ps => ps.BatchDescriptor)
 				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName })
 				.Verifiable();
 
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Envelope>.DocumentSpec);
+
 			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
 			{
 				MessageMock.Object.BodyPart.Data = dataStream;
+				var sut = new EnvelopeBuilder();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 			}
 
@@ -162,22 +130,27 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void MessageIsTransformedToEnvelope()
 		{
-			var sut = CreateXsltRunner();
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
+				.Returns(Schema<Any>.DocumentSpec);
+
+			var sut = new EnvelopeBuilder();
 
 			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
 			using (var transformedStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+
 				var transformStreamMock = new Mock<ITransformStream>(MockBehavior.Strict);
 				StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
 				transformStreamMock
 					.Setup(ts => ts.ExtendWith(MessageMock.Object.Context))
-					.Returns(transformStreamMock.Object);
+					.Returns(transformStreamMock.Object)
+					.Verifiable();
 				transformStreamMock
 					.Setup(ts => ts.Apply(typeof(BatchContentToAnyEnvelope), sut.Encoding))
 					.Returns(transformedStream)
 					.Verifiable();
-
-				MessageMock.Object.BodyPart.Data = dataStream;
 
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
@@ -188,7 +161,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void MessageIsTransformedToEnvelopeViaEnvelopeSpecNameAnnotation()
 		{
-			var sut = CreateXsltRunner();
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
+				.Returns(Schema<Any>.DocumentSpec);
+
+			var sut = new EnvelopeBuilder();
 
 			using (var inputStream = ResourceManager.Load("Data.BatchContentWithTransform.xml"))
 			using (var transformedStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
@@ -214,30 +191,94 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void PartitionIsPromoted()
 		{
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
-			//	.Returns(Schema<Any>.DocumentSpec);
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("urn-one#letter"))
-			//	.Returns(Schema<Any>.DocumentSpec);
-
-			//PipelineContextMock
-			//	.Setup(pc => pc.GetDocumentSpecByType("http://schemas.microsoft.com/BizTalk/2003/aggschema#Root"))
-			//	.Returns(Schema<Batch.Content>.DocumentSpec);
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType(Schema<Batch.Content>.MessageType))
 				.Returns(Schema<Batch.Content>.DocumentSpec);
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Envelope>.DocumentSpec);
 
 			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
 			{
 				MessageMock.Object.BodyPart.Data = dataStream;
-
-				var sut = CreateXsltRunner();
-
+				var sut = new EnvelopeBuilder();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 			}
 
 			MessageMock.Verify(m => m.Promote(BizTalkFactoryProperties.EnvelopePartition, "p-one"));
+		}
+
+		[Test]
+		public override void ReplacesMessageOriginalDataStreamWithTransformResult()
+		{
+			var probeStreamMock = new Mock<IProbeStream>();
+			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
+			probeStreamMock
+				.Setup(ps => ps.MessageType)
+				.Returns(Schema<Envelope>.MessageType);
+			probeBatchContentStreamMock
+				.Setup(ps => ps.BatchDescriptor)
+				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName });
+			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Envelope>.DocumentSpec);
+
+			base.ReplacesMessageOriginalDataStreamWithTransformResult();
+		}
+
+		[Test]
+		public override void XsltEntailsMessageTypeIsPromoted()
+		{
+			PipelineContextMock
+				.Setup(m => m.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Batch.Content>.DocumentSpec);
+
+			var probeStreamMock = new Mock<IProbeStream>();
+			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
+			probeStreamMock
+				.Setup(ps => ps.MessageType)
+				.Returns(Schema<Envelope>.MessageType);
+			probeBatchContentStreamMock
+				.Setup(ps => ps.BatchDescriptor)
+				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName });
+			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+
+			base.XsltEntailsMessageTypeIsPromoted();
+		}
+
+		[Test]
+		public override void XsltEntailsMessageTypeIsPromotedOnlyIfOutputMethodIsXml()
+		{
+			var probeStreamMock = new Mock<IProbeStream>();
+			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
+			probeBatchContentStreamMock
+				.Setup(ps => ps.BatchDescriptor)
+				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName });
+			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+
+			base.XsltEntailsMessageTypeIsPromotedOnlyIfOutputMethodIsXml();
+		}
+
+		[Test]
+		public override void XsltFromContextHasPrecedenceOverConfiguredOne()
+		{
+			var probeStreamMock = new Mock<IProbeStream>();
+			var probeBatchContentStreamMock = probeStreamMock.As<IProbeBatchContentStream>();
+			probeStreamMock
+				.Setup(ps => ps.MessageType)
+				.Returns(Schema<Envelope>.MessageType);
+			probeBatchContentStreamMock
+				.Setup(ps => ps.BatchDescriptor)
+				.Returns(new BatchDescriptor { EnvelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName });
+			StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+
+			PipelineContextMock
+				.Setup(pc => pc.GetDocumentSpecByType(Schema<Envelope>.MessageType))
+				.Returns(Schema<Envelope>.DocumentSpec);
+
+			base.XsltFromContextHasPrecedenceOverConfiguredOne();
 		}
 
 		protected override XsltRunner CreateXsltRunner()

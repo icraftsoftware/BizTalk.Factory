@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			var transformStreamMock = new Mock<ITransformStream>();
 			StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
 
-			// CAUTION! does not call CreateXsltRunner() as this test does not concern XsltRunner-derived classes
+			// CAUTION! does not call CreateXsltRunner() as this test concerns only XsltRunner and none of its derived types
 			var sut = new XsltRunner();
 			Assert.That(sut.MapType, Is.Null);
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -76,12 +76,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void EncodingDefaultsToUtf8WithoutSignature()
 		{
-			var sut = CreateXsltRunner();
-			Assert.That(sut.Encoding, Is.EqualTo(new UTF8Encoding()));
+			Assert.That(CreateXsltRunner().Encoding, Is.EqualTo(new UTF8Encoding(false)));
 		}
 
 		[Test]
-		public void ReplacesMessageOriginalDataStreamWithTransformResult()
+		public virtual void ReplacesMessageOriginalDataStreamWithTransformResult()
 		{
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
@@ -95,6 +94,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			using (var transformedStream = dataStream.Transform().Apply(sut.MapType))
 			{
 				MessageMock.Object.BodyPart.Data = dataStream;
+
 				var transformStreamMock = new Mock<ITransformStream>(MockBehavior.Strict);
 				StreamExtensions.StreamTransformerFactory = stream => transformStreamMock.Object;
 				transformStreamMock
@@ -111,12 +111,14 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.TypeOf<MarkableForwardOnlyEventingReadStream>());
 				// ReSharper disable once PossibleInvalidCastException
-				Assert.That(Reflector.GetField((MarkableForwardOnlyEventingReadStream) MessageMock.Object.BodyPart.Data, "m_data"), Is.SameAs(transformedStream));
+				Assert.That(
+					Reflector.GetField((MarkableForwardOnlyEventingReadStream) MessageMock.Object.BodyPart.Data, "m_data"),
+					Is.SameAs(transformedStream));
 			}
 		}
 
 		[Test]
-		public void XsltEntailsMessageTypeIsPromoted()
+		public virtual void XsltEntailsMessageTypeIsPromoted()
 		{
 			PipelineContextMock
 				.Setup(m => m.GetDocumentSpecByType("urn:ns#root"))
@@ -126,18 +128,18 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			sut.Encoding = Encoding.UTF8;
 			sut.MapType = typeof(IdentityTransform);
 
-			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			using (var dataStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
 				MessageMock.Object.BodyPart.Data = dataStream;
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 			}
 
-			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType));
-			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName));
+			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType), Times.Once());
+			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName), Times.Once());
 		}
 
 		[Test]
-		public void XsltEntailsMessageTypeIsPromotedOnlyIfOutputMethodIsXml()
+		public virtual void XsltEntailsMessageTypeIsPromotedOnlyIfOutputMethodIsXml()
 		{
 			PipelineContextMock
 				.Setup(m => m.GetDocumentSpecByType("urn:ns#root"))
@@ -147,7 +149,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			sut.Encoding = Encoding.UTF8;
 			sut.MapType = typeof(AnyToText);
 
-			using (var dataStream = new StringStream("<root xmlns='urn:ns'></root>"))
+			using (var dataStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
 				MessageMock.Object.BodyPart.Data = dataStream;
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -158,7 +160,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[Test]
-		public void XsltFromContextHasPrecedenceOverConfiguredOne()
+		public virtual void XsltFromContextHasPrecedenceOverConfiguredOne()
 		{
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
@@ -199,7 +201,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			return new XsltRunner();
 		}
 
-		protected Func<MarkableForwardOnlyEventingReadStream, IProbeStream> _proberFactory;
+		private Func<MarkableForwardOnlyEventingReadStream, IProbeStream> _proberFactory;
 		private Func<Stream[], ITransformStream> _transformerFactory;
 	}
 }
