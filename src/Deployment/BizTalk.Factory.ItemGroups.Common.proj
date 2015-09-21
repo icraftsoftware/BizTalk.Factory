@@ -109,7 +109,7 @@
       <Grant>Replace</Grant>
       <Recurse>true</Recurse>
     </LocalDirectories>
-    <!-- apply DACLS to binding files -->
+    <!-- apply DACL to binding files -->
     <LocalFiles Include="$(MSBuildThisFileDirectory)$(ProjectName).PortBindingsMaster.xml;$(MSBuildThisFileDirectory)PortBindings.xml">
       <Users>$(BizTalkGroupsDomain)\$(BizTalkServerAdministratorGroup);NT AUTHORITY\SYSTEM</Users>
       <Permissions>(F)</Permissions>
