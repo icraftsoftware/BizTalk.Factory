@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Be.Stateless.Extensions;
 using Microsoft.RuleEngine;
@@ -31,6 +32,62 @@ namespace Be.Stateless.BizTalk.RuleEngine
 	[TypeConverter(typeof(PolicyNameConverter))]
 	public class PolicyName : RuleSetInfo, IEquatable<RuleSetInfo>
 	{
+		/// <summary>
+		/// Converts the given <see cref="string"/> to a <see cref="PolicyName"/> instance.
+		/// </summary>
+		/// <param name="displayName">
+		/// The <see cref="string"/> to convert to a <see cref="PolicyName"/> instance.
+		/// </param>
+		/// <returns>
+		/// A <see cref="PolicyName"/> instance that represents the converted <paramref name="displayName"/>.
+		/// </returns>
+		/// <exception cref="NotSupportedException">
+		/// The conversion cannot be performed.
+		/// </exception>
+		/// <remarks>
+		/// This <see cref="PolicyName"/> can be converted back to a <see cref="string"/> via the <see cref="ToString"/>
+		/// methods.
+		/// </remarks>
+		/// <seealso cref="ToString"/>
+		public static PolicyName Parse(string displayName)
+		{
+			if (displayName.IsNullOrEmpty()) throw new NotSupportedException(string.Format("Cannot parse a null or empty string into a {0}.", typeof(PolicyName).Name));
+
+			var match = _regex.Match(displayName);
+			if (!match.Success) throw new NotSupportedException(string.Format("'{0}' format is invalid and cannot be parsed into a {1}.", displayName, typeof(PolicyName).Name));
+
+			return new PolicyName(match.Groups["Name"].Value, int.Parse(match.Groups["Major"].Value), int.Parse(match.Groups["Minor"].Value));
+		}
+
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization but not supposed to be called.")]
+		public PolicyName() : base(string.Empty, 0, 0) { throw new NotSupportedException(); }
+
+		public PolicyName(RuleSetInfo ruleSetInfo) : base(ruleSetInfo.Name, ruleSetInfo.MajorRevision, ruleSetInfo.MinorRevision) { }
+
+		public PolicyName(string name, int major, int minor) : base(name, major, minor) { }
+
+		#region Base Class Member Overrides
+
+		/// <summary>
+		/// Converts a <see cref="PolicyName"/> instance to its <see cref="string"/> representation.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="string"/> that represents the <see cref="PolicyName"/>.
+		/// </returns>
+		/// <remarks>
+		/// This <see cref="string"/> can be converted back to a <see cref="PolicyName"/> via the <see cref="Parse"/>
+		/// methods.
+		/// </remarks>
+		/// <seealso cref="Parse"/>
+		public override string ToString()
+		{
+			return string.Format("{0}, Version={1}.{2}", Name, MajorRevision, MinorRevision);
+		}
+
+		#endregion
+
+		private static readonly Regex _regex = new Regex(@"^(?<Name>\w[\w\.]+?)\,\sVersion=(?<Major>\d+)\.(?<Minor>\d)$", RegexOptions.Singleline | RegexOptions.Compiled);
+
 		#region Equality members
 
 		public static bool operator ==(PolicyName left, PolicyName right)
@@ -116,58 +173,5 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Converts the given <see cref="string"/> to a <see cref="PolicyName"/> instance.
-		/// </summary>
-		/// <param name="displayName">
-		/// The <see cref="string"/> to convert to a <see cref="PolicyName"/> instance.
-		/// </param>
-		/// <returns>
-		/// A <see cref="PolicyName"/> instance that represents the converted <paramref name="displayName"/>.
-		/// </returns>
-		/// <exception cref="NotSupportedException">
-		/// The conversion cannot be performed.
-		/// </exception>
-		/// <remarks>
-		/// This <see cref="PolicyName"/> can be converted back to a <see cref="string"/> via the <see cref="ToString"/>
-		/// methods.
-		/// </remarks>
-		/// <seealso cref="ToString"/>
-		public static PolicyName Parse(string displayName)
-		{
-			if (displayName.IsNullOrEmpty()) throw new NotSupportedException(string.Format("Cannot parse a null or empty string into a {0}.", typeof(PolicyName).Name));
-
-			var match = _regex.Match(displayName);
-			if (!match.Success) throw new NotSupportedException(string.Format("'{0}' format is invalid and cannot be parsed into a {1}.", displayName, typeof(PolicyName).Name));
-
-			return new PolicyName(match.Groups["Name"].Value, Int32.Parse(match.Groups["Major"].Value), Int32.Parse(match.Groups["Minor"].Value));
-		}
-
-		public PolicyName(RuleSetInfo ruleSetInfo) : base(ruleSetInfo.Name, ruleSetInfo.MajorRevision, ruleSetInfo.MinorRevision) { }
-
-		public PolicyName(string name, int major, int minor) : base(name, major, minor) { }
-
-		#region Base Class Member Overrides
-
-		/// <summary>
-		/// Converts a <see cref="PolicyName"/> instance to its <see cref="string"/> representation.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="string"/> that represents the <see cref="PolicyName"/>.
-		/// </returns>
-		/// <remarks>
-		/// This <see cref="string"/> can be converted back to a <see cref="PolicyName"/> via the <see cref="Parse"/>
-		/// methods.
-		/// </remarks>
-		/// <seealso cref="Parse"/>
-		public override string ToString()
-		{
-			return string.Format("{0}, Version={1}.{2}", Name, MajorRevision, MinorRevision);
-		}
-
-		#endregion
-
-		private static readonly Regex _regex = new Regex(@"^(?<Name>\w[\w\.]+?)\,\sVersion=(?<Major>\d+)\.(?<Minor>\d)$", RegexOptions.Singleline | RegexOptions.Compiled);
 	}
 }

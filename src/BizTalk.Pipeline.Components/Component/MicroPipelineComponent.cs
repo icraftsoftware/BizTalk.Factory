@@ -100,6 +100,5 @@ namespace Be.Stateless.BizTalk.Component
 		public IEnumerable<IMicroPipelineComponent> Components { get; set; }
 
 		private const string CLASS_ID = "02dd03e8-9509-4799-a196-a8c68e02d933";
-		// TODO private static readonly ILog _logger = LogManager.GetLogger(typeof(MicroPipelineComponent));
 	}
 }

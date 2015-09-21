@@ -117,6 +117,7 @@
     <Compile Include="MicroComponent\MessageBodyStreamFactoryFixture.cs" />
     <Compile Include="MicroComponent\MessageConsumerFixture.cs" />
     <Compile Include="MicroComponent\MicroPipelineComponentFixture.cs" />
+    <Compile Include="MicroComponent\PolicyRunnerFixture.cs" />
     <Compile Include="MicroComponent\XmlTranslatorFixture.cs" />
     <Compile Include="MicroComponent\XsltRunnerFixture.cs" />
     <Compile Include="MicroComponent\ZipDecoderFixture.cs" />

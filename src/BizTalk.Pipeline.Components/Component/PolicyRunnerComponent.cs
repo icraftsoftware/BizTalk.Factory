@@ -20,12 +20,9 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.RuleEngine;
-using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.Extensions;
-using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -36,6 +33,11 @@ namespace Be.Stateless.BizTalk.Component
 	[Guid(CLASS_ID)]
 	public class PolicyRunnerComponent : PipelineComponent
 	{
+		public PolicyRunnerComponent()
+		{
+			_microComponent = new PolicyRunner();
+		}
+
 		#region Base Class Member Overrides
 
 		/// <summary>
@@ -45,46 +47,12 @@ namespace Be.Stateless.BizTalk.Component
 		[Description("Description of the pipeline component.")]
 		public override string Description
 		{
-			get { return "Executes a BizTalk Business Rule Policy against facts asserted from the message context."; }
-		}
-
-		/// <summary>
-		/// Enables or disables the pipeline component.
-		/// </summary>
-		/// <remarks>
-		/// Whether to let this pipeline component execute or not.
-		/// </remarks>
-		[Browsable(true)]
-		[Description("Enables or disables the pipeline component.")]
-		public override bool Enabled
-		{
-			get { return base.Enabled && Policy != null; }
-			set { base.Enabled = value; }
+			get { return "Executes a BizTalk Business Rule Policy against facts asserted in the message context."; }
 		}
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			if (_logger.IsDebugEnabled) _logger.DebugFormat("Scheduling policy '{0}' for {1} execution.", Policy.ToString(), ExecutionMode.ToString());
-
-			if (ExecutionMode == PluginExecutionMode.Deferred)
-			{
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => {
-						var substitutionStream = new EventingReadStream(originalStream);
-						substitutionStream.AfterLastReadEvent += (src, args) => {
-							if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing policy '{0}' that was scheduled for deferred execution.", Policy.ToString());
-							RuleEngine.Policy.Execute(Policy, new Context(message.Context));
-						};
-						return substitutionStream;
-					},
-					pipelineContext.ResourceTracker);
-			}
-			else
-			{
-				RuleEngine.Policy.Execute(Policy, new Context(message.Context));
-			}
-
-			return message;
+			return _microComponent.Execute(pipelineContext, message);
 		}
 
 		/// <summary>
@@ -126,7 +94,11 @@ namespace Be.Stateless.BizTalk.Component
 		/// </summary>
 		[Browsable(true)]
 		[Description("The Business Rule Policy execution mode, either Immediate or Deferred.")]
-		public PluginExecutionMode ExecutionMode { get; set; }
+		public PluginExecutionMode ExecutionMode
+		{
+			get { return _microComponent.ExecutionMode; }
+			set { _microComponent.ExecutionMode = value; }
+		}
 
 		/// <summary>
 		/// The Business Rule Policy to be executed.
@@ -134,9 +106,13 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("The Business Rule Policy to be executed.")]
 		[TypeConverter(typeof(PolicyNameConverter))]
-		public PolicyName Policy { get; set; }
+		public PolicyName Policy
+		{
+			get { return _microComponent.Policy; }
+			set { _microComponent.Policy = value; }
+		}
 
 		private const string CLASS_ID = "d320f64f-59a5-4c2b-bf6c-22409b7893a9";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(PolicyRunnerComponent));
+		private readonly PolicyRunner _microComponent;
 	}
 }

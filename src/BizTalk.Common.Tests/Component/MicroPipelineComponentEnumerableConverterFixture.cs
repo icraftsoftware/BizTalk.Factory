@@ -25,6 +25,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.XPath;
@@ -71,6 +72,7 @@ namespace Be.Stateless.BizTalk.Component
     <Modes>Default</Modes>
     <Name>DummyTen</Name>
     <Plugin>{3}</Plugin>
+    <Policy>SamplePolicy, Version=6.1</Policy>
   </mComponent>
 </mComponents>",
 				typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName,
@@ -97,6 +99,7 @@ namespace Be.Stateless.BizTalk.Component
 			Assert.That(microPipelineComponentDummyTen.Encoding, Is.EqualTo(new UTF8Encoding(false)));
 			Assert.That(microPipelineComponentDummyTen.Modes, Is.EqualTo(XmlTranslationModes.Default));
 			Assert.That(microPipelineComponentDummyTen.Plugin, Is.EqualTo(typeof(DummyXmlTranslatorComponent)));
+			Assert.That(microPipelineComponentDummyTen.Policy, Is.EqualTo(new PolicyName("SamplePolicy", 6, 1)));
 		}
 
 		[Test]
@@ -147,6 +150,7 @@ namespace Be.Stateless.BizTalk.Component
 							+ "<Modes>AbsorbXmlDeclaration TranslateAttributeNamespace</Modes>"
 							+ "<Name>DummyTen</Name>"
 							+ "<Plugin>{3}</Plugin>"
+							+ "<Policy>DummyPolicy, Version=1.1</Policy>"
 							+ "</mComponent>"
 							+ "</mComponents>",
 						typeof(MicroPipelineComponentDummyOne).AssemblyQualifiedName,
@@ -454,6 +458,7 @@ namespace Be.Stateless.BizTalk.Component
 				Modes = XmlTranslationModes.AbsorbXmlDeclaration | XmlTranslationModes.TranslateAttributeNamespace;
 				Name = "DummyTen";
 				Plugin = typeof(DummyContextPropertyExtractorComponent);
+				Policy = new PolicyName("DummyPolicy", 1, 1);
 			}
 
 			#region IMicroPipelineComponent Members
@@ -476,6 +481,9 @@ namespace Be.Stateless.BizTalk.Component
 
 			[XmlElement(typeof(RuntimeTypeXmlSerializer))]
 			public Type Plugin { get; set; }
+
+			[XmlElement(typeof(PolicyNameXmlSerializer))]
+			public PolicyName Policy { get; set; }
 		}
 	}
 }
