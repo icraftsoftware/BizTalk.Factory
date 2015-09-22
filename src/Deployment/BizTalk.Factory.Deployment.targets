@@ -1101,7 +1101,7 @@
           DependsOnTargets="BuildWindowsServicesQualified"
           Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
-    <Message Text="Deploying Windows Service '%(WindowsServicesQualified.Identity)'..."  Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Message Text="Deploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
 
     <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /%(WindowsServicesQualified.ServiceAccountNameParameter)=&quot;%(WindowsServicesQualified.ServiceAccountNameArgument)&quot; /%(WindowsServicesQualified.ServiceAccountPasswordParameter)=%(WindowsServicesQualified.ServiceAccountPasswordArgument) /%(WindowsServicesQualified.ServiceStartModeParameter)=%(WindowsServicesQualified.ServiceStartModeArgument) &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" 
            Condition="'%(WindowsServicesQualified.Identity)' != ''" />
@@ -1113,9 +1113,9 @@
           DependsOnTargets="BuildWindowsServicesQualified"
           Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
-    <Message Text="Undeploying Windows Service '%(WindowsServicesQualified.Identity)'..." />
+    <Message Text="Undeploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /uninstall &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" />
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /uninstall &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" Condition="'%(WindowsServicesQualified.Identity)' != ''" />
     <Delete
       Files="%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly).config"
       Condition="Exists('%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly).config')" />
@@ -1123,7 +1123,7 @@
       Files="%(WindowsServicesQualified.LocationPath)\log4net.config"
       Condition="Exists('%(WindowsServicesQualified.LocationPath)\log4net.config')" />
 
-    <Message Text="Undeployed Windows Service '%(WindowsServicesQualified.Identity)'." />
+    <Message Text="Undeployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
   </Target>
 
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
