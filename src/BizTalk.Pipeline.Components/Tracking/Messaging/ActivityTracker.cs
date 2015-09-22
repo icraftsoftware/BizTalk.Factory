@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Streaming;
@@ -30,14 +29,14 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 	internal class ActivityTracker
 	{
-		public static ActivityTracker Create(ActivityTrackerComponent.Context context)
+		public static ActivityTracker Create(MicroComponent.ActivityTracker.Context context)
 		{
 			return Factory(context);
 		}
 
 		#region Mock's Factory Hook Point
 
-		internal static Func<ActivityTrackerComponent.Context, ActivityTracker> Factory
+		internal static Func<MicroComponent.ActivityTracker.Context, ActivityTracker> Factory
 		{
 			get { return _factory; }
 			set { _factory = value; }
@@ -47,7 +46,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 		// ReSharper disable once MemberCanBePrivate.Global
 		// ctor is protected for mocking purposes
-		protected ActivityTracker(ActivityTrackerComponent.Context context)
+		protected ActivityTracker(MicroComponent.ActivityTracker.Context context)
 		{
 			_context = context;
 		}
@@ -106,10 +105,10 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			_process.IfNotNull(p => p.AddStep(_messagingStep));
 		}
 
-		private static Func<ActivityTrackerComponent.Context, ActivityTracker> _factory = context => new ActivityTracker(context);
+		private static Func<MicroComponent.ActivityTracker.Context, ActivityTracker> _factory = context => new ActivityTracker(context);
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ActivityTracker));
-		private readonly ActivityTrackerComponent.Context _context;
+		private readonly MicroComponent.ActivityTracker.Context _context;
 		private MessagingStep _messagingStep;
 		private MessagingStep _previousMessagingStep;
 		private Process _process;

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,13 +21,10 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
 using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.RuleEngine;
-using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
-using Be.Stateless.BizTalk.Tracking.Messaging;
 using Be.Stateless.Extensions;
-using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -42,36 +39,20 @@ namespace Be.Stateless.BizTalk.Component
 	[Guid(CLASS_ID)]
 	public class ActivityTrackerComponent : PipelineComponent
 	{
-		#region Nested type: Context
-
-		internal class Context
-		{
-			internal Context(IPipelineContext pipelineContext, IBaseMessage message, ActivityTrackingModes trackingModes, PolicyName trackingResolutionPolicy)
-			{
-				Message = message;
-				PipelineContext = pipelineContext;
-				TrackingModes = trackingModes;
-				TrackingResolver = TrackingResolver.Create(trackingResolutionPolicy, message);
-			}
-
-			internal IBaseMessage Message { get; private set; }
-			internal IPipelineContext PipelineContext { get; private set; }
-			internal ActivityTrackingModes TrackingModes { get; set; }
-			internal TrackingResolver TrackingResolver { get; private set; }
-		}
-
-		#endregion
-
 		/// <summary>
 		/// Creates a new instance of <see cref="ActivityTrackerComponent"/>.
 		/// </summary>
 		public ActivityTrackerComponent()
 		{
-			TrackingContextRetentionDuration = 60;
-			TrackingModes = ActivityTrackingModes.Body;
+			_microComponent = new ActivityTracker();
 		}
 
-		#region IBaseComponent members
+		protected ActivityTrackerComponent(ActivityTracker batchTracker)
+		{
+			_microComponent = batchTracker;
+		}
+
+		#region Base Class Member Overrides
 
 		/// <summary>
 		/// Description of the pipeline component.
@@ -87,9 +68,24 @@ namespace Be.Stateless.BizTalk.Component
 			}
 		}
 
-		#endregion
+		/// <summary>
+		/// Enables or disables the pipeline component.
+		/// </summary>
+		/// <remarks>
+		/// Whether to let this pipeline component execute or not.
+		/// </remarks>
+		[Browsable(true)]
+		[Description("Enables or disables the pipeline component.")]
+		public override bool Enabled
+		{
+			get { return base.Enabled && TrackingModes != ActivityTrackingModes.None; }
+			set { base.Enabled = value; }
+		}
 
-		#region IPersistPropertyBag members
+		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
+		{
+			return _microComponent.Execute(pipelineContext, message);
+		}
 
 		/// <summary>
 		/// Gets class ID of component for usage from unmanaged code.
@@ -124,68 +120,28 @@ namespace Be.Stateless.BizTalk.Component
 
 		#endregion
 
-		#region Base Class Member Overrides
-
-		/// <summary>
-		/// Enables or disables the pipeline component.
-		/// </summary>
-		/// <remarks>
-		/// Whether to let this pipeline component execute or not.
-		/// </remarks>
-		[Browsable(true)]
-		[Description("Enables or disables the pipeline component.")]
-		public override bool Enabled
-		{
-			get { return base.Enabled && TrackingModes != ActivityTrackingModes.None; }
-			set { base.Enabled = value; }
-		}
-
-		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
-		{
-			var messageDirection = message.Direction();
-			var isSolicitResponse = message.PortType().IsSolicitResponse();
-
-			// TODO ?? what if message.BodyPart == null ??
-
-			// tracking context can only be restored for the inbound message of a Solicit-Response MEP, i.e. when BizTalk was the initiator of the 2-way MEP
-			if (messageDirection.IsInbound() && isSolicitResponse) RestoreCachedTrackingContext(message);
-
-			var context = new Context(pipelineContext, message, TrackingModes, TrackingResolutionPolicy);
-			var activityTracker = ActivityTracker.Create(context);
-			var messageBodyTracker = MessageBodyTracker.Create(context);
-
-			// try to replace a claim token message with its original body's payload stream
-			messageBodyTracker.TryCheckOutMessageBody();
-			// ensure a TrackingStream has been setup and ascertain TrackingModes
-			messageBodyTracker.SetupTracking();
-			// perform the necessary setup to ensure TrackingContext is initiated early but information is collected at stream's end
-			activityTracker.TrackActivity();
-			// try to replace message body's original payload with a claim token, this will drain the stream and, hence, ensure activity tracking is completed
-			messageBodyTracker.TryCheckInMessageBody();
-
-			// tracking context can only be cached for the outbound message of a Solicit-Response MEP, i.e. when BizTalk is the initiator of the 2-way MEP
-			if (messageDirection.IsOutbound() && isSolicitResponse) CacheTrackingContext(message);
-
-			return message;
-		}
-
-		#endregion
-
 		/// <summary>
 		/// How many seconds activity tracking contexts will be kept in cache when propagated through solicit-response
-		/// ports. A value of -1 disables caching.
+		/// ports. Any negative value disables caching.
 		/// </summary>
 		[Browsable(true)]
 		[Description("How many seconds activity tracking contexts will be kept in cache when propagated through solicit-response ports. Any negative value disables caching.")]
-		// ReSharper disable once MemberCanBePrivate.Global
-		public int TrackingContextRetentionDuration { get; set; }
+		public int TrackingContextRetentionDuration
+		{
+			get { return _microComponent.TrackingContextRetentionDuration; }
+			set { _microComponent.TrackingContextRetentionDuration = value; }
+		}
 
 		/// <summary>
 		/// Level of tracking to use, or the extent of message data to capture.
 		/// </summary>
 		[Browsable(true)]
 		[Description("Level of tracking to use, or the extent of message data to capture.")]
-		public ActivityTrackingModes TrackingModes { get; set; }
+		public ActivityTrackingModes TrackingModes
+		{
+			get { return _microComponent.TrackingModes; }
+			set { _microComponent.TrackingModes = value; }
+		}
 
 		/// <summary>
 		/// Policy used to resolve either the process name of a messaging-only flow, <see
@@ -196,38 +152,13 @@ namespace Be.Stateless.BizTalk.Component
 		[Browsable(true)]
 		[Description("Policy used to resolve either the process name of a messaging-only flow or the archive's target location should neither be found in message context.")]
 		[TypeConverter(typeof(PolicyNameConverter))]
-		// ReSharper disable once MemberCanBePrivate.Global
-		public PolicyName TrackingResolutionPolicy { get; set; }
-
-		#region TrackingContext Propagation
-
-		private void CacheTrackingContext(IBaseMessage message)
+		public PolicyName TrackingResolutionPolicy
 		{
-			// if propagation of TrackingContext is not disabled, cache the current TrackingContext
-			if (TrackingContextRetentionDuration > -1)
-			{
-				_logger.DebugFormat("Caching current tracking context for {0} seconds", TrackingContextRetentionDuration);
-				TrackingContextCache.Instance.Add(
-					message.GetProperty(BtsProperties.TransmitWorkId),
-					message.GetTrackingContext(),
-					TrackingContextRetentionDuration);
-			}
+			get { return _microComponent.TrackingResolutionPolicy; }
+			set { _microComponent.TrackingResolutionPolicy = value; }
 		}
-
-		private void RestoreCachedTrackingContext(IBaseMessage message)
-		{
-			// if propagation of TrackingContext is not disabled, restore a previously cached TrackingContext
-			if (TrackingContextRetentionDuration > -1)
-			{
-				_logger.Debug("Restoring cached tracking context");
-				var trackingContext = TrackingContextCache.Instance.Remove(message.GetProperty(BtsProperties.TransmitWorkId));
-				message.SetTrackingContext(trackingContext);
-			}
-		}
-
-		#endregion
 
 		private const string CLASS_ID = "1b4c83dd-7e71-453c-80de-457f70e8a703";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ActivityTrackerComponent));
+		private readonly ActivityTracker _microComponent;
 	}
 }

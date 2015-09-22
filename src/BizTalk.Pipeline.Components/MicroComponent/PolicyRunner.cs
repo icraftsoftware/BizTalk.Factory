@@ -37,17 +37,17 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			if (Policy == null) return message;
+			if (PolicyName == null) return message;
 
 			if (ExecutionMode == PluginExecutionMode.Deferred)
 			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Scheduling policy '{0}' for deferred execution.", Policy.ToString());
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Scheduling policy '{0}' for deferred execution.", PolicyName.ToString());
 				message.BodyPart.WrapOriginalDataStream(
 					originalStream => {
 						var substitutionStream = new EventingReadStream(originalStream);
 						substitutionStream.AfterLastReadEvent += (src, args) => {
-							if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing policy '{0}' that was scheduled for deferred execution.", Policy.ToString());
-							RuleEngine.Policy.Execute(Policy, new Context(message.Context));
+							if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing policy '{0}' that was scheduled for deferred execution.", PolicyName.ToString());
+							Policy.Execute(PolicyName, new Context(message.Context));
 						};
 						return substitutionStream;
 					},
@@ -55,8 +55,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			}
 			else
 			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing policy '{0}' that is scheduled for immediate execution.", Policy.ToString());
-				RuleEngine.Policy.Execute(Policy, new Context(message.Context));
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing policy '{0}' that is scheduled for immediate execution.", PolicyName.ToString());
+				Policy.Execute(PolicyName, new Context(message.Context));
 			}
 			return message;
 		}
@@ -72,8 +72,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// <summary>
 		/// The Business Rule Policy to be executed.
 		/// </summary>
-		[XmlElement("Builder", typeof(PolicyNameXmlSerializer))]
-		public PolicyName Policy { get; set; }
+		[XmlElement("Policy", typeof(PolicyNameXmlSerializer))]
+		public PolicyName PolicyName { get; set; }
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(PolicyRunner));
 	}

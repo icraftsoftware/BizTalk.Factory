@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 using System;
 using System.IO;
 using System.Transactions;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
@@ -70,7 +69,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			{
 				MessageMock.Object.BodyPart.Data = stream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Context, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Context, null));
 				sut.SetupTracking();
 			}
 
@@ -97,7 +96,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				trackingStream.ArchiveDescriptor = new ArchiveDescriptor("from", "to");
 				MessageMock.Object.BodyPart.Data = trackingStream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Archive, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Archive, null));
 				sut.SetupTracking();
 			}
 
@@ -117,7 +116,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			{
 				MessageMock.Object.BodyPart.Data = trackingStream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Archive, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Archive, null));
 				sut.SetupTracking();
 			}
 
@@ -133,7 +132,11 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		[Test]
 		public void AscertainedTrackingModeIsPushedBackInActivityTrackerComponentContext()
 		{
-			var context = new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Archive | ActivityTrackingModes.Claim, null);
+			var context = new MicroComponent.ActivityTracker.Context(
+				PipelineContextMock.Object,
+				MessageMock.Object,
+				ActivityTrackingModes.Archive | ActivityTrackingModes.Claim,
+				null);
 			ClaimStoreMock
 				.Setup(
 					cs => cs.SetupMessageBodyCapture(It.IsAny<TrackingStream>(), ActivityTrackingModes.Archive | ActivityTrackingModes.Claim, It.IsAny<Func<IKernelTransaction>>()))
@@ -157,7 +160,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			{
 				MessageMock.Object.BodyPart.Data = trackingStream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 				sut.SetupTracking();
 			}
 
@@ -173,7 +176,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			{
 				MessageMock.Object.BodyPart.Data = stream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 				sut.SetupTracking();
 			}
 
@@ -195,15 +198,17 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				var transaction = TransactionInterop.GetDtcTransaction(Transaction.Current);
 				PipelineContextMock.As<IPipelineContextEx>()
 					.Setup(pc => pc.GetTransaction())
+					// ReSharper disable once SuspiciousTypeConversion.Global
 					.Returns((IKernelTransaction) transaction);
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 				sut.SetupTracking();
 
 				ClaimStoreMock.Verify(
 					cs => cs.SetupMessageBodyCapture(
 						It.IsAny<TrackingStream>(),
 						It.IsAny<ActivityTrackingModes>(),
+						// ReSharper disable once SuspiciousTypeConversion.Global
 						It.Is<Func<IKernelTransaction>>(ktf => ReferenceEquals(ktf(), transaction))),
 					Times.Once());
 			}
@@ -222,9 +227,10 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				var transaction = TransactionInterop.GetDtcTransaction(Transaction.Current);
 				PipelineContextMock.As<IPipelineContextEx>()
 					.Setup(pc => pc.GetTransaction())
+					// ReSharper disable once SuspiciousTypeConversion.Global
 					.Returns((IKernelTransaction) transaction);
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 				sut.SetupTracking();
 
 				ClaimStoreMock.Verify(
@@ -245,7 +251,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			{
 				MessageMock.Object.BodyPart.Data = stream;
 
-				var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+				var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 				sut.SetupTracking();
 			}
 
@@ -259,7 +265,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		[Test]
 		public void InboundMessageBodyIsCheckedIn()
 		{
-			var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Claim, null));
+			var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Claim, null));
 			sut.TryCheckInMessageBody();
 
 			ClaimStoreMock.Verify(cs => cs.Claim(MessageMock.Object, It.IsAny<IResourceTracker>()), Times.Once());
@@ -268,7 +274,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		[Test]
 		public void InboundMessageBodyIsNotCheckedIn()
 		{
-			var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+			var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 			sut.TryCheckInMessageBody();
 
 			ClaimStoreMock.Verify(cs => cs.Claim(MessageMock.Object, It.IsAny<IResourceTracker>()), Times.Never());
@@ -279,7 +285,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		{
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 
-			var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Claim, null));
+			var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Claim, null));
 			sut.TryCheckOutMessageBody();
 
 			ClaimStoreMock.Verify(cs => cs.Redeem(MessageMock.Object, It.IsAny<IResourceTracker>()), Times.Once());
@@ -290,7 +296,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		{
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 
-			var sut = MessageBodyTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
+			var sut = MessageBodyTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null));
 			sut.TryCheckOutMessageBody();
 
 			ClaimStoreMock.Verify(cs => cs.Redeem(MessageMock.Object, It.IsAny<IResourceTracker>()), Times.Never());

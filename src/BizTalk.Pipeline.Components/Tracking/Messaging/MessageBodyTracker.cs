@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schemas.Xml;
@@ -29,14 +28,14 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 	internal class MessageBodyTracker
 	{
-		internal static MessageBodyTracker Create(ActivityTrackerComponent.Context context)
+		internal static MessageBodyTracker Create(MicroComponent.ActivityTracker.Context context)
 		{
 			return Factory(context);
 		}
 
 		#region Mock's Factory Hook Point
 
-		internal static Func<ActivityTrackerComponent.Context, MessageBodyTracker> Factory
+		internal static Func<MicroComponent.ActivityTracker.Context, MessageBodyTracker> Factory
 		{
 			get { return _factory; }
 			set { _factory = value; }
@@ -46,7 +45,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 		// ReSharper disable once MemberCanBePrivate.Global
 		// ctor is protected for mocking purposes
-		protected MessageBodyTracker(ActivityTrackerComponent.Context context)
+		protected MessageBodyTracker(MicroComponent.ActivityTracker.Context context)
 		{
 			_context = context;
 		}
@@ -121,10 +120,10 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			}
 		}
 
-		private static Func<ActivityTrackerComponent.Context, MessageBodyTracker> _factory = context => new MessageBodyTracker(context);
+		private static Func<MicroComponent.ActivityTracker.Context, MessageBodyTracker> _factory = context => new MessageBodyTracker(context);
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ActivityTracker));
-		private readonly ActivityTrackerComponent.Context _context;
+		private readonly MicroComponent.ActivityTracker.Context _context;
 		private TrackingStream _trackingStream;
 	}
 }

@@ -17,7 +17,6 @@
 #endregion
 
 using System.IO;
-using Be.Stateless.BizTalk.Component;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
 using NUnit.Framework;

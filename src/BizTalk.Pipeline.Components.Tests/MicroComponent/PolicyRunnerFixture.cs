@@ -60,7 +60,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				var sut = new PolicyRunner {
 					ExecutionMode = PluginExecutionMode.Deferred,
-					Policy = new PolicyName("name", 1, 0)
+					PolicyName = new PolicyName("name", 1, 0)
 				};
 
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				var sut = new PolicyRunner {
 					ExecutionMode = PluginExecutionMode.Immediate,
-					Policy = new PolicyName("name", 1, 0)
+					PolicyName = new PolicyName("name", 1, 0)
 				};
 
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);

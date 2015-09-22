@@ -108,8 +108,8 @@ namespace Be.Stateless.BizTalk.Component
 		[TypeConverter(typeof(PolicyNameConverter))]
 		public PolicyName Policy
 		{
-			get { return _microComponent.Policy; }
-			set { _microComponent.Policy = value; }
+			get { return _microComponent.PolicyName; }
+			set { _microComponent.PolicyName = value; }
 		}
 
 		private const string CLASS_ID = "d320f64f-59a5-4c2b-bf6c-22409b7893a9";

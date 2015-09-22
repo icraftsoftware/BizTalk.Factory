@@ -18,7 +18,6 @@
 
 using System.IO;
 using System.Text;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.IO.Extensions;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;

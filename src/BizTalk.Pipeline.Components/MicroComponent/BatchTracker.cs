@@ -16,21 +16,60 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.Component;
+using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Streaming.Extensions;
+using Be.Stateless.BizTalk.Tracking.Messaging;
+using Be.Stateless.Extensions;
+using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.MicroComponent
 {
-	public class BatchTracker : IMicroPipelineComponent
+	/// <summary>
+	/// <see cref="ActivityTracker"/> that specifically tracks the messaging activities involved in the release process
+	/// of a batch message.
+	/// </summary>
+	public class BatchTracker : ActivityTracker
 	{
-		#region IMicroPipelineComponent Members
+		#region Base Class Member Overrides
 
-		public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
+		public override IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			throw new System.NotImplementedException();
+			message = base.Execute(pipelineContext, message);
+
+			var markableForwardOnlyEventingReadStream = message.BodyPart.WrapOriginalDataStream(
+				originalStream => originalStream.AsMarkable(),
+				pipelineContext.ResourceTracker);
+			var probe = (IProbeBatchContentStream) markableForwardOnlyEventingReadStream.Probe();
+
+			var batchDescriptor = probe.BatchDescriptor;
+			if (batchDescriptor != null && !batchDescriptor.EnvelopeSpecName.IsNullOrEmpty())
+			{
+				if (_logger.IsInfoEnabled)
+					_logger.DebugFormat(
+						"Tracking batch release process for envelope '{0}' and partition '{1}'.",
+						batchDescriptor.EnvelopeSpecName,
+						batchDescriptor.Partition ?? "[null]");
+				var batchTrackingContext = probe.BatchTrackingContext;
+				BatchReleaseProcessActivityTracker.Create(pipelineContext, message).TrackActivity(batchTrackingContext);
+
+				message.SetProperty(TrackingProperties.Value1, batchDescriptor.EnvelopeSpecName);
+				message.SetProperty(TrackingProperties.Value2, batchDescriptor.Partition);
+			}
+			else
+			{
+				if (_logger.IsInfoEnabled) _logger.Debug("Tracking of batch release process is skipped for non batch message.");
+			}
+
+			markableForwardOnlyEventingReadStream.StopMarking();
+
+			return message;
 		}
 
 		#endregion
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(BatchTracker));
 	}
 }

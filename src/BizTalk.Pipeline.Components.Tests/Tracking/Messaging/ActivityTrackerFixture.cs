@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
@@ -74,6 +73,35 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		#endregion
 
 		[Test]
+		public void CompleteTrackingOfInboundMessageWithoutProcessAffiliationAfterStreamLastReadEvent()
+		{
+			using (var stream = new TrackingStream(new StringStream("some-content")))
+			{
+				MessageMock.Object.BodyPart.Data = stream;
+
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				sut.TrackActivity();
+				MessageMock.Object.BodyPart.Data.Drain();
+
+				ProcessMock.Verify(
+					p => p.TrackActivity(),
+					Times.Never());
+				InitiatingMessagingStepMock.Verify(
+					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
+					Times.Never());
+				ProcessMock.Verify(
+					p => p.AddStep(InitiatingMessagingStepMock.Object),
+					Times.Never());
+				MessagingStepMock.Verify(
+					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
+					Times.Once());
+				ProcessMock.Verify(
+					p => p.AddStep(MessagingStepMock.Object),
+					Times.Never());
+			}
+		}
+
+		[Test]
 		public void CompleteTrackingOfInboundMessageWithProcessAffiliationAfterStreamLastReadEvent()
 		{
 			using (var stream = new TrackingStream(new StringStream("some-content")))
@@ -81,67 +109,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Object.BodyPart.Data = stream;
 				MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId)).Returns(ActivityId.NewActivityId());
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
-				sut.TrackActivity();
-				MessageMock.Object.BodyPart.Data.Drain();
-
-				ProcessMock.Verify(
-					p => p.TrackActivity(),
-					Times.Never());
-				InitiatingMessagingStepMock.Verify(
-					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
-					Times.Never());
-				ProcessMock.Verify(
-					p => p.AddStep(InitiatingMessagingStepMock.Object),
-					Times.Never());
-				MessagingStepMock.Verify(
-					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
-					Times.Once());
-				ProcessMock.Verify(
-					p => p.AddStep(MessagingStepMock.Object),
-					Times.Once());
-			}
-		}
-
-		[Test]
-		public void CompleteTrackingOfInboundMessageWithoutProcessAffiliationAfterStreamLastReadEvent()
-		{
-			using (var stream = new TrackingStream(new StringStream("some-content")))
-			{
-				MessageMock.Object.BodyPart.Data = stream;
-
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
-				sut.TrackActivity();
-				MessageMock.Object.BodyPart.Data.Drain();
-
-				ProcessMock.Verify(
-					p => p.TrackActivity(),
-					Times.Never());
-				InitiatingMessagingStepMock.Verify(
-					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
-					Times.Never());
-				ProcessMock.Verify(
-					p => p.AddStep(InitiatingMessagingStepMock.Object),
-					Times.Never());
-				MessagingStepMock.Verify(
-					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
-					Times.Once());
-				ProcessMock.Verify(
-					p => p.AddStep(MessagingStepMock.Object),
-					Times.Never());
-			}
-		}
-
-		[Test]
-		public void CompleteTrackingOfOutboundMessageWithProcessAffiliationAfterStreamLastReadEvent()
-		{
-			using (var stream = new TrackingStream(new StringStream("some-content")))
-			{
-				MessageMock.Object.BodyPart.Data = stream;
-				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
-				MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId)).Returns(ActivityId.NewActivityId());
-
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 				MessageMock.Object.BodyPart.Data.Drain();
 
@@ -172,7 +140,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 				MessageMock.Setup(m => m.GetProperty(TrackingProperties.MessagingStepActivityId)).Returns(ActivityId.NewActivityId()); // InitiatingMessagingStep
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 				MessageMock.Object.BodyPart.Data.Drain();
 
@@ -203,7 +171,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Object.BodyPart.Data = stream;
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 				MessageMock.Object.BodyPart.Data.Drain();
 
@@ -227,6 +195,37 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		}
 
 		[Test]
+		public void CompleteTrackingOfOutboundMessageWithProcessAffiliationAfterStreamLastReadEvent()
+		{
+			using (var stream = new TrackingStream(new StringStream("some-content")))
+			{
+				MessageMock.Object.BodyPart.Data = stream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
+				MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId)).Returns(ActivityId.NewActivityId());
+
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				sut.TrackActivity();
+				MessageMock.Object.BodyPart.Data.Drain();
+
+				ProcessMock.Verify(
+					p => p.TrackActivity(),
+					Times.Never());
+				InitiatingMessagingStepMock.Verify(
+					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
+					Times.Never());
+				ProcessMock.Verify(
+					p => p.AddStep(InitiatingMessagingStepMock.Object),
+					Times.Never());
+				MessagingStepMock.Verify(
+					ms => ms.TrackActivity(It.IsAny<ActivityTrackingModes>(), It.IsAny<TrackingStream>()),
+					Times.Once());
+				ProcessMock.Verify(
+					p => p.AddStep(MessagingStepMock.Object),
+					Times.Once());
+			}
+		}
+
+		[Test]
 		public void CreateProcessAndMessagingStepAndFindPreviousMessagingStepBeforeStreamFirstReadEvent()
 		{
 			var trackingContext = new TrackingContext {
@@ -239,7 +238,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 				MessageMock.Setup(m => m.GetProperty(TrackingProperties.MessagingStepActivityId)).Returns(trackingContext.MessagingStepActivityId);
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 
 				ActivityFactory.Verify(
@@ -271,7 +270,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId)).Returns(trackingContext.ProcessActivityId);
 				MessageMock.Setup(m => m.GetProperty(TrackingProperties.MessagingStepActivityId)).Returns(trackingContext.MessagingStepActivityId);
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 
 				ActivityFactory.Verify(
@@ -297,7 +296,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				MessageMock.Object.BodyPart.Data = stream;
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 
-				var sut = ActivityTracker.Create(new ActivityTrackerComponent.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
+				var sut = ActivityTracker.Create(new MicroComponent.ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Step, null));
 				sut.TrackActivity();
 
 				TrackingResolverMock.Verify(tr => tr.ResolveProcessName(), Times.Once());
