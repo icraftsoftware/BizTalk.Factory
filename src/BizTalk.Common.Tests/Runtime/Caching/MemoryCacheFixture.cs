@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		[Test]
 		public void ConstructorThrowsWhenNameIsNull()
 		{
+			// ReSharper disable once AssignNullToNotNullAttribute
 			Assert.That(
 				() => new MemoryCache(null),
 				Throws.TypeOf<ArgumentNullException>());
@@ -108,6 +109,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ContainsThrowsWhenKeyIsNull()
 		{
+			// ReSharper disable once AssignNullToNotNullAttribute
 			_memoryCache.Contains(null);
 		}
 

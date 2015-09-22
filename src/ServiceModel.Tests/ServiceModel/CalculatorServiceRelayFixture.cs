@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -100,21 +100,21 @@ namespace Be.Stateless.ServiceModel
 		[Test]
 		public void RelayCompositeMessage()
 		{
-			const string RESPONSE_XML = "<CalculatorResponse xmlns=\"urn:services.stateless.be:unit:calculator\">" +
+			const string responseXml = "<CalculatorResponse xmlns=\"urn:services.stateless.be:unit:calculator\">" +
 				"<s0:Result xmlns:s0=\"urn:services.stateless.be:unit:calculator\">one</s0:Result>" +
 				"<s0:Result xmlns:s0=\"urn:services.stateless.be:unit:calculator\">two</s0:Result>" +
 				"</CalculatorResponse>";
 
 			StubServiceHost.FindDefaultService<ICalculatorService>()
 				.Setup(s => s.Add(It.IsAny<XmlCalculatorRequest>()))
-				.Returns(new StringStream(RESPONSE_XML));
+				.Returns(new StringStream(responseXml));
 
 			ICalculatorService client = null;
 			try
 			{
 				client = SimpleServiceClient<CalculatorService, ICalculatorService>.Create();
 				var calculatorResult = client.Add(new XmlCalculatorRequest(CALCULATOR_REQUEST_XML));
-				Assert.AreEqual(RESPONSE_XML, calculatorResult.RawXmlBody);
+				Assert.AreEqual(responseXml, calculatorResult.RawXmlBody);
 				client.Close();
 			}
 			catch (Exception)

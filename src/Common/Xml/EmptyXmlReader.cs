@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,6 +51,11 @@ namespace Be.Stateless.Xml
 			get { return string.Empty; }
 		}
 
+		public override void Close()
+		{
+			_state = ReadState.Closed;
+		}
+
 		public override int Depth
 		{
 			get { return 0; }
@@ -59,6 +64,21 @@ namespace Be.Stateless.Xml
 		public override bool EOF
 		{
 			get { return _state == ReadState.EndOfFile; }
+		}
+
+		public override string GetAttribute(string name)
+		{
+			return null;
+		}
+
+		public override string GetAttribute(string name, string namespaceUri)
+		{
+			return null;
+		}
+
+		public override string GetAttribute(int index)
+		{
+			throw new ArgumentOutOfRangeException("index");
 		}
 
 		public override bool HasValue
@@ -74,56 +94,6 @@ namespace Be.Stateless.Xml
 		public override string LocalName
 		{
 			get { return string.Empty; }
-		}
-
-		public override XmlNameTable NameTable
-		{
-			get { return _table; }
-		}
-
-		public override string NamespaceURI
-		{
-			get { return string.Empty; }
-		}
-
-		public override XmlNodeType NodeType
-		{
-			get { return XmlNodeType.None; }
-		}
-
-		public override string Prefix
-		{
-			get { return string.Empty; }
-		}
-
-		public override ReadState ReadState
-		{
-			get { return _state; }
-		}
-
-		public override string Value
-		{
-			get { return string.Empty; }
-		}
-
-		public override void Close()
-		{
-			_state = ReadState.Closed;
-		}
-
-		public override string GetAttribute(string name)
-		{
-			return null;
-		}
-
-		public override string GetAttribute(string name, string namespaceURI)
-		{
-			return null;
-		}
-
-		public override string GetAttribute(int index)
-		{
-			throw new ArgumentOutOfRangeException("index");
 		}
 
 		public override string LookupNamespace(string prefix)
@@ -156,6 +126,26 @@ namespace Be.Stateless.Xml
 			return false;
 		}
 
+		public override string NamespaceURI
+		{
+			get { return string.Empty; }
+		}
+
+		public override XmlNameTable NameTable
+		{
+			get { return _table; }
+		}
+
+		public override XmlNodeType NodeType
+		{
+			get { return XmlNodeType.None; }
+		}
+
+		public override string Prefix
+		{
+			get { return string.Empty; }
+		}
+
 		public override bool Read()
 		{
 			_state = ReadState.EndOfFile;
@@ -167,9 +157,19 @@ namespace Be.Stateless.Xml
 			return false;
 		}
 
+		public override ReadState ReadState
+		{
+			get { return _state; }
+		}
+
 		public override void ResolveEntity()
 		{
 			throw new InvalidOperationException();
+		}
+
+		public override string Value
+		{
+			get { return string.Empty; }
 		}
 
 		#endregion

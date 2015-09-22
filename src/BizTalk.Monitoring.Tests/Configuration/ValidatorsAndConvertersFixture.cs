@@ -52,6 +52,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Configuration
 		{
 			var validator = ValidatorsAndConverters.NonEmptyStringValidator;
 			Assert.That(
+				// ReSharper disable once AssignNullToNotNullAttribute
 				() => validator.Validate(null),
 				Throws.ArgumentException.With.Message.EqualTo("The string must be at least 1 characters long."));
 		}
