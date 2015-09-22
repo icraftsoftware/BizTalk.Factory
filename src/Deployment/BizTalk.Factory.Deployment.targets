@@ -70,13 +70,13 @@
     <FrameworkDir Condition=" '$(FrameworkDir)' != '' "></FrameworkDir>
   </PropertyGroup>
   <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
-  <!--Instead of importing the tasks definition file of MS Build extension pack, we just declare our tasks here, because we cannot override the path to the containing assembly-->
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Security.Certificate"/>
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Xml.XmlFile"/>
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.SqlServer.SqlExecute"/>
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Computer.Registry"/>
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MSBuildHelper"/>
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Communication.MSMQ"/>
+  <!-- Instead of importing the tasks definition file of MS Build extension pack, we just declare our tasks here, because we cannot override the path to the containing assembly -->
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Communication.MSMQ" />
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Computer.Registry" />
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MSBuildHelper" />
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Security.Certificate" />
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.SqlServer.SqlExecute" />
+  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Xml.XmlFile" />
   <Import Project="BizTalk.Factory.tasks" />
   <Import Project="BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" Condition=" '$(IgnoreStandardErrorWarningFormat)' == 'true' " />
 
@@ -1101,21 +1101,21 @@
           DependsOnTargets="BuildWindowsServicesQualified"
           Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
-    <Message Text="Deploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Message Text="Deploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /%(WindowsServicesQualified.ServiceAccountNameParameter)=&quot;%(WindowsServicesQualified.ServiceAccountNameArgument)&quot; /%(WindowsServicesQualified.ServiceAccountPasswordParameter)=%(WindowsServicesQualified.ServiceAccountPasswordArgument) /%(WindowsServicesQualified.ServiceStartModeParameter)=%(WindowsServicesQualified.ServiceStartModeArgument) &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" 
-           Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /%(WindowsServicesQualified.ServiceAccountNameParameter)=&quot;%(WindowsServicesQualified.ServiceAccountNameArgument)&quot; /%(WindowsServicesQualified.ServiceAccountPasswordParameter)=%(WindowsServicesQualified.ServiceAccountPasswordArgument) /%(WindowsServicesQualified.ServiceStartModeParameter)=%(WindowsServicesQualified.ServiceStartModeArgument) &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;"
+          Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
 
-    <Message Text="Deployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Message Text="Deployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
   </Target>
 
   <Target Name="UndeployWindowsServices"
           DependsOnTargets="BuildWindowsServicesQualified"
           Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
-    <Message Text="Undeploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Message Text="Undeploying Windows Service '%(WindowsServicesQualified.Identity)'..." Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /uninstall &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /uninstall &quot;%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly)&quot;" Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
     <Delete
       Files="%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly).config"
       Condition="Exists('%(WindowsServicesQualified.LocationPath)\%(WindowsServicesQualified.ServiceAssembly).config')" />
@@ -1123,7 +1123,7 @@
       Files="%(WindowsServicesQualified.LocationPath)\log4net.config"
       Condition="Exists('%(WindowsServicesQualified.LocationPath)\log4net.config')" />
 
-    <Message Text="Undeployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition="'%(WindowsServicesQualified.Identity)' != ''" />
+    <Message Text="Undeployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
   </Target>
 
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
@@ -1137,7 +1137,7 @@
     <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
       <WindowsServicesQualified Include="@(WindowsServices)">
         <!-- rewrite LocationPath to align to CopyWindowsServiceFilesToRedist's target folder -->
-        <LocationPath Condition="'$(Configuration)' == 'Server'">%(LocationPath)\Services\%(WindowsServices.Identity)</LocationPath>
+        <LocationPath Condition=" '$(Configuration)' == 'Server' ">%(LocationPath)\Services\%(WindowsServices.Identity)</LocationPath>
       </WindowsServicesQualified>
     </ItemGroup>
 
