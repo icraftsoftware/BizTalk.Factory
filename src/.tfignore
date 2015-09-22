@@ -1,4 +1,13 @@
 ## Ignore the NuGet packages folder in the root of the repository
+*.btp.cs
+*.xsd.cs
+*.btm.cs
+be.stateless.snk
+\BizTalk.Common\Tracking\ActivityModel\ActivityModel_LastAutoDeploy.xml
+\Deployment\InstallUtil.InstallLog
+\Deployment\PortBindings.xml
+\Deployment\DecodeBindings.cmd
+\Deployment\EnvironmentSettings\.Exports
 packages
 
 #include package target files which may be required for msbuild

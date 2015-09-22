@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<Favorites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <folders>
+    <Folder>
+      <name>MSBuild Compilation</name>
+      <favorites>
+        <Favorite>
+          <name>Microsoft.Common.targets</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Common.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalkCommon.targets</name>
+          <absolutePath>C:\Program Files (x86)\MSBuild\Microsoft\BizTalk\BizTalkCommon.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>Be.Stateless.Dsl.targets</name>
+          <path>.imports\Be.Stateless.Dsl.targets</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\.imports\Be.Stateless.Dsl.targets</absolutePath>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>MSBuild Deployment Scripts</name>
+      <favorites>
+        <Favorite>
+          <name>test.btdfproj</name>
+          <path>Deployment\test.btdfproj</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\test.btdfproj</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalkDeploymentFramework.targets</name>
+          <absolutePath>C:\Program Files (x86)\MSBuild\DeploymentFrameworkForBizTalk\5.0\BizTalkDeploymentFramework.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalkDeploymentFramework.ServerExecute.targets</name>
+          <absolutePath>C:\Program Files (x86)\MSBuild\DeploymentFrameworkForBizTalk\5.0\BizTalkDeploymentFramework.ServerExecute.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalkDeploymentFramework.WiXSetup.targets</name>
+          <absolutePath>C:\Program Files (x86)\MSBuild\DeploymentFrameworkForBizTalk\5.0\BizTalkDeploymentFramework.WiXSetup.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalk.Factory.Deployment.btdfproj</name>
+          <path>Deployment\BizTalk.Factory.Deployment.btdfproj</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\BizTalk.Factory.Deployment.btdfproj</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalk.Factory.Deployment.targets</name>
+          <path>Deployment\BizTalk.Factory.Deployment.targets</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\BizTalk.Factory.Deployment.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets</name>
+          <path>Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>BizTalk.Factory.ItemGroups.proj</name>
+          <path>Deployment\BizTalk.Factory.ItemGroups.proj</path>
+          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\BizTalk.Factory.ItemGroups.proj</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>Babi.Deployment.btdfproj</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\src\Deployment\Babi.Deployment.btdfproj</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>CommonDeployTargets.targets</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\utils\Deployment Tools\CommonDeployTargets.targets</absolutePath>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Failed Process Alerting Job</name>
+      <favorites>
+        <Favorite>
+          <name>DropReportFailedBizTalkProcessJob.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\DropReportFailedBizTalkProcessJob.sql</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>Locator.RegisterProcessAlerts.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\BiMI\data\scripts\Locator.RegisterProcessAlerts.sql</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>CreateReportFailedBizTalkProcessJob.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\CreateReportFailedBizTalkProcessJob.sql</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>CreateBabiMgmtDbObjects.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\CreateBabiMgmtDbObjects.sql</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>FailedProcesses.xml</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\FailedProcesses.xml</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>FailedProcesses.xslt</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\FailedProcesses.xslt</absolutePath>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Babi SQL Scripts</name>
+      <favorites>
+        <Favorite>
+          <name>StartBamTrackingActivitiesMaintenanceJob.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\StartBamTrackingActivitiesMaintenanceJob.sql</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>CreateQuartzObjects.sql</name>
+          <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\CreateQuartzObjects.sql</absolutePath>
+        </Favorite>
+      </favorites>
+    </Folder>
+  </folders>
+  <favorites />
+</Favorites>
