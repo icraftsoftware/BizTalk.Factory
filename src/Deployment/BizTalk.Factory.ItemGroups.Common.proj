@@ -137,14 +137,14 @@
 
   <ItemGroup>
     <!-- customized version of the deploy tools and any supplementary tools we need during deployment -->
-    <RedistributableCustomDeployTools Include="MSBuild.ExtensionPack.dll;MSBuild.ExtensionPack.tasks;Ionic.Zip.dll">
+    <RedistributableCustomDeployTools Include="MSBuild.ExtensionPack.dll;Ionic.Zip.dll">
       <LocationPath>$(ExtensionTasksPath)</LocationPath>
     </RedistributableCustomDeployTools>
   </ItemGroup>
 
   <ItemGroup>
     <!-- any custom MSBuild file that the BTDF project imports -->
-    <RedistributableCustomMsbuildProjectFiles Include="BizTalk.Factory.ItemGroups.proj;BizTalk.Factory.ItemGroups.Common.proj;BizTalk.Factory.Deployment.targets;BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets">
+    <RedistributableCustomMsbuildProjectFiles Include="BizTalk.Factory.ItemGroups.proj;BizTalk.Factory.ItemGroups.Common.proj;BizTalk.Factory.Deployment.targets;BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets;BizTalk.Factory.tasks">
       <LocationPath>$(MSBuildThisFileDirectory)</LocationPath>
     </RedistributableCustomMsbuildProjectFiles>
   </ItemGroup>

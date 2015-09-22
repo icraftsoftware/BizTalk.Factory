@@ -35,8 +35,7 @@
 
   <ItemGroup>
     <BamDefinitions Include="ActivityModel.xml">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Common\Tracking\ActivityModel</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Common\Tracking\ActivityModel</LocationPath>
     </BamDefinitions>
   </ItemGroup>
 
@@ -199,32 +198,25 @@
 
   <ItemGroup>
     <ExternalAssemblies Include="log4net.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\packages\log4net.2.0.3\lib\net40-full</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\packages\log4net.2.0.3\lib\net40-full</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.Extensions.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\Extensions\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\Extensions\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.Logging.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\Logging\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\Logging\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.Common.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\Common\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\Common\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.BizTalk.Common.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Common\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Common\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.BizTalk.Dsl.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Dsl\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Dsl\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.ServiceModel.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\ServiceModel\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\ServiceModel\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
   </ItemGroup>
 
@@ -267,22 +259,19 @@
 
   <ItemGroup>
     <PipelineComponents Include="Be.Stateless.BizTalk.Pipeline.Components.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Pipeline.Components\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Pipeline.Components\bin\$(Configuration)</LocationPath>
     </PipelineComponents>
   </ItemGroup>
 
   <ItemGroup>
     <Pipelines Include="Be.Stateless.BizTalk.Pipelines.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Pipelines\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Pipelines\bin\$(Configuration)</LocationPath>
     </Pipelines>
   </ItemGroup>
 
   <ItemGroup>
     <Policies Include="Be.Stateless.BizTalk.Policies.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Policies\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Policies\bin\$(Configuration)</LocationPath>
     </Policies>
   </ItemGroup>
 
@@ -295,15 +284,13 @@
 
   <ItemGroup>
     <Schemas Include="Be.Stateless.BizTalk.Schemas.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Schemas\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Schemas\bin\$(Configuration)</LocationPath>
     </Schemas>
   </ItemGroup>
 
   <ItemGroup>
     <Transforms Include="Be.Stateless.BizTalk.Transforms.dll">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\BizTalk.Transforms\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)</LocationPath>
+      <LocationPath>..\BizTalk.Transforms\bin\$(Configuration)</LocationPath>
     </Transforms>
   </ItemGroup>
 
@@ -353,8 +340,7 @@
     -->
   <ItemGroup Condition=" '$(IncludeClaimStoreAgent)' == 'true' ">
     <WindowsServices Include="BizTalk.ClaimStore.Agent">
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' != 'true' ">..\%(Identity)\bin\$(Configuration)</LocationPath>
-      <LocationPath Condition=" '$(EmbedBizTalkFactory)' == 'true' ">$(BizTalkFactoryArtifactsLocationPath)\Services\%(Identity)</LocationPath>
+      <LocationPath>..\%(Identity)\bin\$(Configuration)</LocationPath>
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
       <ServiceStartModeArgument>auto</ServiceStartModeArgument>
       <ServiceAssembly>Be.Stateless.BizTalk.ClaimStore.Agent.exe</ServiceAssembly>
