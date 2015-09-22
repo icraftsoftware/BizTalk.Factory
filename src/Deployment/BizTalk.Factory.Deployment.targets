@@ -210,7 +210,7 @@
     <!-- this target must be executed only when deploying BizTalk Factory and not when deploying an application that depends on BizTalk Factory -->
     <Copy SourceFiles="..\BTSNTSvc.log4net.config" DestinationFiles="$(BtsDir)log4net.config" />
 
-    <Message Text="Deploied log4net.config to BizTalk Server installation directory." />
+    <Message Text="Deployed log4net.config to BizTalk Server installation directory." />
   </Target>
 
   <Target Name="UndeployBizTalkLog4netConfig" Condition=" Exists('$(BtsDir)log4net.config') and '$(ProjectName)' == 'BizTalk.Factory' and '$(EnableXmlPreprocess)' == 'true' ">
@@ -219,7 +219,7 @@
     <!-- this target must be executed only when deploying BizTalk Factory and not when deploying an application that depends on BizTalk Factory -->
     <Delete Files="$(BtsDir)log4net.config" ContinueOnError="true" />
 
-    <Message Text="Undeploied log4net.config from BizTalk Server installation directory." />
+    <Message Text="Undeployed log4net.config from BizTalk Server installation directory." />
   </Target>
 
   <!--
