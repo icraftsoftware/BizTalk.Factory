@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Explorer
@@ -42,6 +43,7 @@ namespace Be.Stateless.BizTalk.Explorer
 
 		#endregion
 
+		[SuppressMessage("ReSharper", "CollectionNeverQueried.Local", Justification = "SqlConnectionStringBuilder")]
 		public string ConnectionString
 		{
 			get
@@ -56,8 +58,8 @@ namespace Be.Stateless.BizTalk.Explorer
 			}
 		}
 
-		public string Server { get; private set; }
-
 		public string Database { get; private set; }
+
+		public string Server { get; private set; }
 	}
 }

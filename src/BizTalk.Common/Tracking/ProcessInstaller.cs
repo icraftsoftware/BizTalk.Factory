@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Collections;
 using System.Configuration.Install;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.Extensions;
 
@@ -46,6 +47,12 @@ namespace Be.Stateless.BizTalk.Tracking
 
 		protected abstract string[] ProcessNames { get; }
 
+		private string DataSource
+		{
+			get { return Context.Parameters["Server"] ?? Context.Parameters["DataSource"]; }
+		}
+
+		[SuppressMessage("ReSharper", "CollectionNeverQueried.Local", Justification = "SqlConnectionStringBuilder")]
 		private SqlConnection MgmtDbConnection
 		{
 			get
@@ -57,11 +64,6 @@ namespace Be.Stateless.BizTalk.Tracking
 				};
 				return new SqlConnection(builder.ConnectionString);
 			}
-		}
-
-		private string DataSource
-		{
-			get { return Context.Parameters["Server"] ?? Context.Parameters["DataSource"]; }
 		}
 
 		private void RegisterProcessNames()
@@ -119,6 +121,7 @@ WHEN NOT MATCHED THEN INSERT (Name) VALUES (NPD.Name);";
 			}
 		}
 
+		[SuppressMessage("ReSharper", "CollectionNeverQueried.Local", Justification = "SqlConnectionStringBuilder")]
 		private bool MgmtDbExists()
 		{
 			var builder = new SqlConnectionStringBuilder {

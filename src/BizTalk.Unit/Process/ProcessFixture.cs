@@ -86,6 +86,8 @@ namespace Be.Stateless.BizTalk.Unit.Process
 				.ToArray();
 		}
 
+		// ReSharper disable once MemberCanBePrivate.Global
+		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		protected DateTime StartTime { get; private set; }
 
 		protected MessageBoxServiceInstance[] BizTalkServiceInstances

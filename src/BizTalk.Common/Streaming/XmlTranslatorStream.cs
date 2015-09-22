@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -25,6 +26,7 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Streaming
 {
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	public class XmlTranslatorStream : Microsoft.BizTalk.Streaming.XmlTranslatorStream
 	{
 		public XmlTranslatorStream(XmlReader reader, XmlNamespaceTranslation[] translations)

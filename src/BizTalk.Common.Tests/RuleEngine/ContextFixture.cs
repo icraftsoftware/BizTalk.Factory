@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		[Test]
 		public void ValueWrittenViaContextIsNotReadableViaMessage()
 		{
-			var message = new Be.Stateless.BizTalk.Unit.Message.Mock<IBaseMessage>();
+			var message = new Unit.Message.Mock<IBaseMessage>();
 
 			var sut = new Context(message.Object.Context);
 			sut.Write(TrackingProperties.ProcessName.QName, "process-name");
@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		[Test]
 		public void ValueWrittenViaContextIsVerifiableViaMessage()
 		{
-			var message = new Be.Stateless.BizTalk.Unit.Message.Mock<IBaseMessage>();
+			var message = new Unit.Message.Mock<IBaseMessage>();
 
 			var sut = new Context(message.Object.Context);
 			sut.Write(TrackingProperties.ProcessName.QName, "process-name");

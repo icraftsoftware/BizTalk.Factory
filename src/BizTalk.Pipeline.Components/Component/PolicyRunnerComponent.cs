@@ -50,6 +50,20 @@ namespace Be.Stateless.BizTalk.Component
 			get { return "Executes a BizTalk Business Rule Policy against facts asserted in the message context."; }
 		}
 
+		/// <summary>
+		/// Enables or disables the pipeline component.
+		/// </summary>
+		/// <remarks>
+		/// Whether to let this pipeline component execute or not.
+		/// </remarks>
+		[Browsable(true)]
+		[Description("Enables or disables the pipeline component.")]
+		public override bool Enabled
+		{
+			get { return base.Enabled && Policy != null; }
+			set { base.Enabled = value; }
+		}
+
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 		{
 			return _microComponent.Execute(pipelineContext, message);

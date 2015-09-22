@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@
 #endregion
 
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Be.Stateless.BizTalk.ClaimStore.Configuration
 {
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used to declare section in config files.")]
 	public class ClaimStoreConfigurationSection : ConfigurationSection
 	{
-		#region Factory Helpers
+		static ClaimStoreConfigurationSection()
+		{
+			_properties.Add(_agentProperty);
+		}
 
 		public static ClaimStoreConfigurationSection Current
 		{
@@ -31,13 +36,6 @@ namespace Be.Stateless.BizTalk.ClaimStore.Configuration
 				var section = (ClaimStoreConfigurationSection) ConfigurationManager.GetSection(DEFAULT_SECTION_NAME);
 				return section;
 			}
-		}
-
-		#endregion
-
-		static ClaimStoreConfigurationSection()
-		{
-			_properties.Add(_agentProperty);
 		}
 
 		#region Base Class Member Overrides
@@ -61,8 +59,9 @@ namespace Be.Stateless.BizTalk.ClaimStore.Configuration
 			get { return (AgentConfigurationElement) base[_agentProperty]; }
 		}
 
-		private const string DEFAULT_SECTION_NAME = "be.stateless/biztalk/claimStore";
 		private const string AGENT_PROPERTY_NAME = "agent";
+
+		private const string DEFAULT_SECTION_NAME = "be.stateless/biztalk/claimStore";
 
 		private static readonly ConfigurationPropertyCollection _properties = new ConfigurationPropertyCollection();
 

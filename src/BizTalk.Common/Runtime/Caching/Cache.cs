@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Caching;
 
 namespace Be.Stateless.BizTalk.Runtime.Caching
@@ -94,7 +95,9 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 						if (!_cache.Add(cacheItem, new CacheItemPolicy { SlidingExpiration = _slidingExpiration }))
 							throw new InvalidOperationException(
 								string.Format(
-									"{0} already contains an entry for '{1}'.", GetType().Name, keyString));
+									"{0} already contains an entry for '{1}'.",
+									GetType().Name,
+									keyString));
 						return (TItem) cacheItem.Value;
 					}
 				}
@@ -112,6 +115,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		/// <c>true</c> if the cache contains an entry for the <typeparamref name="TKey"/> instance; otherwise,
 		/// <c>false</c>.
 		/// </returns>
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 		public bool Contains(TKey key)
 		{
 			var keyString = ConvertKeyToString(key);

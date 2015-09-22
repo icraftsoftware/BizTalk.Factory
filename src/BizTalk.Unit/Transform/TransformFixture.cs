@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 	/// </typeparam>
 	public abstract class TransformFixture<T> where T : TransformBase, new()
 	{
-		#region Nested type: TransformResult
+		#region Nested Type: TransformResult
 
 		/// <summary>
 		/// Allows to build up assertions on the result of a BizTalk transform returned by one of <see
@@ -355,7 +355,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			var inputStreams = Enumerable.Empty<Stream>().ToArray();
 			try
 			{
-				inputStreams = inputPaths.Select(f => File.OpenRead(f)).Cast<Stream>().ToArray();
+				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
 				return Transform<TSchema>(contentProcessing, inputStreams);
 			}
 			finally
@@ -469,7 +469,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			var inputStreams = Enumerable.Empty<Stream>().ToArray();
 			try
 			{
-				inputStreams = inputPaths.Select(f => File.OpenRead(f)).Cast<Stream>().ToArray();
+				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
 				return Transform<TSchema1, TSchema2>(contentProcessing, inputStreams);
 			}
 			finally

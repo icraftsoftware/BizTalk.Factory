@@ -17,10 +17,12 @@
 #endregion
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk
 {
 	[RunInstaller(true)]
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Installer class.")]
 	public class Installer : RuleSetInstaller { }
 }

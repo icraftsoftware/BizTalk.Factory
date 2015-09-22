@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -34,6 +35,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		public static void Save(this IXPathNavigable document, string path)
 		{
 			var objXPathNav = document.CreateNavigator();
+			Debug.Assert(objXPathNav != null, "objXPathNav != null");
 			var objXmlWriterSettings = new XmlWriterSettings { Indent = true };
 			using (var objXmlWriter = XmlWriter.Create(path, objXmlWriterSettings))
 			{

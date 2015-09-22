@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,10 +66,10 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			{
 				Facts.Assert(Context.Property(BizTalkFactoryProperties.CorrelationToken).WithValue("ActionShouldFireWheneverRuleFires"));
 
-				policyTester.Execute(new object[] { new Be.Stateless.BizTalk.RuleEngine.Context(Facts.Context) });
+				policyTester.Execute(new object[] { new BizTalk.RuleEngine.Context(Facts.Context) });
 				var v1 = guid;
 
-				policyTester.Execute(new object[] { new Be.Stateless.BizTalk.RuleEngine.Context(Facts.Context) });
+				policyTester.Execute(new object[] { new BizTalk.RuleEngine.Context(Facts.Context) });
 				var v2 = guid;
 
 				Assert.That(v1, Is.Not.EqualTo(v2));

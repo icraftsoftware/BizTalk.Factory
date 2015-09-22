@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -110,10 +111,13 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 		#endregion
 
+		#region Operators
+
 		public static implicit operator Microsoft.RuleEngine.RuleSet(RuleSet fromRuleSet)
 		{
-			var toRuleSet = new Microsoft.RuleEngine.RuleSet(fromRuleSet.Name, fromRuleSet.VersionInfo);
-			toRuleSet.ExecutionConfiguration.MaxExecutionLoopDepth = 1;
+			var toRuleSet = new Microsoft.RuleEngine.RuleSet(fromRuleSet.Name, fromRuleSet.VersionInfo) {
+				ExecutionConfiguration = { MaxExecutionLoopDepth = 1 }
+			};
 
 			foreach (var rule in (RuleList) fromRuleSet.Rules)
 			{
@@ -123,14 +127,15 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			return toRuleSet;
 		}
 
+		#endregion
+
 		protected RuleSet()
 		{
 			_rules = new RuleList();
 			VersionInfo = new VersionInfo(string.Empty, DateTime.Now, Environment.UserName, 1, 0);
 		}
 
-		protected RuleSet(string name)
-			: this()
+		protected RuleSet(string name) : this()
 		{
 			if (name.IsNullOrEmpty()) throw new ArgumentNullException("name");
 			_name = name;
@@ -146,17 +151,17 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 		#region IHideObjectMembers Members
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
+		[SuppressMessage("ReSharper", "BaseObjectEqualsIsObjectEquals")]
 		public override bool Equals(object obj)
 		{
-			// ReSharper disable once BaseObjectEqualsIsObjectEquals
 			return base.Equals(obj);
 		}
 
-		// ReSharper disable once NonReadonlyFieldInGetHashCode
 		[EditorBrowsable(EditorBrowsableState.Never)]
+		[SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+		[SuppressMessage("ReSharper", "BaseObjectGetHashCodeCallInGetHashCode")]
 		public override int GetHashCode()
 		{
-			// ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
 			return base.GetHashCode();
 		}
 

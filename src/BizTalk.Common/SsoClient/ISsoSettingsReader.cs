@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 #endregion
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Be.Stateless.BizTalk.SsoClient
 {
 	/// <summary>
 	/// <see cref="SSOSettingsFileReader"/> indirection for the sake of mocking.
 	/// </summary>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	public interface ISsoSettingsReader
 	{
 		void ClearCache(string affiliateApplication);

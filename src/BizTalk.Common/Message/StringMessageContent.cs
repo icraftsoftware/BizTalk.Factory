@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -31,9 +32,10 @@ namespace Be.Stateless.BizTalk.Message
 	/// <see href = "http://msdn.microsoft.com/en-us/library/ee253435" />
 	[CustomFormatter(typeof(StringContentFormatter))]
 	[Serializable]
+	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
 	public class StringMessageContent
 	{
-		#region Nested type: StringContentFormatter
+		#region Nested Type: StringContentFormatter
 
 		public class StringContentFormatter : IFormatter
 		{
@@ -76,10 +78,14 @@ namespace Be.Stateless.BizTalk.Message
 
 		#endregion
 
+		#region Operators
+
 		public static implicit operator StringMessageContent(string content)
 		{
 			return new StringMessageContent(content);
 		}
+
+		#endregion
 
 		public StringMessageContent(string content)
 		{

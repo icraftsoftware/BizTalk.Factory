@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.MicroComponent;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -69,7 +68,6 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		private const string CLASS_ID = "0895f316-1e7b-46c4-ba19-7d357d5ac116";
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ZipEncoderComponent));
 		private readonly ZipEncoder _microComponent;
 	}
 }

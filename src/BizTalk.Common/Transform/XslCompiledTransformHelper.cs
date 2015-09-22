@@ -387,7 +387,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <param name="arguments"></param>
 		/// <param name="transformArguments"></param>
 		/// <returns></returns>
-		private static XsltArgumentList BuildTransformArguments(Be.Stateless.Xml.Xsl.XsltArgumentList arguments, object[] transformArguments)
+		private static XsltArgumentList BuildTransformArguments(XsltArgumentList arguments, object[] transformArguments)
 		{
 			if (transformArguments != null && transformArguments.Length != 0)
 			{

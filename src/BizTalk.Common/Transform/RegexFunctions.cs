@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -28,6 +29,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// XSLT extension object offering support for regular expressions.
 	/// </summary>
 	/// <seealso cref="XsltArgumentList.AddExtensionObject"/>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "XSLT Extension Object.")]
 	public class RegexFunctions
 	{
 		public bool IsMatch(string input, string pattern)
@@ -41,6 +43,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <param name="input">The string to search for a match.</param>
 		/// <param name="pattern">The regular expression pattern to match.</param>
 		/// <returns>true if the regular expression finds a match; otherwise, false.</returns>
+		[SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global", Justification = "XSLT Extension Object.")]
 		public bool IsOneOf(string input, string pattern)
 		{
 			return Regex.IsMatch(input, "^(" + pattern + ")$");

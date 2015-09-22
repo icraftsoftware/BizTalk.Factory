@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		[Test]
 		public void ComputeApplicationNameViaNamingConvention()
 		{
-			var conventionMock = new Mock<INamingConvention<object>>() { };
+			var conventionMock = new Mock<INamingConvention<object>>();
 
 			var applicationBindingMock = new Mock<IApplicationBinding<object>>();
 			applicationBindingMock.Setup(m => m.Name).Returns(conventionMock.Object);
@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		[Test]
 		public void ComputeReceiveLocationNameViaNamingConvention()
 		{
-			var conventionMock = new Mock<INamingConvention<object>>() { };
+			var conventionMock = new Mock<INamingConvention<object>>();
 
 			var receiveLocationMock = new Mock<IReceiveLocation<object>>();
 			receiveLocationMock.Setup(m => m.Name).Returns(conventionMock.Object);
@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		[Test]
 		public void ComputeReceivePortNameViaNamingConvention()
 		{
-			var conventionMock = new Mock<INamingConvention<object>>() { };
+			var conventionMock = new Mock<INamingConvention<object>>();
 
 			var receivePortMock = new Mock<IReceivePort<object>>();
 			receivePortMock.Setup(m => m.Name).Returns(conventionMock.Object);
@@ -101,7 +101,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		[Test]
 		public void ComputeSendPortNameViaNamingConvention()
 		{
-			var conventionMock = new Mock<INamingConvention<object>>() { };
+			var conventionMock = new Mock<INamingConvention<object>>();
 
 			var sendPortMock = new Mock<ISendPort<object>>();
 			sendPortMock.Setup(m => m.Name).Returns(conventionMock.Object);

@@ -44,7 +44,7 @@ namespace Be.Stateless.Xml.Extensions
 		/// <summary>
 		/// Calls <see cref="XmlReader.MoveToContent"/> and tests if the current content node is a start tag or empty
 		/// element tag whose <see cref="XmlReader.LocalName"/> and <see cref="XmlReader.NamespaceURI"/> properties match
-		/// the given <paramref name="name"/> and <param name="ns"/> arguments; throws otherwise.
+		/// the given <paramref name="name"/> and <paramref name="ns"/> arguments; throws otherwise.
 		/// </summary>
 		/// <param name="reader">
 		/// An <see cref="XmlReader"/> object.
@@ -87,7 +87,7 @@ namespace Be.Stateless.Xml.Extensions
 
 		/// <summary>
 		/// Tests if the current content node is an end tag whose <see cref="XmlReader.LocalName"/> and <see
-		/// cref="XmlReader.NamespaceURI"/> match the given <paramref name="name"/> and <param name="ns"/> arguments;
+		/// cref="XmlReader.NamespaceURI"/> match the given <paramref name="name"/> and <paramref name="ns"/> arguments;
 		/// throws otherwise.
 		/// </summary>
 		/// <param name="reader">
@@ -173,8 +173,8 @@ namespace Be.Stateless.Xml.Extensions
 		}
 
 		/// <summary>
-		/// Checks that the current content node is an element with the given <param name="name"/> and advances the reader
-		/// to the next node.
+		/// Checks that the current content node is an element with the given <paramref name="name"/> name="name"/> and
+		/// advances the reader to the next node.
 		/// </summary>
 		/// <param name="reader">
 		/// An <see cref="XmlReader"/> object.

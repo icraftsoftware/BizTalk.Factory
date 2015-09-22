@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -595,18 +595,14 @@ namespace Be.Stateless.Logging
 		/// <returns>The wrapper for the logger specified.</returns>
 		private static ILoggerWrapper WrapperCreationHandler(ILogger logger)
 		{
-			return new Be.Stateless.Logging.Core.LogImpl(logger);
+			return new Core.LogImpl(logger);
 		}
 
 		#endregion
-
-		#region Private Static Fields
 
 		/// <summary>
 		/// The wrapper map to use to hold the <see cref="LogImpl"/> objects.
 		/// </summary>
 		private static readonly WrapperMap _wrapperMap = new WrapperMap(WrapperCreationHandler);
-
-		#endregion Private Static Fields
 	}
 }

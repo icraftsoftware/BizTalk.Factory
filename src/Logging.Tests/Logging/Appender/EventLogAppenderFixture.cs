@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashes = ExceptionTypes
 				.Select(EventLogAppender.TypeHashAlgorithm)
 				.ToArray();
-			var computedHashesCount = hashes.Count();
+			var computedHashesCount = hashes.Length;
 			var uniqueHashesCount = hashes.Distinct().Count();
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;
@@ -217,7 +217,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashes = ExceptionTypes
 				.Select(EventLogAppender.TypeHashAlgorithm)
 				.ToArray();
-			var computedHashesCount = hashes.Count();
+			var computedHashesCount = hashes.Length;
 			var uniqueHashesCount = hashes.Distinct().Count();
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;
@@ -235,7 +235,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashes = ExceptionTypes
 				.Select(EventLogAppender.TypeHashAlgorithm)
 				.ToArray();
-			var computedHashesCount = hashes.Count();
+			var computedHashesCount = hashes.Length;
 			var uniqueHashesCount = hashes.Distinct().Count();
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;

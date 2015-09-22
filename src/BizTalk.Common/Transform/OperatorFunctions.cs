@@ -16,6 +16,8 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Be.Stateless.BizTalk.Transform
 {
 	/// <summary>
@@ -23,6 +25,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// ternary operator.
 	/// </summary>
 	/// <seealso cref="System.Xml.Xsl.XsltArgumentList.AddExtensionObject(string, object)"/>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "XSLT Extension Object.")]
 	public class OperatorFunctions
 	{
 		/// <summary>

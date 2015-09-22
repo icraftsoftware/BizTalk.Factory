@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -98,8 +98,8 @@ namespace Be.Stateless.Xml
 			Assert.That(sut.Prefix, Is.EqualTo(expected.Prefix));
 			Assert.That(sut.Value, Is.EqualTo(expected.Value));
 
-			Assert.That(() => expected.Close(), Throws.Nothing);
-			Assert.That(() => sut.Close(), Throws.Nothing);
+			Assert.That(expected.Close, Throws.Nothing);
+			Assert.That(sut.Close, Throws.Nothing);
 			Assert.That(() => expected.GetAttribute(0), Throws.TypeOf<ArgumentOutOfRangeException>());
 			Assert.That(() => sut.GetAttribute(0), Throws.TypeOf<ArgumentOutOfRangeException>());
 			Assert.That(sut.GetAttribute("name"), Is.EqualTo(expected.GetAttribute("name")));
@@ -113,8 +113,8 @@ namespace Be.Stateless.Xml
 			Assert.That(sut.MoveToFirstAttribute(), Is.EqualTo(expected.MoveToFirstAttribute()));
 			Assert.That(sut.MoveToNextAttribute(), Is.EqualTo(expected.MoveToNextAttribute()));
 			Assert.That(sut.ReadAttributeValue(), Is.EqualTo(expected.ReadAttributeValue()));
-			Assert.That(() => expected.ResolveEntity(), Throws.TypeOf<InvalidOperationException>());
-			Assert.That(() => sut.ResolveEntity(), Throws.TypeOf<InvalidOperationException>());
+			Assert.That(expected.ResolveEntity, Throws.TypeOf<InvalidOperationException>());
+			Assert.That(sut.ResolveEntity, Throws.TypeOf<InvalidOperationException>());
 		}
 	}
 }

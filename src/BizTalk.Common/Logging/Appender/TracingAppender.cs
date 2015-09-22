@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.BizTalk.Diagnostics;
 using Microsoft.BizTalk.Tracing;
 using log4net.Appender;
@@ -42,6 +43,7 @@ namespace Be.Stateless.BizTalk.Logging.Appender
 	/// <item>All levels lower than <see cref="Level.Debug"/> => <see cref="TraceLevel.Tracking"/></item>
 	/// </list>
 	/// </remarks>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "log4net appenders are typically declared in config files.")]
 	public class TracingAppender : AppenderSkeleton
 	{
 		#region Base Class Member Overrides

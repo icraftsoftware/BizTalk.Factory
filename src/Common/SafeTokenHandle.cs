@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -24,21 +25,24 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Be.Stateless
 {
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	internal sealed class SafeTokenHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
-		private SafeTokenHandle() : base(true)
+		private SafeTokenHandle() : base(true) { }
+
+		#region Base Class Member Overrides
+
+		protected override bool ReleaseHandle()
 		{
+			return CloseHandle(handle);
 		}
+
+		#endregion
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
 		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
 		[SuppressUnmanagedCodeSecurity]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool CloseHandle(IntPtr handle);
-
-		protected override bool ReleaseHandle()
-		{
-			return CloseHandle(handle);
-		}
 	}
 }

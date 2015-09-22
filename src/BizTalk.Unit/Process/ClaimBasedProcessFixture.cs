@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
@@ -31,17 +32,25 @@ namespace Be.Stateless.BizTalk.Unit.Process
 {
 	public abstract class ClaimBasedProcessFixture : ProcessFixture
 	{
-		#region Nested type: ClaimToken
+		#region Nested Type: ClaimToken
 
-		public class ClaimToken
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+		protected class ClaimToken
 		{
 			public string Url { get; set; }
+
 			public string CorrelationToken { get; set; }
+
 			public string MessageType { get; set; }
+
 			public string OutboundTransportLocation { get; set; }
+
 			public string ProcessActivityId { get; set; }
+
 			public string ReceiverName { get; set; }
+
 			public string SenderName { get; set; }
+
 			public string Any { get; set; }
 		}
 

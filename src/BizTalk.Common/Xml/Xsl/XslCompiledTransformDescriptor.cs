@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 
 			var navigator = CreateNavigator(transformBase.XmlContent);
 
-			Arguments = new Be.Stateless.Xml.Xsl.XsltArgumentList(transformBase.TransformArgs);
+			Arguments = new Stateless.Xml.Xsl.XsltArgumentList(transformBase.TransformArgs);
 			ExtensionRequirements = BuildExtensionRequirements(navigator);
 			if ((ExtensionRequirements & ExtensionRequirements.MessageContext) == ExtensionRequirements.MessageContext) NamespaceResolver = BuildNamespaceResolver(navigator);
 			XslCompiledTransform = BuildXslCompiledTransform(navigator);
@@ -67,7 +67,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		/// Relying on the cloneable <see cref="T:Be.Stateless.Xml.Xsl.XsltArgumentList"/> allows a <see
 		/// cref="XslCompiledTransformDescriptor"/> not to keep a reference on a <see cref="TransformBase"/> instance.
 		/// </remarks>
-		public Be.Stateless.Xml.Xsl.XsltArgumentList Arguments { get; private set; }
+		public Stateless.Xml.Xsl.XsltArgumentList Arguments { get; private set; }
 
 		/// <summary>
 		/// Requirements of a <see cref="XslCompiledTransform"/> in terms of extension objects.

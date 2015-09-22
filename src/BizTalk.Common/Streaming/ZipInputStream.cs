@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Be.Stateless.IO.Extensions;
 
@@ -37,6 +38,7 @@ namespace Be.Stateless.BizTalk.Streaming
 			_baseInputStream = baseInputStream;
 		}
 
+		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Replicate base class API.")]
 		public ZipInputStream(Stream baseInputStream, int bufferSize) : base(baseInputStream, bufferSize)
 		{
 			_baseInputStream = baseInputStream;

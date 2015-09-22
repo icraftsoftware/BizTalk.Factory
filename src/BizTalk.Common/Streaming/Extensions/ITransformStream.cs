@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml.Xsl;
@@ -26,6 +27,7 @@ using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Streaming.Extensions
 {
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Public API.")]
 	public interface ITransformStream
 	{
 		/// <summary>

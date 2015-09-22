@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Xsl;
 using Be.Stateless.Extensions;
@@ -29,6 +30,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// cref="IBaseMessage"/>.
 	/// </summary>
 	/// <seealso cref="XsltArgumentList.AddExtensionObject"/>
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "XSLT Extension Object.")]
 	public class BaseMessageContextFunctions
 	{
 		public BaseMessageContextFunctions(IBaseMessageContext context, IXmlNamespaceResolver xmlNamespaceResolver)

@@ -42,9 +42,7 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		[Test]
 		public void AsPluginReturnsNull()
 		{
-			Type type = null;
-
-			var resolvedPluginType = type.AsPlugin<IMessageFactory>();
+			var resolvedPluginType = ((Type) null).AsPlugin<IMessageFactory>();
 
 			Assert.That(resolvedPluginType, Is.Null);
 		}
@@ -74,9 +72,7 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		[Test]
 		public void OfPluginTypeReturnsNull()
 		{
-			Type type = null;
-
-			var resolvedPluginType = type.OfPluginType<IMessageFactory>();
+			var resolvedPluginType = ((Type) null).OfPluginType<IMessageFactory>();
 
 			Assert.That(resolvedPluginType, Is.Null);
 		}

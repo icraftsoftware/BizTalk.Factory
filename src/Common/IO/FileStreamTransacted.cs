@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace Be.Stateless.IO
 	/// </summary>
 	public class FileStreamTransacted : FileStream, IStreamTransacted
 	{
-		#region Nested type: TransactionState
+		#region TransactionState Enum
 
 		private enum TransactionState
 		{
@@ -48,18 +48,18 @@ namespace Be.Stateless.IO
 			_transactionHandle = transactionHandle;
 		}
 
-		#region ITransaction Members
+		#region IStreamTransacted Members
 
 		public void Commit()
 		{
 			_state = TransactionState.Completed;
-			base.Close();
+			Close();
 		}
 
 		public void Rollback()
 		{
 			_state = TransactionState.Faulted;
-			base.Close();
+			Close();
 		}
 
 		#endregion
