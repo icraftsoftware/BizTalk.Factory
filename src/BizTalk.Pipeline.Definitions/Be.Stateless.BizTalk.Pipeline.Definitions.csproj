@@ -49,6 +49,10 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.Component.Utilities, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Component.Utilities.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Pipeline">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
     </Reference>
@@ -68,6 +72,12 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="MicroPipelines\FFReceive.cs" />
+    <Compile Include="MicroPipelines\FFTransmit.cs" />
+    <Compile Include="MicroPipelines\PassThruReceive.cs" />
+    <Compile Include="MicroPipelines\PassThruTransmit.cs" />
+    <Compile Include="MicroPipelines\XmlReceive.cs" />
+    <Compile Include="MicroPipelines\XmlTransmit.cs" />
     <Compile Include="Pipelines\AbsorbingTransmit.cs" />
     <Compile Include="Pipelines\PassThruReceive.cs" />
     <Compile Include="Pipelines\PassThruTransmit.cs" />

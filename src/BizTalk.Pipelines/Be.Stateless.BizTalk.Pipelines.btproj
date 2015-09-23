@@ -113,6 +113,38 @@
       <Name>Be.Stateless.BizTalk.Pipeline.Definitions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Pipeline Include="MicroPipelines\FFReceive.btp">
+      <TypeName>FFReceive</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+    <Pipeline Include="MicroPipelines\FFTransmit.btp">
+      <TypeName>FFTransmit</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+    <Pipeline Include="MicroPipelines\PassThruReceive.btp">
+      <TypeName>PassThruReceive</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+    <Pipeline Include="MicroPipelines\PassThruTransmit.btp">
+      <TypeName>PassThruTransmit</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+    <Pipeline Include="MicroPipelines\XmlReceive.btp">
+      <TypeName>XmlReceive</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+    <Pipeline Include="MicroPipelines\XmlTransmit.btp">
+      <TypeName>XmlTransmit</TypeName>
+      <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
+      <SubType>Task</SubType>
+    </Pipeline>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\.imports\Be.Stateless.BizTalk.targets" />
