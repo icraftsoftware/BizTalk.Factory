@@ -35,8 +35,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)' != 'Server' ">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
-    <DeployTools>$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
-    <ExtensionTasksPath Condition=" '$(ExtensionTasksPath)' == '' ">$(MSBuildThisFileDirectory)..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\</ExtensionTasksPath>
+    <DeployTools Condition="'$(DeployTools)' == ''">$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
     <OutputPath Condition=" '$(TeamBuildOutDir)' == '' ">bin\$(Configuration)\</OutputPath>
     <OutputPath Condition=" '$(TeamBuildOutDir)' != '' ">$(TeamBuildOutDir)</OutputPath>
   </PropertyGroup>
@@ -45,7 +44,6 @@
     <DeployTools>$(DeploymentFrameworkTargetsPath)DeployTools</DeployTools>
     <!-- Deploy PDBs to the GAC to get file/line number information in stack traces -->
     <DeployPDBsToGac>true</DeployPDBsToGac>
-    <ExtensionTasksPath Condition=" '$(ExtensionTasksPath)' == '' ">$(DeployTools)\</ExtensionTasksPath>
   </PropertyGroup>
 
   <!-- common and specific spreadsheet settings -->
@@ -70,14 +68,10 @@
     <FrameworkDir Condition=" '$(FrameworkDir)' != '' "></FrameworkDir>
   </PropertyGroup>
   <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
-  <!-- Instead of importing the tasks definition file of MS Build extension pack, we just declare our tasks here, because we cannot override the path to the containing assembly -->
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Communication.MSMQ" />
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Computer.Registry" />
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MSBuildHelper" />
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Security.Certificate" />
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.SqlServer.SqlExecute" />
-  <UsingTask AssemblyFile="$(ExtensionTasksPath)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Xml.XmlFile" />
-  <Import Project="BizTalk.Factory.tasks" />
+  <Import Project="$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets" 
+          Condition="Exists('$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets')"/>
+  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Extension.Pack.targets" 
+          Condition="Exists('$(MSBuildThisFileDirectory)\MSBuild.Extension.Pack.targets')"/>
   <Import Project="BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" Condition=" '$(IgnoreStandardErrorWarningFormat)' == 'true' " />
 
   <!--
@@ -98,7 +92,9 @@
       FrameworkInitialize;
       PreprocessBindings;
       PreprocessFiles;
-      UpdateOrchestration
+      StopQuartzAndClaimStoreAgentServices;
+      UpdateOrchestration;
+      StartQuartzAndClaimStoreAgentServices
     </PatchDeployDependsOn>
   </PropertyGroup>
   <Target Name="PatchDeploy" DependsOnTargets="$(PatchDeployDependsOn)" />
@@ -1199,6 +1195,23 @@
     </ItemGroup>
 
     <Message Text="Copied Windows service redistributable files to redist folder." />
+  </Target>
+
+  <!--Review those targets-->
+  <Target Name="StartQuartzAndClaimStoreAgentServices">
+    <Message Text="Start Quartz and Claim store agent windows services" />
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="BizTalk Factory Claim Store Service Agent"
+                                                   Condition=" '$(IncludeClaimStoreAgentService)' == 'true' " />
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="QuartzServer"
+                                                   Condition="('$(TargetEnvironment)' == 'ACC' or '$(TargetEnvironment)' == 'PRD') and '$(NetworkZone)' == 'Internal' " />
+  </Target>
+
+  <Target Name="StopQuartzAndClaimStoreAgentServices">
+    <Message Text="Stop Quartz and Claim store agent windows services" />
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="BizTalk Factory Claim Store Service Agent"
+                                                   Condition=" '$(IncludeClaimStoreAgentService)' == 'true' " />
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="QuartzServer"
+                                                   Condition="('$(TargetEnvironment)' == 'ACC' or '$(TargetEnvironment)' == 'PRD') and '$(NetworkZone)' == 'Internal' " />
   </Target>
 
 </Project>

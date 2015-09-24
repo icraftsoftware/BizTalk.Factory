@@ -22,6 +22,13 @@
 
   <Import Project="BizTalk.Factory.ItemGroups.Common.proj" />
 
+  <ItemGroup>
+    <!-- customized version of the deploy tools and any supplementary tools we need during deployment -->
+    <RedistributableCustomDeployTools Include="MSBuild.ExtensionPack.dll;Ionic.Zip.dll">
+      <LocationPath>$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\tools\net40</LocationPath>
+    </RedistributableCustomDeployTools>
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(ProjectName)' == 'BizTalk.Factory' ">
     <!-- BizTalk Server Service (i.e. BTSNTSvc.exe) log4net configuration -->
     <AdditionalFiles Include="BTSNTSvc.log4net.template.config">
@@ -220,6 +227,12 @@
     </ExternalAssemblies>
   </ItemGroup>
 
+  <ItemGroup>
+    <RedistributableCustomMsbuildProjectFiles Include="BizTalk.Factory.ItemGroups.proj">
+      <LocationPath>$(MSBuildThisFileDirectory)</LocationPath>
+    </RedistributableCustomMsbuildProjectFiles>
+  </ItemGroup>
+  
   <ItemGroup Condition=" '$(IncludeClaimStoreAgent)' == 'true' ">
     <!-- make sure the claim store check-in directories exist and are granted the right DACL permissions -->
     <LocalDirectories Include="$(ClaimStoreCheckInDirectory)">
