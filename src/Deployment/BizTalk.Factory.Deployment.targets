@@ -235,25 +235,29 @@
 
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Certificates -->
 
-  <Target Name="DeployCertificates" Outputs="%(Certificates.Identity)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-    <Message Text="Deploying certificates..." />
+  <Target Name="DeployCertificates" 
+          DependsOnTargets="BuildCertificatesQualified"
+          Outputs="%(CertificatesQualified.Identity)" 
+          Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
+    
+    <Message Text="Deploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup>
-      <_Location>$([System.String]::Copy(&quot;%(Certificates.Store)&quot;).Split('\\')[0])</_Location>
+      <_Location>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[0])</_Location>
       <_MachineStore Condition=" '$(_Location)' != 'LOCAL_MACHINE' ">false</_MachineStore>
       <_MachineStore Condition=" '$(_Location)' == 'LOCAL_MACHINE' ">true</_MachineStore>
-      <_StoreName>$([System.String]::Copy(&quot;%(Certificates.Store)&quot;).Split('\\')[1])</_StoreName>
+      <_StoreName>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[1])</_StoreName>
     </PropertyGroup>
 
     <ItemGroup>
-      <_Administrators Include="%(Certificates.Administrators)" />
-      <_Users Include="%(Certificates.Users)" />
+      <_Administrators Include="%(CertificatesQualified.Administrators)" />
+      <_Users Include="%(CertificatesQualified.Users)" />
     </ItemGroup>
 
     <MSBuild.ExtensionPack.Security.Certificate
       TaskAction="Add"
-      FileName="%(Certificates.LocationPath)\%(Certificates.Identity)"
-      CertPassword="%(Certificates.Password)"
+      FileName="%(CertificatesQualified.LocationPath)\%(CertificatesQualified.Identity)"
+      CertPassword="%(CertificatesQualified.Password)"
       Exportable="true"
       MachineStore="$(_MachineStore)"
       StoreName="$(_StoreName)">
@@ -263,7 +267,7 @@
 
     <!--
       SetUserRights TaskAction cannot find a certificate by the SubjectDName returned by Add TaskAction, see https://github.com/mikefourie/MSBuildExtensionPack/issues/15
-      hence cannot use SubjectDName="%(Certificates.SubjectDistinguishedName)" nor SubjectDName="$(SubjectDistinguishedName)", but must use Thumbprint="$(Thumbprint)"
+      hence cannot use SubjectDName="%(CertificatesQualified.SubjectDistinguishedName)" nor SubjectDName="$(SubjectDistinguishedName)", but must use Thumbprint="$(Thumbprint)"
       -->
     <MSBuild.ExtensionPack.Security.Certificate
       TaskAction="SetUserRights"
@@ -286,27 +290,44 @@
       <_Users Remove="@(_Users)" />
     </ItemGroup>
 
-    <Message Text="Deployed certificates." />
+    <Message Text="Certificate deployed." />
   </Target>
 
-  <Target Name="UndeployCertificates" Outputs="%(Certificates.Identity)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-    <Message Text="Undeploying certificates..." />
+  <Target Name="BuildCertificatesQualified" Outputs="%(Certificates.Identity)%(Certificates.TargetHosts)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
+
+    <!-- filter TargetHosts to keep only those that coincides with the local host -->
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="%(Certificates.TargetHosts)" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+      <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+
+    <!-- keep only the certificates whose TargetHosts have CoincidingHosts -->
+    <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
+      <CertificatesQualified Include="@(Certificates)" />
+    </ItemGroup>
+  </Target>
+  
+  <Target Name="UndeployCertificates" 
+          DependsOnTargets="BuildCertificatesQualified"
+          Outputs="%(CertificatesQualified.Identity)" 
+          Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
+    
+    <Message Text="Undeploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup>
-      <_Location>$([System.String]::Copy(&quot;%(Certificates.Store)&quot;).Split('\\')[0])</_Location>
+      <_Location>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[0])</_Location>
       <_MachineStore Condition=" '$(_Location)' != 'LOCAL_MACHINE' ">false</_MachineStore>
       <_MachineStore Condition=" '$(_Location)' == 'LOCAL_MACHINE' ">true</_MachineStore>
-      <_StoreName>$([System.String]::Copy(&quot;%(Certificates.Store)&quot;).Split('\\')[1])</_StoreName>
+      <_StoreName>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[1])</_StoreName>
     </PropertyGroup>
 
     <MSBuild.ExtensionPack.Security.Certificate
       TaskAction="Remove"
       MachineStore="$(_MachineStore)"
       StoreName="$(_StoreName)"
-      SubjectDName="%(Certificates.SubjectDistinguishedName)"
-      Thumbprint="%(Certificates.Thumbprint)" />
+      SubjectDName="%(CertificatesQualified.SubjectDistinguishedName)"
+      Thumbprint="%(CertificatesQualified.Thumbprint)" />
 
-    <Message Text="Undeployed certificates." />
+    <Message Text="Certificate undeployed." />
   </Target>
 
   <Target Name="CopyCertificatesToRedist" Condition=" '$(IncludeCertificates)' == 'true' ">
