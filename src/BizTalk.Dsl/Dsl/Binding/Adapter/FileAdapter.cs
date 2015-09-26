@@ -33,20 +33,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			using (var classes = Registry.ClassesRoot)
 			using (var classIdKey = classes.SafeOpenSubKey(@"TransportMgmt.FileMgmt\CLSID"))
 			{
-				var classId = (string) classIdKey.GetValue(string.Empty);
-
+				var configurationClassId = new Guid((string) classIdKey.GetValue(string.Empty));
 				// [HKCR\Wow6432Node\CLSID\{5E49E3A6-B4FC-4077-B44C-22F34A242FDB}\BizTalk]
-				using (var classes32 = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry32))
-				using (var btsKey = classes32.SafeOpenSubKey(string.Format(@"CLSID\{0}\BizTalk", classId)))
-				{
-					var capabilities = (int) btsKey.GetValue("Constraints");
-					var name = (string) btsKey.GetValue("TransportType");
-					_protocolType = new ProtocolType {
-						Capabilities = capabilities, // 11
-						ConfigurationClsid = new Guid(classId).ToString(), // "5e49e3a6-b4fc-4077-b44c-22f34a242fdb"
-						Name = name.ToUpper() // "FILE"
-					};
-				}
+				_protocolType = GetProtocolTypeFromConfigurationClassId(configurationClassId);
 			}
 		}
 
