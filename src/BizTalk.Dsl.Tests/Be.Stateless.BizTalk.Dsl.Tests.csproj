@@ -143,8 +143,8 @@
     <Compile Include="Dsl\Binding\ServiceWindowFixture.cs" />
     <Compile Include="Dsl\Binding\Subscription\FilterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\FileAdapterFixture.cs" />
-    <Compile Include="Dsl\Binding\Adapter\InboundFileAdapterFixture.cs" />
-    <Compile Include="Dsl\Binding\Adapter\OutboundFileAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\TransportBaseFixture.cs" />
     <Compile Include="Dsl\Pipeline\ComponentListFixture.cs" />
     <Compile Include="Dsl\Pipeline\PipelineComponentExtensionsFixture.cs" />

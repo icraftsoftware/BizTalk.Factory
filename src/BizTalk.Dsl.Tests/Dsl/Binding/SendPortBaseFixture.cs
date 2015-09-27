@@ -57,7 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				(Action<ISendPort<string>>) (sp => {
 					sp.Name = "Send Port Name";
 					sp.SendPipeline = new SendPipeline<XMLTransmit>();
-					sp.Transport.Adapter = new OutboundFileAdapter(ifa => { ifa.DestinationFolder = @"c:\files\drops"; });
+					sp.Transport.Adapter = new FileAdapter.Outbound(ifa => { ifa.DestinationFolder = @"c:\files\drops"; });
 					sp.Transport.Host = "Host";
 				})) { CallBase = true };
 			var validatingSendPortMock = sendPortMock.As<ISupportValidation>();

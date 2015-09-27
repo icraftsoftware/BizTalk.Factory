@@ -191,11 +191,11 @@
     <Compile Include="Dsl\Binding\Adapter\FileRemovingSettings.cs" />
     <Compile Include="Dsl\Binding\Adapter\FileAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\IInboundAdapter.cs" />
-    <Compile Include="Dsl\Binding\Adapter\InboundFileAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\IOutboundAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterBindingSerializerFactory.cs" />
-    <Compile Include="Dsl\Binding\Adapter\OutboundFileAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FileAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\Extensions\RegistryExtensions.cs" />
     <Compile Include="Dsl\Binding\Adapter\AdapterBindingSerializer.cs" />
     <Compile Include="Dsl\IHideObjectMembers.cs" />

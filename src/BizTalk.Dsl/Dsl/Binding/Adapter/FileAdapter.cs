@@ -25,7 +25,7 @@ using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class FileAdapter : AdapterBase, IAdapter, IAdapterBindingSerializerFactory
+	public abstract partial class FileAdapter : AdapterBase, IAdapter, IAdapterBindingSerializerFactory
 	{
 		static FileAdapter()
 		{

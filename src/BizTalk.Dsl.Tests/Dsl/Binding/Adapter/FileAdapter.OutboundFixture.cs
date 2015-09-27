@@ -21,12 +21,12 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class OutboundFileAdapterFixture
+	public class FileAdapterOutboundFixture
 	{
 		[Test]
 		public void CredentialsAreCompatibleWithNetworkFolder()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"\\server\folder";
 					t.NetworkCredentials.Username = "user";
@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void CredentialsAreNotCompatibleWithLocalFolder()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"c:\files\drops";
 					t.NetworkCredentials.Username = "user";
@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void DestinationFolderIsRequired()
 		{
-			var oft = new OutboundFileAdapter(t => { });
+			var oft = new FileAdapter.Outbound(t => { });
 			Assert.That(
 				() => ((ISupportValidation) oft).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbond file adapter has no destination folder."));
@@ -62,7 +62,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void FileNameIsRequired()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"\\server";
 					t.FileName = string.Empty;
@@ -75,7 +75,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			var oft = new OutboundFileAdapter(t => { t.DestinationFolder = @"c:\files\drops"; });
+			var oft = new FileAdapter.Outbound(t => { t.DestinationFolder = @"c:\files\drops"; });
 			var xml = ((IAdapterBindingSerializerFactory) oft).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
@@ -91,7 +91,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void UseTempFileOnWriteAndAppendFileAreNotCompatible()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"\\server";
 					t.CopyMode = CopyMode.Append;
@@ -103,7 +103,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void UseTempFileOnWriteAndCreateNewFileAreCompatible()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"\\server";
 					t.CopyMode = CopyMode.CreateNew;
@@ -115,7 +115,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void UseTempFileOnWriteAndOverwriteFileAreNotCompatible()
 		{
-			var oft = new OutboundFileAdapter(
+			var oft = new FileAdapter.Outbound(
 				t => {
 					t.DestinationFolder = @"\\server";
 					t.CopyMode = CopyMode.Overwrite;

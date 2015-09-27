@@ -102,7 +102,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var transportMock = new Mock<TransportBase<IAdapter>> { CallBase = true };
 			var stackFrame = new StackFrame(0, true);
-			transportMock.Object.Adapter = new OutboundFileAdapter(a => { });
+			transportMock.Object.Adapter = new FileAdapter.Outbound(a => { });
 
 			Assert.That(
 				() => ((ISupportValidation) transportMock.Object).Validate(),

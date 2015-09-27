@@ -84,7 +84,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 											l.Name = "Unconventional receive location name";
 											l.Description = "Some useless test receive location.";
 											l.ReceivePipeline = new ReceivePipeline<PassThruReceive>();
-											l.Transport.Adapter = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+											l.Transport.Adapter = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 											l.Transport.Host = "Receive Host";
 										})
 									);
@@ -96,7 +96,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 								p.Name = "Unconventional send port name";
 								p.Description = "Some useless test send port.";
 								p.SendPipeline = new SendPipeline<PassThruTransmit>();
-								p.Transport.Adapter = new OutboundFileAdapter(t => { t.DestinationFolder = @"c:\files\drops"; });
+								p.Transport.Adapter = new FileAdapter.Outbound(t => { t.DestinationFolder = @"c:\files\drops"; });
 								p.Transport.Host = "Send Host";
 							})
 						);
@@ -135,7 +135,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 											l.Name = ReceiveLocationName.About(MessageName.Invoice).FormattedAs.Xml;
 											l.Enable = false;
 											l.ReceivePipeline = new ReceivePipeline<XmlReceive>();
-											l.Transport.Adapter = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+											l.Transport.Adapter = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 											l.Transport.Host = Host.RECEIVING_HOST;
 										}),
 									ReceiveLocation(
@@ -143,7 +143,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 											l.Name = ReceiveLocationName.About(MessageName.CreditNote).FormattedAs.Edi;
 											l.Enable = false;
 											l.ReceivePipeline = new ReceivePipeline<XmlReceive>();
-											l.Transport.Adapter = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+											l.Transport.Adapter = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 											l.Transport.Host = Host.RECEIVING_HOST;
 										})
 								);
@@ -159,7 +159,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 										l.Enable = true;
 										l.ReceivePipeline = new ReceivePipeline<PassThruReceive>(pl => { pl.Decoder<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
 										l.SendPipeline = new SendPipeline<PassThruTransmit>(pl => { pl.PreAssembler<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
-										l.Transport.Adapter = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+										l.Transport.Adapter = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 										l.Transport.Host = Host.RECEIVING_HOST;
 									}));
 						}),
@@ -171,7 +171,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 							p.Name = SendPortName.Towards(Party.Customer).About(MessageName.Statement).FormattedAs.Csv;
 							p.SendPipeline = new SendPipeline<PassThruTransmit>(pl => { pl.PreAssembler<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
 							p.ReceivePipeline = new ReceivePipeline<PassThruReceive>(pl => { pl.Decoder<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
-							p.Transport.Adapter = new OutboundFileAdapter(t => { t.DestinationFolder = @"c:\files\drops"; });
+							p.Transport.Adapter = new FileAdapter.Outbound(t => { t.DestinationFolder = @"c:\files\drops"; });
 							p.Transport.RetryPolicy = Convention.BizTalkFactory.RetryPolicy.LongRunning;
 							p.Transport.Host = Host.SENDING_HOST;
 						}));
@@ -184,7 +184,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			{
 				Name = SendPortName.Towards(Party.Bank).About(MessageName.CreditNote).FormattedAs.Edi;
 				SendPipeline = new SendPipeline<XmlTransmit>();
-				Transport.Adapter = new OutboundFileAdapter(t => { t.DestinationFolder = @"c:\files\drops"; });
+				Transport.Adapter = new FileAdapter.Outbound(t => { t.DestinationFolder = @"c:\files\drops"; });
 				Transport.Host = Host.SENDING_HOST;
 				Transport.RetryPolicy = Convention.BizTalkFactory.RetryPolicy.LongRunning;
 				Filter = new Filter(() => BtsProperties.MessageType == Schema<Batch.Content>.MessageType);
@@ -210,7 +210,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 											c.Policy = Policy<Policies.Send.Claim.ProcessResolver>.Name;
 										});
 								});
-							l.Transport.Adapter = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+							l.Transport.Adapter = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 							l.Transport.Host = Host.ISOLATED_HOST;
 							l.Transport.Schedule = new Schedule {
 								StartDate = new DateTime(2015, 2, 17),

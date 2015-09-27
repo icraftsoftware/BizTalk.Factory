@@ -49,7 +49,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				(Action<IReceiveLocation<string>>) (rl => {
 					rl.Name = "Receive Location Name";
 					rl.ReceivePipeline = new ReceivePipeline<XMLReceive>();
-					rl.Transport.Adapter = new InboundFileAdapter(ifa => { ifa.ReceiveFolder = @"c:\files\drops"; });
+					rl.Transport.Adapter = new FileAdapter.Inbound(ifa => { ifa.ReceiveFolder = @"c:\files\drops"; });
 					rl.Transport.Host = "Host";
 				})) { CallBase = true };
 			var validatingReceiveLocationBindingMock = receiveLocationMock.As<ISupportValidation>();

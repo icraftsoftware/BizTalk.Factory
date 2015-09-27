@@ -21,12 +21,12 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class InboundFileAdapterFixture
+	public class FileAdapterInboundFixture
 	{
 		[Test]
 		public void CredentialsAreCompatibleWithNetworkFolder()
 		{
-			var ift = new InboundFileAdapter(
+			var ift = new FileAdapter.Inbound(
 				t => {
 					t.ReceiveFolder = @"\\server\folder";
 					t.NetworkCredentials.Username = "user";
@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void CredentialsAreNotCompatibleWithLocalFolder()
 		{
-			var ift = new InboundFileAdapter(
+			var ift = new FileAdapter.Inbound(
 				t => {
 					t.ReceiveFolder = @"c:\files\drops";
 					t.NetworkCredentials.Username = "user";
@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void FileNameIsRequired()
 		{
-			var ift = new InboundFileAdapter(
+			var ift = new FileAdapter.Inbound(
 				t => {
 					t.ReceiveFolder = @"\\server";
 					t.FileMask = string.Empty;
@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void ReceiveFolderIsRequired()
 		{
-			var ift = new InboundFileAdapter(t => { });
+			var ift = new FileAdapter.Inbound(t => { });
 			Assert.That(
 				() => ((ISupportValidation) ift).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Inbound file adapter has no source folder."));
@@ -75,7 +75,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			var ift = new InboundFileAdapter(t => { t.ReceiveFolder = @"c:\files\drops"; });
+			var ift = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
 			var xml = ((IAdapterBindingSerializerFactory) ift).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
