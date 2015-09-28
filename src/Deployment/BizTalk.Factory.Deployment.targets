@@ -68,10 +68,7 @@
     <FrameworkDir Condition=" '$(FrameworkDir)' != '' "></FrameworkDir>
   </PropertyGroup>
   <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets" 
-          Condition="Exists('$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets')"/>
-  <Import Project="$(MSBuildThisFileDirectory)\MSBuild.Extension.Pack.targets" 
-          Condition="Exists('$(MSBuildThisFileDirectory)\MSBuild.Extension.Pack.targets')"/>
+  <Import Project="$(DeployTools)\MSBuild.Extension.Pack.targets" />
   <Import Project="BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" Condition=" '$(IgnoreStandardErrorWarningFormat)' == 'true' " />
 
   <!--
@@ -242,7 +239,7 @@
     
     <Message Text="Deploying certificate %(CertificatesQualified.Identity)..." />
 
-    <PropertyGroup>
+    <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
       <_Location>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[0])</_Location>
       <_MachineStore Condition=" '$(_Location)' != 'LOCAL_MACHINE' ">false</_MachineStore>
       <_MachineStore Condition=" '$(_Location)' == 'LOCAL_MACHINE' ">true</_MachineStore>
@@ -255,6 +252,7 @@
     </ItemGroup>
 
     <MSBuild.ExtensionPack.Security.Certificate
+      Condition=" '@(CertificatesQualified)' != '' "
       TaskAction="Add"
       FileName="%(CertificatesQualified.LocationPath)\%(CertificatesQualified.Identity)"
       CertPassword="%(CertificatesQualified.Password)"
@@ -313,7 +311,7 @@
     
     <Message Text="Undeploying certificate %(CertificatesQualified.Identity)..." />
 
-    <PropertyGroup>
+    <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
       <_Location>$([System.String]::Copy(&quot;%(CertificatesQualified.Store)&quot;).Split('\\')[0])</_Location>
       <_MachineStore Condition=" '$(_Location)' != 'LOCAL_MACHINE' ">false</_MachineStore>
       <_MachineStore Condition=" '$(_Location)' == 'LOCAL_MACHINE' ">true</_MachineStore>
@@ -321,6 +319,7 @@
     </PropertyGroup>
 
     <MSBuild.ExtensionPack.Security.Certificate
+      Condition=" '@(CertificatesQualified)' != '' "
       TaskAction="Remove"
       MachineStore="$(_MachineStore)"
       StoreName="$(_StoreName)"

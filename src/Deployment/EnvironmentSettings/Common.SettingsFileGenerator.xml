@@ -16,8 +16,8 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>11775</WindowHeight>
-  <WindowWidth>19590</WindowWidth>
+  <WindowHeight>12795</WindowHeight>
+  <WindowWidth>29865</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <TabRatio>151</TabRatio>
@@ -81,7 +81,7 @@
   <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="41" x:FullColumns="1"
    x:FullRows="1" ss:StyleID="s62">
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="213.75"/>
-   <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="144"/>
+   <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="75"/>
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="240" ss:Span="3"/>
    <Row ss:AutoFitHeight="0" ss:Height="18" ss:StyleID="s63">
     <Cell ss:StyleID="s64"><Data ss:Type="String">Environment Settings</Data></Cell>
@@ -151,7 +151,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">BizTalkGroupsDomain</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">Potager</Data></Cell>
+    <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -207,7 +207,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">BizTalkServerAccountName</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BTS_USER</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BTS_USER</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -215,7 +215,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">BizTalkServerAccountPassword</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">p@ssw0rd</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">p@ssw0rd</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -223,7 +223,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">SqlAgentAccountName</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">NT AUTHORITY\NetworkService</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">NT AUTHORITY\NetworkService</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -239,7 +239,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">SsoAppUserGroup</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalk Application Users</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalk Application Users</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -247,7 +247,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">SsoAppAdminGroup</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalk Server Administrators</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalk Server Administrators</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -263,7 +263,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">ManagementDatabaseServer</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">sqlserver</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -271,7 +271,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">MonitoringDatabaseServer</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">sqlserver</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -279,7 +279,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">ProcessingDatabaseServer</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">sqlserver</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">localhost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -287,7 +287,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">BizTalkFactoryTransientStateDbUri</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">mssql://localhost//BizTalkFactoryTransientStateDb</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">mssql://localhost//BizTalkFactoryTransientStateDb</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -303,7 +303,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">IsolatedHost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerIsolatedHost</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerIsolatedHost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -311,7 +311,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">ReceiveHost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerApplication</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerApplication</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -319,7 +319,7 @@
     <Cell ss:StyleID="s66"><Data ss:Type="String">TransmitHost</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerApplication</Data></Cell>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerApplication</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
    </Row>
@@ -433,7 +433,7 @@
    <SplitHorizontal>6</SplitHorizontal>
    <TopRowBottomPane>6</TopRowBottomPane>
    <SplitVertical>1</SplitVertical>
-   <LeftColumnRightPane>2</LeftColumnRightPane>
+   <LeftColumnRightPane>1</LeftColumnRightPane>
    <ActivePane>0</ActivePane>
    <Panes>
     <Pane>
@@ -441,13 +441,14 @@
     </Pane>
     <Pane>
      <Number>1</Number>
-     <ActiveCol>1</ActiveCol>
     </Pane>
     <Pane>
      <Number>2</Number>
     </Pane>
     <Pane>
      <Number>0</Number>
+     <ActiveRow>24</ActiveRow>
+     <ActiveCol>3</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

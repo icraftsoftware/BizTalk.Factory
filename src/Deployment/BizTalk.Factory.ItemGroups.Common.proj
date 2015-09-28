@@ -118,12 +118,12 @@
     </LocalFiles>
   </ItemGroup>
 
-  <!-- set to $(COMPUTERNAME) for DEV, get it from settings otherwise -->
-  <PropertyGroup Condition=" '$(TargetEnvironment)' == 'DEV' ">
+  <!-- set to $(COMPUTERNAME) for DEV and BLD, get it from settings otherwise -->
+  <PropertyGroup Condition=" '$(TargetEnvironment)' == 'DEV' or '$(TargetEnvironment)' == 'BLD' ">
     <BizTalkGroupsDomain>$(COMPUTERNAME)</BizTalkGroupsDomain>
   </PropertyGroup>
   <ItemGroup>
-    <CommonPropsFromEnvSettings Include="BizTalkGroupsDomain" Condition=" '$(TargetEnvironment)' != 'DEV' " />
+    <CommonPropsFromEnvSettings Include="BizTalkGroupsDomain" Condition=" '$(TargetEnvironment)' != 'DEV' and '$(TargetEnvironment)' != 'BLD' " />
   </ItemGroup>
 
   <ItemGroup>
