@@ -49,6 +49,14 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Adapters.Sql, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.Sql.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.Wcf.Common, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Wcf.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.B2B.PartnerManagement, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.B2B.PartnerManagement.dll</HintPath>
@@ -82,6 +90,10 @@
     <Reference Include="Microsoft.RuleEngine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ServiceModel.Channels, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceModel.Channels.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.XLANGs.BaseTypes">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
     </Reference>
@@ -106,7 +118,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +134,8 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBaseFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />

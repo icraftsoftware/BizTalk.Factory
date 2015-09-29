@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Interop
 	/// Provides an object with a property bag in which the object can save its properties persistently.
 	/// </summary>
 	/// <seealso href="Microsoft.BizTalk.Internal.BTMPropertyBag" />
-	public class PropertyBag : IPropertyBag, IXmlSerializable
+	public class PropertyBag : IPropertyBag, Microsoft.BizTalk.ExplorerOM.IPropertyBag, IXmlSerializable
 	{
 		internal PropertyBag()
 		{
@@ -118,6 +118,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Interop
 
 		#endregion
 
+		public int Count
+		{
+			get { return Properties.Count(); }
+		}
+
+		protected IDictionary<string, object> Bag
+		{
+			get { return _properties; }
+		}
+
+		protected virtual IEnumerable<KeyValuePair<string, object>> Properties
+		{
+			get { return _properties; }
+		}
+
+		private readonly IDictionary<string, object> _properties;
+
 		#region Variant Helper
 
 		private static VarEnum ToVariantTypeCode(Type type)
@@ -175,22 +192,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Interop
 		}
 
 		#endregion
-
-		public int Count
-		{
-			get { return Properties.Count(); }
-		}
-
-		protected IDictionary<string, object> Bag
-		{
-			get { return _properties; }
-		}
-
-		protected virtual IEnumerable<KeyValuePair<string, object>> Properties
-		{
-			get { return _properties; }
-		}
-
-		private readonly IDictionary<string, object> _properties;
 	}
 }

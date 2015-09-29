@@ -26,26 +26,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void CredentialsAreCompatibleWithNetworkFolder()
 		{
-			var ift = new FileAdapter.Inbound(
-				t => {
-					t.ReceiveFolder = @"\\server\folder";
-					t.NetworkCredentials.Username = "user";
-					t.NetworkCredentials.Password = "pwd";
+			var ifa = new FileAdapter.Inbound(
+				a => {
+					a.ReceiveFolder = @"\\server\folder";
+					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.Password = "pwd";
 				});
-			Assert.That(() => ((ISupportValidation) ift).Validate(), Throws.Nothing);
+			Assert.That(() => ((ISupportValidation) ifa).Validate(), Throws.Nothing);
 		}
 
 		[Test]
 		public void CredentialsAreNotCompatibleWithLocalFolder()
 		{
-			var ift = new FileAdapter.Inbound(
-				t => {
-					t.ReceiveFolder = @"c:\files\drops";
-					t.NetworkCredentials.Username = "user";
-					t.NetworkCredentials.Password = "pwd";
+			var ifa = new FileAdapter.Inbound(
+				a => {
+					a.ReceiveFolder = @"c:\files\drops";
+					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.Password = "pwd";
 				});
 			Assert.That(
-				() => ((ISupportValidation) ift).Validate(),
+				() => ((ISupportValidation) ifa).Validate(),
 				Throws.TypeOf<BindingException>()
 					.With.Message.EqualTo("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive."));
 		}
@@ -53,30 +53,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void FileNameIsRequired()
 		{
-			var ift = new FileAdapter.Inbound(
-				t => {
-					t.ReceiveFolder = @"\\server";
-					t.FileMask = string.Empty;
+			var ifa = new FileAdapter.Inbound(
+				a => {
+					a.ReceiveFolder = @"\\server";
+					a.FileMask = string.Empty;
 				});
 			Assert.That(
-				() => ((ISupportValidation) ift).Validate(),
+				() => ((ISupportValidation) ifa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Inbound file adapter has no source file mask."));
 		}
 
 		[Test]
 		public void ReceiveFolderIsRequired()
 		{
-			var ift = new FileAdapter.Inbound(t => { });
+			var ifa = new FileAdapter.Inbound(a => { });
 			Assert.That(
-				() => ((ISupportValidation) ift).Validate(),
+				() => ((ISupportValidation) ifa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Inbound file adapter has no source folder."));
 		}
 
 		[Test]
 		public void SerializeToXml()
 		{
-			var ift = new FileAdapter.Inbound(t => { t.ReceiveFolder = @"c:\files\drops"; });
-			var xml = ((IAdapterBindingSerializerFactory) ift).GetAdapterBindingSerializer().Serialize();
+			var ifa = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
+			var xml = ((IAdapterBindingSerializerFactory) ifa).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(

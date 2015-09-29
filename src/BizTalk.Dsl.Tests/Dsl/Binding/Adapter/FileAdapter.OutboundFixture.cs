@@ -26,26 +26,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void CredentialsAreCompatibleWithNetworkFolder()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"\\server\folder";
-					t.NetworkCredentials.Username = "user";
-					t.NetworkCredentials.Password = "pwd";
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"\\server\folder";
+					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.Password = "pwd";
 				});
-			Assert.That(() => ((ISupportValidation) oft).Validate(), Throws.Nothing);
+			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
 		}
 
 		[Test]
 		public void CredentialsAreNotCompatibleWithLocalFolder()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"c:\files\drops";
-					t.NetworkCredentials.Username = "user";
-					t.NetworkCredentials.Password = "pwd";
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"c:\files\drops";
+					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.Password = "pwd";
 				});
 			Assert.That(
-				() => ((ISupportValidation) oft).Validate(),
+				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>()
 					.With.Message.EqualTo("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive."));
 		}
@@ -53,30 +53,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void DestinationFolderIsRequired()
 		{
-			var oft = new FileAdapter.Outbound(t => { });
+			var ofa = new FileAdapter.Outbound(a => { });
 			Assert.That(
-				() => ((ISupportValidation) oft).Validate(),
+				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbond file adapter has no destination folder."));
 		}
 
 		[Test]
 		public void FileNameIsRequired()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"\\server";
-					t.FileName = string.Empty;
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"\\server";
+					a.FileName = string.Empty;
 				});
 			Assert.That(
-				() => ((ISupportValidation) oft).Validate(),
+				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbond file adapter has no destination file name."));
 		}
 
 		[Test]
 		public void SerializeToXml()
 		{
-			var oft = new FileAdapter.Outbound(t => { t.DestinationFolder = @"c:\files\drops"; });
-			var xml = ((IAdapterBindingSerializerFactory) oft).GetAdapterBindingSerializer().Serialize();
+			var ofa = new FileAdapter.Outbound(a => { a.DestinationFolder = @"c:\files\drops"; });
+			var xml = ((IAdapterBindingSerializerFactory) ofa).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
@@ -91,38 +91,38 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void UseTempFileOnWriteAndAppendFileAreNotCompatible()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"\\server";
-					t.CopyMode = CopyMode.Append;
-					t.UseTempFileOnWrite = false;
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"\\server";
+					a.CopyMode = FileAdapter.CopyMode.Append;
+					a.UseTempFileOnWrite = false;
 				});
-			Assert.That(() => ((ISupportValidation) oft).Validate(), Throws.Nothing);
+			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
 		}
 
 		[Test]
 		public void UseTempFileOnWriteAndCreateNewFileAreCompatible()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"\\server";
-					t.CopyMode = CopyMode.CreateNew;
-					t.UseTempFileOnWrite = true;
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"\\server";
+					a.CopyMode = FileAdapter.CopyMode.CreateNew;
+					a.UseTempFileOnWrite = true;
 				});
-			Assert.That(() => ((ISupportValidation) oft).Validate(), Throws.Nothing);
+			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
 		}
 
 		[Test]
 		public void UseTempFileOnWriteAndOverwriteFileAreNotCompatible()
 		{
-			var oft = new FileAdapter.Outbound(
-				t => {
-					t.DestinationFolder = @"\\server";
-					t.CopyMode = CopyMode.Overwrite;
-					t.UseTempFileOnWrite = true;
+			var ofa = new FileAdapter.Outbound(
+				a => {
+					a.DestinationFolder = @"\\server";
+					a.CopyMode = FileAdapter.CopyMode.Overwrite;
+					a.UseTempFileOnWrite = true;
 				});
 			Assert.That(
-				() => ((ISupportValidation) oft).Validate(),
+				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>()
 					.With.Message.EqualTo("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file."));
 		}

@@ -105,6 +105,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// How many seconds activity tracking contexts will be kept in cache when propagated through solicit-response
 		/// ports. Any negative value disables caching.
 		/// </summary>
+		// TODO refactor to TimeSpan
 		public int TrackingContextRetentionDuration { get; set; }
 
 		/// <summary>

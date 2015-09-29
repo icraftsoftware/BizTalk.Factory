@@ -21,6 +21,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.RuleEngine;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Xml
 {
@@ -39,7 +40,7 @@ namespace Be.Stateless.BizTalk.Xml
 
 		public static implicit operator PolicyNameXmlSerializer(PolicyName policyName)
 		{
-			return new PolicyNameXmlSerializer(policyName.ToString());
+			return new PolicyNameXmlSerializer(policyName.IfNotNull(pn => pn.ToString()));
 		}
 
 		#endregion

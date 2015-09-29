@@ -18,10 +18,17 @@
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public enum CopyMode : uint
+	public abstract partial class FileAdapter
 	{
-		Append = 0,
-		CreateNew = 1,
-		Overwrite = 2
+		#region CopyMode Enum
+
+		public enum CopyMode : uint
+		{
+			Append = 0,
+			CreateNew = 1,
+			Overwrite = 2
+		}
+
+		#endregion
 	}
 }

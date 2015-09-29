@@ -1,5 +1,6 @@
 /BindingInfo//Component/Properties/Translations
 /BindingInfo//Component/Properties/Extractors
+/BindingInfo//Component/Properties/Components
 
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/VariablePropertyMapping
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/ServiceBehaviorConfiguration

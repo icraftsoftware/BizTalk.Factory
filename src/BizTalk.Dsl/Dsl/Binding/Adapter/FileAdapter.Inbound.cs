@@ -42,8 +42,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				RetryIntervalOnNetworkFailure = TimeSpan.FromMinutes(5);
 			}
 
-			public Inbound(Action<Inbound> adapterConfigurator)
-				: this()
+			public Inbound(Action<Inbound> adapterConfigurator) : this()
 			{
 				adapterConfigurator(this);
 			}

@@ -1,6 +1,6 @@
-#region Copyright & License
+ï»¿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright Â© 2012 - 2015 FranÃ§ois Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,22 +16,23 @@
 
 #endregion
 
+using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class FileAdapterFixture
+	public class WcfSqlAdapterFixture
 	{
 		[Test]
 		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			var mock = new Mock<FileAdapter> { CallBase = true };
-			var fa = mock.Object as IAdapter;
-			Assert.That(fa.ProtocolType.Name, Is.EqualTo("FILE"));
-			Assert.That(fa.ProtocolType.Capabilities, Is.EqualTo(11));
-			Assert.That(fa.ProtocolType.ConfigurationClsid, Is.EqualTo("5e49e3a6-b4fc-4077-b44c-22f34a242fdb"));
+			var mock = new Mock<WcfSqlAdapter<CustomRLConfig>> { CallBase = true };
+			var wsa = mock.Object as IAdapter;
+			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-SQL"));
+			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(779));
+			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("59b35d03-6a06-4734-a249-ef561254ecf7"));
 		}
 	}
 }
