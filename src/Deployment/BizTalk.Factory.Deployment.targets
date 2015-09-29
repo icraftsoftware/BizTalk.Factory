@@ -36,8 +36,8 @@
   <PropertyGroup Condition=" '$(Configuration)' != 'Server' ">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <DeployTools Condition="'$(DeployTools)' == ''">$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
-    <OutputPath Condition=" '$(TeamBuildOutDir)' == '' ">bin\$(Configuration)\</OutputPath>
-    <OutputPath Condition=" '$(TeamBuildOutDir)' != '' ">$(TeamBuildOutDir)</OutputPath>
+    <!--Where to put the MSI package -->
+    <OutputPath Condition=" '$(OutputPath)' == '' ">bin\$(Configuration)\Installer\$(ProjectName)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Server' ">
     <DeploymentFrameworkTargetsPath>$(MSBuildThisFileDirectory)Framework\</DeploymentFrameworkTargetsPath>
