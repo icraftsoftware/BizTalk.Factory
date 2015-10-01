@@ -64,6 +64,7 @@
     <IncludeSchemas>true</IncludeSchemas>
     <IncludeSSO>true</IncludeSSO>
     <IncludeTransforms>true</IncludeTransforms>
+    <IncludeQuartzJobs>false</IncludeQuartzJobs>
   </PropertyGroup>
 
   <!-- Controlling of BizTalk Factory's Specific Deployment Tasks -->

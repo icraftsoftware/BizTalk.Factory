@@ -122,6 +122,7 @@
   <PropertyGroup Condition=" '$(TargetEnvironment)' == 'DEV' or '$(TargetEnvironment)' == 'BLD' ">
     <BizTalkGroupsDomain>$(COMPUTERNAME)</BizTalkGroupsDomain>
   </PropertyGroup>
+  
   <ItemGroup>
     <CommonPropsFromEnvSettings Include="BizTalkGroupsDomain" Condition=" '$(TargetEnvironment)' != 'DEV' and '$(TargetEnvironment)' != 'BLD' " />
   </ItemGroup>
@@ -140,6 +141,19 @@
     <RedistributableCustomMsbuildProjectFiles Include="BizTalk.Factory.ItemGroups.Common.proj;BizTalk.Factory.Deployment.targets;BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets">
       <LocationPath>$(MSBuildThisFileDirectory)</LocationPath>
     </RedistributableCustomMsbuildProjectFiles>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(IncludeQuartzJobs)' == 'true'">
+    <QuartzJobsFiles Include="QuartzJobs.xml">
+      <LocationPath Condition=" '$(Configuration)' != 'Server' ">.</LocationPath>
+      <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
+    </QuartzJobsFiles>
+    <FilesToXmlPreprocess Include="QuartzJobs.Template.xml">
+      <LocationPath Condition=" '$(Configuration)' != 'Server' ">.</LocationPath>
+      <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
+      <OutputFilename>QuartzJobs.xml</OutputFilename>
+    </FilesToXmlPreprocess>
+    <QuartzJobsFilesQualified Include="@(QuartzJobsFiles->'%(LocationPath)\%(Identity)')" />
   </ItemGroup>
 
 </Project>

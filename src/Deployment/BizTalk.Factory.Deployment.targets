@@ -21,8 +21,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!-- TODO Failed Process Alerting -->
-  <!-- TODO deploy Quartz.NET 2.3 http://www.quartz-scheduler.net/ : NuGet Install-Package Quartz -->
-  <!-- TODO register Quartz jobs -->
   <!-- TODO custom PatchDeploy target must behave like Deploy, i.e. LoadPropsFromEnvSettingsThenExecute: <Target Name="Deploy" DependsOnTargets="SetDeployProperties;LoadPropsFromEnvSettingsThenExecute" /> -->
   <!-- TODO possibility to call any custom target wrt. SetDeployProperties;LoadPropsFromEnvSettingsThenExecute -->
 
@@ -124,7 +122,8 @@
       SetupBizTalkBackupForCustomDatabases;
       DeployPolicies;
       RegisterOrchestrationProcessNames;
-      DeployWindowsServices
+      DeployWindowsServices;
+      RegisterQuartzJobs
     </CustomPostDeployDependsOn>
   </PropertyGroup>
   <Target Name="CustomPostDeployTarget" DependsOnTargets="$(CustomPostDeployDependsOn)" />
@@ -132,6 +131,7 @@
   <PropertyGroup>
     <CustomUndeployDependsOn>
       PrepareAppForUndeploy;
+      UnregisterQuartzJobs;
       UndeployWindowsServices;
       UnregisterOrchestrationProcessNames;
       UndeployPolicies;
@@ -164,7 +164,8 @@
       CopyCustomMsbuildProjectFilesToRedist;
       CopyDatabaseDeploymentScriptsToRedist;
       CopyPoliciesToRedist;
-      CopyWindowsServiceFilesToRedist
+      CopyWindowsServiceFilesToRedist;
+      CopyQuartzJobsFilesToRedist
     </CustomRedistDependsOn>
   </PropertyGroup>
   <Target Name="CustomRedist" DependsOnTargets="$(CustomRedistDependsOn)" />
@@ -1215,6 +1216,75 @@
     </ItemGroup>
 
     <Message Text="Copied Windows service redistributable files to redist folder." />
+  </Target>
+
+  <!--
+     _____            _     _               ____                   _              _       _         
+    |  __ \          (_)   | |             / __ \                 | |            | |     | |        
+    | |__) |___  __ _ _ ___| |_ ___ _ __  | |  | |_   _  __ _ _ __| |_ ____      | | ___ | |__  ___ 
+    |  _  // _ \/ _` | / __| __/ _ | '__| | |  | | | | |/ _` | '__| __|_  /  _   | |/ _ \| '_ \/ __|
+    | | \ |  __| (_| | \__ | ||  __| |    | |__| | |_| | (_| | |  | |_ / /  | |__| | (_) | |_) \__ \
+    |_|  \_\___|\__, |_|___/\__\___|_|     \___\_\\__,_|\__,_|_|   \__/___|  \____/ \___/|_.__/|___/
+                 __/ |                                                                              
+                |___/                                                                                 
+    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
+
+  <PropertyGroup>
+    <QuartzDirectory>C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
+  </PropertyGroup>
+
+  <Target Name="RegisterQuartzJobs"
+          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
+          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+    <!-- Define a property to hold the single item value -->
+    <PropertyGroup>
+      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
+    </PropertyGroup>
+    <!-- read the current configuration value -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute" 
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config" 
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
+    </MSBuild.ExtensionPack.Xml.XmlFile>
+    <!-- Append the job file path to the current list of job files -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute" 
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config" 
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)" />
+    
+  </Target>
+
+  <Target Name="UnregisterQuartzJobs"
+          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
+          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+    <!-- Define a property to hold the single item value -->
+    <PropertyGroup>
+      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
+    </PropertyGroup>
+    <!-- read the current configuration value -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
+    </MSBuild.ExtensionPack.Xml.XmlFile>
+    <!-- remove the job file from the list -->
+    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(CurrentQuartzJobsFiles)" OldValue=",$(TempJobsFile)" NewValue="">
+      <Output PropertyName="NewJobsFilesList" TaskParameter="NewString"/>
+    </MSBuild.ExtensionPack.Framework.TextString>
+    <!-- Update with the new list -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Value="$(NewJobsFilesList)" />
+  </Target>
+
+  <Target Name="CopyQuartzJobsFilesToRedist"
+          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' ">
+    <Message Text="Copying Quartz jobs files to redist folder..." />
+
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="%(QuartzJobsFiles.LocationPath)\$([System.IO.Path]::GetFileNameWithoutExtension('%(QuartzJobsFiles.Identity)')).template.xml" />
+
+    <Message Text="Copied Quartz jobs files to redist folder." />
   </Target>
 
   <!--Review those targets-->
