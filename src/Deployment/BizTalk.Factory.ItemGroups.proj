@@ -207,6 +207,9 @@
     <ExternalAssemblies Include="log4net.dll">
       <LocationPath>..\packages\log4net.2.0.3\lib\net40-full</LocationPath>
     </ExternalAssemblies>
+    <ExternalAssemblies Include="Quartz.dll">
+      <LocationPath>..\packages\Quartz.2.3.3\lib\net40</LocationPath>
+    </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.Extensions.dll">
       <LocationPath>..\Extensions\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
@@ -367,21 +370,20 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(IncludeQuartzAgent)' == 'true' ">
-    <WindowsServices Include="Quartz.Service">
-      <LocationPath Condition=" '$(Configuration)' != 'Server' ">..\..\lib\%(Identity)</LocationPath>
+    <WindowsServices Include="Quartz.Server">
+      <LocationPath Condition=" '$(Configuration)' != 'Server' ">..\%(Identity)\bin\$(Configuration)</LocationPath>
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
-      <ServiceStartModeParameter>ServiceStartType</ServiceStartModeParameter>
-      <ServiceStartModeArgument>a</ServiceStartModeArgument>
-      <ServiceAssembly>Quartz.Server.Service.exe</ServiceAssembly>
+      <ServiceStartModeArgument>auto</ServiceStartModeArgument>
+      <ServiceAssembly>Quartz.Server.exe</ServiceAssembly>
       <Redistributables>
-        BizTalk.Factory.QuartzJobs.xml;
+        QuartzJobs.xml;
         Common.Logging.dll;
-        Common.Logging.Log4Net1211.dll;
+        Common.Logging.Core.dll;
+        Common.Logging.Log4Net1213.dll;
         Quartz.dll;
         Quartz.pdb;
-        Quartz.Server.Core.dll;
-        Quartz.Server.Service.exe;
-        Quartz.Server.Service.exe.Template.config
+        Quartz.Server.exe.template.config;
+        Quartz.Server.log4net.template.config
       </Redistributables>
       <TargetHosts>$(QuartzAgentTargetHosts)</TargetHosts>
     </WindowsServices>

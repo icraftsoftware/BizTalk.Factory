@@ -1173,7 +1173,7 @@
       <!-- log4net.config -->
       <_WindowsServiceConfigFilesToXmlPreprocess
         Include="$([System.IO.Path]::GetFileNameWithoutExtension('%(WindowsServicesQualified.ServiceAssembly)')).log4net.template.config"
-        Condition="Exists('%(WindowsServicesQualified.LocationPath)\$([System.IO.Path]::GetFileNameWithoutExtension(%27%(WindowsServicesQualified.ServiceAssembly)%27)).log4net.template.config')">
+        Condition="Exists('%(WindowsServicesQualified.LocationPath)\$([System.IO.Path]::GetFileNameWithoutExtension(`%(WindowsServicesQualified.ServiceAssembly)`)).log4net.template.config')">
         <LocationPath>%(WindowsServicesQualified.LocationPath)</LocationPath>
         <OutputFilename>log4net.config</OutputFilename>
       </_WindowsServiceConfigFilesToXmlPreprocess>

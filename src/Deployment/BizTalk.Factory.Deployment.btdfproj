@@ -79,7 +79,7 @@
   <!-- Controlling of BizTalk Factory's Windows Services Deployment -->
   <PropertyGroup>
     <IncludeClaimStoreAgent>true</IncludeClaimStoreAgent>
-    <IncludeQuartzAgent>false</IncludeQuartzAgent>
+    <IncludeQuartzAgent>true</IncludeQuartzAgent>
     <IncludeWindowsServices Condition=" '$(Configuration)' != 'Server' ">false</IncludeWindowsServices>
     <IncludeWindowsServices Condition=" '$(Configuration)' == 'Server' ">true</IncludeWindowsServices>
   </PropertyGroup>
