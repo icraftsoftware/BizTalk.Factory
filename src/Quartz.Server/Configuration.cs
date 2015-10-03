@@ -1,3 +1,21 @@
+#region Copyright & License
+
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#endregion
+
 using System.Collections.Specialized;
 using System.Configuration;
 
@@ -8,52 +26,12 @@ namespace Quartz.Server
 	/// </summary>
 	public static class Configuration
 	{
-		private const string PrefixServerConfiguration = "quartz.server";
-		private const string KeyServiceName = PrefixServerConfiguration + ".serviceName";
-		private const string KeyServiceDisplayName = PrefixServerConfiguration + ".serviceDisplayName";
-		private const string KeyServiceDescription = PrefixServerConfiguration + ".serviceDescription";
-		private const string KeyServerImplementationType = PrefixServerConfiguration + ".type";
-
-		private const string DefaultServiceName = "QuartzServer";
-		private const string DefaultServiceDisplayName = "Quartz Server";
-		private const string DefaultServiceDescription = "Quartz Job Scheduling Server";
-		private static readonly string DefaultServerImplementationType = typeof(QuartzServer).AssemblyQualifiedName;
-
-		private static readonly NameValueCollection configuration;
-
 		/// <summary>
 		/// Initializes the <see cref="Configuration"/> class.
 		/// </summary>
 		static Configuration()
 		{
-			configuration = (NameValueCollection) ConfigurationManager.GetSection("quartz");
-		}
-
-		/// <summary>
-		/// Gets the name of the service.
-		/// </summary>
-		/// <value>The name of the service.</value>
-		public static string ServiceName
-		{
-			get { return GetConfigurationOrDefault(KeyServiceName, DefaultServiceName); }
-		}
-
-		/// <summary>
-		/// Gets the display name of the service.
-		/// </summary>
-		/// <value>The display name of the service.</value>
-		public static string ServiceDisplayName
-		{
-			get { return GetConfigurationOrDefault(KeyServiceDisplayName, DefaultServiceDisplayName); }
-		}
-
-		/// <summary>
-		/// Gets the service description.
-		/// </summary>
-		/// <value>The service description.</value>
-		public static string ServiceDescription
-		{
-			get { return GetConfigurationOrDefault(KeyServiceDescription, DefaultServiceDescription); }
+			_configuration = (NameValueCollection) ConfigurationManager.GetSection("quartz");
 		}
 
 		/// <summary>
@@ -62,7 +40,34 @@ namespace Quartz.Server
 		/// <value>The type of the server implementation.</value>
 		public static string ServerImplementationType
 		{
-			get { return GetConfigurationOrDefault(KeyServerImplementationType, DefaultServerImplementationType); }
+			get { return GetConfigurationOrDefault(KEY_SERVER_IMPLEMENTATION_TYPE, _defaultServerImplementationType); }
+		}
+
+		/// <summary>
+		/// Gets the service description.
+		/// </summary>
+		/// <value>The service description.</value>
+		public static string ServiceDescription
+		{
+			get { return GetConfigurationOrDefault(KEY_SERVICE_DESCRIPTION, DEFAULT_SERVICE_DESCRIPTION); }
+		}
+
+		/// <summary>
+		/// Gets the display name of the service.
+		/// </summary>
+		/// <value>The display name of the service.</value>
+		public static string ServiceDisplayName
+		{
+			get { return GetConfigurationOrDefault(KEY_SERVICE_DISPLAY_NAME, DEFAULT_SERVICE_DISPLAY_NAME); }
+		}
+
+		/// <summary>
+		/// Gets the name of the service.
+		/// </summary>
+		/// <value>The name of the service.</value>
+		public static string ServiceName
+		{
+			get { return GetConfigurationOrDefault(KEY_SERVICE_NAME, DEFAULT_SERVICE_NAME); }
 		}
 
 		/// <summary>
@@ -75,9 +80,9 @@ namespace Quartz.Server
 		private static string GetConfigurationOrDefault(string configurationKey, string defaultValue)
 		{
 			string retValue = null;
-			if (configuration != null)
+			if (_configuration != null)
 			{
-				retValue = configuration[configurationKey];
+				retValue = _configuration[configurationKey];
 			}
 
 			if (retValue == null || retValue.Trim().Length == 0)
@@ -86,5 +91,18 @@ namespace Quartz.Server
 			}
 			return retValue;
 		}
+
+		private const string DEFAULT_SERVICE_DESCRIPTION = "Quartz Job Scheduling Server";
+		private const string DEFAULT_SERVICE_DISPLAY_NAME = "Quartz Server";
+
+		private const string DEFAULT_SERVICE_NAME = "QuartzServer";
+		private const string KEY_SERVER_IMPLEMENTATION_TYPE = PREFIX_SERVER_CONFIGURATION + ".type";
+		private const string KEY_SERVICE_DESCRIPTION = PREFIX_SERVER_CONFIGURATION + ".serviceDescription";
+		private const string KEY_SERVICE_DISPLAY_NAME = PREFIX_SERVER_CONFIGURATION + ".serviceDisplayName";
+		private const string KEY_SERVICE_NAME = PREFIX_SERVER_CONFIGURATION + ".serviceName";
+		private const string PREFIX_SERVER_CONFIGURATION = "quartz.server";
+
+		private static readonly NameValueCollection _configuration;
+		private static readonly string _defaultServerImplementationType = typeof(QuartzServer).AssemblyQualifiedName;
 	}
 }

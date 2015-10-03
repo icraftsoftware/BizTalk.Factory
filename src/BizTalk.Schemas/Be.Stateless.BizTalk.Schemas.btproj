@@ -128,10 +128,6 @@
     </Schema>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
-      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
-      <Name>Be.Stateless.BizTalk.Generated.Items</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
       <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
       <Name>Be.Stateless.Extensions</Name>

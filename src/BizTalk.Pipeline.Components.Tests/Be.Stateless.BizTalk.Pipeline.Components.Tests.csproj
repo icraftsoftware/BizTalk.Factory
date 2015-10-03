@@ -128,10 +128,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BizTalk.Common.Tests\Be.Stateless.BizTalk.Common.Tests.csproj">
-      <Project>{7A19A988-3B56-495A-A2D4-047268479F7E}</Project>
-      <Name>Be.Stateless.BizTalk.Common.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
@@ -139,10 +135,6 @@
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
-      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
-      <Name>Be.Stateless.BizTalk.Generated.Items</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
       <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
@@ -163,10 +155,6 @@
     <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
       <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
       <Name>Be.Stateless.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
-      <Project>{8C40C4CF-5FC3-49CE-8314-56AEAD6DDA60}</Project>
-      <Name>Be.Stateless.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

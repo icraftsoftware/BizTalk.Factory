@@ -95,7 +95,6 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -163,10 +162,6 @@
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
-      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
-      <Name>Be.Stateless.BizTalk.Generated.Items</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
       <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>

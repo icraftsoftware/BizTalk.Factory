@@ -61,7 +61,6 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="AsyncResultWrapper.cs" />
-    <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="ServiceModel\Channels\DefaultConverter.cs">
       <SubType>Code</SubType>
     </Compile>

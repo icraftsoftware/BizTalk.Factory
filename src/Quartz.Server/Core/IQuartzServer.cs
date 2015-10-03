@@ -1,6 +1,6 @@
-ï»¿#region Copyright & License
+#region Copyright & License
 
-// Copyright Â© 2012 FranÃ§ois Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,20 +17,28 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Reflection;
 
-namespace Be.Stateless.Resources
+namespace Quartz.Server.Core
 {
-	internal static class ResourceManager
+	/// <summary>
+	/// Service interface for core Quartz.NET server.
+	/// </summary>
+	public interface IQuartzServer : IDisposable
 	{
-		public static T Load<T>(Assembly assembly, string name, Func<Stream, T> deserializer)
-		{
-			using (var stream = assembly.GetManifestResourceStream(name))
-			{
-				if (stream == null) throw new FileNotFoundException(string.Format("Cannot find resource in assembly {0}.", assembly.FullName), name);
-				return deserializer(stream);
-			}
-		}
+		/// <summary>
+		/// Initializes the instance of <see cref="IQuartzServer"/>.
+		/// Initialization will only be called once in server's lifetime.
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// Starts this instance.
+		/// </summary>
+		void Start();
+
+		/// <summary>
+		/// Stops this instance.
+		/// </summary>
+		void Stop();
 	}
 }

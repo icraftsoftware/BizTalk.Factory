@@ -63,6 +63,7 @@
     <Compile Include="IO\EnumerableStream.cs" />
     <Compile Include="IO\XmlBuilderStream.cs" />
     <Compile Include="Linq\Extensions\EnumeratorExtensions.cs" />
+    <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Text\Extensions\StringBuilderExtensions.cs" />
     <Compile Include="IKernelTransaction.cs" />
     <Compile Include="IO\BufferController.cs" />

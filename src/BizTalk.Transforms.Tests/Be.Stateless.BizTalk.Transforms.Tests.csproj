@@ -85,10 +85,6 @@
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj" Condition=" 'ReSharper' == 'Intellisense' ">
-      <Project>{D73E3CF5-25E6-4059-A50F-268287F9D148}</Project>
-      <Name>Be.Stateless.BizTalk.Generated.Items</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
       <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
       <Name>Be.Stateless.BizTalk.Schemas</Name>

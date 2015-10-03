@@ -10,6 +10,7 @@
     <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
     <AssemblyName>Be.Stateless.BizTalk.Pipeline.Definitions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
