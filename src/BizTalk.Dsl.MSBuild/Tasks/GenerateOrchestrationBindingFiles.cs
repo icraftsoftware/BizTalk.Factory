@@ -18,6 +18,7 @@
 
 using System;
 using System.CodeDom.Compiler;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,57 +31,61 @@ using Microsoft.CSharp;
 namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 {
 	[Serializable]
-	public class GenerateOrchestrationBindingFiles : AppDomainIsolatedTask
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Implements Msbuild Task API.")]
+	public class GenerateOrchestrationBindingFiles : Task
 	{
 		#region Base Class Member Overrides
 
 		public override bool Execute()
 		{
-			using (var provider = new CSharpCodeProvider())
+			try
 			{
-				// TODO refactor this in task ResolveReferencedBizTalkOrchestrationAssemblies
-				var orchestrationTypes = OrchestrationAssemblies
-					.Select(ra => ra.GetMetadata("Identity"))
-					.Select(Assembly.LoadFrom)
-					// make sure all assemblies are loaded before proceeding with reflection
-					.ToArray()
-					.Where(a => a.IsBizTalkAssembly())
-					.SelectMany(a => a.GetOrchestrations());
-
-				// TODO delete all previously generated files
-
-				foreach (var orchestrationType in orchestrationTypes)
+				using (var provider = new CSharpCodeProvider())
 				{
-					Log.LogMessage(MessageImportance.High, "Generating binding class for orchestration '{0}'.", orchestrationType.FullName);
-					var path = ComputeOutputPath(orchestrationType);
-					// ReSharper disable once AssignNullToNotNullAttribute
-					Directory.CreateDirectory(Path.GetDirectoryName(path));
-					using (var writer = new StreamWriter(path))
+					// TODO refactor this in task ResolveReferencedBizTalkOrchestrationAssemblies
+					var orchestrationTypes = OrchestrationAssemblies
+						.Select(ra => ra.GetMetadata("Identity"))
+						.Select(Assembly.LoadFrom)
+						// make sure all assemblies are loaded before proceeding with reflection
+						.ToArray()
+						.Where(a => a.IsBizTalkAssembly())
+						.SelectMany(a => a.GetOrchestrations());
+
+					// TODO delete all previously generated files
+
+					foreach (var orchestrationType in orchestrationTypes)
 					{
-						provider.GenerateCodeFromCompileUnit(
-							orchestrationType.ConvertToOrchestrationBindingCodeCompileUnit(),
-							writer,
-							new CodeGeneratorOptions { BracingStyle = "C", IndentString = "\t", VerbatimOrder = true });
+						Log.LogMessage(MessageImportance.High, "Generating binding class for orchestration '{0}'.", orchestrationType.FullName);
+						var path = ComputeOutputPath(orchestrationType);
+						// ReSharper disable once AssignNullToNotNullAttribute
+						Directory.CreateDirectory(Path.GetDirectoryName(path));
+						using (var writer = new StreamWriter(path))
+						{
+							provider.GenerateCodeFromCompileUnit(
+								orchestrationType.ConvertToOrchestrationBindingCodeCompileUnit(),
+								writer,
+								new CodeGeneratorOptions { BracingStyle = "C", IndentString = "\t", VerbatimOrder = true });
+						}
 					}
 				}
+				return true;
 			}
-			return true;
+			catch (Exception exception)
+			{
+				Log.LogErrorFromException(exception, true, true, null);
+				return false;
+			}
 		}
 
 		#endregion
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public ITaskItem[] OrchestrationAssemblies { get; set; }
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public string RootNamespace { get; set; }
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public string RootPath { get; set; }
 

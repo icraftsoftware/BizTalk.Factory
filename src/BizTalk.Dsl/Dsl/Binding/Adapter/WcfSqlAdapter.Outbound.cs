@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Transactions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 
@@ -26,15 +27,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Outbound
 
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Outbound : WcfSqlAdapter<CustomTLConfig>, IOutboundAdapter
 		{
 			public Outbound()
 			{
-				// Buffering Settings
+				// Binding Tab - Buffering Settings
 				BatchSize = 20;
 				ChunkSize = 4096 * 1024;
 
-				// Miscellaneous Settings
+				// Binding Tab - Miscellaneous Settings
 				AllowIdentityInsert = false;
 			}
 
@@ -56,7 +58,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Buffering Settings
+			#region General Tab - SOAP Action Header Settings
+
+			public string StaticAction
+			{
+				get { return _adapterConfig.StaticAction; }
+				set { _adapterConfig.StaticAction = value; }
+			}
+
+			#endregion
+
+			#region Binding Tab - Buffering Settings
 
 			/// <summary>
 			/// The number of rows to buffer in memory before attempting an Insert, Update or Delete operation. A higher value
@@ -79,17 +91,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Error Handling Settings
-
-			public bool PropagateFaultMessage
-			{
-				get { return _adapterConfig.PropagateFaultMessage; }
-				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Miscellaneous Settings
+			#region Binding Tab - Miscellaneous Settings
 
 			/// <summary>
 			/// Determines whether the adapter does a "SET IDENTITY_INSERT ON" before an INSERT or UPDATE operation.
@@ -102,7 +104,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region User Name Credentials
+			#region Credentials Tab - User Name Credentials Settings
 
 			public string AffiliateApplicationName
 			{
@@ -127,6 +129,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				set { _adapterConfig.UserName = value; }
 			}
 
+			// ReSharper disable once InconsistentNaming
 			public bool UseSSO
 			{
 				get { return _adapterConfig.UseSSO; }
@@ -135,7 +138,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Proxy Settings
+			#region Credentials Tab - Proxy Settings
 
 			public string ProxyAddress
 			{
@@ -169,17 +172,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region SOAP Action Header Settings
+			#region Messages Tab - Error Handling Settings
 
-			public string StaticAction
+			public bool PropagateFaultMessage
 			{
-				get { return _adapterConfig.StaticAction; }
-				set { _adapterConfig.StaticAction = value; }
+				get { return _adapterConfig.PropagateFaultMessage; }
+				set { _adapterConfig.PropagateFaultMessage = value; }
 			}
 
 			#endregion
 
-			#region Transactions Settings
+			#region Messages Tab - Transactions Settings
 
 			public bool EnableTransaction
 			{

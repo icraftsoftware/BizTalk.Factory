@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--Copyright & License
+<!--
 
 // Copyright © 2012 - 2015 François Chabot, Yves Dierick
 //
@@ -16,11 +16,12 @@
 // limitations under the License.
 
 -->
-
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
-             TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GeneratePipelineFiles" />
+             TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateBizTalkPipelineFiles" />
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
+             TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateEnvironmentSettingsClasses" />
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
              TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateOrchestrationBindingFiles" />
 
@@ -34,8 +35,9 @@
 
   <PropertyGroup>
     <BeforeBuildDependsOn>
+      GenerateBizTalkPipelineFiles;
+      GenerateEnvironmentSettingsClasses;
       GenerateOrchestrationBindingFiles;
-      GeneratePipelineFiles;
       $(BeforeBuildDependsOn)
     </BeforeBuildDependsOn>
   </PropertyGroup>
@@ -43,28 +45,44 @@
   <Target Name="ResolveReferencedBizTalkPipelineDefinitionAssemblies" DependsOnTargets="ResolveReferencedBizTalkAssemblies">
     <ItemGroup>
       <!-- TODO filter out assemblies without pipeline definitions -->
-      <BizTalkPipelineDefinitionAssemblies Include="@(_ResolveAssemblyReferenceResolvedFiles)"/>
+      <BizTalkPipelineDefinitionAssemblies Include="@(_ResolveAssemblyReferenceResolvedFiles)" />
     </ItemGroup>
   </Target>
 
-  <Target Name="GeneratePipelineFiles" DependsOnTargets="ResolveReferencedBizTalkPipelineDefinitionAssemblies">
+  <Target Name="GenerateBizTalkPipelineFiles" DependsOnTargets="ResolveReferencedBizTalkPipelineDefinitionAssemblies">
     <!-- TODO incremental build wrt. inputs/outputs -->
-    <GeneratePipelineFiles
+    <GenerateBizTalkPipelineFiles Condition=" '@(BizTalkPipelineDefinitionAssemblies)' != '' "
       PipelineDefinitionAssemblies="@(BizTalkPipelineDefinitionAssemblies)"
       RootNamespace="$(RootNamespace)"
       RootPath="$(MSBuildProjectDirectory)" />
   </Target>
 
+  <Target Name="ResolveReferencedEnvironmentSettingsFiles">
+    <ItemGroup>
+      <EnvironmentSettingsFiles
+        Include="@(None);@(Content)"
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename)%(Extension), '(?i:^.+\.SettingsFileGenerator\.xml$)'))"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateEnvironmentSettingsClasses" DependsOnTargets="ResolveReferencedEnvironmentSettingsFiles">
+    <GenerateEnvironmentSettingsClasses Condition=" '@(EnvironmentSettingsFiles)' != '' "
+      SettingsFiles="@(EnvironmentSettingsFiles)"
+      RootNamespace="$(RootNamespace)">
+      <!--<Output TaskParameter="SettingsClass" ItemName="Compile" />-->
+    </GenerateEnvironmentSettingsClasses>
+  </Target>
+
   <Target Name="ResolveReferencedBizTalkOrchestrationAssemblies" DependsOnTargets="ResolveReferencedBizTalkAssemblies">
     <ItemGroup>
       <!-- TODO filter out assemblies without orchestrations -->
-      <BizTalkOrchestrationAssemblies Include="@(_ResolveAssemblyReferenceResolvedFiles)"/>
+      <BizTalkOrchestrationAssemblies Include="@(_ResolveAssemblyReferenceResolvedFiles)" />
     </ItemGroup>
   </Target>
 
   <Target Name="GenerateOrchestrationBindingFiles" DependsOnTargets="ResolveReferencedBizTalkOrchestrationAssemblies">
     <!-- TODO incremental build wrt. inputs/outputs -->
-    <GenerateOrchestrationBindingFiles
+    <GenerateOrchestrationBindingFiles Condition=" '@(BizTalkOrchestrationAssemblies)' != '' "
       OrchestrationAssemblies="@(BizTalkOrchestrationAssemblies)"
       RootNamespace="$(RootNamespace)"
       RootPath="$(MSBuildProjectDirectory)" />

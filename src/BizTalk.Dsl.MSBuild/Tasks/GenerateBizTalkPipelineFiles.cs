@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -29,61 +30,63 @@ using Microsoft.Build.Utilities;
 namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 {
 	[Serializable]
-	public class GeneratePipelineFiles : AppDomainIsolatedTask
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Implements Msbuild Task API.")]
+	public class GenerateBizTalkPipelineFiles : Task
 	{
 		#region Base Class Member Overrides
 
 		public override bool Execute()
 		{
-			// TODO refactor this in task ResolveReferencedBizTalkPipelineAssemblies
-			var pipelineTypes = PipelineDefinitionAssemblies
-				.Select(ra => ra.GetMetadata("Identity"))
-				.Select(Assembly.LoadFrom)
-				// make sure all assemblies are loaded before proceeding with reflection
-				.ToArray()
-				.SelectMany(a => a.GetTypes())
-				.Where(t => typeof(SendPipeline).IsAssignableFrom(t) || typeof(ReceivePipeline).IsAssignableFrom(t));
-
-			// TODO delete all previously generated files
-
-			var outputs = new List<ITaskItem>();
-			foreach (var pipelineType in pipelineTypes)
+			try
 			{
-				var path = ComputeOutputPath(pipelineType);
-				Log.LogMessage(MessageImportance.High, "Generating pipeline '{0}'.", pipelineType.FullName);
-				// ReSharper disable once AssignNullToNotNullAttribute
-				Directory.CreateDirectory(Path.GetDirectoryName(path));
-				var pipelineSerializerFactory = (IPipelineSerializerFactory) Activator.CreateInstance(pipelineType);
-				pipelineSerializerFactory.GetPipelineDesignerDocumentSerializer().Save(path);
-				Log.LogMessage(MessageImportance.High, "Adding pipeline to item group {0}", path);
-				var taskItem = new TaskItem(path);
-				taskItem.SetMetadata("TypeName", pipelineType.Name);
-				taskItem.SetMetadata("Namespace", pipelineType.Namespace);
-				outputs.Add(taskItem);
+				// TODO refactor this in task ResolveReferencedBizTalkPipelineAssemblies
+				var pipelineTypes = PipelineDefinitionAssemblies
+					.Select(ra => ra.GetMetadata("Identity"))
+					.Select(Assembly.LoadFrom)
+					// make sure all assemblies are loaded before proceeding with reflection
+					.ToArray()
+					.SelectMany(a => a.GetTypes())
+					.Where(t => !t.IsAbstract && !t.IsGenericTypeDefinition)
+					.Where(t => typeof(SendPipeline).IsAssignableFrom(t) || typeof(ReceivePipeline).IsAssignableFrom(t));
+				// TODO delete all previously generated files
+
+				var outputs = new List<ITaskItem>();
+				foreach (var pipelineType in pipelineTypes)
+				{
+					var path = ComputeOutputPath(pipelineType);
+					Log.LogMessage(MessageImportance.High, "Generating pipeline '{0}'.", pipelineType.FullName);
+					// ReSharper disable once AssignNullToNotNullAttribute
+					Directory.CreateDirectory(Path.GetDirectoryName(path));
+					var pipelineSerializerFactory = (IPipelineSerializerFactory) Activator.CreateInstance(pipelineType);
+					pipelineSerializerFactory.GetPipelineDesignerDocumentSerializer().Save(path);
+					Log.LogMessage(MessageImportance.High, "Adding pipeline to item group {0}", path);
+					var taskItem = new TaskItem(path);
+					taskItem.SetMetadata("TypeName", pipelineType.Name);
+					taskItem.SetMetadata("Namespace", pipelineType.Namespace);
+					outputs.Add(taskItem);
+				}
+				PipelineFiles = outputs.ToArray();
+				return true;
 			}
-			PipelineFiles = outputs.ToArray();
-			return true;
+			catch (Exception exception)
+			{
+				Log.LogErrorFromException(exception, true, true, null);
+				return false;
+			}
 		}
 
 		#endregion
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public ITaskItem[] PipelineDefinitionAssemblies { get; set; }
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Output]
 		public ITaskItem[] PipelineFiles { get; private set; }
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public string RootNamespace { get; set; }
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
 		[Required]
 		public string RootPath { get; set; }
 

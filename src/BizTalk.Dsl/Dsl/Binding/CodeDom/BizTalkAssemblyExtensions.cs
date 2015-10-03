@@ -57,7 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 		{
 			return !assembly.IsBizTalkAssembly()
 				? Enumerable.Empty<Type>()
-				: assembly.GetTypes().Where(t => typeof(BTXService).IsAssignableFrom(t));
+				: assembly.GetTypes().Where(t => typeof(BTXService).IsAssignableFrom(t) && !t.IsAbstract);
 		}
 	}
 }

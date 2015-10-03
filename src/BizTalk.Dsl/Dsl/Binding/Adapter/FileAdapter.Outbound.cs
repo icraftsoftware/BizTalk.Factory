@@ -17,12 +17,11 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.Extensions;
 using Be.Stateless.IO;
 using Microsoft.BizTalk.Component.Interop;
-
-// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
@@ -30,12 +29,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Outbound
 
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 		public class Outbound : FileAdapter, IOutboundAdapter
 		{
 			private Outbound()
 			{
 				FileName = "%MessageID%.xml";
-				CopyMode = CopyMode.CreateNew;
+				Mode = CopyMode.CreateNew;
 				UseTempFileOnWrite = true;
 			}
 
@@ -55,7 +55,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				base.Save(propertyBag);
 				propertyBag.WriteAdapterCustomProperty("AllowCacheOnWrite", AllowCacheOnWrite);
-				propertyBag.WriteAdapterCustomProperty("CopyMode", Convert.ToUInt32(CopyMode));
+				propertyBag.WriteAdapterCustomProperty("CopyMode", Convert.ToUInt32(Mode));
 				propertyBag.WriteAdapterCustomProperty("FileName", FileName);
 				propertyBag.WriteAdapterCustomProperty("UseTempFileOnWrite", UseTempFileOnWrite);
 			}
@@ -68,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination folder.");
 				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination file name.");
-				if (UseTempFileOnWrite && CopyMode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
+				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
 				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
 			}
 
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <summary>
 			/// File content writing mode.
 			/// </summary>
-			public CopyMode CopyMode { get; set; }
+			public CopyMode Mode { get; set; }
 
 			/// <summary>
 			/// Destination folder.
@@ -95,7 +95,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// <list type="bullet">
 			/// <item>
-			/// <description>Restrictions on the File Mask and File Name Properties, see https://msdn.microsoft.com/en-us/library/aa578688.aspx.</description>
+			/// <description>
+			/// <see href="https://msdn.microsoft.com/en-us/library/aa578688.aspx">Restrictions on the File Mask and File Name Properties.</see>
+			/// </description>
 			/// </item>
 			/// </list>
 			/// </remarks>
@@ -105,8 +107,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// Use temporary file while writing.
 			/// </summary>
 			/// <remarks>
-			/// Can be set to <c>true</c> only when the <see cref="CopyMode"/> is set to <see
-			/// cref="Adapter.CopyMode.CreateNew"/>.
+			/// Can be set to <c>true</c> only when the <see cref="Mode"/> is set to <see
+			/// cref="FileAdapter.CopyMode.CreateNew"/>.
 			/// </remarks>
 			public bool UseTempFileOnWrite { get; set; }
 		}

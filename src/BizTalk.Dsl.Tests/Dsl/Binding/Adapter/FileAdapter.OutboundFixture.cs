@@ -94,7 +94,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(
 				a => {
 					a.DestinationFolder = @"\\server";
-					a.CopyMode = FileAdapter.CopyMode.Append;
+					a.Mode = FileAdapter.CopyMode.Append;
 					a.UseTempFileOnWrite = false;
 				});
 			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
@@ -106,7 +106,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(
 				a => {
 					a.DestinationFolder = @"\\server";
-					a.CopyMode = FileAdapter.CopyMode.CreateNew;
+					a.Mode = FileAdapter.CopyMode.CreateNew;
 					a.UseTempFileOnWrite = true;
 				});
 			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
@@ -118,7 +118,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(
 				a => {
 					a.DestinationFolder = @"\\server";
-					a.CopyMode = FileAdapter.CopyMode.Overwrite;
+					a.Mode = FileAdapter.CopyMode.Overwrite;
 					a.UseTempFileOnWrite = true;
 				});
 			Assert.That(

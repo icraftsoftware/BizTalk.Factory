@@ -17,8 +17,16 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.ServiceModel.Configuration;
+using System.ServiceModel.Description;
+using Be.Stateless.Linq.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
+using Microsoft.BizTalk.Adapter.Wcf.Converters;
+using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
@@ -26,27 +34,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Inbound
 
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Inbound : WcfSqlAdapter<CustomRLConfig>, IInboundAdapter
 		{
 			public Inbound()
 			{
-				// Inbound Settings
+				// Binding Tab - Inbound Settings
 				InboundOperationType = InboundOperation.Polling;
 
-				// Notification Settings
+				// Binding Tab - Notification Settings
 				NotifyOnListenerStart = true;
 
-				// Polling Settings
+				// Binding Tab - Polling Settings
 				PollingInterval = TimeSpan.FromSeconds(30);
 				PollWhileDataFound = false;
 
-				// Polling Credentials Settings
+				// Other Tab - Polling Credentials Settings
 				CredentialType = CredentialSelection.None;
 
-				// Error Handling Settings
+				// Messages Tab - Error Handling Settings
 				DisableLocationOnFailure = false;
 				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
+
+				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
 			}
 
 			public Inbound(Action<Inbound> adapterConfigurator) : this()
@@ -55,6 +66,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#region Base Class Member Overrides
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				// TODO refactor and share ConfigurationProxy
+				var cp = new ConfigurationProxy();
+				var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
+				ServiceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
+				cp.SetServiceBehaviorElement(serviceBehaviorElement);
+				_adapterConfig.ServiceBehaviorConfiguration = cp.GetServiceBehaviorElementXml();
+
+				base.Save(propertyBag);
+			}
 
 			protected override void Validate()
 			{
@@ -67,7 +90,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Inbound Settings
+			#region Binding Tab - Inbound Settings
 
 			/// <summary>
 			/// The inbound operation which needs to be performed.
@@ -80,29 +103,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Error Handling Settings
-
-			public bool DisableLocationOnFailure
-			{
-				get { return _adapterConfig.DisableLocationOnFailure; }
-				set { _adapterConfig.DisableLocationOnFailure = value; }
-			}
-
-			public bool IncludeExceptionDetailInFaults
-			{
-				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
-				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
-			}
-
-			public bool SuspendRequestMessageOnFailure
-			{
-				get { return _adapterConfig.SuspendMessageOnFailure; }
-				set { _adapterConfig.SuspendMessageOnFailure = value; }
-			}
-
-			#endregion
-
-			#region Notification Settings
+			#region Binding Tab - Notification Settings
 
 			/// <summary>
 			/// The SQL SELECT or EXEC statement against which notifications will be registered.
@@ -124,7 +125,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Polling Settings
+			#region Binding Tab - Polling Settings
 
 			/// <summary>
 			/// This statement is executed to determine whether data is available to be polled. Execution of this statement
@@ -170,7 +171,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Polling Credentials Settings
+			#region Behavior Tab - ServiceBehavior Settings
+
+			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
+
+			#endregion
+
+			#region Other Tab - Credentials Settings
 
 			public CredentialSelection CredentialType
 			{
@@ -194,6 +201,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.AffiliateApplicationName; }
 				set { _adapterConfig.AffiliateApplicationName = value; }
+			}
+
+			#endregion
+
+			#region Messages Tab - Error Handling Settings
+
+			public bool DisableLocationOnFailure
+			{
+				get { return _adapterConfig.DisableLocationOnFailure; }
+				set { _adapterConfig.DisableLocationOnFailure = value; }
+			}
+
+			public bool IncludeExceptionDetailInFaults
+			{
+				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
+				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
+			}
+
+			public bool SuspendRequestMessageOnFailure
+			{
+				get { return _adapterConfig.SuspendMessageOnFailure; }
+				set { _adapterConfig.SuspendMessageOnFailure = value; }
 			}
 
 			#endregion

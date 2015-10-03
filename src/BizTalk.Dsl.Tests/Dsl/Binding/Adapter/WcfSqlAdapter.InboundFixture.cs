@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.ServiceModel.Description;
+using System.Transactions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using NUnit.Framework;
@@ -40,23 +42,32 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.InboundBodyPathExpression = "/BodyWrapper/*";
 					a.InboundNodeEncoding = MessageBodyFormat.Xml;
 					a.XmlStoredProcedureRootNodeName = "BodyWrapper";
+					a.ServiceBehaviors = new IServiceBehavior[] {
+						new SqlAdapterInboundTransactionBehavior {
+							TransactionIsolationLevel = IsolationLevel.Serializable
+						}
+					};
 				});
 			var xml = ((IAdapterBindingSerializerFactory) isa).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
 					"<CustomProps>" +
-						//"<AffiliateApplicationName vt=\"8\" />" +
 						"<BindingType vt=\"8\">sqlBinding</BindingType>" +
 						"<BindingConfiguration vt=\"8\">" +
 						"&lt;binding name=\"sqlBinding\" " +
 						"polledDataAvailableStatement=\"SELECT COUNT(1) FROM vw_claim_AvailableTokens\" " +
 						"pollingStatement=\"EXEC usp_claim_CheckOut\" " +
-						// TODO apply environment override "pollingIntervalInSeconds=\"${ClaimCheckOutPollingInterval}\" " +
 						"pollingIntervalInSeconds=\"7200\" " +
 						"inboundOperationType=\"XmlPolling\" " +
 						"xmlStoredProcedureRootNodeName=\"BodyWrapper\" /&gt;" +
 						"</BindingConfiguration>" +
+						"<ServiceBehaviorConfiguration vt=\"8\">" +
+						"&lt;behavior name=\"ServiceBehavior\"&gt;" +
+						"&lt;sqlAdapterInboundTransactionBehavior transactionIsolationLevel=\"Serializable\" /&gt;" +
+						"&lt;/behavior&gt;" +
+						"</ServiceBehaviorConfiguration>" +
+						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
 						"<InboundBodyLocation vt=\"8\">UseBodyPath</InboundBodyLocation>" +
 						"<InboundBodyPathExpression vt=\"8\">/BodyWrapper/*</InboundBodyPathExpression>" +
 						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
@@ -67,13 +78,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<IncludeExceptionDetailInFaults vt=\"11\">-1</IncludeExceptionDetailInFaults>" +
 						"<CredentialType vt=\"8\">None</CredentialType>" +
 						"<OrderedProcessing vt=\"11\">0</OrderedProcessing>" +
-						//"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;</EndpointBehaviorConfiguration>" +
-						//"<ServiceBehaviorConfiguration vt=\"8\">" +
-						//"&lt;behavior name=\"ServiceBehavior\"&gt;" +
-						//"&lt;sqlAdapterInboundTransactionBehavior transactionTimeout=\"00:02:00\" transactionIsolationLevel=\"ReadCommitted\" /&gt;" +
-						//"&lt;/behavior&gt;" +
-						//"</ServiceBehaviorConfiguration>" +
-						//"<UserName vt=\"8\" />" +
 						"</CustomProps>"));
 		}
 	}
