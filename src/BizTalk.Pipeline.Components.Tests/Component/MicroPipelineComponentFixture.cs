@@ -136,7 +136,7 @@ namespace Be.Stateless.BizTalk.Component
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion
@@ -174,7 +174,7 @@ namespace Be.Stateless.BizTalk.Component
 
 			public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 
 			#endregion

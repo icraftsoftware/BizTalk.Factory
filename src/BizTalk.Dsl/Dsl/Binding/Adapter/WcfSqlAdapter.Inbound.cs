@@ -20,12 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
-using Be.Stateless.Linq.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
 using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -69,13 +66,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override void Save(IPropertyBag propertyBag)
 			{
-				// TODO refactor and share ConfigurationProxy
-				var cp = new ConfigurationProxy();
-				var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
-				ServiceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
-				cp.SetServiceBehaviorElement(serviceBehaviorElement);
-				_adapterConfig.ServiceBehaviorConfiguration = cp.GetServiceBehaviorElementXml();
-
+				_adapterConfig.ServiceBehaviorConfiguration = GetServiceBehaviorConfiguration(ServiceBehaviors);
 				base.Save(propertyBag);
 			}
 
@@ -100,6 +91,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				get { return _bindingConfigurationElement.InboundOperationType; }
 				set { _bindingConfigurationElement.InboundOperationType = value; }
 			}
+
+			#endregion
+
+			#region Behavior Tab - ServiceBehavior Settings
+
+			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 
 			#endregion
 
@@ -168,12 +165,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				get { return _bindingConfigurationElement.PollWhileDataFound; }
 				set { _bindingConfigurationElement.PollWhileDataFound = value; }
 			}
-
-			#endregion
-
-			#region Behavior Tab - ServiceBehavior Settings
-
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 
 			#endregion
 

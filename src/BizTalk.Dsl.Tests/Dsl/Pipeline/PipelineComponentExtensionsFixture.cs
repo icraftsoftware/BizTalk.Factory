@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,30 +67,34 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 		[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 		private class NoStageComponent : PipelineComponent
 		{
+			#region Base Class Member Overrides
+
 			public override string Description
 			{
-				get { throw new NotImplementedException(); }
-			}
-
-			public override void GetClassID(out Guid classId)
-			{
-				throw new NotImplementedException();
-			}
-
-			protected override void Load(IPropertyBag propertyBag)
-			{
-				throw new NotImplementedException();
-			}
-
-			protected override void Save(IPropertyBag propertyBag)
-			{
-				throw new NotImplementedException();
+				get { throw new NotSupportedException(); }
 			}
 
 			protected override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
+
+			public override void GetClassID(out Guid classId)
+			{
+				throw new NotSupportedException();
+			}
+
+			protected override void Load(IPropertyBag propertyBag)
+			{
+				throw new NotSupportedException();
+			}
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				throw new NotSupportedException();
+			}
+
+			#endregion
 		}
 
 		[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
@@ -98,30 +102,34 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 		[ComponentCategory(CategoryTypes.CATID_PartyResolver)]
 		private class MultipleStageComponent : PipelineComponent
 		{
+			#region Base Class Member Overrides
+
 			public override string Description
 			{
-				get { throw new NotImplementedException(); }
-			}
-
-			public override void GetClassID(out Guid classId)
-			{
-				throw new NotImplementedException();
-			}
-
-			protected override void Load(IPropertyBag propertyBag)
-			{
-				throw new NotImplementedException();
-			}
-
-			protected override void Save(IPropertyBag propertyBag)
-			{
-				throw new NotImplementedException();
+				get { throw new NotSupportedException(); }
 			}
 
 			protected override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
+
+			public override void GetClassID(out Guid classId)
+			{
+				throw new NotSupportedException();
+			}
+
+			protected override void Load(IPropertyBag propertyBag)
+			{
+				throw new NotSupportedException();
+			}
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				throw new NotSupportedException();
+			}
+
+			#endregion
 		}
 	}
 }

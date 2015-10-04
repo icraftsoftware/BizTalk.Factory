@@ -18,22 +18,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
-using Be.Stateless.Linq.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfSqlAdapter<T> : AdapterBase, IAdapter, IAdapterBindingSerializerFactory
-		where T : AdapterConfig,
+	public abstract class WcfSqlAdapter<TConfig> : WcfAdapterBase<SqlAdapterBindingConfigurationElement, TConfig>
+		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
@@ -46,11 +42,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("59b35d03-6a06-4734-a249-ef561254ecf7"));
 		}
 
-		protected WcfSqlAdapter()
+		protected WcfSqlAdapter() : base("sqlBinding")
 		{
-			_bindingConfigurationElement = new SqlAdapterBindingConfigurationElement { Name = "sqlBinding" };
-			_adapterConfig = new T { BindingType = _bindingConfigurationElement.Name };
-
 			// Binding Tab - BizTalk Settings
 			EnableBizTalkCompatibilityMode = true;
 
@@ -70,35 +63,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
 
-		#region IAdapter Members
+		#region Base Class Member Overrides
 
-		string IAdapter.Address
+		protected override Uri GetAddress()
 		{
-			get { return Address.Uri.ToString(); }
+			return Address.Uri;
 		}
 
-		ProtocolType IAdapter.ProtocolType
+		protected override ProtocolType GetProtocolType()
 		{
-			get { return _protocolType; }
+			return _protocolType;
 		}
 
-		void IAdapter.Load(IPropertyBag propertyBag)
+		protected override void Save(IPropertyBag propertyBag)
 		{
-			throw new NotImplementedException();
-		}
-
-		void IAdapter.Save(IPropertyBag propertyBag)
-		{
-			Save(propertyBag);
-		}
-
-		#endregion
-
-		#region IAdapterBindingSerializerFactory Members
-
-		IDslSerializer IAdapterBindingSerializerFactory.GetAdapterBindingSerializer()
-		{
-			return new AdapterBindingSerializer(this);
+			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorConfiguration(EndpointBehaviors);
+			base.Save(propertyBag);
 		}
 
 		#endregion
@@ -108,6 +88,65 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected override void Validate()
 		{
 			// TODO _adapterConfig.Identity
+		}
+
+		#endregion
+
+		#region Binding Tab - BizTalk Settings
+
+		/// <summary>
+		/// Whether the adapter will be used with BizTalk Server.
+		/// </summary>
+		public bool EnableBizTalkCompatibilityMode
+		{
+			get { return _bindingConfigurationElement.EnableBizTalkCompatibilityMode; }
+			set { _bindingConfigurationElement.EnableBizTalkCompatibilityMode = value; }
+		}
+
+		#endregion
+
+		#region Binding Tab - Diagnostics Settings
+
+		/// <summary>
+		/// Determines whether performance counters are enabled or not.
+		/// </summary>
+		public bool EnablePerformanceCounters
+		{
+			get { return _bindingConfigurationElement.EnablePerformanceCounters; }
+			set { _bindingConfigurationElement.EnablePerformanceCounters = value; }
+		}
+
+		#endregion
+
+		#region Behavior Tab - EndpointBehavior Settings
+
+		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+
+		#endregion
+
+		#region Binding Tab - Transaction Settings
+
+		/// <summary>
+		/// Determines whether the adapter performs the operations on the SQL Server within the context of the ambient
+		/// transaction. In BizTalk Server, the same transaction is used to publish/delete messages from the MessageBox.
+		/// </summary>
+		public bool UseAmbientTransaction
+		{
+			get { return _bindingConfigurationElement.UseAmbientTransaction; }
+			set { _bindingConfigurationElement.UseAmbientTransaction = value; }
+		}
+
+		#endregion
+
+		#region Binding Tab - Metadata Settings
+
+		/// <summary>
+		/// Determines whether the database name should be used in the XSD namespaces.
+		/// </summary>
+		public bool UseDatabaseNameInXsdNamespace
+		{
+			get { return _bindingConfigurationElement.UseDatabaseNameInXsdNamespace; }
+			set { _bindingConfigurationElement.UseDatabaseNameInXsdNamespace = value; }
 		}
 
 		#endregion
@@ -217,19 +256,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab - BizTalk Settings
-
-		/// <summary>
-		/// Whether the adapter will be used with BizTalk Server.
-		/// </summary>
-		public bool EnableBizTalkCompatibilityMode
-		{
-			get { return _bindingConfigurationElement.EnableBizTalkCompatibilityMode; }
-			set { _bindingConfigurationElement.EnableBizTalkCompatibilityMode = value; }
-		}
-
-		#endregion
-
 		#region Binding Tab - Connection Settings
 
 		/// <summary>
@@ -262,19 +288,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab - Diagnostics Settings
-
-		/// <summary>
-		/// Determines whether performance counters are enabled or not.
-		/// </summary>
-		public bool EnablePerformanceCounters
-		{
-			get { return _bindingConfigurationElement.EnablePerformanceCounters; }
-			set { _bindingConfigurationElement.EnablePerformanceCounters = value; }
-		}
-
-		#endregion
-
 		#region Binding Tab - FOR XML Settings
 
 		/// <summary>
@@ -294,39 +307,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _bindingConfigurationElement.XmlStoredProcedureRootNodeNamespace; }
 			set { _bindingConfigurationElement.XmlStoredProcedureRootNodeNamespace = value; }
 		}
-
-		#endregion
-
-		#region Binding Tab - Metadata Settings
-
-		/// <summary>
-		/// Determines whether the database name should be used in the XSD namespaces.
-		/// </summary>
-		public bool UseDatabaseNameInXsdNamespace
-		{
-			get { return _bindingConfigurationElement.UseDatabaseNameInXsdNamespace; }
-			set { _bindingConfigurationElement.UseDatabaseNameInXsdNamespace = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Transaction Settings
-
-		/// <summary>
-		/// Determines whether the adapter performs the operations on the SQL Server within the context of the ambient
-		/// transaction. In BizTalk Server, the same transaction is used to publish/delete messages from the MessageBox.
-		/// </summary>
-		public bool UseAmbientTransaction
-		{
-			get { return _bindingConfigurationElement.UseAmbientTransaction; }
-			set { _bindingConfigurationElement.UseAmbientTransaction = value; }
-		}
-
-		#endregion
-
-		#region Behavior Tab - EndpointBehavior Settings
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
 
 		#endregion
 
@@ -368,24 +348,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		protected virtual void Save(IPropertyBag propertyBag)
-		{
-			var cp = new ConfigurationProxy();
-			cp.SetBindingElement(_bindingConfigurationElement);
-			_adapterConfig.BindingConfiguration = cp.GetBindingElementXml(_bindingConfigurationElement.Name);
-
-			var endpointBehaviorElement = new EndpointBehaviorElement("EndpointBehavior");
-			EndpointBehaviors.Cast<BehaviorExtensionElement>().Each(b => endpointBehaviorElement.Add(b));
-			cp.SetEndpointBehaviorElement(endpointBehaviorElement);
-			_adapterConfig.EndpointBehaviorConfiguration = cp.GetEndpointBehaviorElementXml();
-
-			_adapterConfig.Save(propertyBag as Microsoft.BizTalk.ExplorerOM.IPropertyBag);
-		}
-
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;
-
-		protected readonly T _adapterConfig;
-		protected readonly SqlAdapterBindingConfigurationElement _bindingConfigurationElement;
 	}
 }

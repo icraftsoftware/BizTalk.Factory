@@ -177,7 +177,7 @@ namespace Be.Stateless.BizTalk.Unit.Component
 				// pick a unique value to ensure load/save roundtrip
 				return new Random().Next();
 			}
-			throw new NotImplementedException(string.Format("Support for {0} primitive type has yet to be provided.", _property.PropertyType.Name));
+			throw new NotSupportedException(string.Format("Support for {0} primitive type has yet to be provided.", _property.PropertyType.Name));
 		}
 
 		private object GetDistinguishedComplexValue()

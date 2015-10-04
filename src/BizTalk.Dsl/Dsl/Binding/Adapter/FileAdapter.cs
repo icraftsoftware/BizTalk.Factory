@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		void IAdapter.Load(IPropertyBag propertyBag)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		void IAdapter.Save(IPropertyBag propertyBag)

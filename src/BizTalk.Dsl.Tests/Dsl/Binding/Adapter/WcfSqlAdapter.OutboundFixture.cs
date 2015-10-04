@@ -16,6 +16,9 @@
 
 #endregion
 
+using System.Transactions;
+using Microsoft.Adapters.Sql;
+using Microsoft.BizTalk.Adapter.Wcf.Config;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -26,7 +29,32 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			Assert.Fail("TODO");
+			var osa = new WcfSqlAdapter.Outbound(
+				a => {
+					a.Address = new SqlAdapterConnectionUri { InboundId = "AvailableBatches", Server = "localhost", InitialCatalog = "BizTalkFactoryTransientStateDb" };
+					a.IsolationLevel = IsolationLevel.ReadCommitted;
+					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
+					a.PropagateFaultMessage = true;
+					a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
+				});
+			var xml = ((IAdapterBindingSerializerFactory) osa).GetAdapterBindingSerializer().Serialize();
+			Assert.That(
+				xml,
+				Is.EqualTo(
+					"<CustomProps>" +
+						"<BindingType vt=\"8\">sqlBinding</BindingType>" +
+						"<BindingConfiguration vt=\"8\">&lt;binding name=\"sqlBinding\" /&gt;</BindingConfiguration>" +
+						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
+						"<StaticAction vt=\"8\">TypedProcedure/dbo/usp_batch_AddPart</StaticAction>" +
+						"<UseSSO vt=\"11\">0</UseSSO>" +
+						"<InboundBodyLocation vt=\"8\">UseBodyElement</InboundBodyLocation>" +
+						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
+						"<OutboundBodyLocation vt=\"8\">UseBodyElement</OutboundBodyLocation>" +
+						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
+						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
+						"<EnableTransaction vt=\"11\">-1</EnableTransaction>" +
+						"<IsolationLevel vt=\"8\">ReadCommitted</IsolationLevel>" +
+						"</CustomProps>"));
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,13 @@ namespace Be.Stateless.Xml.Builder
 			}
 		}
 
+		public override void Close()
+		{
+			_actual.Close();
+			_expected.Close();
+			AssertClosedStateConformance();
+		}
+
 		public override int Depth
 		{
 			get
@@ -73,81 +80,6 @@ namespace Be.Stateless.Xml.Builder
 			}
 		}
 
-		public override bool IsEmptyElement
-		{
-			get
-			{
-				Assert.That(_actual.IsEmptyElement, Is.EqualTo(_expected.IsEmptyElement));
-				return _actual.IsEmptyElement;
-			}
-		}
-
-		public override string LocalName
-		{
-			get
-			{
-				Assert.That(_actual.LocalName, Is.EqualTo(_expected.LocalName));
-				return _actual.LocalName;
-			}
-		}
-
-		public override XmlNameTable NameTable
-		{
-			get { return _actual.NameTable; }
-		}
-
-		public override string NamespaceURI
-		{
-			get
-			{
-				Assert.That(_actual.NamespaceURI, Is.EqualTo(_expected.NamespaceURI));
-				return _actual.NamespaceURI;
-			}
-		}
-
-		public override XmlNodeType NodeType
-		{
-			get
-			{
-				Assert.That(_actual.NodeType, Is.EqualTo(_expected.NodeType));
-				return _actual.NodeType;
-			}
-		}
-
-		public override string Prefix
-		{
-			get
-			{
-				Assert.That(_actual.Prefix, Is.EqualTo(_expected.Prefix));
-				return _actual.Prefix;
-			}
-		}
-
-		public override ReadState ReadState
-		{
-			get
-			{
-				Assert.That(_actual.ReadState, Is.EqualTo(_expected.ReadState));
-				return _actual.ReadState;
-			}
-		}
-
-		public override string Value
-		{
-			get
-			{
-				Assert.That(_actual.Value, Is.EqualTo(_expected.Value));
-				return _actual.Value;
-			}
-		}
-
-		public override void Close()
-		{
-			_actual.Close();
-			_expected.Close();
-			AssertClosedStateConformance();
-		}
-
 		public override string GetAttribute(string name)
 		{
 			Assert.That(_actual.GetAttribute(name), Is.EqualTo(_expected.GetAttribute(name)));
@@ -164,6 +96,24 @@ namespace Be.Stateless.Xml.Builder
 		{
 			Assert.That(_actual.GetAttribute(i), Is.EqualTo(_expected.GetAttribute(i)));
 			return _actual.GetAttribute(i);
+		}
+
+		public override bool IsEmptyElement
+		{
+			get
+			{
+				Assert.That(_actual.IsEmptyElement, Is.EqualTo(_expected.IsEmptyElement));
+				return _actual.IsEmptyElement;
+			}
+		}
+
+		public override string LocalName
+		{
+			get
+			{
+				Assert.That(_actual.LocalName, Is.EqualTo(_expected.LocalName));
+				return _actual.LocalName;
+			}
 		}
 
 		public override string LookupNamespace(string prefix)
@@ -212,6 +162,38 @@ namespace Be.Stateless.Xml.Builder
 			return result;
 		}
 
+		public override string NamespaceURI
+		{
+			get
+			{
+				Assert.That(_actual.NamespaceURI, Is.EqualTo(_expected.NamespaceURI));
+				return _actual.NamespaceURI;
+			}
+		}
+
+		public override XmlNameTable NameTable
+		{
+			get { return _actual.NameTable; }
+		}
+
+		public override XmlNodeType NodeType
+		{
+			get
+			{
+				Assert.That(_actual.NodeType, Is.EqualTo(_expected.NodeType));
+				return _actual.NodeType;
+			}
+		}
+
+		public override string Prefix
+		{
+			get
+			{
+				Assert.That(_actual.Prefix, Is.EqualTo(_expected.Prefix));
+				return _actual.Prefix;
+			}
+		}
+
 		public override bool Read()
 		{
 			var result = _actual.Read();
@@ -228,11 +210,29 @@ namespace Be.Stateless.Xml.Builder
 			return result;
 		}
 
+		public override ReadState ReadState
+		{
+			get
+			{
+				Assert.That(_actual.ReadState, Is.EqualTo(_expected.ReadState));
+				return _actual.ReadState;
+			}
+		}
+
 		public override void ResolveEntity()
 		{
 			_actual.ResolveEntity();
 			_expected.ResolveEntity();
 			AssertStateConformance();
+		}
+
+		public override string Value
+		{
+			get
+			{
+				Assert.That(_actual.Value, Is.EqualTo(_expected.Value));
+				return _actual.Value;
+			}
 		}
 
 		#endregion
@@ -286,7 +286,7 @@ namespace Be.Stateless.Xml.Builder
 				case XmlNodeType.None:
 					break;
 				default:
-					throw new NotImplementedException();
+					throw new NotSupportedException();
 			}
 
 			//TODO Assert.That(_actual.CanReadBinaryContent, Is.EqualTo(_expected.CanReadBinaryContent));
