@@ -74,7 +74,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			// Solution Explorer does only display the first occurrence in the .csproj file of the included item.
 			Assert.That(
 				// being resilient to runtime version in CodeDom heading comment
-				Regex.Replace(builder.ToString(), @"(//\s+)Runtime Version:\d\.\d\.\d+\.\d+", @"$1Runtime Version:4.0.30319.34209", RegexOptions.Multiline),
+				Regex.Replace(builder.ToString(), @"(//\s+)Runtime Version:\d\.\d\.\d+\.\d+", @"$1Runtime Version:4.0.30319.42000", RegexOptions.Multiline),
 				Is.EqualTo(ResourceManager.LoadString("Data.ProcessOrchestrationBinding.Designer.cs")));
 		}
 	}

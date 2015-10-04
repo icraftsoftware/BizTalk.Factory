@@ -128,6 +128,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common.Tests\Be.Stateless.BizTalk.Common.Tests.csproj">
+      <Project>{7a19a988-3b56-495a-a2d4-047268479f7e}</Project>
+      <Name>Be.Stateless.BizTalk.Common.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
