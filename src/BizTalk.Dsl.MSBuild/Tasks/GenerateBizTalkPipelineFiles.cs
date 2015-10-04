@@ -46,9 +46,11 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 					.Select(Assembly.LoadFrom)
 					// make sure all assemblies are loaded before proceeding with reflection
 					.ToArray()
+					// discard Be.Stateless.BizTalk.Dsl assembly
+					.Where(a => a != typeof(ReceivePipeline).Assembly)
 					.SelectMany(a => a.GetTypes())
 					.Where(t => !t.IsAbstract && !t.IsGenericTypeDefinition)
-					.Where(t => typeof(SendPipeline).IsAssignableFrom(t) || typeof(ReceivePipeline).IsAssignableFrom(t));
+					.Where(t => typeof(ReceivePipeline).IsAssignableFrom(t) || typeof(SendPipeline).IsAssignableFrom(t));
 				// TODO delete all previously generated files
 
 				var outputs = new List<ITaskItem>();
