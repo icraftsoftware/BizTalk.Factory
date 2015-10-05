@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override void Save(IPropertyBag propertyBag)
 			{
-				_adapterConfig.ServiceBehaviorConfiguration = GetServiceBehaviorConfiguration(ServiceBehaviors);
+				_adapterConfig.ServiceBehaviorConfiguration = GetServiceBehaviorElementXml(ServiceBehaviors);
 				base.Save(propertyBag);
 			}
 

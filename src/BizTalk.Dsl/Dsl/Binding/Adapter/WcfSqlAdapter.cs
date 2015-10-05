@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected override void Save(IPropertyBag propertyBag)
 		{
-			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorConfiguration(EndpointBehaviors);
+			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorElementXml(EndpointBehaviors);
 			base.Save(propertyBag);
 		}
 
