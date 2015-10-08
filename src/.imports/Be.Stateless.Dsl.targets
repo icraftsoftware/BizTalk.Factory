@@ -50,8 +50,15 @@
   </Target>
 
   <Target Name="GenerateBizTalkPipelineFiles" DependsOnTargets="ResolveReferencedBizTalkPipelineDefinitionAssemblies">
+    <ItemGroup>
+      <_ProjectTypeGuids Include="$(ProjectTypeGuids)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_IsBizTalkProject>false</_IsBizTalkProject>
+      <_IsBizTalkProject Condition=" '%(_ProjectTypeGuids.Identity)' == '{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}' ">true</_IsBizTalkProject>
+    </PropertyGroup>
     <!-- TODO incremental build wrt. inputs/outputs -->
-    <GenerateBizTalkPipelineFiles Condition=" '@(BizTalkPipelineDefinitionAssemblies)' != '' "
+    <GenerateBizTalkPipelineFiles Condition=" $(_IsBizTalkProject) and '@(BizTalkPipelineDefinitionAssemblies)' != '' "
       PipelineDefinitionAssemblies="@(BizTalkPipelineDefinitionAssemblies)"
       RootNamespace="$(RootNamespace)"
       RootPath="$(MSBuildProjectDirectory)" />

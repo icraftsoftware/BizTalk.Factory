@@ -25,6 +25,7 @@
 
   <xsl:param name="clr-namespace-name" />
   <xsl:param name="clr-class-name" />
+  <xsl:param name="settings-file-name" />
 
   <xsl:template match="text()" />
 
@@ -50,6 +51,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
+using Be.Stateless.BizTalk.Dsl.Binding.Install;
 
 namespace </xsl:text>
     <xsl:value-of select="$clr-namespace-name" />
@@ -62,31 +64,53 @@ namespace </xsl:text>
 	{</xsl:text>
     <xsl:apply-templates />
     <xsl:text><![CDATA[
-		public static string TargetEnvironment
+		private static int TargetEnvironmentIndex
 		{
-			get { return _targetEnvironments[TargetEnvironmentIndex]; }
-			set { TargetEnvironmentIndex = Array.IndexOf(_targetEnvironments, value); }
+			get
+			{
+				if (_targetEnvironmentsIndex < 0)
+				{
+					_targetEnvironmentsIndex = Array.IndexOf(_targetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
+				}
+				if (_targetEnvironmentsIndex < 0)
+					throw new InvalidOperationException(
+						string.Format(
+							"'{0}' is not a target environment declared in the ']]></xsl:text>
+    <xsl:value-of select="$settings-file-name" />
+    <xsl:text><![CDATA[.xml' file.",
+							BindingGenerationContext.Instance.TargetEnvironment));
+				return _targetEnvironmentsIndex;
+			}
 		}
-
-		private static int TargetEnvironmentIndex { get; set; }
 
 		private static T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
 		{
 			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null) throw new InvalidOperationException(string.Format("'{0}' has neither a defined nor a default value.", propertyName));
+			if (value == null)
+				throw new InvalidOperationException(
+					string.Format(
+						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
+						propertyName,
+						BindingGenerationContext.Instance.TargetEnvironment));
 			return value.Value;
 		}
 
 		private static T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
 		{
 			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null) throw new InvalidOperationException(string.Format("'{0}' has neither a defined nor a default value.", propertyName));
+			if (value == null)
+				throw new InvalidOperationException(
+					string.Format(
+						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
+						propertyName,
+						BindingGenerationContext.Instance.TargetEnvironment));
 			return value;
 		}
 
 		private static readonly string[] _targetEnvironments = { ]]></xsl:text>
     <xsl:apply-templates select="ss:Row[ss:Cell[1]/ss:Data/text()='TargetEnvironment']/ss:Cell" mode="values" />
     <xsl:text> };
+		private static int _targetEnvironmentsIndex = -1;
 	}
 }
 </xsl:text>

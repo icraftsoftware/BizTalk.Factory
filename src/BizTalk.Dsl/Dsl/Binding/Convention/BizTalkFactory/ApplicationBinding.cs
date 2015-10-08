@@ -34,6 +34,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 			if (Name == null) Name = new TNamingConvention();
 		}
 
+		protected ApplicationNamingConvention<TNamingConvention> ApplicationName
+		{
+			get { return new ApplicationNamingConvention<TNamingConvention>(); }
+		}
+
 		protected ReceiveLocationNamingConvention<TNamingConvention> ReceiveLocationName
 		{
 			get { return new ReceiveLocationNamingConvention<TNamingConvention>(); }

@@ -23,10 +23,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 {
 	public class NamingConvention<TParty, TMessageName> :
 		INamingConvention<NamingConvention<TParty, TMessageName>>,
+		IApplicationNameMemento<string>,
 		IPartyMemento<TParty>,
 		IMessageNameMemento<TMessageName>,
 		IMessageFormatMemento<string>
 	{
+		#region IApplicationNameMemento<string> Members
+
+		public string Name { get; set; }
+
+		#endregion
+
 		#region IMessageFormatMemento<string> Members
 
 		public string MessageFormat { get; set; }
@@ -47,7 +54,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public string ComputeApplicationName(IApplicationBinding<NamingConvention<TParty, TMessageName>> application)
 		{
-			return application.GetType().Name;
+			return Name.IsNullOrEmpty() ? application.GetType().Name : Name;
 		}
 
 		public string ComputeReceivePortName(IReceivePort<NamingConvention<TParty, TMessageName>> receivePort)

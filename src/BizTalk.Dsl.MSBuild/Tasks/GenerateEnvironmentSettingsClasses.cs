@@ -31,8 +31,9 @@ using Microsoft.Build.Utilities;
 namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 {
 	[Serializable]
-	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Msbuild Task.")]
 	public class GenerateEnvironmentSettingsClasses : Task
 	{
 		#region Nested Type: Typifier
@@ -72,20 +73,21 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 			try
 			{
 				var outputs = new List<ITaskItem>();
-				foreach (var settingsFile in SettingsFiles)
+				foreach (var settingsFileTaskItem in SettingsFiles)
 				{
-					Log.LogMessage(MessageImportance.High, "Generating environment settings class '{0}'.", settingsFile.GetMetadata("Identity"));
-					var outputPath = ComputeOutputPath(settingsFile);
-					var taskItem = new TaskItem(outputPath);
-					taskItem.SetMetadata("DependentUpon", settingsFile.GetMetadata("Filename") + settingsFile.GetMetadata("Extension"));
-					outputs.Add(taskItem);
-					using (var reader = XmlReader.Create(settingsFile.GetMetadata("FullPath")))
-					using (var writer = File.CreateText(taskItem.GetMetadata("FullPath")))
+					Log.LogMessage(MessageImportance.High, "Generating environment settings class '{0}'.", settingsFileTaskItem.GetMetadata("Identity"));
+					var outputPath = ComputeOutputPath(settingsFileTaskItem);
+					var settingsClassTaskItem = new TaskItem(outputPath);
+					settingsClassTaskItem.SetMetadata("DependentUpon", settingsFileTaskItem.GetMetadata("Filename") + settingsFileTaskItem.GetMetadata("Extension"));
+					outputs.Add(settingsClassTaskItem);
+					using (var reader = XmlReader.Create(settingsFileTaskItem.GetMetadata("FullPath")))
+					using (var writer = File.CreateText(settingsClassTaskItem.GetMetadata("FullPath")))
 					{
 						var arguments = new XsltArgumentList();
 						arguments.AddExtensionObject("urn:extensions.stateless.be:biztalk:environment-settings-class-generation:typifier:2015:10", new Typifier());
-						arguments.AddParam("clr-namespace-name", string.Empty, ComputeNamespace(taskItem));
-						arguments.AddParam("clr-class-name", string.Empty, ComputeClassName(taskItem));
+						arguments.AddParam("clr-namespace-name", string.Empty, ComputeNamespace(settingsClassTaskItem));
+						arguments.AddParam("clr-class-name", string.Empty, ComputeClassName(settingsClassTaskItem));
+						arguments.AddParam("settings-file-name", string.Empty, settingsFileTaskItem.GetMetadata("Filename"));
 						_xslt.Transform(reader, arguments, writer);
 					}
 				}

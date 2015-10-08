@@ -248,13 +248,10 @@
     <None Include="Tracking\ActivityModel\ActivityModelToTypedApi.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets" Condition="Exists('..\packages\MSBuild.Extension.Pack.1.6.0\build\net40\MSBuild.Extension.Pack.targets')" />
   <Target Name="GenerateTypedBamApi" Inputs="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModel.xml;$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModelToTypedApi.xslt" Outputs="$(MSBuildThisFileDirectory)Tracking\Messaging\Tracking.Designer.cs;$(MSBuildThisFileDirectory)Tracking\Processing\Tracking.Designer.cs">
     <Message Text="Generating Tracking\Messaging\Tracking.Designer.cs" />
-    <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Checkout" ItemPath="$(MSBuildThisFileDirectory)Tracking\Messaging\Tracking.Designer.cs" />
     <XslTransformation XslInputPath="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModelToTypedApi.xslt" XmlInputPaths="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModel.xml" OutputPaths="$(MSBuildThisFileDirectory)Tracking\Messaging\Tracking.Designer.cs" Parameters="&lt;Parameter Name='EventStreamType' Value='Buffered'/&gt;&lt;Parameter Name='TargetNamespace' Value='Be.Stateless.BizTalk.Tracking.Messaging'/&gt;" />
     <Message Text="Generating Tracking\Processing\Tracking.Designer.cs" />
-    <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Checkout" ItemPath="$(MSBuildThisFileDirectory)Tracking\Processing\Tracking.Designer.cs" />
     <XslTransformation XslInputPath="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModelToTypedApi.xslt" XmlInputPaths="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModel.xml" OutputPaths="$(MSBuildThisFileDirectory)Tracking\Processing\Tracking.Designer.cs" Parameters="&lt;Parameter Name='EventStreamType' Value='Orchestration'/&gt;&lt;Parameter Name='TargetNamespace' Value='Be.Stateless.BizTalk.Tracking.Processing'/&gt;" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

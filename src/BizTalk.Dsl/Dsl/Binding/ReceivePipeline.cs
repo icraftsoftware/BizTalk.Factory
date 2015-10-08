@@ -35,7 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			PipelineObjectModel<T>.CloneStageDefinitions(Stages);
 		}
 
-		internal ReceivePipeline(Action<ReceivePipeline<T>> receivePipelineConfigurator) : this()
+		public ReceivePipeline(Action<ReceivePipeline<T>> receivePipelineConfigurator) : this()
 		{
 			receivePipelineConfigurator(this);
 		}

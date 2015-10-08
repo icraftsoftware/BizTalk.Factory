@@ -30,8 +30,9 @@ using Microsoft.Build.Utilities;
 namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 {
 	[Serializable]
-	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Implements Msbuild Task API.")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Msbuild Task.")]
 	public class GenerateBizTalkPipelineFiles : Task
 	{
 		#region Base Class Member Overrides

@@ -19,6 +19,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
+using Be.Stateless.BizTalk.Dsl.Binding.Install;
 
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
@@ -145,28 +146,48 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			get { return ValueForTargetEnvironment(new string[] { null, @"DEBUG", @"DEBUG", @"INFO", @"INFO" }); }
 		}
 
-		public static string TargetEnvironment
+		private static int TargetEnvironmentIndex
 		{
-			get { return _targetEnvironments[TargetEnvironmentIndex]; }
-			set { TargetEnvironmentIndex = Array.IndexOf(_targetEnvironments, value); }
+			get
+			{
+				if (_targetEnvironmentsIndex < 0)
+				{
+					_targetEnvironmentsIndex = Array.IndexOf(_targetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
+				}
+				if (_targetEnvironmentsIndex < 0)
+					throw new InvalidOperationException(
+						string.Format(
+							"'{0}' is not a target environment declared in the 'Common.SettingsFileGenerator.xml' file.",
+							BindingGenerationContext.Instance.TargetEnvironment));
+				return _targetEnvironmentsIndex;
+			}
 		}
-
-		private static int TargetEnvironmentIndex { get; set; }
 
 		private static T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
 		{
 			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null) throw new InvalidOperationException(string.Format("'{0}' has neither a defined nor a default value.", propertyName));
+			if (value == null)
+				throw new InvalidOperationException(
+					string.Format(
+						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
+						propertyName,
+						BindingGenerationContext.Instance.TargetEnvironment));
 			return value.Value;
 		}
 
 		private static T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
 		{
 			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null) throw new InvalidOperationException(string.Format("'{0}' has neither a defined nor a default value.", propertyName));
+			if (value == null)
+				throw new InvalidOperationException(
+					string.Format(
+						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
+						propertyName,
+						BindingGenerationContext.Instance.TargetEnvironment));
 			return value;
 		}
 
 		private static readonly string[] _targetEnvironments = { null, @"DEV", @"BLD", @"ACC", @"PRD" };
+		private static int _targetEnvironmentsIndex = -1;
 	}
 }

@@ -10,6 +10,7 @@
     <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
     <AssemblyName>Be.Stateless.BizTalk.Binding</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -27,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,26 +43,104 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Adapters.Sql, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.Sql.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.Wcf.Common, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Wcf.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.B2B.PartnerManagement, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.B2B.PartnerManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Pipeline, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.RuleEngine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ServiceModel.Channels, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceModel.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.XLANGs.BizTalk.Engine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.Engine.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.XLANGs.BizTalk.ProcessInterface">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.ProcessInterface.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.XLANGs.Engine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.Engine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PipelineObjects, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\PipelineObjects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46e0347e-7978-4f76-86d7-7d31201d856d}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
+      <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
+      <Name>Be.Stateless.BizTalk.Pipeline.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Pipelines\Be.Stateless.BizTalk.Pipelines.btproj">
+      <Project>{2c77abb3-fad7-41fa-80bc-616bf3762c70}</Project>
+      <Name>Be.Stateless.BizTalk.Pipelines</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Policies\Be.Stateless.BizTalk.Policies.csproj">
+      <Project>{62ec131f-0984-4c8c-b1bd-66bef9800cfa}</Project>
+      <Name>Be.Stateless.BizTalk.Policies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
+      <Project>{f33df96f-ec86-41de-94d4-0ec981b7c9ff}</Project>
+      <Name>Be.Stateless.BizTalk.Schemas</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.TestArtifacts\Be.Stateless.BizTalk.TestArtifacts.btproj">
       <Project>{0df4664b-9bc4-47c8-bcc1-870f267d42f0}</Project>
       <Name>Be.Stateless.BizTalk.TestArtifacts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Transforms\Be.Stateless.BizTalk.Transforms.btproj">
+      <Project>{D0F8E1D6-2FE8-415C-9981-D08931EDC908}</Project>
+      <Name>Be.Stateless.BizTalk.Transforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
+      <Project>{3b226253-7a9c-46eb-a1d8-11b1a6f634a8}</Project>
+      <Name>Be.Stateless.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
+      <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
+      <Name>Be.Stateless.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Be.Stateless.Logging.csproj">
+      <Project>{8f890272-22e8-4668-9f0e-c12dd48474d2}</Project>
+      <Name>Be.Stateless.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +159,9 @@
     <Compile Include="BizTalkFactoryApplicationBinding.cs" />
     <Compile Include="EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.Designer.cs" />
     <Compile Include="EnvironmentSettings\Common.SettingsFileGenerator.Designer.cs" />
+    <Compile Include="BindingGenerator.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
