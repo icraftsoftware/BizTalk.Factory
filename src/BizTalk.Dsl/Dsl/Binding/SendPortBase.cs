@@ -74,7 +74,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		public SendPortTransport BackupTransport
 		{
-			get { return _backupTransport ?? (_backupTransport = new SendPortTransport()); }
+			get { return _backupTransport ?? (_backupTransport = new SendPortTransport(this)); }
 		}
 
 		public string Description { get; set; }

@@ -17,6 +17,7 @@
 #endregion
 
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -32,7 +33,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		public SendPortTransport()
+		public SendPortTransport() : this(null) { }
+
+		public SendPortTransport(IProvideSourceFileInformation sourceFileInformationProvider) : base(sourceFileInformationProvider)
 		{
 			Adapter = UnknownOutboundAdapter.Instance;
 			RetryPolicy = RetryPolicy.None;

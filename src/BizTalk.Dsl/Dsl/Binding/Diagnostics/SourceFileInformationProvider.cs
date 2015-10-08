@@ -26,6 +26,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Diagnostics
 {
 	internal class SourceFileInformationProvider : IProvideSourceFileInformation
 	{
+		public SourceFileInformationProvider() { }
+
+		public SourceFileInformationProvider(IProvideSourceFileInformation sourceFileInformationProvider)
+		{
+			if (sourceFileInformationProvider != null)
+			{
+				_columnNumber = sourceFileInformationProvider.Column;
+				_fileName = sourceFileInformationProvider.Name;
+				_lineNumber = sourceFileInformationProvider.Line;
+			}
+		}
+
 		#region IProvideSourceFileInformation Members
 
 		public string Name
@@ -61,12 +73,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Diagnostics
 									&& !t.GetCustomAttributes(typeof(GeneratedCodeAttribute), false).Any()
 								)
 							));
-				// throwing InvalidOperationException means we might need to increase the Enumerable.Range count argument
-				if (stackFrame == null) throw new InvalidOperationException("Cannot determine source file information.");
 
-				_fileName = stackFrame.GetFileName();
-				_lineNumber = stackFrame.GetFileLineNumber();
-				_columnNumber = stackFrame.GetFileColumnNumber();
+				if (stackFrame != null)
+				{
+					_fileName = stackFrame.GetFileName();
+					_lineNumber = stackFrame.GetFileLineNumber();
+					_columnNumber = stackFrame.GetFileColumnNumber();
+				}
+
+				// throwing InvalidOperationException means we might need to increase the Enumerable.Range count argument
+				if (_fileName.IsNullOrEmpty() && _lineNumber == 0) throw new InvalidOperationException("Cannot determine source file information.");
 			}
 		}
 

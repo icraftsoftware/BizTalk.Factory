@@ -18,22 +18,11 @@
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Install;
 
 namespace Be.Stateless.BizTalk
 {
 	[RunInstaller(true)]
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Pseudo installer class.")]
-	public class BindingFileGenerator : BindingFileGeneratorBase
-	{
-		#region Base Class Member Overrides
-
-		protected override IBindingSerializerFactory CreateApplicationBindingSerializerFactory()
-		{
-			return new BizTalkFactoryApplicationBinding();
-		}
-
-		#endregion
-	}
+	public class BindingFileGenerator : BindingFileGenerator<BizTalkFactoryApplicationBinding> { }
 }

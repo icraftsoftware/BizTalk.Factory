@@ -75,6 +75,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			_sourceFileInformationProvider.Capture();
 		}
 
+		protected TransportBase(IProvideSourceFileInformation sourceFileInformationProvider)
+		{
+			_sourceFileInformationProvider = new SourceFileInformationProvider(sourceFileInformationProvider);
+			_sourceFileInformationProvider.Capture();
+		}
+
 		#region IProvideSourceFileInformation Members
 
 		int IProvideSourceFileInformation.Line

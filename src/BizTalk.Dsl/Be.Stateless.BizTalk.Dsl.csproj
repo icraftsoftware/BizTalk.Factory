@@ -157,7 +157,7 @@
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
-    <Compile Include="Dsl\Binding\Install\BindingFileGeneratorBase.cs">
+    <Compile Include="Dsl\Binding\Install\BindingFileGenerator.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dsl\Binding\Install\BindingGenerationContext.cs" />
