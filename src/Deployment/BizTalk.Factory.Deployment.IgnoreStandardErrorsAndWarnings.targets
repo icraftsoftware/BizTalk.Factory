@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2014 François Chabot, Yves Dierick
+  Copyright © 2012 - 2015 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -82,10 +82,8 @@
       CustomErrorRegularExpression="$(_CustomErrorRegularExpression)"
       CustomWarningRegularExpression="$(_CustomWarningRegularExpression)"
       Condition="%(Identity) == %(Identity) and '$(DeployBizTalkMgmtDB)' == 'true'" />
-
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(OrchestrationsQualified)&quot;"
           Condition="%(Identity) == %(Identity) and '$(DeployBizTalkMgmtDB)' == 'false'" />
-
     <!-- Deploy PDBS to gac -->
     <GeneratePdbCopyItemGroups SourceAssemblies="@(OrchestrationsQualified)" Condition="'$(DeployPDBsToGac)' == 'true'">
       <Output TaskParameter="SourceItemGroup" ItemName="OrchestrationsPdbSourceFilesGroup" />
