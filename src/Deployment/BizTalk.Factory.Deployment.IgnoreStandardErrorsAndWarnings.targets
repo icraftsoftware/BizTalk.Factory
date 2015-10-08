@@ -75,4 +75,24 @@
     <Copy SourceFiles="@(TransformsPdbSourceFilesGroup)" DestinationFiles="@(TransformsPdbDestinationFilesGroup)" Condition=" '$(DeployPDBsToGac)' == 'true' " ContinueOnError="true" />
   </Target>
 
+  <Target Name="DeployOrchestrations" Condition="'$(IncludeOrchestrations)' == 'true'">
+    <Exec
+      Command="BTSTask.exe AddResource -Type:BizTalkAssembly -Overwrite -Source:&quot;@(OrchestrationsQualified)&quot; -ApplicationName:&quot;$(BizTalkAppName)&quot; -Options:GacOnAdd,GacOnImport,GacOnInstall"
+      IgnoreStandardErrorWarningFormat="true"
+      CustomErrorRegularExpression="$(_CustomErrorRegularExpression)"
+      CustomWarningRegularExpression="$(_CustomWarningRegularExpression)"
+      Condition="%(Identity) == %(Identity) and '$(DeployBizTalkMgmtDB)' == 'true'" />
+
+    <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(OrchestrationsQualified)&quot;"
+          Condition="%(Identity) == %(Identity) and '$(DeployBizTalkMgmtDB)' == 'false'" />
+
+    <!-- Deploy PDBS to gac -->
+    <GeneratePdbCopyItemGroups SourceAssemblies="@(OrchestrationsQualified)" Condition="'$(DeployPDBsToGac)' == 'true'">
+      <Output TaskParameter="SourceItemGroup" ItemName="OrchestrationsPdbSourceFilesGroup" />
+      <Output TaskParameter="DestinationItemGroup" ItemName="OrchestrationsPdbDestinationFilesGroup" />
+    </GeneratePdbCopyItemGroups>
+    <Copy SourceFiles="@(OrchestrationsPdbSourceFilesGroup)" DestinationFiles="@(OrchestrationsPdbDestinationFilesGroup)" Condition="'$(DeployPDBsToGac)' == 'true'"
+          ContinueOnError="true" />
+  </Target>
+
 </Project>
