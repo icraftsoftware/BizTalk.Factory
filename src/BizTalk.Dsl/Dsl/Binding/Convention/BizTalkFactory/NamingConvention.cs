@@ -60,7 +60,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		public string ComputeReceivePortName(IReceivePort<NamingConvention<TParty, TMessageName>> receivePort)
 		{
 			if (Area == null) Area = ComputeArea(receivePort.GetType());
-			if (Party.Equals(default(TParty))) throw new NamingConventionException("Party is required.");
+			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
 
 			return string.Format(
 				"{0}{1}.RP{2}.{3}",
@@ -75,10 +75,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 			if (Area == null) Area = receiveLocation.ReceivePort.Name.Area;
 			if (Area == null) Area = ComputeArea(receiveLocation.GetType());
 			if (Area != receiveLocation.ReceivePort.Name.Area) throw new NamingConventionException("ReceiveLocation's Area does not match its ReceivePort's one.");
-			if (Party.Equals(default(TParty))) Party = receiveLocation.ReceivePort.Name.Party;
-			if (Party.Equals(default(TParty))) throw new NamingConventionException("Party is required.");
-			if (!Party.Equals(receiveLocation.ReceivePort.Name.Party)) throw new NamingConventionException("ReceiveLocation's Party does not match its ReceivePort's one.");
-			if (MessageName.Equals(default(TMessageName))) throw new NamingConventionException("MessageName is required.");
+			if (Equals(Party, default(TParty))) Party = receiveLocation.ReceivePort.Name.Party;
+			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
+			if (!Equals(Party, receiveLocation.ReceivePort.Name.Party)) throw new NamingConventionException("ReceiveLocation's Party does not match its ReceivePort's one.");
+			if (Equals(MessageName, default(TMessageName))) throw new NamingConventionException("MessageName is required.");
 			if (MessageFormat == null) throw new NamingConventionException("MessageFormat is required.");
 
 			return string.Format(
@@ -95,7 +95,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		public string ComputeSendPortName(ISendPort<NamingConvention<TParty, TMessageName>> sendPort)
 		{
 			if (Area == null) Area = ComputeArea(sendPort.GetType());
-			if (Party.Equals(default(TParty))) throw new NamingConventionException("Party is required.");
+			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
 			if (MessageName.Equals(default(TMessageName))) throw new NamingConventionException("MessageName is required.");
 			if (MessageFormat == null) throw new NamingConventionException("MessageFormat is required.");
 

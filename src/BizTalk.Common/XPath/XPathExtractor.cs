@@ -18,6 +18,7 @@
 
 using System;
 using System.Xml;
+using Be.Stateless.BizTalk.ContextProperties;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.XPath;
 
@@ -61,12 +62,15 @@ namespace Be.Stateless.BizTalk.XPath
 
 		#endregion
 
-		public XPathExtractor(XmlQualifiedName propertyName, string xpathExpression, ExtractionMode extractionMode)
+		public XPathExtractor(XmlQualifiedName propertyName, string xpathExpression, ExtractionMode extractionMode = ExtractionMode.Write)
 		{
 			PropertyName = propertyName;
 			XPathExpression = new XPathExpression(xpathExpression);
 			ExtractionMode = extractionMode;
 		}
+
+		public XPathExtractor(IMessageContextProperty property, string xpathExpression, ExtractionMode extractionMode = ExtractionMode.Write)
+			: this(property.QName, xpathExpression, extractionMode) { }
 
 		#region IEquatable<XPathExtractor> Members
 

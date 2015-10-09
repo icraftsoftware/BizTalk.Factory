@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			return new SendPipeline<T>(sendPipelineConfigurator);
 		}
 
-		internal SendPipeline()
+		public SendPipeline()
 		{
 			PipelineObjectModel<T>.CloneStageDefinitions(Stages);
 		}
