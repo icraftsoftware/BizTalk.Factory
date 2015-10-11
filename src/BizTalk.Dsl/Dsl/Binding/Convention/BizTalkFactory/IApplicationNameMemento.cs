@@ -20,6 +20,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 {
 	internal interface IApplicationNameMemento<T>
 	{
-		T Name { get; set; }
+		T ApplicationName { get; set; }
 	}
 }

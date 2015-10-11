@@ -18,7 +18,7 @@
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Be.Stateless.BizTalk.Dsl.Binding.Install;
+using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk
 {

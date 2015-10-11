@@ -22,13 +22,14 @@ using System.Configuration.Install;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.Extensions;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Install
+namespace Be.Stateless.BizTalk.Install
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Pseudo installer class.")]
 	public abstract class BindingFileGenerator<T> : Installer
-		where T : IBindingSerializerFactory, new()
+		where T : IBindingSerializerFactory, ISupportEnvironmentOverride, new()
 	{
 		#region Base Class Member Overrides
 
@@ -52,6 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Install
 				AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
 				var applicationBindingSerializerFactory = new T();
+				applicationBindingSerializerFactory.ApplyEnvironmentOverrides(targetEnvironment);
 				var applicationBindingSerializer = applicationBindingSerializerFactory.GetBindingSerializer();
 				applicationBindingSerializer.Save(bindingFilePath);
 			}

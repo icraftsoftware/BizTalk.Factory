@@ -19,7 +19,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
-using Be.Stateless.BizTalk.Dsl.Binding.Install;
+using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
@@ -86,11 +86,6 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			get { return ValueForTargetEnvironment(new string[] { null, @"localhost", @"localhost", null, null }); }
 		}
 
-		public static string BizTalkFactoryTransientStateDbUri 
-		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"mssql://localhost//BizTalkFactoryTransientStateDb", @"mssql://localhost//BizTalkFactoryTransientStateDb", null, null }); }
-		}
-
 		public static string IsolatedHost 
 		{
 			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalkServerIsolatedHost", @"BizTalkServerIsolatedHost", null, null }); }
@@ -104,36 +99,6 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 		public static string TransmitHost 
 		{
 			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalkServerApplication", @"BizTalkServerApplication", null, null }); }
-		}
-
-		public static int RetryCountRealTime 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 0, 0, 0, 0 }); }
-		}
-
-		public static int RetryIntervalRealTime 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 1, 1, 1, 1 }); }
-		}
-
-		public static int RetryCountShortRunning 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 0, 0, 15, 15 }); }
-		}
-
-		public static int RetryIntervalShortRunning 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 1, 1, 2, 2 }); }
-		}
-
-		public static int RetryCountLongRunning 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 0, 0, 300, 300 }); }
-		}
-
-		public static int RetryIntervalLongRunning 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 1, 1, 15, 15 }); }
 		}
 
 		public static string LogDirectory 

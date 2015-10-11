@@ -28,9 +28,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		IMessageNameMemento<TMessageName>,
 		IMessageFormatMemento<string>
 	{
+		#region Operators
+
+		public static implicit operator string(NamingConvention<TParty, TMessageName> convention)
+		{
+			throw new NotSupportedException("In order to support Be.Stateless.BizTalk.Dsl.Binding.Subscription.FilterTranslator.");
+		}
+
+		#endregion
+
 		#region IApplicationNameMemento<string> Members
 
-		public string Name { get; set; }
+		public string ApplicationName { get; set; }
 
 		#endregion
 
@@ -54,7 +63,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public string ComputeApplicationName(IApplicationBinding<NamingConvention<TParty, TMessageName>> application)
 		{
-			return Name.IsNullOrEmpty() ? application.GetType().Name : Name;
+			return ApplicationName.IsNullOrEmpty() ? application.GetType().Name : ApplicationName;
 		}
 
 		public string ComputeReceivePortName(IReceivePort<NamingConvention<TParty, TMessageName>> receivePort)

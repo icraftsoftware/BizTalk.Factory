@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.B2B.PartnerManagement;
@@ -171,6 +172,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			var memberExpression = expression as MemberExpression;
 			if (memberExpression != null) return TranslateFilterExpression(memberExpression);
 
+			var unaryExpression = expression as UnaryExpression;
+			if (unaryExpression != null) return TranslateFilterExpression(unaryExpression);
+
 			throw new NotSupportedException(
 				string.Format(
 					"Cannot translate FilterExpression \"{0}\" because {1} node is not supported.",
@@ -215,9 +219,62 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				return value.ToString();
 			}
 
+			// handle IReceivePort<TNamingConvention>
+			var containingObject = expression.Expression;
+			if (containingObject.Type.IsGenericType && containingObject.Type.GetGenericTypeDefinition() == typeof(IReceivePort<>))
+			{
+				dynamic receivePort = Expression.Lambda(containingObject).Compile().DynamicInvoke();
+				// handle IReceivePort<string>
+				if (expression.Member.Name == "Name" && expression.Type == typeof(string))
+				{
+					return receivePort.Name;
+				}
+				// handle IReceivePort<TNamingConvention> where TNamingConvention : INamingConvention
+				if (expression.Type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
+				{
+					return receivePort.Name.ComputeReceivePortName(receivePort);
+				}
+			}
+
+			// handle ISendPort<TNamingConvention>
+			if (containingObject.Type.IsGenericType && containingObject.Type.GetGenericTypeDefinition() == typeof(ISendPort<>))
+			{
+				dynamic sendPort = Expression.Lambda(containingObject).Compile().DynamicInvoke();
+				// handle IReceivePort<string>
+				if (expression.Member.Name == "Name" && expression.Type == typeof(string))
+				{
+					return sendPort.Name;
+				}
+				// handle IReceivePort<TNamingConvention> where TNamingConvention : INamingConvention
+				if (expression.Type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
+				{
+					return sendPort.Name.ComputeSendPortName(sendPort);
+				}
+			}
+
 			throw new NotSupportedException(
 				string.Format(
 					"Cannot translate MemberExpression \"{0}\" because {1} node is not supported.",
+					expression,
+					expression.NodeType));
+		}
+
+		private static string TranslateFilterExpression(UnaryExpression expression)
+		{
+			if (expression.NodeType == ExpressionType.Convert)
+			{
+				// handle cast operator to INamingConvention<TNamingConvention>
+				var declaringType = expression.Method.DeclaringType;
+				if (declaringType != null && declaringType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
+				{
+					var memberExpression = expression.Operand as MemberExpression;
+					if (memberExpression != null) return TranslateFilterExpression(memberExpression);
+				}
+			}
+
+			throw new NotSupportedException(
+				string.Format(
+					"Cannot translate UnaryExpression \"{0}\" because {1} node is not supported.",
 					expression,
 					expression.NodeType));
 		}

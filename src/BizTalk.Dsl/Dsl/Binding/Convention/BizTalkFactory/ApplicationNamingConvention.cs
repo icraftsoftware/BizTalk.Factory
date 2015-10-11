@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public TNamingConvention Is<T>(T name)
 		{
-			((IApplicationNameMemento<T>) _convention).Name = name;
+			((IApplicationNameMemento<T>) _convention).ApplicationName = name;
 			return _convention;
 		}
 

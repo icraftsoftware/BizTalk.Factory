@@ -105,7 +105,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value1 == "*"
 					&& p.Value2 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
@@ -154,7 +154,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value1 == "*"
 					&& p.Value2 == "p-one");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
@@ -204,7 +204,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
 					&& p.Value2 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
@@ -243,7 +243,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal));
@@ -295,7 +295,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
 					&& p.Value2 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
@@ -346,7 +346,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal));
@@ -376,7 +376,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal));
@@ -521,7 +521,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value2 == "partition-z");
 			// control message
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.FILE.XML"
+				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)

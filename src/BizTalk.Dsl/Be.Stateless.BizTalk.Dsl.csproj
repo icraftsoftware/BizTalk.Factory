@@ -79,6 +79,7 @@
     <Reference Include="Microsoft.BizTalk.Studio.Extensibility">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Studio.Extensibility.DLL</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.RuleEngine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
     </Reference>
@@ -157,10 +158,10 @@
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
-    <Compile Include="Dsl\Binding\Install\BindingFileGenerator.cs">
+    <Compile Include="Install\BindingFileGenerator.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dsl\Binding\Install\BindingGenerationContext.cs" />
+    <Compile Include="Install\BindingGenerationContext.cs" />
     <Compile Include="Dsl\Binding\IOrchestrationBinding.cs" />
     <Compile Include="Dsl\Binding\IOrchestrationBindingCollection.cs" />
     <Compile Include="Dsl\Binding\IOrchestrationPortBinding.cs" />
@@ -296,7 +297,6 @@
       <Name>Be.Stateless.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

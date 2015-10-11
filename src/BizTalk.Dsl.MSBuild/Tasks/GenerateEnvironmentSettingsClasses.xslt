@@ -51,7 +51,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
-using Be.Stateless.BizTalk.Dsl.Binding.Install;
+using Be.Stateless.BizTalk.Install;
 
 namespace </xsl:text>
     <xsl:value-of select="$clr-namespace-name" />

@@ -19,7 +19,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
-using Be.Stateless.BizTalk.Dsl.Binding.Install;
+using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
@@ -34,16 +34,6 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 		public static int BamOnlineWindowTimeLength 
 		{
 			get { return ValueForTargetEnvironment(new int?[] { null, 15, 15, 15, 15 }); }
-		}
-
-		public static int BatchReleasePollingInterval 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 5, 5, 900, 900 }); }
-		}
-
-		public static int ClaimCheckOutPollingInterval 
-		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 5, 5, 300, 300 }); }
 		}
 
 		public static string ClaimStoreAgentTargetHosts 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -75,6 +75,24 @@ namespace Be.Stateless.Extensions
 		public static bool IsNullOrEmpty(this string @string)
 		{
 			return string.IsNullOrEmpty(@string);
+		}
+
+		/// <summary>
+		/// Returns whether the array of string values <paramref name="strings"/> contains a given string value <paramref
+		/// name="string"/>.
+		/// </summary>
+		/// <param name="string">
+		/// The string value being searched for.
+		/// </param>
+		/// <param name="strings">
+		/// The array of string values being searched into.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the <paramref name="strings"/> contains <paramref name="string"/>; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsOneOf(this string @string, params string[] @strings)
+		{
+			return @strings.Contains(@string);
 		}
 
 		/// <summary>

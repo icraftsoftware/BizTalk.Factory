@@ -16,7 +16,7 @@
 
 #endregion
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Install
+namespace Be.Stateless.BizTalk.Install
 {
 	public class BindingGenerationContext
 	{
@@ -25,7 +25,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Install
 			get { return _instance; }
 		}
 
-		public string TargetEnvironment { get; /*internal */set; }
+		public string TargetEnvironment { get; internal set; }
 
 		private static readonly BindingGenerationContext _instance = new BindingGenerationContext();
 	}
