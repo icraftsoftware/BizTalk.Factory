@@ -17,11 +17,80 @@
 #endregion
 
 using System;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 {
 	public static class RetryPolicy
 	{
+		#region Nested Type: LongRunningPolicy
+
+		private class LongRunningPolicy : Binding.RetryPolicy, ISupportEnvironmentOverride
+		{
+			#region ISupportEnvironmentOverride Members
+
+			public void ApplyEnvironmentOverrides(string environment)
+			{
+				_policy = environment.IsOneOf("DEV", "BLD")
+					? _realTime
+					: environment == "ACC"
+						? _shortRunning
+						: _longRunning;
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
+
+			public override int Count
+			{
+				get { return _policy.Count; }
+			}
+
+			public override TimeSpan Interval
+			{
+				get { return _policy.Interval; }
+			}
+
+			#endregion
+
+			private Binding.RetryPolicy _policy;
+		}
+
+		#endregion
+
+		#region Nested Type: ShortRunningPolicy
+
+		private class ShortRunningPolicy : Binding.RetryPolicy, ISupportEnvironmentOverride
+		{
+			#region ISupportEnvironmentOverride Members
+
+			public void ApplyEnvironmentOverrides(string environment)
+			{
+				_policy = environment.IsOneOf("DEV", "BLD", "ACC") ? _realTime : _shortRunning;
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
+
+			public override int Count
+			{
+				get { return _policy.Count; }
+			}
+
+			public override TimeSpan Interval
+			{
+				get { return _policy.Interval; }
+			}
+
+			#endregion
+
+			private Binding.RetryPolicy _policy;
+		}
+
+		#endregion
+
 		static RetryPolicy()
 		{
 			_longRunning = new Binding.RetryPolicy { Count = 300, Interval = TimeSpan.FromMinutes(15) };
@@ -31,7 +100,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public static Binding.RetryPolicy LongRunning
 		{
-			get { return _longRunning; }
+			get { return new LongRunningPolicy(); }
 		}
 
 		public static Binding.RetryPolicy RealTime
@@ -41,7 +110,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public static Binding.RetryPolicy ShortRunning
 		{
-			get { return _shortRunning; }
+			get { return new ShortRunningPolicy(); }
 		}
 
 		private static readonly Binding.RetryPolicy _longRunning;

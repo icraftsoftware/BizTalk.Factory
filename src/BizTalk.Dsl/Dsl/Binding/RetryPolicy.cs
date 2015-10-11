@@ -38,14 +38,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private RetryPolicy(int count, int interval)
 		{
-			Count = count;
-			Interval = TimeSpan.FromMinutes(interval);
+			_count = count;
+			_interval = TimeSpan.FromMinutes(interval);
 		}
 
-		public int Count { get; set; }
+		public virtual int Count
+		{
+			get { return _count; }
+			set { _count = value; }
+		}
 
-		public TimeSpan Interval { get; set; }
+		public virtual TimeSpan Interval
+		{
+			get { return _interval; }
+			set { _interval = value; }
+		}
 
 		private static readonly RetryPolicy _none;
+		private int _count;
+		private TimeSpan _interval;
 	}
 }

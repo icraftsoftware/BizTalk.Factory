@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Install
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Pseudo installer class.")]
 	public abstract class BindingFileGenerator<T> : Installer
-		where T : IBindingSerializerFactory, ISupportEnvironmentOverride, new()
+		where T : IBindingSerializerFactory, new()
 	{
 		#region Base Class Member Overrides
 
@@ -53,8 +53,7 @@ namespace Be.Stateless.BizTalk.Install
 				AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
 				var applicationBindingSerializerFactory = new T();
-				applicationBindingSerializerFactory.ApplyEnvironmentOverrides(targetEnvironment);
-				var applicationBindingSerializer = applicationBindingSerializerFactory.GetBindingSerializer();
+				var applicationBindingSerializer = applicationBindingSerializerFactory.GetBindingSerializer(targetEnvironment);
 				applicationBindingSerializer.Save(bindingFilePath);
 			}
 			finally
