@@ -132,7 +132,7 @@ namespace Be.Stateless.BizTalk
 						sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
 						sp.Transport.Host = CommonSettings.TransmitHost;
 						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
-						sp.Filter = new Filter(() => BtsProperties.ReceivePortName == BatchReceivePort.Name);
+						sp.Filter = new Filter(() => BtsProperties.ReceivePortName == _batchReceivePort.Name);
 					}),
 				SendPort(
 					sp => {
@@ -149,7 +149,40 @@ namespace Be.Stateless.BizTalk
 						sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckOut>.MessageType);
 					}));
 			ReceivePorts.Add(
-				BatchReceivePort,
+				_batchReceivePort = ReceivePort(
+					rp => {
+						rp.Name = ReceivePortName.Offwards("Batch");
+						rp.ReceiveLocations.Add(
+							ReceiveLocation(
+								rl => {
+									rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
+									rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
+									rl.Transport.Adapter = new WcfSqlAdapter.Inbound(
+										a => {
+											a.Address = new SqlAdapterConnectionUri {
+												InboundId = "AvailableBatches",
+												InitialCatalog = "BizTalkFactoryTransientStateDb",
+												Server = CommonSettings.ProcessingDatabaseServer
+											};
+											a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM vw_batch_NextAvailableBatch";
+											a.PollingStatement = "EXEC usp_batch_ReleaseNextBatch";
+											a.PollingInterval = BatchReleasePollingInterval;
+											a.PollWhileDataFound = true;
+											a.InboundOperationType = InboundOperation.XmlPolling;
+											a.XmlStoredProcedureRootNodeName = "BodyWrapper";
+											a.InboundBodyLocation = InboundMessageBodySelection.UseBodyPath;
+											a.InboundBodyPathExpression = "/BodyWrapper/*";
+											a.InboundNodeEncoding = MessageBodyFormat.Xml;
+											a.ServiceBehaviors = new[] {
+												new SqlAdapterInboundTransactionBehavior {
+													TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+													TransactionTimeout = TimeSpan.FromMinutes(2)
+												}
+											};
+										});
+									rl.Transport.Host = CommonSettings.ReceiveHost;
+								}));
+					}),
 				ReceivePort(
 					rp => {
 						rp.Name = ReceivePortName.Offwards("Claim");
@@ -258,47 +291,6 @@ namespace Be.Stateless.BizTalk
 					}));
 		}
 
-		private IReceivePort<NamingConvention> BatchReceivePort
-		{
-			get
-			{
-				return _batchReceivePort ?? (_batchReceivePort = ReceivePort(
-					rp => {
-						rp.Name = ReceivePortName.Offwards("Batch");
-						rp.ReceiveLocations.Add(
-							ReceiveLocation(
-								rl => {
-									rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-									rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-									rl.Transport.Adapter = new WcfSqlAdapter.Inbound(
-										a => {
-											a.Address = new SqlAdapterConnectionUri {
-												InboundId = "AvailableBatches",
-												InitialCatalog = "BizTalkFactoryTransientStateDb",
-												Server = CommonSettings.ProcessingDatabaseServer
-											};
-											a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM vw_batch_NextAvailableBatch";
-											a.PollingStatement = "EXEC usp_batch_ReleaseNextBatch";
-											a.PollingInterval = BatchReleasePollingInterval;
-											a.PollWhileDataFound = true;
-											a.InboundOperationType = InboundOperation.XmlPolling;
-											a.XmlStoredProcedureRootNodeName = "BodyWrapper";
-											a.InboundBodyLocation = InboundMessageBodySelection.UseBodyPath;
-											a.InboundBodyPathExpression = "/BodyWrapper/*";
-											a.InboundNodeEncoding = MessageBodyFormat.Xml;
-											a.ServiceBehaviors = new[] {
-												new SqlAdapterInboundTransactionBehavior {
-													TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-													TransactionTimeout = TimeSpan.FromMinutes(2)
-												}
-											};
-										});
-									rl.Transport.Host = CommonSettings.ReceiveHost;
-								}));
-					}));
-			}
-		}
-
 		private TimeSpan BatchReleasePollingInterval
 		{
 			get
@@ -319,6 +311,6 @@ namespace Be.Stateless.BizTalk
 			}
 		}
 
-		private IReceivePort<NamingConvention> _batchReceivePort;
+		private readonly IReceivePort<NamingConvention> _batchReceivePort;
 	}
 }

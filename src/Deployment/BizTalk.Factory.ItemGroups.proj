@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2014 François Chabot, Yves Dierick
+  Copyright © 2012 - 2015 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -235,7 +235,7 @@
       <LocationPath>$(MSBuildThisFileDirectory)</LocationPath>
     </RedistributableCustomMsbuildProjectFiles>
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(IncludeClaimStoreAgent)' == 'true' ">
     <!-- make sure the claim store check-in directories exist and are granted the right DACL permissions -->
     <LocalDirectories Include="$(ClaimStoreCheckInDirectory)">
@@ -274,6 +274,12 @@
   -->
 
   <ItemGroup>
+    <ApplicationBindings Include="Be.Stateless.BizTalk.Binding.dll">
+      <LocationPath>..\BizTalk.Binding\bin\$(Configuration)</LocationPath>
+    </ApplicationBindings>
+  </ItemGroup>
+
+  <ItemGroup>
     <PipelineComponents Include="Be.Stateless.BizTalk.Pipeline.Components.dll">
       <LocationPath>..\BizTalk.Pipeline.Components\bin\$(Configuration)</LocationPath>
     </PipelineComponents>
@@ -293,7 +299,6 @@
 
   <ItemGroup>
     <PropsFromEnvSettings Include="BamArchiveWindowTimeLength;BamOnlineWindowTimeLength" />
-    <PropsFromEnvSettings Include="BatchReleasePollingInterval" />
     <PropsFromEnvSettings Include="ClaimStoreAgentTargetHosts;ClaimStoreCheckInDirectory;ClaimStoreCheckOutDirectory" />
     <PropsFromEnvSettings Include="QuartzAgentTargetHosts" />
   </ItemGroup>

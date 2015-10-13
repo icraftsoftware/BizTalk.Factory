@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2014 François Chabot, Yves Dierick
+  Copyright © 2012 - 2015 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@
     <IncludeBAM>true</IncludeBAM>
     <IncludeComponents>false</IncludeComponents>
     <IncludeInstallUtilForComponents>false</IncludeInstallUtilForComponents>
-    <IncludeMessagingBindings>true</IncludeMessagingBindings>
+    <IncludeMessagingBindings>false</IncludeMessagingBindings>
     <IncludeOrchestrations>false</IncludeOrchestrations>
     <IncludePipelineComponents>true</IncludePipelineComponents>
     <IncludePipelines>true</IncludePipelines>
@@ -73,6 +73,7 @@
     <IncludeConfigFiles>true</IncludeConfigFiles>
     <IncludeDatabases>true</IncludeDatabases>
     <IncludeDirectoriesAndFiles>true</IncludeDirectoriesAndFiles>
+    <IncludeFluentApplicationBindings>true</IncludeFluentApplicationBindings>
     <IncludeMsmqQueues>false</IncludeMsmqQueues>
     <IncludePolicies>true</IncludePolicies>
   </PropertyGroup>

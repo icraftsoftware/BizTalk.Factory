@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2014 François Chabot, Yves Dierick
+  Copyright © 2012 - 2015 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
 
   <PropertyGroup Condition=" '$(Configuration)' != 'Server' ">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
-    <DeployTools Condition="'$(DeployTools)' == ''">$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
+    <DeployTools Condition=" '$(DeployTools)' == '' ">$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
     <!--Where to put the MSI package -->
     <OutputPath Condition=" '$(OutputPath)' == '' ">bin\$(Configuration)\Installer\$(ProjectName)\</OutputPath>
   </PropertyGroup>
@@ -114,6 +114,7 @@
 
   <PropertyGroup>
     <CustomPostDeployDependsOn>
+      GenerateAndDeployFluentApplicationBindings;
       ApplyConfigFilesCustomizations;
       CreateBamIndexes;
       CreateMsmqQueues;
@@ -158,6 +159,7 @@
 
   <PropertyGroup>
     <CustomRedistDependsOn>
+      CopyApplicationBindingsToRedist;
       CopyAdditionalItemsToRedist;
       CopyCertificatesToRedist;
       CopyCustomDeployToolsToRedist;
@@ -233,11 +235,11 @@
 
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Certificates -->
 
-  <Target Name="DeployCertificates" 
+  <Target Name="DeployCertificates"
           DependsOnTargets="BuildCertificatesQualified"
-          Outputs="%(CertificatesQualified.Identity)" 
+          Outputs="%(CertificatesQualified.Identity)"
           Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-    
+
     <Message Text="Deploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
@@ -304,12 +306,12 @@
       <CertificatesQualified Include="@(Certificates)" />
     </ItemGroup>
   </Target>
-  
-  <Target Name="UndeployCertificates" 
+
+  <Target Name="UndeployCertificates"
           DependsOnTargets="BuildCertificatesQualified"
-          Outputs="%(CertificatesQualified.Identity)" 
+          Outputs="%(CertificatesQualified.Identity)"
           Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-    
+
     <Message Text="Undeploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
@@ -872,6 +874,59 @@
   </Target>
 
   <!--
+     ______ _                  _                          _ _           _   _               ____  _           _ _                 
+    |  ____| |                | |       /\               | (_)         | | (_)             |  _ \(_)         | (_)                
+    | |__  | |_   _  ___ _ __ | |_     /  \   _ __  _ __ | |_  ___ __ _| |_ _  ___  _ __   | |_) |_ _ __   __| |_ _ __   __ _ ___ 
+    |  __| | | | | |/ _ | '_ \| __|   / /\ \ | '_ \| '_ \| | |/ __/ _` | __| |/ _ \| '_ \  |  _ <| | '_ \ / _` | | '_ \ / _` / __|
+    | |    | | |_| |  __| | | | |_   / ____ \| |_) | |_) | | | (_| (_| | |_| | (_) | | | | | |_) | | | | | (_| | | | | | (_| \__ \
+    |_|    |_|\__,_|\___|_| |_|\__| /_/    \_| .__/| .__/|_|_|\___\__,_|\__|_|\___/|_| |_| |____/|_|_| |_|\__,_|_|_| |_|\__, |___/
+                                             | |   | |                                                                   __/ |    
+                                             |_|   |_|                                                                  |___/     
+    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Fluent%20Application%20Bindings -->
+
+  <ItemGroup >
+    <ApplicationBindingsQualified Condition=" '$(Configuration)' != 'Server' " Include=" @(ApplicationBindings -> '%(LocationPath)\%(Identity)') ">
+      <BindingFilePath>%(LocationPath)\%(Filename).xml</BindingFilePath>
+    </ApplicationBindingsQualified>
+    <ApplicationBindingsQualified Condition=" '$(Configuration)' == 'Server' " Include=" @(ApplicationBindings -> '..\%(Identity)') ">
+      <BindingFilePath>.\%(Filename).xml</BindingFilePath>
+    </ApplicationBindingsQualified>
+  </ItemGroup>
+
+  <Target Name="GenerateAndDeployFluentApplicationBindings"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '$(DeployBizTalkMgmtDB)' == 'true' and '@(ApplicationBindings)' != '' "
+          DependsOnTargets="GenerateApplicationBindings;ImportApplicationBindings">
+  </Target>
+
+  <Target Name="GenerateApplicationBindings"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+    <Message Text="Generating XML port bindings from fluent DSL-based bindings..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /BindingFilePath=&quot;%(BindingFilePath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' " />
+
+    <Message Text="Generated XML port bindings from fluent DSL-based bindings." />
+  </Target>
+
+  <Target Name="ImportApplicationBindings"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+    <Message Text="Importing XML port bindings generated from fluent DSL-based bindings..." />
+
+    <Exec Command="BTSTask.exe ImportBindings -Source:&quot;@(ApplicationBindingsQualified -> '%(BindingFilePath)')&quot; -ApplicationName:&quot;$(BizTalkAppName)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' " />
+
+    <Message Text="Imported XML port bindings generated from fluent DSL-based bindings." />
+  </Target>
+
+  <Target Name="CopyApplicationBindingsToRedist" Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+    <Message Text="Copying fluent DSL-based binding assemblies to redist folder..." />
+
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ApplicationBindingsQualified)" Condition=" '@(ApplicationBindings)' != '' " />
+
+    <Message Text="Copyied fluent DSL-based binding assemblies to redist folder." />
+  </Target>
+
+  <!--
      __  __  _____ __  __  ____     ____
     |  \/  |/ ____|  \/  |/ __ \   / __ \
     | \  / | (___ | \  / | |  | | | |  | |_   _  ___ _   _  ___ ___
@@ -1091,6 +1146,74 @@
   </Target>
 
   <!--
+     _____            _     _               ____                   _              _       _         
+    |  __ \          (_)   | |             / __ \                 | |            | |     | |        
+    | |__) |___  __ _ _ ___| |_ ___ _ __  | |  | |_   _  __ _ _ __| |_ ____      | | ___ | |__  ___ 
+    |  _  // _ \/ _` | / __| __/ _ | '__| | |  | | | | |/ _` | '__| __|_  /  _   | |/ _ \| '_ \/ __|
+    | | \ |  __| (_| | \__ | ||  __| |    | |__| | |_| | (_| | |  | |_ / /  | |__| | (_) | |_) \__ \
+    |_|  \_\___|\__, |_|___/\__\___|_|     \___\_\\__,_|\__,_|_|   \__/___|  \____/ \___/|_.__/|___/
+                 __/ |                                                                              
+                |___/                                                                                 
+    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
+
+  <PropertyGroup>
+    <QuartzDirectory>C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
+  </PropertyGroup>
+
+  <Target Name="RegisterQuartzJobs"
+          Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
+          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+    <!-- Define a property to hold the single item value -->
+    <PropertyGroup>
+      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
+    </PropertyGroup>
+    <!-- read the current configuration value -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
+    </MSBuild.ExtensionPack.Xml.XmlFile>
+    <!-- Append the job file path to the current list of job files -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)" />
+  </Target>
+
+  <Target Name="UnregisterQuartzJobs"
+          Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
+          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+    <!-- Define a property to hold the single item value -->
+    <PropertyGroup>
+      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
+    </PropertyGroup>
+    <!-- read the current configuration value -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
+    </MSBuild.ExtensionPack.Xml.XmlFile>
+    <!-- remove the job file from the list -->
+    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(CurrentQuartzJobsFiles)" OldValue=",$(TempJobsFile)" NewValue="">
+      <Output PropertyName="NewJobsFilesList" TaskParameter="NewString"/>
+    </MSBuild.ExtensionPack.Framework.TextString>
+    <!-- Update with the new list -->
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
+                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Value="$(NewJobsFilesList)" />
+  </Target>
+
+  <Target Name="CopyQuartzJobsFilesToRedist" Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' ">
+    <Message Text="Copying Quartz jobs files to redist folder..." />
+
+    <Copy DestinationFolder="$(RedistDir)"
+          SourceFiles="%(QuartzJobsFiles.LocationPath)\$([System.IO.Path]::GetFileNameWithoutExtension('%(QuartzJobsFiles.Identity)')).template.xml" />
+
+    <Message Text="Copied Quartz jobs files to redist folder." />
+  </Target>
+
+  <!--
     __          ___           _                      _____                 _
     \ \        / (_)         | |                    / ____|               (_)
      \ \  /\  / / _ _ __   __| | _____      _____  | (___   ___ _ ____   ___  ___ ___ ___
@@ -1218,76 +1341,7 @@
     <Message Text="Copied Windows service redistributable files to redist folder." />
   </Target>
 
-  <!--
-     _____            _     _               ____                   _              _       _         
-    |  __ \          (_)   | |             / __ \                 | |            | |     | |        
-    | |__) |___  __ _ _ ___| |_ ___ _ __  | |  | |_   _  __ _ _ __| |_ ____      | | ___ | |__  ___ 
-    |  _  // _ \/ _` | / __| __/ _ | '__| | |  | | | | |/ _` | '__| __|_  /  _   | |/ _ \| '_ \/ __|
-    | | \ |  __| (_| | \__ | ||  __| |    | |__| | |_| | (_| | |  | |_ / /  | |__| | (_) | |_) \__ \
-    |_|  \_\___|\__, |_|___/\__\___|_|     \___\_\\__,_|\__,_|_|   \__/___|  \____/ \___/|_.__/|___/
-                 __/ |                                                                              
-                |___/                                                                                 
-    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
-
-  <PropertyGroup>
-    <QuartzDirectory>C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
-  </PropertyGroup>
-
-  <Target Name="RegisterQuartzJobs"
-          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
-          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
-    <!-- Define a property to hold the single item value -->
-    <PropertyGroup>
-      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
-    </PropertyGroup>
-    <!-- read the current configuration value -->
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute" 
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config" 
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
-      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
-    </MSBuild.ExtensionPack.Xml.XmlFile>
-    <!-- Append the job file path to the current list of job files -->
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute" 
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config" 
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
-                                       Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)" />
-    
-  </Target>
-
-  <Target Name="UnregisterQuartzJobs"
-          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
-          Outputs="%(QuartzJobsFilesQualified.Fullpath)">
-    <!-- Define a property to hold the single item value -->
-    <PropertyGroup>
-      <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
-    </PropertyGroup>
-    <!-- read the current configuration value -->
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
-      <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
-    </MSBuild.ExtensionPack.Xml.XmlFile>
-    <!-- remove the job file from the list -->
-    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(CurrentQuartzJobsFiles)" OldValue=",$(TempJobsFile)" NewValue="">
-      <Output PropertyName="NewJobsFilesList" TaskParameter="NewString"/>
-    </MSBuild.ExtensionPack.Framework.TextString>
-    <!-- Update with the new list -->
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
-                                       Value="$(NewJobsFilesList)" />
-  </Target>
-
-  <Target Name="CopyQuartzJobsFilesToRedist"
-          Condition="'$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' ">
-    <Message Text="Copying Quartz jobs files to redist folder..." />
-
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="%(QuartzJobsFiles.LocationPath)\$([System.IO.Path]::GetFileNameWithoutExtension('%(QuartzJobsFiles.Identity)')).template.xml" />
-
-    <Message Text="Copied Quartz jobs files to redist folder." />
-  </Target>
-
-  <!--Review those targets-->
+  <!-- TODO Review those targets -->
   <Target Name="StartQuartzAndClaimStoreAgentServices">
     <Message Text="Start Quartz and Claim store agent windows services" />
     <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="BizTalk Factory Claim Store Service Agent"

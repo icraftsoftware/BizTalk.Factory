@@ -15,7 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", 
 		Deployment\BizTalk.Factory.Deployment.targets = Deployment\BizTalk.Factory.Deployment.targets
 		Deployment\BizTalk.Factory.ItemGroups.Common.proj = Deployment\BizTalk.Factory.ItemGroups.Common.proj
 		Deployment\BizTalk.Factory.ItemGroups.proj = Deployment\BizTalk.Factory.ItemGroups.proj
-		Deployment\BizTalk.Factory.PortBindingsMaster.xml = Deployment\BizTalk.Factory.PortBindingsMaster.xml
 		Deployment\BizTalk.Factory.tasks = Deployment\BizTalk.Factory.tasks
 		BTSNTSvc.log4net.template.config = BTSNTSvc.log4net.template.config
 	EndProjectSection
@@ -136,9 +135,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Bindin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.Server", "Quartz.Server\Quartz.Server.csproj", "{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestArtifacts.Binding", "BizTalk.TestArtifacts.Binding\Be.Stateless.BizTalk.TestArtifacts.Binding.csproj", "{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 37
+		SccNumberOfProjects = 38
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -250,6 +251,9 @@ Global
 		SccProjectUniqueName36 = Quartz.Server\\Quartz.Server.csproj
 		SccProjectName36 = Quartz.Server
 		SccLocalPath36 = Quartz.Server
+		SccProjectUniqueName37 = BizTalk.TestArtifacts.Binding\\Be.Stateless.BizTalk.TestArtifacts.Binding.csproj
+		SccProjectName37 = BizTalk.TestArtifacts.Binding
+		SccLocalPath37 = BizTalk.TestArtifacts.Binding
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -474,6 +478,12 @@ Global
 		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|x86.ActiveCfg = Release|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,8 +16,8 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>12795</WindowHeight>
-  <WindowWidth>29865</WindowWidth>
+  <WindowHeight>9495</WindowHeight>
+  <WindowWidth>19575</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <TabRatio>151</TabRatio>
@@ -78,7 +78,7 @@
   </Style>
  </Styles>
  <Worksheet ss:Name="Settings">
-  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="41" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="33" x:FullColumns="1"
    x:FullRows="1" ss:StyleID="s62">
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="213.75"/>
    <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="75"/>
@@ -284,14 +284,6 @@
     <Cell ss:StyleID="s67"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">BizTalkFactoryTransientStateDbUri</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">mssql://localhost//BizTalkFactoryTransientStateDb</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">mssql://localhost//BizTalkFactoryTransientStateDb</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-   </Row>
-   <Row>
     <Cell ss:StyleID="s66"/>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
@@ -322,62 +314,6 @@
     <Cell ss:StyleID="s67"><Data ss:Type="String">BizTalkServerApplication</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryCount-RealTime</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryInterval-RealTime</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryCount-ShortRunning</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryInterval-ShortRunning</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">2</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">2</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryCount-LongRunning</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">300</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">300</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">RetryInterval-LongRunning</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
    </Row>
    <Row>
     <Cell ss:StyleID="s66"/>
@@ -433,7 +369,7 @@
    <SplitHorizontal>6</SplitHorizontal>
    <TopRowBottomPane>6</TopRowBottomPane>
    <SplitVertical>1</SplitVertical>
-   <LeftColumnRightPane>1</LeftColumnRightPane>
+   <LeftColumnRightPane>2</LeftColumnRightPane>
    <ActivePane>0</ActivePane>
    <Panes>
     <Pane>
@@ -441,14 +377,13 @@
     </Pane>
     <Pane>
      <Number>1</Number>
+     <ActiveCol>1</ActiveCol>
     </Pane>
     <Pane>
      <Number>2</Number>
     </Pane>
     <Pane>
      <Number>0</Number>
-     <ActiveRow>24</ActiveRow>
-     <ActiveCol>3</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

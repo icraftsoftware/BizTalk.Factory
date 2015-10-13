@@ -23,7 +23,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Be.Stateless.BizTalk.Dsl.Binding;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.Extensions;
+using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Install
 {
@@ -42,6 +44,23 @@ namespace Be.Stateless.BizTalk.Install
 		}
 
 		#endregion
+
+		private String BizTalkInstallPath
+		{
+			get
+			{
+				if (_installPath == null)
+				{
+					// [HKLM\SOFTWARE\Microsoft\BizTalk Server\3.0]
+					using (var classes32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+					using (var btsKey = classes32.SafeOpenSubKey(@"SOFTWARE\Microsoft\BizTalk Server\3.0"))
+					{
+						_installPath = (string) btsKey.GetValue("InstallPath");
+					}
+				}
+				return _installPath;
+			}
+		}
 
 		private void GenerateBindingFile(string targetEnvironment, string bindingFilePath)
 		{
@@ -64,14 +83,31 @@ namespace Be.Stateless.BizTalk.Install
 
 		private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
 		{
+			// unexisting resource assemblies
+			if (args.Name.StartsWith("Microsoft.BizTalk.Pipeline.Components.resources, Version=3.0.")) return null;
+			if (args.Name.StartsWith("Microsoft.ServiceModel.Channels.resources, Version=3.0.")) return null;
+
 			var name = new AssemblyName(args.Name);
 			var locationPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			// ReSharper disable once AssignNullToNotNullAttribute
 			var fullPath = Path.Combine(locationPath, name.Name + ".dll");
-			if (File.Exists(fullPath)) return Assembly.LoadFile(fullPath);
+			if (File.Exists(fullPath))
+			{
+				Context.LogMessage(string.Format("   Resolved assembly '{0}'.", fullPath));
+				return Assembly.LoadFile(fullPath);
+			}
 
-			Context.LogMessage(string.Format("   OnAssemblyResolve could not find assembly '{0}'.", fullPath));
+			fullPath = Path.Combine(BizTalkInstallPath, @"SDK\Utilities\PipelineTools", name.Name + ".dll");
+			if (File.Exists(fullPath))
+			{
+				Context.LogMessage(string.Format("   Resolved assembly '{0}'.", fullPath));
+				return Assembly.LoadFile(fullPath);
+			}
+
+			Context.LogMessage(string.Format("   Could not resolve assembly '{0}'.", args.Name));
 			return null;
 		}
+
+		private string _installPath;
 	}
 }

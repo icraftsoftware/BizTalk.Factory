@@ -117,7 +117,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\BizTalk.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
+    <Compile Include="..\BizTalk.TestArtifacts.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
       <Link>Dsl\Binding\ProcessOrchestrationBinding.Designer.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -186,7 +186,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\BizTalk.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
+    <EmbeddedResource Include="..\BizTalk.TestArtifacts.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
       <Link>Dsl\Binding\CodeDom\Data\ProcessOrchestrationBinding.Designer.cs</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Dsl\Binding\Data\bindings.with.conventions.xml" />

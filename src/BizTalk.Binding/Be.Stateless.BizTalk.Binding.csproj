@@ -90,10 +90,6 @@
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.Engine.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PipelineObjects, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\BizTalk 2013 R2\PipelineObjects.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -126,10 +122,6 @@
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
       <Project>{f33df96f-ec86-41de-94d4-0ec981b7c9ff}</Project>
       <Name>Be.Stateless.BizTalk.Schemas</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BizTalk.TestArtifacts\Be.Stateless.BizTalk.TestArtifacts.btproj">
-      <Project>{0df4664b-9bc4-47c8-bcc1-870f267d42f0}</Project>
-      <Name>Be.Stateless.BizTalk.TestArtifacts</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Transforms\Be.Stateless.BizTalk.Transforms.btproj">
       <Project>{D0F8E1D6-2FE8-415C-9981-D08931EDC908}</Project>
@@ -168,9 +160,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildProjectDirectory)\**\*OrchestrationBinding.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml">

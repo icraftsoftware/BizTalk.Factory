@@ -16,8 +16,8 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>11775</WindowHeight>
-  <WindowWidth>19590</WindowWidth>
+  <WindowHeight>9495</WindowHeight>
+  <WindowWidth>19575</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <TabRatio>151</TabRatio>
@@ -78,7 +78,7 @@
   </Style>
  </Styles>
  <Worksheet ss:Name="Settings">
-  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="20" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="17" x:FullColumns="1"
    x:FullRows="1" ss:StyleID="s62" ss:DefaultColumnWidth="51">
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="213.75"/>
    <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="144"/>
@@ -176,36 +176,6 @@
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">BatchReleasePollingInterval</Data><Comment
-      ss:Author="François Chabot"><ss:Data
-       xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
-        html:Color="#000000">in seconds</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">5</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">5</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">900</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">900</Data></Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">ClaimCheckOutPollingInterval</Data><Comment
-      ss:Author="François Chabot"><ss:Data
-       xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
-        html:Color="#000000">in seconds</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">5</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">5</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">300</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">300</Data></Cell>
    </Row>
    <Row>
     <Cell ss:StyleID="s66"><Data ss:Type="String">ClaimStoreAgentTargetHosts</Data></Cell>

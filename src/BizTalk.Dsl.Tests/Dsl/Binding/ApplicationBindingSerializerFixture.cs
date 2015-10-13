@@ -48,7 +48,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var applicationBinding = new Finance.SampleApplication {
 				Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
 			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer();
+			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("PRD");
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -61,7 +61,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var applicationBinding = new SampleApplication {
 				Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
 			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer();
+			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("PRD");
 
 			var binding = applicationBindingSerializer.Serialize();
 
