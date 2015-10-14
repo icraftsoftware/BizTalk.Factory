@@ -17,12 +17,16 @@
 #endregion
 
 using System;
+using System.Text;
+using System.Xml;
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Tracking.Messaging;
+using Be.Stateless.IO;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
 using NUnit.Framework;
@@ -70,6 +74,38 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		#endregion
 
 		[Test]
+		public void Deserialize()
+		{
+			var microPipelineComponentType = typeof(ActivityTracker);
+			var xml = string.Format(
+				"<mComponent name=\"{0}\"><TrackingContextCacheDuration>00:02:00</TrackingContextCacheDuration></mComponent>",
+				microPipelineComponentType.AssemblyQualifiedName);
+			using (var reader = XmlReader.Create(new StringStream(xml)))
+			{
+				var microPipelineComponent = reader.DeserializeMicroPipelineComponent();
+				Assert.That(((ActivityTracker) microPipelineComponent).TrackingContextCacheDuration, Is.EqualTo(TimeSpan.FromMinutes(2)));
+				Assert.That(reader.EOF);
+			}
+		}
+
+		[Test]
+		public void Serialize()
+		{
+			var component = new ActivityTracker();
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			{
+				component.Serialize(writer);
+			}
+			Assert.That(
+				builder.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<mComponent name=\"{0}\"><TrackingContextCacheDuration>00:01:00</TrackingContextCacheDuration><TrackingModes>Body</TrackingModes><TrackingResolutionPolicy /></mComponent>",
+						component.GetType().AssemblyQualifiedName)));
+		}
+
+		[Test]
 		public void TrackingContextIsCachedForSolicitResponseOutboundMessage()
 		{
 			var transmitWorkId = Guid.NewGuid().ToString();
@@ -103,7 +139,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId)).Returns(ActivityId.NewActivityId());
 
 			var sut = CreateActivityTracker();
-			sut.TrackingContextRetentionDuration = -1;
+			sut.TrackingContextCacheDuration = TimeSpan.FromSeconds(-1);
 
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
@@ -176,7 +212,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.TransmitWorkId)).Returns(transmitWorkId);
 
 			var sut = CreateActivityTracker();
-			sut.TrackingContextRetentionDuration = -1;
+			sut.TrackingContextCacheDuration = TimeSpan.FromSeconds(-1);
 
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 

@@ -35,7 +35,7 @@ namespace Be.Stateless.BizTalk.Xml
 
 		public static implicit operator PolicyName(PolicyNameXmlSerializer serializer)
 		{
-			return PolicyName.Parse(serializer._serializedPolicyName);
+			return serializer._serializedPolicyName.IsNullOrEmpty() ? null : PolicyName.Parse(serializer._serializedPolicyName);
 		}
 
 		public static implicit operator PolicyNameXmlSerializer(PolicyName policyName)

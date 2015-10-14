@@ -52,7 +52,10 @@ namespace Be.Stateless.BizTalk.XPath
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization")]
 	public class XPathExtractorEnumerableSerializer : IXmlSerializable
 	{
-		public XPathExtractorEnumerableSerializer() { }
+		public XPathExtractorEnumerableSerializer()
+		{
+			Extractors = Enumerable.Empty<XPathExtractor>();
+		}
 
 		public XPathExtractorEnumerableSerializer(IEnumerable<XPathExtractor> extractors)
 		{

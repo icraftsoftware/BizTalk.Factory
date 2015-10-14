@@ -19,12 +19,15 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Xml;
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.XPath;
+using Be.Stateless.IO;
 using Be.Stateless.IO.Extensions;
 using Microsoft.BizTalk.Streaming;
 using Moq;
@@ -68,7 +71,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				var sut = new ContextPropertyExtractor {
 					Extractors = new[] {
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
 					}
 				};
 				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
@@ -91,7 +94,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				var sut = new ContextPropertyExtractor {
 					Extractors = new[] {
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
 					}
 				};
 
@@ -99,7 +102,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				annotationsMock.Setup(am => am.Extractors).Returns(
 					new[] {
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
-						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write)
+						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")
 					});
 				SchemaMetadataMock.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
 
@@ -110,9 +113,23 @@ namespace Be.Stateless.BizTalk.MicroComponent
 					Is.EqualTo(
 						new[] {
 							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
-							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
-							new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write)
+							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations"),
+							new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
 						}));
+			}
+		}
+
+		[Test]
+		public void Deserialize()
+		{
+			var microPipelineComponentType = typeof(ContextPropertyExtractor);
+			var xml = string.Format(
+				"<mComponent name=\"{0}\"><Extractors /></mComponent>",
+				microPipelineComponentType.AssemblyQualifiedName);
+			using (var reader = XmlReader.Create(new StringStream(xml)))
+			{
+				// ReSharper disable once AccessToDisposedClosure
+				Assert.That(() => reader.DeserializeMicroPipelineComponent(), Throws.Nothing);
 			}
 		}
 
@@ -154,6 +171,23 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
 				MessageMock.Verify(m => m.Context.Write(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
 			}
+		}
+
+		[Test]
+		public void Serialize()
+		{
+			var component = new ContextPropertyExtractor();
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			{
+				component.Serialize(writer);
+			}
+			Assert.That(
+				builder.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<mComponent name=\"{0}\"><Extractors /></mComponent>",
+						component.GetType().AssemblyQualifiedName)));
 		}
 
 		[Test]

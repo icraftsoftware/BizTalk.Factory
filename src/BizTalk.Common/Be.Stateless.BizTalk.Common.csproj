@@ -108,6 +108,7 @@
     <Compile Include="Component\MicroPipelineComponentDedicatedXmlWriter.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentExtensions.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentXmlReaderExtensions.cs" />
+    <Compile Include="Xml\TimeSpanXmlSerializer.cs" />
     <Compile Include="Xml\XmlWriterWrapper.cs" />
     <Compile Include="Component\IMicroPipelineComponent.cs" />
     <Compile Include="Component\MicroPipelineComponentEnumerableConverter.cs" />

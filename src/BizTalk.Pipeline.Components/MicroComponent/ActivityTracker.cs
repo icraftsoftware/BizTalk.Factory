@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -62,7 +63,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		public ActivityTracker()
 		{
-			TrackingContextRetentionDuration = 60;
+			TrackingContextCacheDuration = TimeSpan.FromSeconds(60);
 			TrackingModes = ActivityTrackingModes.Body;
 		}
 
@@ -80,7 +81,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				// tracking context can only be restored for the inbound message of a Solicit-Response MEP, i.e. when BizTalk was the initiator of the 2-way MEP
 				if (messageDirection.IsInbound() && isSolicitResponse) RestoreCachedTrackingContext(message);
 
-				var context = new Context(pipelineContext, message, TrackingModes, TrackingResolutionPolicy);
+				var context = new Context(pipelineContext, message, TrackingModes, TrackingResolutionPolicyName);
 				var activityTracker = Tracking.Messaging.ActivityTracker.Create(context);
 				var messageBodyTracker = MessageBodyTracker.Create(context);
 
@@ -102,11 +103,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		#endregion
 
 		/// <summary>
-		/// How many seconds activity tracking contexts will be kept in cache when propagated through solicit-response
+		/// How long activity tracking contexts will be kept in cache when propagated through solicit-response
 		/// ports. Any negative value disables caching.
 		/// </summary>
-		// TODO refactor to TimeSpan
-		public int TrackingContextRetentionDuration { get; set; }
+		[XmlElement(typeof(TimeSpanXmlSerializer))]
+		public TimeSpan TrackingContextCacheDuration { get; set; }
 
 		/// <summary>
 		/// Level of tracking to use, or the extent of message data to capture.
@@ -119,26 +120,28 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// cref="BizTalkFactoryProperties.ArchiveTargetLocation"/>, should neither one of them be found in message
 		/// context.
 		/// </summary>
-		[XmlElement(typeof(PolicyNameXmlSerializer))]
-		public PolicyName TrackingResolutionPolicy { get; set; }
+		[XmlElement("TrackingResolutionPolicy", typeof(PolicyNameXmlSerializer))]
+		public PolicyName TrackingResolutionPolicyName { get; set; }
 
 		private void CacheTrackingContext(IBaseMessage message)
 		{
+			var duration = (int) TrackingContextCacheDuration.TotalSeconds;
 			// if propagation of TrackingContext is not disabled, cache the current TrackingContext
-			if (TrackingContextRetentionDuration > -1)
+			if (duration > -1)
 			{
-				_logger.DebugFormat("Caching current tracking context for {0} seconds", TrackingContextRetentionDuration);
+				_logger.DebugFormat("Caching current tracking context for {0} seconds", duration);
 				TrackingContextCache.Instance.Add(
 					message.GetProperty(BtsProperties.TransmitWorkId),
 					message.GetTrackingContext(),
-					TrackingContextRetentionDuration);
+					duration);
 			}
 		}
 
 		private void RestoreCachedTrackingContext(IBaseMessage message)
 		{
+			var duration = (int) TrackingContextCacheDuration.TotalSeconds;
 			// if propagation of TrackingContext is not disabled, restore a previously cached TrackingContext
-			if (TrackingContextRetentionDuration > -1)
+			if (duration > -1)
 			{
 				_logger.Debug("Restoring cached tracking context");
 				var trackingContext = TrackingContextCache.Instance.Remove(message.GetProperty(BtsProperties.TransmitWorkId));

@@ -27,7 +27,8 @@ using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.EnvironmentSettings;
 using Be.Stateless.BizTalk.Install;
-using Be.Stateless.BizTalk.Pipelines;
+using Be.Stateless.BizTalk.MicroComponent;
+using Be.Stateless.BizTalk.MicroPipelines;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch;
@@ -53,10 +54,14 @@ namespace Be.Stateless.BizTalk
 						sp.Name = SendPortName.Towards("Batch").About("AddPart").FormattedAs.Xml;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline
-									.Encoder<ActivityTrackerComponent>(pc => { pc.TrackingResolutionPolicy = Policy<Policies.Send.Batch.AggregateProcessResolver>.Name; })
-									.Encoder<XsltRunnerComponent>(pc => { pc.Map = typeof(AnyToAddPart); })
-									.Encoder<XmlTranslatorComponent>(pc => { pc.Enabled = false; });
+								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+								pipeline.Encoder<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new ActivityTracker { TrackingResolutionPolicyName = Policy<Policies.Send.Batch.AggregateProcessResolver>.Name },
+											new XsltRunner { MapType = typeof(AnyToAddPart) }
+										};
+									});
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
@@ -73,10 +78,14 @@ namespace Be.Stateless.BizTalk
 						sp.Name = SendPortName.Towards("Batch").About("QueueControlledRelease").FormattedAs.Xml;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline
-									.Encoder<ActivityTrackerComponent>(pc => { pc.TrackingResolutionPolicy = Policy<Policies.Send.Batch.ReleaseProcessResolver>.Name; })
-									.Encoder<XsltRunnerComponent>(pc => { pc.Map = typeof(ReleaseToQueueControlledRelease); })
-									.Encoder<XmlTranslatorComponent>(pc => { pc.Enabled = false; });
+								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+								pipeline.Encoder<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new ActivityTracker { TrackingResolutionPolicyName = Policy<Policies.Send.Batch.ReleaseProcessResolver>.Name },
+											new XsltRunner { MapType = typeof(ReleaseToQueueControlledRelease) }
+										};
+									});
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
@@ -93,10 +102,14 @@ namespace Be.Stateless.BizTalk
 						sp.Name = SendPortName.Towards("Claim").About("CheckIn").FormattedAs.Xml;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline
-									.Encoder<ActivityTrackerComponent>(pc => { pc.TrackingResolutionPolicy = Policy<Policies.Send.Claim.ProcessResolver>.Name; })
-									.Encoder<XsltRunnerComponent>(pc => { pc.Map = typeof(ClaimToCheckIn); })
-									.Encoder<XmlTranslatorComponent>(pc => { pc.Enabled = false; });
+								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+								pipeline.Encoder<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new ActivityTracker { TrackingResolutionPolicyName = Policy<Policies.Send.Claim.ProcessResolver>.Name },
+											new XsltRunner { MapType = typeof(ClaimToCheckIn) }
+										};
+									});
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
@@ -111,10 +124,15 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Sink").About("FailedMessage").FormattedAs.None;
-						sp.SendPipeline = new SendPipeline<AbsorbingTransmit>(
+						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
-								pipeline.Encoder<ActivityTrackerComponent>(
-									pc => { pc.TrackingResolutionPolicy = Policy<Policies.Send.FailedProcessResolver>.Name; });
+								pipeline.PreAssembler<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new ActivityTracker { TrackingResolutionPolicyName = Policy<Policies.Send.FailedProcessResolver>.Name },
+											new MessageConsumer()
+										};
+									});
 							});
 						sp.Transport.Adapter = new FileAdapter.Outbound(
 							a => {
@@ -128,7 +146,16 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-						sp.SendPipeline = new SendPipeline<PassThruTransmit>();
+						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
+							pipeline => {
+								pipeline.PreAssembler<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new FailedMessageRoutingEnabler(),
+											new ActivityTracker()
+										};
+									});
+							});
 						sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
 						sp.Transport.Host = CommonSettings.TransmitHost;
 						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
@@ -138,7 +165,15 @@ namespace Be.Stateless.BizTalk
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Claim").About("Redeem").FormattedAs.Xml;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
-							pipeline => { pipeline.PreAssembler<ActivityTrackerComponent>(pc => { pc.TrackingModes = ActivityTrackingModes.Claim; }); });
+							pipeline => {
+								pipeline.PreAssembler<MicroPipelineComponent>(
+									pc => {
+										pc.Components = new IMicroPipelineComponent[] {
+											new FailedMessageRoutingEnabler(),
+											new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
+										};
+									});
+							});
 						sp.Transport.Adapter = new FileAdapter.Outbound(
 							a => {
 								a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Out";
@@ -156,7 +191,18 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-									rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
+									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
+										pipeline => {
+											pipeline.Decoder<MicroPipelineComponent>(
+												pc => {
+													pc.Components = new IMicroPipelineComponent[] {
+														new FailedMessageRoutingEnabler(),
+														new BatchTracker(),
+														new EnvelopeBuilder(),
+														new ContextPropertyExtractor()
+													};
+												});
+										});
 									rl.Transport.Adapter = new WcfSqlAdapter.Inbound(
 										a => {
 											a.Address = new SqlAdapterConnectionUri {
@@ -190,7 +236,17 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("CheckOut").FormattedAs.Xml;
-									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>();
+									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
+										pipeline => {
+											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+											pipeline.Validator<MicroPipelineComponent>(
+												pc => {
+													pc.Components = new IMicroPipelineComponent[] {
+														new ContextPropertyExtractor(),
+														new ActivityTracker()
+													};
+												});
+										});
 									rl.Transport.Adapter = new WcfSqlAdapter.Inbound(
 										a => {
 											a.Address = new SqlAdapterConnectionUri {
@@ -223,7 +279,17 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("InputMessage").FormattedAs.Xml;
-									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>();
+									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
+										pipeline => {
+											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+											pipeline.Validator<MicroPipelineComponent>(
+												pc => {
+													pc.Components = new IMicroPipelineComponent[] {
+														new ContextPropertyExtractor(),
+														new ActivityTracker()
+													};
+												});
+										});
 									rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In"; });
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}),
@@ -232,13 +298,19 @@ namespace Be.Stateless.BizTalk
 									rl.Name = ReceiveLocationName.About("Batch.AddPart").FormattedAs.Xml;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.PartyResolver<ContextPropertyExtractorComponent>(
+											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
-													pc.Extractors = new[] {
-														new XPathExtractor(BizTalkFactoryProperties.EnvelopeSpecName, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']", ExtractionMode.Promote),
-														new XPathExtractor(BizTalkFactoryProperties.EnvelopePartition, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']"),
-														new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']"),
-														new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
+													pc.Components = new IMicroPipelineComponent[] {
+														new ContextPropertyExtractor {
+															Extractors = new[] {
+																new XPathExtractor(BizTalkFactoryProperties.EnvelopeSpecName, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']", ExtractionMode.Promote),
+																new XPathExtractor(BizTalkFactoryProperties.EnvelopePartition, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']"),
+																new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']"),
+																new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
+															}
+														},
+														new ActivityTracker()
 													};
 												});
 										});
@@ -254,19 +326,24 @@ namespace Be.Stateless.BizTalk
 									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.Xml;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.PartyResolver<ContextPropertyExtractorComponent>(
+											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
+											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
-													pc.Extractors = new[] {
-														new XPathExtractor(BizTalkFactoryProperties.CorrelationToken, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
-														new XPathExtractor(BizTalkFactoryProperties.OutboundTransportLocation, "/*[local-name()='Any']/*[local-name()='OutboundTransportLocation']"),
-														new XPathExtractor(BizTalkFactoryProperties.ReceiverName, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
-														new XPathExtractor(BizTalkFactoryProperties.SenderName, "/*[local-name()='Any']/*[local-name()='SenderName']"),
-														new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
-														new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
-														new XPathExtractor(TrackingProperties.Value3, "/*[local-name()='Any']/*[local-name()='SenderName']")
+													pc.Components = new IMicroPipelineComponent[] {
+														new ContextPropertyExtractor {
+															Extractors = new[] {
+																new XPathExtractor(BizTalkFactoryProperties.CorrelationToken, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
+																new XPathExtractor(BizTalkFactoryProperties.OutboundTransportLocation, "/*[local-name()='Any']/*[local-name()='OutboundTransportLocation']"),
+																new XPathExtractor(BizTalkFactoryProperties.ReceiverName, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
+																new XPathExtractor(BizTalkFactoryProperties.SenderName, "/*[local-name()='Any']/*[local-name()='SenderName']"),
+																new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
+																new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
+																new XPathExtractor(TrackingProperties.Value3, "/*[local-name()='Any']/*[local-name()='SenderName']")
+															}
+														},
+														new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
 													};
 												});
-											pipeline.PartyResolver<ActivityTrackerComponent>(pc => { pc.TrackingModes = ActivityTrackingModes.Claim; });
 										});
 									rl.Transport.Adapter = new FileAdapter.Inbound(
 										a => {
@@ -279,7 +356,15 @@ namespace Be.Stateless.BizTalk
 								rl => {
 									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.None;
 									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
-										pipeline => { pipeline.Decoder<ActivityTrackerComponent>(pc => { pc.TrackingModes = ActivityTrackingModes.Claim; }); });
+										pipeline => {
+											pipeline.Decoder<MicroPipelineComponent>(
+												pc => {
+													pc.Components = new IMicroPipelineComponent[] {
+														new FailedMessageRoutingEnabler(),
+														new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
+													};
+												});
+										});
 									rl.Transport.Adapter = new FileAdapter.Inbound(
 										a => {
 											a.FileMask = "*.bin.claim";

@@ -16,41 +16,40 @@
 
 #endregion
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Be.Stateless.Extensions;
-using Be.Stateless.Text;
 
 namespace Be.Stateless.BizTalk.Xml
 {
 	/// <summary>
-	/// XML serializer surrogate that supports the serialization of <see cref="Encoding"/>.
+	/// XML serializer surrogate that supports the serialization of <see cref="TimeSpan"/>.
 	/// </summary>
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization")]
-	public class EncodingXmlSerializer : IXmlSerializable
+	public class TimeSpanXmlSerializer : IXmlSerializable
 	{
 		#region Operators
 
-		public static implicit operator Encoding(EncodingXmlSerializer serializer)
+		public static implicit operator TimeSpan(TimeSpanXmlSerializer serializer)
 		{
-			return serializer._serializedEncoding.IsNullOrEmpty() ? null : EncodingConverter.Deserialize(serializer._serializedEncoding);
+			return serializer._serializedTimeSpan.IsNullOrEmpty() ? TimeSpan.Zero : TimeSpan.Parse(serializer._serializedTimeSpan);
 		}
 
-		public static implicit operator EncodingXmlSerializer(Encoding encoding)
+		public static implicit operator TimeSpanXmlSerializer(TimeSpan timeSpan)
 		{
-			return new EncodingXmlSerializer(EncodingConverter.Serialize(encoding));
+			return new TimeSpanXmlSerializer(timeSpan.ToString());
 		}
 
 		#endregion
 
-		public EncodingXmlSerializer() { }
+		public TimeSpanXmlSerializer() { }
 
-		private EncodingXmlSerializer(string serializedEncoding)
+		public TimeSpanXmlSerializer(string serializedTimeSpan)
 		{
-			_serializedEncoding = serializedEncoding;
+			_serializedTimeSpan = serializedTimeSpan;
 		}
 
 		#region IXmlSerializable Members
@@ -62,16 +61,16 @@ namespace Be.Stateless.BizTalk.Xml
 
 		public void ReadXml(XmlReader reader)
 		{
-			_serializedEncoding = reader.ReadElementContentAsString();
+			_serializedTimeSpan = reader.ReadElementContentAsString();
 		}
 
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteString(_serializedEncoding);
+			writer.WriteString(_serializedTimeSpan);
 		}
 
 		#endregion
 
-		private string _serializedEncoding;
+		private string _serializedTimeSpan;
 	}
 }

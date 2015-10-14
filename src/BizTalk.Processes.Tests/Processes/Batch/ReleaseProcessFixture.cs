@@ -458,8 +458,8 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			// ReSharper restore PossibleMultipleEnumeration
 
 			// ensure the 2 processes are issued from the same polling, thereby validating that all available batches are
-			// released in one shot (i.e., in DEV, one within half second of the other, when polling every 5 seconds)
-			Assert.That(processes[0].BeginTime, Is.EqualTo(processes[1].BeginTime).Within(TimeSpan.FromSeconds(.5)));
+			// released in one shot (i.e., in DEV, one within one second of the other, when polling every 5 seconds)
+			Assert.That(processes[0].BeginTime, Is.EqualTo(processes[1].BeginTime).Within(TimeSpan.FromSeconds(1)));
 
 			// each batch is made of 3 parts
 			var envelopeMessage1 = processes[0].MessagingSteps.Single(

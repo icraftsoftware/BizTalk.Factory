@@ -128,8 +128,8 @@ namespace Be.Stateless.BizTalk.Component
 		[Description("How many seconds activity tracking contexts will be kept in cache when propagated through solicit-response ports. Any negative value disables caching.")]
 		public int TrackingContextRetentionDuration
 		{
-			get { return _microComponent.TrackingContextRetentionDuration; }
-			set { _microComponent.TrackingContextRetentionDuration = value; }
+			get { return (int) _microComponent.TrackingContextCacheDuration.TotalSeconds; }
+			set { _microComponent.TrackingContextCacheDuration = TimeSpan.FromSeconds(value); }
 		}
 
 		/// <summary>
@@ -154,8 +154,8 @@ namespace Be.Stateless.BizTalk.Component
 		[TypeConverter(typeof(PolicyNameConverter))]
 		public PolicyName TrackingResolutionPolicy
 		{
-			get { return _microComponent.TrackingResolutionPolicy; }
-			set { _microComponent.TrackingResolutionPolicy = value; }
+			get { return _microComponent.TrackingResolutionPolicyName; }
+			set { _microComponent.TrackingResolutionPolicyName = value; }
 		}
 
 		private const string CLASS_ID = "1b4c83dd-7e71-453c-80de-457f70e8a703";

@@ -34,7 +34,10 @@ namespace Be.Stateless.BizTalk.XPath
 
 		public override void ReadXml(XmlReader reader)
 		{
+			reader.AssertStartElement("Extractors");
+			var isEmpty = reader.IsEmptyElement;
 			reader.ReadStartElement("Extractors");
+			if (isEmpty) return;
 			base.ReadXml(reader);
 			reader.ReadEndElement("Extractors");
 		}

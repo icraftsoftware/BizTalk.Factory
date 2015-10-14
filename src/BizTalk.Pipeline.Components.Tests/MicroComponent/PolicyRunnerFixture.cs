@@ -18,7 +18,10 @@
 
 using System.IO;
 using System.Text;
+using System.Xml;
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
+using Be.Stateless.IO;
 using Be.Stateless.IO.Extensions;
 using Moq;
 using NUnit.Framework;
@@ -28,6 +31,20 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	[TestFixture]
 	public class PolicyRunnerFixture : MicroPipelineComponentFixture
 	{
+		[Test]
+		public void Deserialize()
+		{
+			var microPipelineComponentType = typeof(PolicyRunner);
+			var xml = string.Format(
+				"<mComponent name=\"{0}\"><ExecutionMode>Immediate</ExecutionMode><Policy /></mComponent>",
+				microPipelineComponentType.AssemblyQualifiedName);
+			using (var reader = XmlReader.Create(new StringStream(xml)))
+			{
+				// ReSharper disable once AccessToDisposedClosure
+				Assert.That(() => reader.DeserializeMicroPipelineComponent(), Throws.Nothing);
+			}
+		}
+
 		[Test]
 		public void DoesNothingWhenNoPolicy()
 		{
@@ -92,6 +109,23 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				MessageMock.Object.BodyPart.Data.Drain();
 				policyMock.Verify(pc => pc.Execute(It.IsAny<object[]>()), Times.Never());
 			}
+		}
+
+		[Test]
+		public void Serialize()
+		{
+			var component = new PolicyRunner();
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			{
+				component.Serialize(writer);
+			}
+			Assert.That(
+				builder.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<mComponent name=\"{0}\"><ExecutionMode>Immediate</ExecutionMode><Policy /></mComponent>",
+						component.GetType().AssemblyQualifiedName)));
 		}
 	}
 }

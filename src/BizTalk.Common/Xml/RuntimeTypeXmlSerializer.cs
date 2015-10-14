@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Xml
 {
@@ -34,7 +35,7 @@ namespace Be.Stateless.BizTalk.Xml
 
 		public static implicit operator Type(RuntimeTypeXmlSerializer serializer)
 		{
-			return Type.GetType(serializer._assemblyQualifiedName, true);
+			return serializer._assemblyQualifiedName.IsNullOrEmpty() ? null : Type.GetType(serializer._assemblyQualifiedName, true);
 		}
 
 		public static implicit operator RuntimeTypeXmlSerializer(Type type)

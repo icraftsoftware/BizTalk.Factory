@@ -181,7 +181,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 														c.Enabled = false;
 														c.Components = new IMicroPipelineComponent[] {
 															new FailedMessageRoutingEnabler { EnableFailedMessageRouting = true, SuppressRoutingFailureReport = false },
-															new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim, TrackingContextRetentionDuration = 120 }
+															new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim, TrackingContextCacheDuration = TimeSpan.FromSeconds(120) }
 														};
 													});
 											});
