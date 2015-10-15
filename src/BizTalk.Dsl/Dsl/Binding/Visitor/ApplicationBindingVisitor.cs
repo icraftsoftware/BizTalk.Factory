@@ -33,83 +33,56 @@ using TransportInfo = Microsoft.BizTalk.Deployment.Binding.TransportInfo;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
 	/// <summary>
+	/// <see cref="IApplicationBindingVisitor"/> implementation that generates BizTalk Server bindings file.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// See <see href="https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx">Microsoft.BizTalk.Deployment.Binding Namespace</see>
+	/// See <see href="https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx">Microsoft.BizTalk.Deployment.Binding
+	/// Namespace</see>
 	/// </para>
 	/// </remarks>
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-	public class ApplicationBindingVisitor : IApplicationBindingVisitor
+	public class ApplicationBindingVisitor : ApplicationBindingVisitorBase
 	{
-		public static ApplicationBindingVisitor Create()
+		public static ApplicationBindingVisitor Create(string targetEnvironment)
 		{
-			return new ApplicationBindingVisitor();
+			return new ApplicationBindingVisitor(targetEnvironment);
 		}
 
-		public static ApplicationBindingVisitor Create(string environment)
-		{
-			return environment.IsNullOrEmpty() ? new ApplicationBindingVisitor() : new ApplicationBindingVisitor(environment);
-		}
+		private ApplicationBindingVisitor(string targetEnvironment) : base(targetEnvironment) { }
 
-		private ApplicationBindingVisitor() { }
+		#region Base Class Member Overrides
 
-		private ApplicationBindingVisitor(string environment)
-		{
-			_environment = environment;
-		}
-
-		#region IApplicationBindingVisitor Members
-
-		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
+		protected internal override void VisitApplicationCore<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 		{
 			ApplicationName = ((ISupportNamingConvention) applicationBinding).Name;
-			((ISupportEnvironmentOverride) applicationBinding).ApplyEnvironmentOverrides(_environment);
 			BindingInfo = CreateBindingInfo(applicationBinding);
 		}
 
-		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
+		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
 		{
-			// TODO ?? should not support this at orchestration level but at ModuleRef level or ensure that if one orchestration is not deployable then none is or only support ApplyEnvironmentOverrides ??
-			if (((ISupportEnvironmentDeploymentPredicate) orchestrationBinding).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) orchestrationBinding).ApplyEnvironmentOverrides(_environment);
-				var moduleRef = CreateModuleRef(orchestrationBinding);
-				BindingInfo.ModuleRefCollection.Add(moduleRef);
-				var serviceRef = CreateServiceRef(orchestrationBinding);
-				moduleRef.Services.Add(serviceRef);
-			}
+			var moduleRef = CreateModuleRef(orchestrationBinding);
+			BindingInfo.ModuleRefCollection.Add(moduleRef);
+			var serviceRef = CreateServiceRef(orchestrationBinding);
+			moduleRef.Services.Add(serviceRef);
 		}
 
-		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) where TNamingConvention : class
+		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 		{
-			// TODO ?? remove this test and check if there are any Receive Location to deploy for the environment ??
-			if (((ISupportEnvironmentDeploymentPredicate) receivePort).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(_environment);
-				_lastVisitedReceivePort = CreateReceivePort(receivePort);
-				BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
-			}
+			_lastVisitedReceivePort = CreateReceivePort(receivePort);
+			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
 
-		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation) where TNamingConvention : class
+		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
-			if (((ISupportEnvironmentDeploymentPredicate) receiveLocation).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(_environment);
-				var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
-				_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
-			}
+			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
+			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
 		}
 
-		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort) where TNamingConvention : class
+		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
-			if (((ISupportEnvironmentDeploymentPredicate) sendPort).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(_environment);
-				var visitedSendPort = CreateSendPort(sendPort);
-				BindingInfo.SendPortCollection.Add(visitedSendPort);
-			}
+			var visitedSendPort = CreateSendPort(sendPort);
+			BindingInfo.SendPortCollection.Add(visitedSendPort);
 		}
 
 		#endregion
@@ -350,7 +323,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return tp;
 		}
 
-		private readonly string _environment;
 		private BtsReceivePort _lastVisitedReceivePort;
 	}
 }

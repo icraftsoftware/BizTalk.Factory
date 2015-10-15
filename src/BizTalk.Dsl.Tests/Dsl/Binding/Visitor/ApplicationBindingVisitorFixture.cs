@@ -22,7 +22,6 @@ using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.BizTalk.ExplorerOM;
-using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
@@ -70,7 +69,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateBindingInfo()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.BindingInfo;
 
@@ -87,7 +86,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateModuleRef()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			// initialize BindingInfo
 			visitor.VisitApplicationBinding(new TestApplication());
 
@@ -101,7 +100,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var dsl = new TestApplication.OneWayReceiveLocation();
 
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			var binding = visitor.CreateReceiveLocation(dsl);
 
 			Assert.That(binding.Name, Is.EqualTo("OneWayReceiveLocation"));
@@ -129,7 +128,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceiveLocationTwoWay()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			var binding = visitor.CreateReceiveLocation(new TestApplication.TwoWayReceiveLocation());
 
 			Assert.That(binding.Name, Is.EqualTo("TwoWayReceiveLocation"));
@@ -160,7 +159,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceivePortOneWay()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			// initialize ApplicationBindingVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.OneWayReceivePort());
@@ -175,7 +174,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceivePortTwoWay()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			// initialize ApplicationBindingVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.TwoWayReceivePort());
@@ -192,7 +191,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var dsl = new TestApplication.OneWaySendPort();
 
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			// initialize ApplicationBindingVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(dsl);
@@ -230,7 +229,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateSendPortTwoWay()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 			// initialize ApplicationBindingVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(new TestApplication.TwoWaySendPort());
@@ -266,7 +265,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateServiceRef()
 		{
-			var visitor = ApplicationBindingVisitor.Create();
+			var visitor = ApplicationBindingVisitor.Create("DEV");
 
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Description = "Some Useless Orchestration.",
@@ -306,87 +305,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			Assert.That(binding.Ports[3].Name, Is.EqualTo("SolicitResponsePort"));
 			Assert.That(binding.Ports[3].ReceivePortRef, Is.Null);
 			Assert.That(binding.Ports[3].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWaySendPort()).Name));
-		}
-
-		[Test]
-		public void VisitApplicationBindingAppliesEnvironmentOverrides()
-		{
-			var applicationBindingMock = new Mock<IApplicationBinding<object>>();
-			var environmentSensitiveApplicationBindingMock = applicationBindingMock.As<ISupportEnvironmentOverride>();
-			applicationBindingMock.As<ISupportNamingConvention>();
-			applicationBindingMock.As<ISupportValidation>();
-
-			var visitor = ApplicationBindingVisitor.Create();
-			visitor.VisitApplicationBinding(applicationBindingMock.Object);
-
-			environmentSensitiveApplicationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitOrchestrationAppliesEnvironmentOverrides()
-		{
-			var applicationBinding = new TestApplication();
-			var orchestrationBindingMock = new Mock<IOrchestrationBinding> { CallBase = true };
-			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentSensitivity>();
-			orchestrationBindingMock.Setup(ob => ob.Type).Returns(typeof(Process));
-			environmentSensitiveOrchestrationBindingMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
-
-			var visitor = ApplicationBindingVisitor.Create();
-			visitor.VisitApplicationBinding(applicationBinding);
-			visitor.VisitOrchestration(orchestrationBindingMock.Object);
-
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitReceiveLocationAppliesEnvironmentOverrides()
-		{
-			var applicationBinding = new TestApplication();
-			var receivePort = new TestApplication.OneWayReceivePort();
-			var receiveLocationMock = new Mock<TestApplication.OneWayReceiveLocation> { CallBase = true };
-			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentSensitivity>();
-
-			var visitor = ApplicationBindingVisitor.Create();
-			visitor.VisitApplicationBinding(applicationBinding);
-			visitor.VisitReceivePort(receivePort);
-			visitor.VisitReceiveLocation(receiveLocationMock.Object);
-
-			environmentSensitiveReceiveLocationMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitReceivePortAppliesEnvironmentOverrides()
-		{
-			var applicationBinding = new TestApplication();
-			var receivePortMock = new Mock<IReceivePort<object>>();
-			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentSensitivity>();
-			receivePortMock.As<ISupportNamingConvention>();
-			receivePortMock.As<ISupportValidation>();
-			environmentSensitiveReceivePortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
-
-			var visitor = ApplicationBindingVisitor.Create();
-			visitor.VisitApplicationBinding(applicationBinding);
-			visitor.VisitReceivePort(receivePortMock.Object);
-
-			environmentSensitiveReceivePortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitSendPortAppliesEnvironmentOverrides()
-		{
-			var applicationBinding = new TestApplication();
-			var sendPortMock = new Mock<TestApplication.OneWaySendPort> { CallBase = true };
-			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentSensitivity>();
-
-			var visitor = ApplicationBindingVisitor.Create();
-			visitor.VisitApplicationBinding(applicationBinding);
-			visitor.VisitSendPort(sendPortMock.Object);
-
-			environmentSensitiveSendPortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
 		}
 	}
 }

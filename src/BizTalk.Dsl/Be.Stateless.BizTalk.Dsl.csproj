@@ -158,6 +158,7 @@
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
+    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBase.cs" />
     <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderConfiguratorVisitor.cs" />
     <Compile Include="Install\ApplicationInstaller.cs">
       <SubType>Component</SubType>

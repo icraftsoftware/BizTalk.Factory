@@ -26,7 +26,10 @@ using Path = Be.Stateless.IO.Path;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
-	public class FileAdapterFolderConfiguratorVisitor : IApplicationBindingVisitor
+	/// <summary>
+	/// <see cref="IApplicationBindingVisitor"/> implementation that setup file adapters' physical paths.
+	/// </summary>
+	public class FileAdapterFolderConfiguratorVisitor : ApplicationBindingVisitorBase
 	{
 		public static FileAdapterFolderConfiguratorVisitor CreateInstaller(string targetEnvironment, string[] users)
 		{
@@ -41,55 +44,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, recurse);
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string environment, string[] users)
+		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, string[] users) : base(targetEnvironment)
 		{
 			_operation = SetupDirectory;
-			_environment = environment;
 			_users = users;
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string environment, bool recurse)
+		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, bool recurse) : base(targetEnvironment)
 		{
 			_operation = path => TeardownDirectory(path, recurse);
-			_environment = environment;
 		}
 
-		#region IApplicationBindingVisitor Members
+		#region Base Class Member Overrides
 
-		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
+		protected internal override void VisitApplicationCore<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) { }
+
+		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding) { }
+
+		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
-			((ISupportEnvironmentOverride) applicationBinding).ApplyEnvironmentOverrides(_environment);
+			var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
+			if (fileAdapter != null) _operation(fileAdapter.ReceiveFolder);
 		}
 
-		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding) { }
+		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) { }
 
-		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) where TNamingConvention : class
+		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
-			// TODO ?? remove this test and check if there are any Receive Location to deploy for the environment ??
-			if (((ISupportEnvironmentDeploymentPredicate) receivePort).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(_environment);
-			}
-		}
-
-		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation) where TNamingConvention : class
-		{
-			if (((ISupportEnvironmentDeploymentPredicate) receiveLocation).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(_environment);
-				var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
-				if (fileAdapter != null) _operation(fileAdapter.ReceiveFolder);
-			}
-		}
-
-		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort) where TNamingConvention : class
-		{
-			if (((ISupportEnvironmentDeploymentPredicate) sendPort).IsDeployableForEnvironment(_environment))
-			{
-				((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(_environment);
-				var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
-				if (fileAdapter != null) _operation(fileAdapter.DestinationFolder);
-			}
+			var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
+			if (fileAdapter != null) _operation(fileAdapter.DestinationFolder);
 		}
 
 		#endregion
@@ -179,8 +162,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		#endregion
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileAdapterFolderConfiguratorVisitor));
-
-		private readonly string _environment;
 		private readonly Action<string> _operation;
 		private readonly string[] _users;
 	}

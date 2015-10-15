@@ -133,6 +133,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
+    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorFixture.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensionsFixture.cs" />
