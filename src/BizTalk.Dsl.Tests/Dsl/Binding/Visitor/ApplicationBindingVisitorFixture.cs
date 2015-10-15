@@ -25,7 +25,7 @@ using Microsoft.BizTalk.ExplorerOM;
 using Moq;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
 	/*
 	 * TODO https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx

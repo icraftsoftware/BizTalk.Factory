@@ -156,7 +156,7 @@
     <Compile Include="BizTalkFactoryApplicationBinding.cs" />
     <Compile Include="EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.Designer.cs" />
     <Compile Include="EnvironmentSettings\Common.SettingsFileGenerator.Designer.cs" />
-    <Compile Include="BindingGenerator.cs">
+    <Compile Include="ApplicationInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

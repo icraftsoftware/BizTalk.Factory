@@ -19,31 +19,79 @@
 using System;
 using System.Collections;
 using System.Configuration.Install;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
+using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
 using Be.Stateless.Extensions;
 using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Install
 {
-	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Pseudo installer class.")]
-	public abstract class BindingFileGenerator<T> : Installer
-		where T : IBindingSerializerFactory, new()
+	public abstract class ApplicationInstaller<T> : Installer
+		where T : class, IBindingSerializerFactory, IVisitable<IApplicationBindingVisitor>, new()
 	{
 		#region Base Class Member Overrides
 
 		public override void Install(IDictionary stateSaver)
 		{
-			var targetEnvironment = Context.Parameters["TargetEnvironment"];
-			var bindingFilePath = Context.Parameters["BindingFilePath"];
-			GenerateBindingFile(targetEnvironment, bindingFilePath);
 			base.Install(stateSaver);
+
+			try
+			{
+				var targetEnvironment = Context.Parameters["TargetEnvironment"];
+				if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
+				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
+
+				AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+				if (Context.Parameters.ContainsKey("BindingFilePath"))
+				{
+					var bindingFilePath = Context.Parameters["BindingFilePath"];
+					GenerateBindingFile(targetEnvironment, bindingFilePath);
+				}
+				if (Context.Parameters.ContainsKey("SetupFileAdapterPaths"))
+				{
+					var users = Context.Parameters["Users"].IfNotNullOrEmpty(u => u.Split(';', ','));
+					SetupFileAdapterPaths(targetEnvironment, users);
+				}
+			}
+			finally
+			{
+				AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+			}
+		}
+
+		public override void Uninstall(IDictionary savedState)
+		{
+			base.Uninstall(savedState);
+
+			try
+			{
+				var targetEnvironment = Context.Parameters["TargetEnvironment"];
+				if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
+				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
+
+				AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+				if (Context.Parameters.ContainsKey("TeardownFileAdapterPaths"))
+				{
+					var recurse = Context.Parameters.ContainsKey("Recurse");
+					TeardownFileAdapterPaths(targetEnvironment, recurse);
+				}
+			}
+			finally
+			{
+				AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+			}
 		}
 
 		#endregion
+
+		private T ApplicationBinding
+		{
+			get { return _applicationBinding ?? (_applicationBinding = new T()); }
+		}
 
 		private String BizTalkInstallPath
 		{
@@ -64,21 +112,24 @@ namespace Be.Stateless.BizTalk.Install
 
 		private void GenerateBindingFile(string targetEnvironment, string bindingFilePath)
 		{
-			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			if (bindingFilePath.IsNullOrEmpty()) throw new ArgumentNullException("bindingFilePath");
 
-			try
-			{
-				AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
-				var applicationBindingSerializerFactory = new T();
-				var applicationBindingSerializer = applicationBindingSerializerFactory.GetBindingSerializer(targetEnvironment);
-				applicationBindingSerializer.Save(bindingFilePath);
-			}
-			finally
-			{
-				AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
-			}
+			var applicationBindingSerializer = ApplicationBinding.GetBindingSerializer(targetEnvironment);
+			applicationBindingSerializer.Save(bindingFilePath);
+		}
+
+		private void SetupFileAdapterPaths(string targetEnvironment, string[] users)
+		{
+			if (users == null) throw new ArgumentNullException("users");
+
+			var visitor = FileAdapterFolderConfiguratorVisitor.CreateInstaller(targetEnvironment, users);
+			ApplicationBinding.Accept(visitor);
+		}
+
+		private void TeardownFileAdapterPaths(string targetEnvironment, bool recurse)
+		{
+			var visitor = FileAdapterFolderConfiguratorVisitor.CreateUninstaller(targetEnvironment, recurse);
+			ApplicationBinding.Accept(visitor);
 		}
 
 		private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -108,6 +159,7 @@ namespace Be.Stateless.BizTalk.Install
 			return null;
 		}
 
+		private T _applicationBinding;
 		private string _installPath;
 	}
 }

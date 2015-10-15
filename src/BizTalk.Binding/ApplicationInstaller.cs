@@ -23,6 +23,6 @@ using Be.Stateless.BizTalk.Install;
 namespace Be.Stateless.BizTalk
 {
 	[RunInstaller(true)]
-	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Pseudo installer class.")]
-	public class BindingFileGenerator : BindingFileGenerator<BizTalkFactoryApplicationBinding> { }
+	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Installer class.")]
+	public class ApplicationInstaller : ApplicationInstaller<BizTalkFactoryApplicationBinding> { }
 }

@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Deployment.Binding;
 

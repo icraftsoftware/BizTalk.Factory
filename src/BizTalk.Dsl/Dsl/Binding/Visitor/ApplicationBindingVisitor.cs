@@ -30,7 +30,7 @@ using BtsReceivePort = Microsoft.BizTalk.Deployment.Binding.ReceivePort;
 using BtsSendPort = Microsoft.BizTalk.Deployment.Binding.SendPort;
 using TransportInfo = Microsoft.BizTalk.Deployment.Binding.TransportInfo;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
 	/// <summary>
 	/// </summary>
@@ -56,7 +56,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private ApplicationBindingVisitor(string environment)
 		{
-			if (environment == null) throw new ArgumentNullException("environment");
 			_environment = environment;
 		}
 

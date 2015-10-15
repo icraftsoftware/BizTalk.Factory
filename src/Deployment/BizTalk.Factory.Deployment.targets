@@ -114,7 +114,7 @@
 
   <PropertyGroup>
     <CustomPostDeployDependsOn>
-      GenerateAndDeployFluentApplicationBindings;
+      DeployFluentApplicationBindings;
       ApplyConfigFilesCustomizations;
       CreateBamIndexes;
       CreateMsmqQueues;
@@ -141,6 +141,7 @@
       UndeployCertificates;
       DeleteMsmqQueues;
       RevertConfigFilesCustomizations;
+      UndeployFluentApplicationBindings
     </CustomUndeployDependsOn>
   </PropertyGroup>
   <Target Name="CustomUndeployTarget" DependsOnTargets="$(CustomUndeployDependsOn)" />
@@ -239,7 +240,6 @@
           DependsOnTargets="BuildCertificatesQualified"
           Outputs="%(CertificatesQualified.Identity)"
           Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-
     <Message Text="Deploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
@@ -294,24 +294,10 @@
     <Message Text="Certificate deployed." />
   </Target>
 
-  <Target Name="BuildCertificatesQualified" Outputs="%(Certificates.Identity)%(Certificates.TargetHosts)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-
-    <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="%(Certificates.TargetHosts)" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
-      <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
-    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
-
-    <!-- keep only the certificates whose TargetHosts have CoincidingHosts -->
-    <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
-      <CertificatesQualified Include="@(Certificates)" />
-    </ItemGroup>
-  </Target>
-
   <Target Name="UndeployCertificates"
           DependsOnTargets="BuildCertificatesQualified"
           Outputs="%(CertificatesQualified.Identity)"
           Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
-
     <Message Text="Undeploying certificate %(CertificatesQualified.Identity)..." />
 
     <PropertyGroup Condition=" '@(CertificatesQualified)' != '' ">
@@ -330,6 +316,18 @@
       Thumbprint="%(CertificatesQualified.Thumbprint)" />
 
     <Message Text="Certificate undeployed." />
+  </Target>
+
+  <Target Name="BuildCertificatesQualified" Outputs="%(Certificates.Identity)%(Certificates.TargetHosts)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
+    <!-- filter TargetHosts to keep only those that coincides with the local host -->
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="%(Certificates.TargetHosts)" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+      <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+
+    <!-- keep only the certificates whose TargetHosts have CoincidingHosts -->
+    <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
+      <CertificatesQualified Include="@(Certificates)" />
+    </ItemGroup>
   </Target>
 
   <Target Name="CopyCertificatesToRedist" Condition=" '$(IncludeCertificates)' == 'true' ">
@@ -893,13 +891,18 @@
     </ApplicationBindingsQualified>
   </ItemGroup>
 
-  <Target Name="GenerateAndDeployFluentApplicationBindings"
-          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '$(DeployBizTalkMgmtDB)' == 'true' and '@(ApplicationBindings)' != '' "
-          DependsOnTargets="GenerateApplicationBindings;ImportApplicationBindings">
+  <Target Name="DeployFluentApplicationBindings"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' "
+          DependsOnTargets="GenerateApplicationBindings;ImportApplicationBindings;DeployFluentFileAdapterPhysicalPaths">
+  </Target>
+
+  <Target Name="UndeployFluentApplicationBindings"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' "
+          DependsOnTargets="UndeployFluentFileAdapterPhysicalPaths">
   </Target>
 
   <Target Name="GenerateApplicationBindings"
-          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' ">
     <Message Text="Generating XML port bindings from fluent DSL-based bindings..." />
 
     <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /BindingFilePath=&quot;%(BindingFilePath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
@@ -909,13 +912,41 @@
   </Target>
 
   <Target Name="ImportApplicationBindings"
-          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' ">
     <Message Text="Importing XML port bindings generated from fluent DSL-based bindings..." />
 
     <Exec Command="BTSTask.exe ImportBindings -Source:&quot;@(ApplicationBindingsQualified -> '%(BindingFilePath)')&quot; -ApplicationName:&quot;$(BizTalkAppName)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' " />
 
     <Message Text="Imported XML port bindings generated from fluent DSL-based bindings." />
+  </Target>
+
+  <Target Name="DeployFluentFileAdapterPhysicalPaths"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(ManageFileAdapterPhysicalPaths)' == 'true' ">
+    <Message Text="Deploying fluent file adapters' physical paths..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;BUILTIN\Users&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' != 'Server' " />
+
+    <Message Text="The BTSACCOUNT environment variable must be set up for automatic configuration of permissions for file adapter physical paths."
+             Condition=" '%(ApplicationBindingsQualified.Identity)' == '%(ApplicationBindingsQualified.Identity)' and '$(Configuration)' == 'Server' and '$(BTSACCOUNT)' == ''" />
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;$(BTSACCOUNT)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' == 'Server' " />
+
+    <Message Text="Deployed fluent file adapters' physical paths." />
+  </Target>
+
+  <Target Name="UndeployFluentFileAdapterPhysicalPaths"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(ManageFileAdapterPhysicalPaths)' == 'true' and '$(DeleteFileAdapterPhysicalPathsOnUndeploy)' != 'Never' ">
+    <Message Text="Undeploying fluent file adapters' physical paths..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /u /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /TeardownFileAdapterPaths &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' and '$(DeleteFileAdapterPhysicalPathsOnUndeploy)' == 'DeleteIfEmpty' " />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /u /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /TeardownFileAdapterPaths /Recurse &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' and '$(DeleteFileAdapterPhysicalPathsOnUndeploy)' == 'DeleteRecursive' " />
+
+    <Message Text="Undeployed fluent file adapters' physical paths." />
   </Target>
 
   <Target Name="CopyApplicationBindingsToRedist" Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
@@ -1267,7 +1298,6 @@
   </Target>
 
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
-
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="%(WindowsServices.TargetHosts)" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
@@ -1280,7 +1310,6 @@
         <LocationPath Condition=" '$(Configuration)' == 'Server' ">%(LocationPath)\Services\%(WindowsServices.Identity)</LocationPath>
       </WindowsServicesQualified>
     </ItemGroup>
-
   </Target>
 
   <Target Name="EnsureWindowsServiceConfigFilesPreprocessing" DependsOnTargets="BuildWindowsServicesQualified" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
