@@ -17,21 +17,21 @@
 #endregion
 
 using System;
-using System.Runtime.CompilerServices;
 using Microsoft.Win32;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions
+namespace Be.Stateless.Extensions
 {
-	internal static class RegistryExtensions
+	public static class RegistryExtensions
 	{
-		internal static RegistryKey SafeOpenSubKey(this RegistryKey key, string name, [CallerMemberName] string memberName = "")
+		public static RegistryKey SafeOpenSubKey(this RegistryKey key, string name)
 		{
 			var subKey = key.OpenSubKey(name);
 			if (subKey == null)
 				throw new InvalidOperationException(
 					string.Format(
-						"Cannot retrieve {0} settings. BizTalk Server might not be deployed on this computer.",
-						memberName));
+						"Cannot retrieve registry key '{0}\\{1} '.",
+						key.Name,
+						name));
 			return subKey;
 		}
 	}

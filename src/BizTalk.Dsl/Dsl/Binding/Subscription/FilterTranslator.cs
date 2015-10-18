@@ -219,36 +219,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				return value.ToString();
 			}
 
-			// handle IReceivePort<TNamingConvention>
-			var containingObject = expression.Expression;
-			if (containingObject.Type.IsGenericType && containingObject.Type.GetGenericTypeDefinition() == typeof(IReceivePort<>))
+			// handle IReceivePort<TNamingConvention> and ISendPort<TNamingConvention>
+			var containingObjectType = expression.Expression.Type;
+			if (containingObjectType.IsGenericType)
 			{
-				dynamic receivePort = Expression.Lambda(containingObject).Compile().DynamicInvoke();
-				// handle IReceivePort<string>
-				if (expression.Member.Name == "Name" && expression.Type == typeof(string))
+				var containingObjectGenericTypeDefinition = containingObjectType.GetGenericTypeDefinition();
+				if (containingObjectGenericTypeDefinition == typeof(IReceivePort<>) || containingObjectGenericTypeDefinition == typeof(ISendPort<>))
 				{
-					return receivePort.Name;
-				}
-				// handle IReceivePort<TNamingConvention> where TNamingConvention : INamingConvention
-				if (expression.Type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
-				{
-					return receivePort.Name.ComputeReceivePortName(receivePort);
-				}
-			}
-
-			// handle ISendPort<TNamingConvention>
-			if (containingObject.Type.IsGenericType && containingObject.Type.GetGenericTypeDefinition() == typeof(ISendPort<>))
-			{
-				dynamic sendPort = Expression.Lambda(containingObject).Compile().DynamicInvoke();
-				// handle IReceivePort<string>
-				if (expression.Member.Name == "Name" && expression.Type == typeof(string))
-				{
-					return sendPort.Name;
-				}
-				// handle IReceivePort<TNamingConvention> where TNamingConvention : INamingConvention
-				if (expression.Type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
-				{
-					return sendPort.Name.ComputeSendPortName(sendPort);
+					var port = (ISupportNamingConvention) Expression.Lambda(expression.Expression).Compile().DynamicInvoke();
+					return port.Name;
 				}
 			}
 

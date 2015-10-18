@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 #endregion
 
-using System;
+using Be.Stateless.Extensions;
 using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Explorer
@@ -29,13 +29,13 @@ namespace Be.Stateless.BizTalk.Explorer
 	{
 		static BizTalkServerGroup()
 		{
-			var key = Registry.LocalMachine.OpenSubKey(
-				string.Format(
-					@"SOFTWARE{0}Microsoft\Biztalk Server\3.0\Administration",
-					Is64BitOperatingSystem ? @"\Wow6432Node\" : @"\"));
-			if (key == null) throw new Exception("The registry key containing information about the BizTalk Server 2009 Management Database is missing.");
-			ManagementDatabase = new BizTalkServerManagementDatabase((string) key.GetValue("MgmtDBServer"), (string) key.GetValue("MgmtDBName"));
-			Applications = new ApplicationCollection();
+			// [HKLM\Wow6432Node\Microsoft\Biztalk Server\3.0\Administration]
+			using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+			using (var key = hklm.SafeOpenSubKey(@"SOFTWARE\Microsoft\Biztalk Server\3.0\Administration"))
+			{
+				ManagementDatabase = new BizTalkServerManagementDatabase((string) key.GetValue("MgmtDBServer"), (string) key.GetValue("MgmtDBName"));
+				Applications = new ApplicationCollection();
+			}
 		}
 
 		/// <summary>
@@ -44,13 +44,5 @@ namespace Be.Stateless.BizTalk.Explorer
 		public static ApplicationCollection Applications { get; private set; }
 
 		public static BizTalkServerManagementDatabase ManagementDatabase { get; private set; }
-
-		/// <summary>
-		/// Determines whether the current operating system is a 64-bit operating system.
-		/// </summary>
-		private static bool Is64BitOperatingSystem
-		{
-			get { return Environment.Is64BitOperatingSystem; }
-		}
 	}
 }

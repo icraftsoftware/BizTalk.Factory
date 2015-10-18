@@ -4,20 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C1E4257C-6BA5-4E88-96E2-6961DA3053D4}</ProjectGuid>
+    <ProjectGuid>{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
-    <AssemblyName>Be.Stateless.BizTalk.Explorer</AssemblyName>
+    <AssemblyName>Be.Stateless.BizTalk.Explorer.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
-    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,8 +24,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Explorer.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,18 +32,31 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Explorer.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\be.stateless.public.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.BizTalk.ExplorerOM">
+    <Reference Include="Microsoft.BizTalk.ExplorerOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -57,36 +65,26 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Explorer\Application.cs" />
-    <Compile Include="Explorer\ApplicationCollection.cs" />
-    <Compile Include="Explorer\BizTalkServerGroup.cs" />
-    <Compile Include="Explorer\ReceiveLocation.cs" />
-    <Compile Include="Explorer\SendPort.cs" />
-    <Compile Include="Explorer\BizTalkServerManagementDatabase.cs" />
-    <Compile Include="Explorer\ReceiveLocationCollection.cs" />
-    <Compile Include="Explorer\ReceivePort.cs" />
-    <Compile Include="Explorer\ReceivePortCollection.cs" />
-    <Compile Include="Explorer\SendPortCollection.cs" />
+    <Compile Include="Explorer\SendPortFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\be.stateless.public.snk">
       <Link>be.stateless.public.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">
-      <Project>{3B226253-7A9C-46EB-A1D8-11B1A6F634A8}</Project>
-      <Name>Be.Stateless.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
-      <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
-      <Name>Be.Stateless.Extensions</Name>
+    <ProjectReference Include="..\BizTalk.Explorer\Be.Stateless.BizTalk.Explorer.csproj">
+      <Project>{c1e4257c-6ba5-4e88-96e2-6961da3053d4}</Project>
+      <Name>Be.Stateless.BizTalk.Explorer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

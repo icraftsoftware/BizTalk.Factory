@@ -67,16 +67,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			moduleRef.Services.Add(serviceRef);
 		}
 
-		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
-		{
-			_lastVisitedReceivePort = CreateReceivePort(receivePort);
-			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
-		}
-
 		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
 			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
 			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
+		}
+
+		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+		{
+			_lastVisitedReceivePort = CreateReceivePort(receivePort);
+			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
 
 		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
@@ -212,7 +212,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 				Name = ((ISupportNamingConvention) receiveLocation).Name,
 				Address = receiveLocation.Transport.Adapter.Address,
 				Description = receiveLocation.Description,
-				Enable = receiveLocation.Enable, // TODO test this does what is expected
+				Enable = false, // receiveLocation.Enabled is the responsibility of BizTalkServiceConfiguratorVisitor
 				EndDate = receiveLocation.Transport.Schedule.StopDate,
 				EndDateEnabled = receiveLocation.Transport.Schedule.StopDateEnabled,
 				// TODO EncryptionCert = 
@@ -264,6 +264,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 					? null
 					: CreateTransportInfo(sendPort.BackupTransport, false, false),
 				SendPipelineData = ((IPipelineSerializerFactory) sendPort.SendPipeline).GetPipelineBindingSerializer().Serialize(),
+				// sendPort.Status is the responsibility of BizTalkServiceConfiguratorVisitor
 				StopSendingOnFailure = sendPort.StopSendingOnOrderedDeliveryFailure,
 				// TODO Tracking =
 				// TODO Transforms =

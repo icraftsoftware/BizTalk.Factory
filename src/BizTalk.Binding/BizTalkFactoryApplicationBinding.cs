@@ -37,6 +37,7 @@ using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
+using Microsoft.BizTalk.ExplorerOM;
 using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
 
 namespace Be.Stateless.BizTalk
@@ -52,6 +53,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Batch").About("AddPart").FormattedAs.Xml;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -76,6 +78,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Batch").About("QueueControlledRelease").FormattedAs.Xml;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -100,6 +103,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Claim").About("CheckIn").FormattedAs.Xml;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -124,6 +128,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Sink").About("FailedMessage").FormattedAs.None;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -146,6 +151,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -164,6 +170,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Claim").About("Redeem").FormattedAs.Xml;
+						sp.Status = PortStatus.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -191,6 +198,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(
@@ -236,6 +244,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("CheckOut").FormattedAs.Xml;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -279,6 +288,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("InputMessage").FormattedAs.Xml;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -296,6 +306,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("Batch.AddPart").FormattedAs.Xml;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -324,6 +335,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.Xml;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -355,6 +367,7 @@ namespace Be.Stateless.BizTalk
 							ReceiveLocation(
 								rl => {
 									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.None;
+									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
 										pipeline => {
 											pipeline.Decoder<MicroPipelineComponent>(

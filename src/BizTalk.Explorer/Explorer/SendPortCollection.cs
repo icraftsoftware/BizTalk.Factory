@@ -17,33 +17,33 @@
 #endregion
 
 using System;
-using BizTalkReceivePortCollection = Microsoft.BizTalk.ExplorerOM.ReceivePortCollection;
+using BizTalkSendPortCollection = Microsoft.BizTalk.ExplorerOM.SendPortCollection;
 
 namespace Be.Stateless.BizTalk.Explorer
 {
-	public class ReceivePortCollection
+	public class SendPortCollection
 	{
-		public ReceivePortCollection(BizTalkReceivePortCollection ports)
+		public SendPortCollection(BizTalkSendPortCollection ports)
 		{
 			if (ports == null) throw new ArgumentNullException("ports");
-			BizTalkReceivePortCollection = ports;
+			BizTalkSendPortCollection = ports;
 		}
 
-		public ReceivePort this[string name]
+		public SendPort this[string name]
 		{
 			get
 			{
-				var explorerReceivePort = BizTalkReceivePortCollection[name];
-				if (explorerReceivePort == null)
+				var explorerSendPort = BizTalkSendPortCollection[name];
+				if (explorerSendPort == null)
 					throw new Exception(
 						string.Format(
-							"BizTalk Receive Port '{0}' cannot be found in BizTalk Server Group [{1}].",
+							"BizTalk Send Port '{0}' cannot be found in BizTalk Server Group [{1}].",
 							name,
 							BizTalkServerGroup.ManagementDatabase));
-				return new ReceivePort(explorerReceivePort);
+				return new SendPort(explorerSendPort);
 			}
 		}
 
-		private BizTalkReceivePortCollection BizTalkReceivePortCollection { get; set; }
+		private BizTalkSendPortCollection BizTalkSendPortCollection { get; set; }
 	}
 }

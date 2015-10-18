@@ -23,7 +23,6 @@ using System.IO;
 using System.Reflection;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
 using Be.Stateless.Extensions;
 using Microsoft.Win32;
@@ -55,6 +54,10 @@ namespace Be.Stateless.BizTalk.Install
 				{
 					var users = Context.Parameters["Users"].IfNotNullOrEmpty(u => u.Split(';', ','));
 					SetupFileAdapterPaths(targetEnvironment, users);
+				}
+				if (Context.Parameters.ContainsKey("InitializeServices"))
+				{
+					InitializeServices(targetEnvironment);
 				}
 			}
 			finally
@@ -130,6 +133,13 @@ namespace Be.Stateless.BizTalk.Install
 		{
 			var visitor = FileAdapterFolderConfiguratorVisitor.CreateUninstaller(targetEnvironment, recurse);
 			ApplicationBinding.Accept(visitor);
+		}
+
+		private void InitializeServices(string targetEnvironment)
+		{
+			var visitor = BizTalkServiceConfiguratorVisitor.Create(targetEnvironment);
+			ApplicationBinding.Accept(visitor);
+			visitor.Commit();
 		}
 
 		private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)

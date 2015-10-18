@@ -204,6 +204,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ExternalAssemblies Include="ICSharpCode.SharpZipLib.dll">
+      <LocationPath>..\packages\SharpZipLib.0.86.0\lib\20</LocationPath>
+    </ExternalAssemblies>
     <ExternalAssemblies Include="log4net.dll">
       <LocationPath>..\packages\log4net.2.0.3\lib\net40-full</LocationPath>
     </ExternalAssemblies>
@@ -219,8 +222,8 @@
     <ExternalAssemblies Include="Be.Stateless.Common.dll">
       <LocationPath>..\Common\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
-    <ExternalAssemblies Include="Be.Stateless.BizTalk.Common.dll">
-      <LocationPath>..\BizTalk.Common\bin\$(Configuration)</LocationPath>
+    <ExternalAssemblies Include="Be.Stateless.BizTalk.Explorer.dll">
+      <LocationPath>..\BizTalk.Explorer\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.BizTalk.Dsl.dll">
       <LocationPath>..\BizTalk.Dsl\bin\$(Configuration)</LocationPath>
@@ -277,6 +280,12 @@
     <ApplicationBindings Include="Be.Stateless.BizTalk.Binding.dll">
       <LocationPath>..\BizTalk.Binding\bin\$(Configuration)</LocationPath>
     </ApplicationBindings>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Components Include="Be.Stateless.BizTalk.Common.dll">
+      <LocationPath>..\BizTalk.Common\bin\$(Configuration)</LocationPath>
+    </Components>
   </ItemGroup>
 
   <ItemGroup>

@@ -135,7 +135,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 									ReceiveLocation(
 										l => {
 											l.Name = ReceiveLocationName.About(MessageName.Invoice).FormattedAs.Xml;
-											l.Enable = false;
+											l.Enabled = false;
 											l.ReceivePipeline = new ReceivePipeline<XmlReceive>();
 											l.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
 											l.Transport.Host = Host.RECEIVING_HOST;
@@ -143,7 +143,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 									ReceiveLocation(
 										l => {
 											l.Name = ReceiveLocationName.About(MessageName.CreditNote).FormattedAs.Edi;
-											l.Enable = false;
+											l.Enabled = false;
 											l.ReceivePipeline = new ReceivePipeline<XmlReceive>();
 											l.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
 											l.Transport.Host = Host.RECEIVING_HOST;
@@ -158,7 +158,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 								ReceiveLocation(
 									l => {
 										l.Name = ReceiveLocationName.About(MessageName.Statement).FormattedAs.Csv;
-										l.Enable = true;
+										l.Enabled = true;
 										l.ReceivePipeline = new ReceivePipeline<PassThruReceive>(pl => { pl.Decoder<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
 										l.SendPipeline = new SendPipeline<PassThruTransmit>(pl => { pl.PreAssembler<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
 										l.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
@@ -173,7 +173,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 								ReceiveLocation(
 									l => {
 										l.Name = ReceiveLocationName.About(MessageName.Statement).FormattedAs.Xml;
-										l.Enable = true;
+										l.Enabled = true;
 										l.ReceivePipeline = new ReceivePipeline<MicroPipelines.XmlReceive>(
 											pl => {
 												pl.Decoder<MicroPipelineComponent>(
@@ -234,7 +234,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					ReceiveLocation(
 						l => {
 							l.Name = ReceiveLocationName.About(MessageName.Statement).FormattedAs.Xml;
-							l.Enable = false;
+							l.Enabled = false;
 							l.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
 								pl => {
 									pl.Decoder<PolicyRunnerComponent>(

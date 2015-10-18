@@ -60,6 +60,7 @@
     <Compile Include="Delegate.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\OperatingSystemExtensions.cs" />
+    <Compile Include="Extensions\RegistryExtensions.cs" />
     <Compile Include="IO\EnumerableStream.cs" />
     <Compile Include="IO\XmlBuilderStream.cs" />
     <Compile Include="Linq\Extensions\EnumeratorExtensions.cs" />

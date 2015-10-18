@@ -46,13 +46,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, string[] users) : base(targetEnvironment)
 		{
-			_operation = SetupDirectory;
+			_directoryOperation = SetupDirectory;
 			_users = users;
 		}
 
 		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, bool recurse) : base(targetEnvironment)
 		{
-			_operation = path => TeardownDirectory(path, recurse);
+			_directoryOperation = path => TeardownDirectory(path, recurse);
 		}
 
 		#region Base Class Member Overrides
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
 			var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
-			if (fileAdapter != null) _operation(fileAdapter.ReceiveFolder);
+			if (fileAdapter != null) _directoryOperation(fileAdapter.ReceiveFolder);
 		}
 
 		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) { }
@@ -72,7 +72,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
 			var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
-			if (fileAdapter != null) _operation(fileAdapter.DestinationFolder);
+			if (fileAdapter != null) _directoryOperation(fileAdapter.DestinationFolder);
 		}
 
 		#endregion
@@ -162,7 +162,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		#endregion
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileAdapterFolderConfiguratorVisitor));
-		private readonly Action<string> _operation;
+		private readonly Action<string> _directoryOperation;
 		private readonly string[] _users;
 	}
 }

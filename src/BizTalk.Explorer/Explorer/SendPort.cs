@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,138 +16,46 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.Linq.Extensions;
-using BizMock;
-using Microsoft.BizTalk.B2B.PartnerManagement;
-using Microsoft.XLANGs.BaseTypes;
+using System;
+using Microsoft.BizTalk.ExplorerOM;
+using BizTalkSendPort = Microsoft.BizTalk.ExplorerOM.SendPort;
 
 namespace Be.Stateless.BizTalk.Explorer
 {
 	public class SendPort
 	{
-		/// <summary>
-		/// Bridges <see cref="SendPort"/> and <see cref="SendPortArtifact"/> so as not to break <see cref="Expect"/> API.
-		/// </summary>
-		/// <returns>A <see cref="SendPortArtifact"/> equivalent.</returns>
-		public static implicit operator SendPortArtifact(SendPort sendPort)
+		public SendPort(BizTalkSendPort port)
 		{
-			return new SendPortArtifact(sendPort.Name, sendPort.Timeout);
+			if (port == null) throw new ArgumentNullException("port");
+			BizTalkSendPort = port;
 		}
 
-		public SendPort(Application application, string name, int timeout)
-			: this(application, name, null, null, timeout) { }
-
-		public SendPort(Application application, string name, string pipelineName, int timeout)
-			: this(application, name, pipelineName, null, timeout) { }
-
-		public SendPort(Application application, string name, string pipelineName, string pipelineData, int timeout)
+		public PortStatus Status
 		{
-			_application = application;
-			_name = name;
-			_pipelineName = pipelineName;
-			_pipelineData = pipelineData;
-			_timeout = timeout;
+			get { return BizTalkSendPort.Status; }
+			set { BizTalkSendPort.Status = value; }
 		}
 
-		private Microsoft.BizTalk.ExplorerOM.SendPort BizTalkSendPort
+		private BizTalkSendPort BizTalkSendPort { get; set; }
+
+		public void Start()
 		{
-			get
-			{
-				var btsApplication = (Microsoft.BizTalk.ExplorerOM.Application) _application;
-				return btsApplication.SendPorts.Cast<Microsoft.BizTalk.ExplorerOM.SendPort>().Single(sp => sp.Name.Equals(_name));
-			}
+			if (Status != PortStatus.Started) Status = PortStatus.Started;
 		}
 
-		public string Name
+		public void Stop()
 		{
-			get { return _name; }
+			if (Status != PortStatus.Stopped) Status = PortStatus.Stopped;
 		}
 
-		public int Timeout
+		public void Enlist()
 		{
-			get { return _timeout; }
+			if (Status == PortStatus.Bound) Status = PortStatus.Stopped;
 		}
 
-		public void Delete()
+		public void Unenlist()
 		{
-			BizTalkExplorerHelper.RemoveSendPort(_application, _name);
+			if (Status != PortStatus.Bound) Status = PortStatus.Bound;
 		}
-
-		public void Deploy()
-		{
-			BizTalkExplorerHelper.CreateNewSendPort(_application, _name, _pipelineName, _pipelineData, null, null, _timeout, false, false);
-		}
-
-		public SendPort SubscribesTo<T, TR>(MessageContextProperty<T, TR> property) where T : MessageContextPropertyBase, new()
-		{
-			BizTalkSendPort.Filter = BuildPropertySubscriptionFilter(property.Type.FullName);
-			return this;
-		}
-
-		public SendPort SubscribesTo<T, TR>(MessageContextProperty<T, TR> property, TR value) where T : MessageContextPropertyBase, new()
-		{
-			BizTalkSendPort.Filter = BuildPropertySubscriptionFilter(property.Type.FullName, value.ToString());
-			return this;
-		}
-
-		public SendPort SubscribesTo(params ReceiveLocation[] receiveLocations)
-		{
-			BizTalkSendPort.Filter = BuildReceivePortSubscriptionFilter(receiveLocations.Select(rl => rl.Name));
-			return this;
-		}
-
-		private string BuildPropertySubscriptionFilter(string propertyName)
-		{
-			var statement = new FilterStatement(propertyName, FilterOperator.Exists, null);
-			var @group = new FilterGroup();
-			@group.Statements.Add(statement);
-			return BuildFilter(@group);
-		}
-
-		private string BuildPropertySubscriptionFilter(string propertyName, string value)
-		{
-			var statement = new FilterStatement(propertyName, FilterOperator.Exists, value);
-			var @group = new FilterGroup();
-			@group.Statements.Add(statement);
-			return BuildFilter(@group);
-		}
-
-		private string BuildReceivePortSubscriptionFilter(IEnumerable<string> portNames)
-		{
-			return BuildFilter(
-				portNames.Select(
-					n => {
-						var @group = new FilterGroup();
-						@group.Statements.Add(new FilterStatement(BtsProperties.ReceivePortName.Type.FullName, FilterOperator.Equals, n));
-						return @group;
-					}));
-		}
-
-		private string BuildFilter(params FilterGroup[] @groups)
-		{
-			return BuildFilter(@groups.AsEnumerable());
-		}
-
-		private string BuildFilter(IEnumerable<FilterGroup> groups)
-		{
-			var predicate = new FilterPredicate();
-			groups.Each(g => predicate.Groups.Add(g));
-
-			var writer = new StringWriter();
-			var serializer = new XmlSerializer(typeof(FilterPredicate));
-			serializer.Serialize(writer, predicate);
-			return writer.ToString();
-		}
-
-		private readonly Application _application;
-		private readonly string _name;
-		private readonly string _pipelineData;
-		private readonly string _pipelineName;
-		private readonly int _timeout = 90;
 	}
 }

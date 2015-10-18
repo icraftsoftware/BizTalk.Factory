@@ -16,22 +16,31 @@
 
 #endregion
 
-using System;
-using BizTalkReceivePort = Microsoft.BizTalk.ExplorerOM.ReceivePort;
+using Microsoft.BizTalk.ExplorerOM;
+using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Explorer
 {
-	public class ReceivePort
+	[TestFixture]
+	public class SendPortFixture
 	{
-		public ReceivePort(BizTalkReceivePort port)
+		[Test]
+		public void Unenlist()
 		{
-			if (port == null) throw new ArgumentNullException("port");
-			BizTalkReceivePort = port;
-			ReceiveLocations = new ReceiveLocationCollection(BizTalkReceivePort.ReceiveLocations);
+			var application = BizTalkServerGroup.Applications["BizTalk EDI Application"];
+			var sendPort = application.SendPorts["ResendPort"];
+
+			sendPort.Unenlist();
+			application.ApplyChanges();
+			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Bound));
+
+			sendPort.Enlist();
+			application.ApplyChanges();
+			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Stopped));
+
+			sendPort.Unenlist();
+			application.ApplyChanges();
+			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Bound));
 		}
-
-		public ReceiveLocationCollection ReceiveLocations { get; private set; }
-
-		private BizTalkReceivePort BizTalkReceivePort { get; set; }
 	}
 }

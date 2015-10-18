@@ -24,13 +24,6 @@
   <!-- TODO custom PatchDeploy target must behave like Deploy, i.e. LoadPropsFromEnvSettingsThenExecute: <Target Name="Deploy" DependsOnTargets="SetDeployProperties;LoadPropsFromEnvSettingsThenExecute" /> -->
   <!-- TODO possibility to call any custom target wrt. SetDeployProperties;LoadPropsFromEnvSettingsThenExecute -->
 
-  <!-- Controlling of BizTalk Server Application Bindings Deployment -->
-  <PropertyGroup>
-    <ApplyXmlEscape>true</ApplyXmlEscape>
-    <PortBindingsMaster Condition=" '$(PortBindingsMaster)' == '' ">$(ProjectName).PortBindingsMaster.xml</PortBindingsMaster>
-    <UsingMasterBindings>true</UsingMasterBindings>
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)' != 'Server' ">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <DeployTools Condition=" '$(DeployTools)' == '' ">$(MSBuildThisFileDirectory)..\..\utils\Deployment Tools</DeployTools>
@@ -114,17 +107,17 @@
 
   <PropertyGroup>
     <CustomPostDeployDependsOn>
-      DeployFluentApplicationBindings;
       ApplyConfigFilesCustomizations;
       CreateBamIndexes;
       CreateMsmqQueues;
       DeployCertificates;
       DeployDatabases;
       SetupBizTalkBackupForCustomDatabases;
+      DeployFluentApplicationBindings;
       DeployPolicies;
       RegisterOrchestrationProcessNames;
       DeployWindowsServices;
-      RegisterQuartzJobs
+      RegisterQuartzJobs;
     </CustomPostDeployDependsOn>
   </PropertyGroup>
   <Target Name="CustomPostDeployTarget" DependsOnTargets="$(CustomPostDeployDependsOn)" />
@@ -136,12 +129,12 @@
       UndeployWindowsServices;
       UnregisterOrchestrationProcessNames;
       UndeployPolicies;
+      UndeployFluentApplicationBindings;
       TeardownBizTalkBackupForCustomDatabases;
       UndeployDatabases;
       UndeployCertificates;
       DeleteMsmqQueues;
       RevertConfigFilesCustomizations;
-      UndeployFluentApplicationBindings
     </CustomUndeployDependsOn>
   </PropertyGroup>
   <Target Name="CustomUndeployTarget" DependsOnTargets="$(CustomUndeployDependsOn)" />
@@ -893,7 +886,7 @@
 
   <Target Name="DeployFluentApplicationBindings"
           Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' "
-          DependsOnTargets="GenerateApplicationBindings;ImportApplicationBindings;DeployFluentFileAdapterPhysicalPaths">
+          DependsOnTargets="GenerateApplicationBindings;ImportApplicationBindings;DeployFluentFileAdapterPhysicalPaths;InitializeBizTalkServices;InitializeApplicationViaBizTalk">
   </Target>
 
   <Target Name="UndeployFluentApplicationBindings"
@@ -934,6 +927,27 @@
           Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' == 'Server' " />
 
     <Message Text="Deployed fluent file adapters' physical paths." />
+  </Target>
+
+  <Target Name="InitializeBizTalkServices"
+          Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' and '$(ControlBizTalkServicesState)' == 'true' ">
+    <Message Text="Initializing BizTalk Server services..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /InitializeServices &quot;@(ApplicationBindingsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' " />
+
+    <Message Text="Initialized BizTalk Server services." />
+  </Target>
+
+  <!-- override BTDF ability to start BizTalk Server services -->
+  <Target Name="StartApplicationViaBizTalk" Condition=" '$(UseLegacyApplicationControl)' == 'true' " DependsOnTargets="InitializeApplicationViaBizTalk"/>
+
+  <Target Name="InitializeApplicationViaBizTalk" Condition=" '$(UseLegacyApplicationControl)' == 'true' and '$(ControlBizTalkServicesState)' == 'false' ">
+    <PropertyGroup>
+      <StartApplicationTime>$([System.DateTime]::Now.ToString('MM-dd-yy hh:mm:ss'))</StartApplicationTime>
+    </PropertyGroup>
+    <Message Text="Starting $(BizTalkAppName) application at $(StartApplicationTime)."/>
+    <ControlBizTalkApp ApplicationName="$(BizTalkAppName)" StartOption="$(ControlBizTalkAppStartOption)" />
   </Target>
 
   <Target Name="UndeployFluentFileAdapterPhysicalPaths"

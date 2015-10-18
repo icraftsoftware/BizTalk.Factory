@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.Win32;

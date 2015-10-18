@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			{
 				Name = "OneWayReceiveLocation";
 				Description = "Some Useless One-Way Test Receive Location";
-				Enable = false;
+				Enabled = false;
 				ReceivePipeline = new ReceivePipeline<PassThruReceive>(
 					pl => pl.Decoder<PolicyRunnerComponent>(
 						c => {
@@ -115,7 +115,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			{
 				Name = "TwoWayReceiveLocation";
 				Description = "Some Useless Two-Way Test Receive Location";
-				Enable = false;
+				Enabled = false;
 				ReceivePipeline = new ReceivePipeline<PassThruReceive>();
 				SendPipeline = new SendPipeline<PassThruTransmit>(
 					pl => pl.PreAssembler<PolicyRunnerComponent>(

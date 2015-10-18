@@ -16,20 +16,9 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.Dsl.Pipeline;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
-{
-	public interface IReceiveLocation<TNamingConvention> : IObjectBinding<TNamingConvention> where TNamingConvention : class
-	{
-		bool Enabled { get; set; }
-
-		ReceivePipeline ReceivePipeline { get; set; }
-
-		IReceivePort<TNamingConvention> ReceivePort { get; }
-
-		SendPipeline SendPipeline { get; set; }
-
-		ReceiveLocationTransport Transport { get; }
-	}
-}
+[assembly: AssemblyTitle("Be.Stateless.BizTalk.Explorer.Tests")]
+[assembly: AssemblyDescription("Unit Tests for be.stateless BizTalk Explorer API Class Library")]
+[assembly: ComVisible(false)]

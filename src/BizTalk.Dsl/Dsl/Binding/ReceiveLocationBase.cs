@@ -67,7 +67,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#region IReceiveLocation<TNamingConvention> Members
 
-		public bool Enable { get; set; }
+		public bool Enabled { get; set; }
 
 		public string Description { get; set; }
 

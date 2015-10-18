@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ namespace Be.Stateless.BizTalk.Explorer
 		{
 			get
 			{
-				var application = BizTalkApplicationCollection[name];
-				if (application == null)
+				var explorerApplication = BizTalkApplicationCollection[name];
+				if (explorerApplication == null)
 					throw new Exception(
 						string.Format(
 							"BizTalk Server Application '{0}' cannot be found in BizTalk Server Group [{1}].",
 							name,
 							BizTalkServerGroup.ManagementDatabase));
-				return new Application(application);
+				return new Application(explorerApplication);
 			}
 		}
 

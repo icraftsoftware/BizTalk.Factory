@@ -55,6 +55,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.B2B.PartnerManagement.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.ExplorerOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.GlobalPropertySchemas.dll</HintPath>
@@ -106,6 +110,10 @@
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46e0347e-7978-4f76-86d7-7d31201d856d}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Explorer\Be.Stateless.BizTalk.Explorer.csproj">
+      <Project>{c1e4257c-6ba5-4e88-96e2-6961da3053d4}</Project>
+      <Name>Be.Stateless.BizTalk.Explorer</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
       <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
