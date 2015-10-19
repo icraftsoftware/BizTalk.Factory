@@ -219,16 +219,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				return value.ToString();
 			}
 
-			// handle IReceivePort<TNamingConvention> and ISendPort<TNamingConvention>
+			// handle IReceivePort<TNamingConvention>.Name and ISendPort<TNamingConvention>.Name
 			var containingObjectType = expression.Expression.Type;
-			if (containingObjectType.IsGenericType)
+			if (containingObjectType.IsGenericType && containingObjectType.GetGenericTypeDefinition().IsOneOf(typeof(IReceivePort<>), typeof(ISendPort<>)))
 			{
-				var containingObjectGenericTypeDefinition = containingObjectType.GetGenericTypeDefinition();
-				if (containingObjectGenericTypeDefinition == typeof(IReceivePort<>) || containingObjectGenericTypeDefinition == typeof(ISendPort<>))
-				{
-					var port = (ISupportNamingConvention) Expression.Lambda(expression.Expression).Compile().DynamicInvoke();
-					return port.Name;
-				}
+				var port = (ISupportNamingConvention) Expression.Lambda(expression.Expression).Compile().DynamicInvoke();
+				return port.Name;
 			}
 
 			throw new NotSupportedException(

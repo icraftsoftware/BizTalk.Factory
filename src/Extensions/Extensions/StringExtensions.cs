@@ -78,24 +78,6 @@ namespace Be.Stateless.Extensions
 		}
 
 		/// <summary>
-		/// Returns whether the array of string values <paramref name="strings"/> contains a given string value <paramref
-		/// name="string"/>.
-		/// </summary>
-		/// <param name="string">
-		/// The string value being searched for.
-		/// </param>
-		/// <param name="strings">
-		/// The array of string values being searched into.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if the <paramref name="strings"/> contains <paramref name="string"/>; otherwise, <c>false</c>.
-		/// </returns>
-		public static bool IsOneOf(this string @string, params string[] @strings)
-		{
-			return @strings.Contains(@string);
-		}
-
-		/// <summary>
 		/// Verifies that the <paramref name="qname"/> string is a valid qualified name according to the W3C Extended
 		/// Markup Language recommendation.
 		/// </summary>

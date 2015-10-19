@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Linq;
 
 namespace Be.Stateless.Extensions
 {
@@ -62,6 +63,23 @@ namespace Be.Stateless.Extensions
 		public static TR IfNotNull<T, TR>(this T @object, Func<T, TR> function) where T : class
 		{
 			return @object == null ? default(TR) : function(@object);
+		}
+
+		/// <summary>
+		/// Returns whether a given <paramref name="value"/> is in the list of <paramref name="values"/>.
+		/// </summary>
+		/// <param name="value">
+		/// The value being searched for.
+		/// </param>
+		/// <param name="values">
+		/// The array of values being searched into.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the <paramref name="values"/> contains <paramref name="value"/>; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsOneOf<T>(this T value, params T[] values)
+		{
+			return values.Any(any => Equals(any, value));
 		}
 	}
 }
