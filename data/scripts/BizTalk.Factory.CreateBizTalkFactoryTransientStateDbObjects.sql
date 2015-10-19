@@ -1049,8 +1049,8 @@ GO
 GRANT EXECUTE ON [dbo].[usp_claim_CheckOut] TO [BTS_USERS] AS [dbo]
 GO
 
-                                                                                                                  
-/*                                                                                                                  
+
+/*
      QQQQQQQQQ                                                                     tttt                           
    QQ:::::::::QQ                                                                ttt:::t                           
  QQ:::::::::::::QQ                                                              t:::::t                           
@@ -1069,8 +1069,8 @@ Q:::::::QQ::::::::Qu:::::::::::::::uua::::a    a:::::a r:::::r                  
      QQQQQQQQ::::QQ    uuuuuuuu  uuuu  aaaaaaaaaa  aaaarrrrrrr                      ttttttttttt  zzzzzzzzzzzzzzzzz
              Q:::::Q                                                                                              
               QQQQQQ                                                                                              
-*/                                                                                                                  
-                                                                                                                  
+*/
+
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[FK_QRTZ_TRIGGERS_QRTZ_JOB_DETAILS]') AND OBJECTPROPERTY(id, N'ISFOREIGNKEY') = 1)
 ALTER TABLE [dbo].[QRTZ_TRIGGERS] DROP CONSTRAINT FK_QRTZ_TRIGGERS_QRTZ_JOB_DETAILS
 GO
