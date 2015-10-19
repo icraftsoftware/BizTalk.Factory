@@ -103,6 +103,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			get { return LogicalPorts.Select(lp => new PortBindingInfo(this, lp)).Cast<IOrchestrationPortBinding>().ToArray(); }
 		}
 
+		public ServiceState State { get; set; }
+
 		#endregion
 
 		#region IProvideSourceFileInformation Members

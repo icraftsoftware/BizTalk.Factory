@@ -60,6 +60,8 @@
     <Compile Include="Explorer\Application.cs" />
     <Compile Include="Explorer\ApplicationCollection.cs" />
     <Compile Include="Explorer\BizTalkServerGroup.cs" />
+    <Compile Include="Explorer\Orchestration.cs" />
+    <Compile Include="Explorer\OrchestrationCollection.cs" />
     <Compile Include="Explorer\ReceiveLocation.cs" />
     <Compile Include="Explorer\SendPort.cs" />
     <Compile Include="Explorer\BizTalkServerManagementDatabase.cs" />

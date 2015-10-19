@@ -30,6 +30,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		IOrchestrationPortBinding[] PortBindings { get; }
 
+		/// <summary>
+		/// The state of the orchestration.
+		/// </summary>
+		/// <remarks>
+		/// An orchestration can be in either of the following state:
+		/// <list type="bullet">
+		/// <item>
+		/// <see cref="ServiceState.Unenlisted"/>;
+		/// </item>
+		/// <item>
+		/// <see cref="ServiceState.Enlisted"/>, or equivalently, <see cref="ServiceState.Stopped"/>;
+		/// </item>
+		/// <item>
+		/// <see cref="ServiceState.Started"/>
+		/// </item>
+		/// </list>
+		/// </remarks>
+		ServiceState State { get; set; }
+
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		Type Type { get; }
 	}

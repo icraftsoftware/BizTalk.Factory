@@ -37,7 +37,6 @@ using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.ExplorerOM;
 using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
 
 namespace Be.Stateless.BizTalk
@@ -53,7 +52,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Batch").About("AddPart").FormattedAs.Xml;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -78,7 +77,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Batch").About("QueueControlledRelease").FormattedAs.Xml;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -103,7 +102,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Claim").About("CheckIn").FormattedAs.Xml;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
@@ -128,7 +127,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Sink").About("FailedMessage").FormattedAs.None;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -148,10 +147,10 @@ namespace Be.Stateless.BizTalk
 						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
 						sp.Filter = new Filter(() => ErrorReportProperties.ErrorType == "FailedMessage");
 					}),
-				SendPort(
+				_batchSendPort = SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -170,7 +169,7 @@ namespace Be.Stateless.BizTalk
 				SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("UnitTest.Claim").About("Redeem").FormattedAs.Xml;
-						sp.Status = PortStatus.Started;
+						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
@@ -409,6 +408,7 @@ namespace Be.Stateless.BizTalk
 			}
 		}
 
-		private readonly IReceivePort<NamingConvention> _batchReceivePort;
+		protected readonly IReceivePort<NamingConvention> _batchReceivePort;
+		protected readonly ISendPort<NamingConvention> _batchSendPort;
 	}
 }

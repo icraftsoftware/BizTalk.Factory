@@ -22,7 +22,6 @@ using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Be.Stateless.Extensions;
-using Microsoft.BizTalk.ExplorerOM;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
@@ -97,7 +96,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		public SendPipeline SendPipeline { get; set; }
 
-		public PortStatus Status { get; set; }
+		public ServiceState State { get; set; }
 
 		public bool StopSendingOnOrderedDeliveryFailure { get; set; }
 

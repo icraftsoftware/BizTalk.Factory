@@ -131,6 +131,7 @@
     <Compile Include="Dsl\Binding\CodeDom\BtxServiceTypeExtensions.cs" />
     <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializer.cs" />
+    <Compile Include="Dsl\Binding\ServiceState.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\ComponentBinding.cs" />
     <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ApplicationNamingConvention.cs" />

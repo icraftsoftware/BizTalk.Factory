@@ -18,7 +18,6 @@
 
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
-using Microsoft.BizTalk.ExplorerOM;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
@@ -85,30 +84,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		SendPipeline SendPipeline { get; set; }
 
 		/// <summary>
-		/// The status of the send port.
+		/// The state of the send port.
 		/// </summary>
 		/// <remarks>
-		/// A send port can be in either of the following state:
-		/// <list type="table">
-		/// <listheader>
-		/// <term><see cref="PortStatus"/></term>
-		/// <description>Value</description>
-		/// </listheader>
+		/// A send port can be in either one of the following state:
+		/// <list type="bullet">
 		/// <item>
-		/// <term><see cref="PortStatus.Bound"/></term>
-		/// <description>The send port is unenlisted.</description>
+		/// <see cref="ServiceState.Unenlisted"/>;
 		/// </item>
 		/// <item>
-		/// <term><see cref="PortStatus.Stopped"/></term>
-		/// <description>The send port is stopped, that is to say, enlisted.</description>
+		/// <see cref="ServiceState.Enlisted"/>, or equivalently, <see cref="ServiceState.Stopped"/>;
 		/// </item>
 		/// <item>
-		/// <term><see cref="PortStatus.Started"/></term>
-		/// <description>The send port is started.</description>
+		/// <see cref="ServiceState.Started"/>
 		/// </item>
 		/// </list>
 		/// </remarks>
-		PortStatus Status { get; set; }
+		ServiceState State { get; set; }
 
 		/// <summary>
 		/// Whether to stop sending subsequent messages that follow a failed message when <see cref="OrderedDelivery"/>

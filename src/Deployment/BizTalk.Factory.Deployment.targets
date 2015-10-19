@@ -942,7 +942,7 @@
   <!-- override BTDF ability to start BizTalk Server services -->
   <Target Name="StartApplicationViaBizTalk" Condition=" '$(UseLegacyApplicationControl)' == 'true' " DependsOnTargets="InitializeApplicationViaBizTalk"/>
 
-  <Target Name="InitializeApplicationViaBizTalk" Condition=" '$(UseLegacyApplicationControl)' == 'true' and '$(ControlBizTalkServicesState)' == 'false' ">
+  <Target Name="InitializeApplicationViaBizTalk" Condition=" '$(UseLegacyApplicationControl)' == 'true' and '$(ControlBizTalkServicesState)' == 'false' and '$(ControlBizTalkAppStartOption)' != 'None' ">
     <PropertyGroup>
       <StartApplicationTime>$([System.DateTime]::Now.ToString('MM-dd-yy hh:mm:ss'))</StartApplicationTime>
     </PropertyGroup>

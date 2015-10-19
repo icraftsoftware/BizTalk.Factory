@@ -27,9 +27,12 @@ namespace Be.Stateless.BizTalk.Explorer
 		{
 			if (application == null) throw new ArgumentNullException("application");
 			BizTalkApplication = application;
+			Orchestrations = new OrchestrationCollection(BizTalkApplication.Orchestrations);
 			ReceivePorts = new ReceivePortCollection(BizTalkApplication.ReceivePorts);
 			SendPorts = new SendPortCollection(BizTalkApplication.SendPorts);
 		}
+
+		public OrchestrationCollection Orchestrations { get; private set; }
 
 		public ReceivePortCollection ReceivePorts { get; private set; }
 

@@ -21,6 +21,7 @@ using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Explorer;
 using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
+using OrchestrationStatus = Microsoft.BizTalk.ExplorerOM.OrchestrationStatus;
 using PortStatus = Microsoft.BizTalk.ExplorerOM.PortStatus;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
@@ -62,7 +63,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
 		{
-			// TODO enforce orchestration status
+			var name = orchestrationBinding.Type.FullName;
+			var orchestration = _application.Orchestrations[name];
+			if (_logger.IsDebugEnabled)
+			{
+				if (orchestrationBinding.State == ServiceState.Unenlisted) _logger.DebugFormat("Unenlisting orchestration '{0}'", name);
+				else if (orchestrationBinding.State == ServiceState.Enlisted) _logger.DebugFormat("Enlisting or stopping orchestration '{0}'", name);
+				else _logger.DebugFormat("Starting orchestration '{0}'", name);
+			}
+			orchestration.Status = (OrchestrationStatus) orchestrationBinding.State;
 		}
 
 		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
@@ -85,11 +94,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var sp = _application.SendPorts[name];
 			if (_logger.IsDebugEnabled)
 			{
-				if (sendPort.Status == PortStatus.Bound) _logger.DebugFormat("Unenlisting send port '{0}'", name);
-				else if (sendPort.Status == PortStatus.Stopped) _logger.DebugFormat("Enlisting send port '{0}'", name);
+				if (sendPort.State == ServiceState.Unenlisted) _logger.DebugFormat("Unenlisting send port '{0}'", name);
+				else if (sendPort.State == ServiceState.Enlisted) _logger.DebugFormat("Enlisting or stopping send port '{0}'", name);
 				else _logger.DebugFormat("Starting send port '{0}'", name);
 			}
-			sp.Status = sendPort.Status;
+			sp.Status = (PortStatus) sendPort.State;
 		}
 
 		#endregion
