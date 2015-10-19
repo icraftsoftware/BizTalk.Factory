@@ -17,13 +17,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
-using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
@@ -34,17 +29,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
-			//IAdapterConfigBinding,
-			//IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
 		protected WcfAdapterBase(string bindingConfigurationElementName)
 		{
-			_configurationProxy = new ConfigurationProxy();
 			_bindingConfigurationElement = new TBinding { Name = bindingConfigurationElementName };
-			// TODO custom _adapterConfig = new TConfig { BindingType = _bindingConfigurationElement.Name };
 			_adapterConfig = new TConfig();
 		}
 
@@ -148,34 +139,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected virtual void Save(IPropertyBag propertyBag)
 		{
-			// TODO custom _adapterConfig.BindingConfiguration = GetBindingElementXml();
 			_adapterConfig.Save(propertyBag as Microsoft.BizTalk.ExplorerOM.IPropertyBag);
-		}
-
-		//TODO custom private string GetBindingElementXml()
-		//{
-		//	_configurationProxy.SetBindingElement(_bindingConfigurationElement);
-		//	return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
-		//}
-
-		protected string GetEndpointBehaviorElementXml(IEnumerable<IEndpointBehavior> endpointBehaviors)
-		{
-			var endpointBehaviorElement = new EndpointBehaviorElement("EndpointBehavior");
-			endpointBehaviors.Cast<BehaviorExtensionElement>().Each(b => endpointBehaviorElement.Add(b));
-			_configurationProxy.SetEndpointBehaviorElement(endpointBehaviorElement);
-			return _configurationProxy.GetEndpointBehaviorElementXml();
-		}
-
-		protected string GetServiceBehaviorElementXml(IEnumerable<IServiceBehavior> serviceBehaviors)
-		{
-			var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
-			serviceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
-			_configurationProxy.SetServiceBehaviorElement(serviceBehaviorElement);
-			return _configurationProxy.GetServiceBehaviorElementXml();
 		}
 
 		protected readonly TConfig _adapterConfig;
 		protected readonly TBinding _bindingConfigurationElement;
-		private readonly ConfigurationProxy _configurationProxy;
 	}
 }
