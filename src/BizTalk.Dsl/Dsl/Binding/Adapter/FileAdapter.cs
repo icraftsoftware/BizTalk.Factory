@@ -36,6 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				var configurationClassId = new Guid((string) classIdKey.GetValue(string.Empty));
 				// [HKCR\Wow6432Node\CLSID\{5E49E3A6-B4FC-4077-B44C-22F34A242FDB}\BizTalk]
 				_protocolType = GetProtocolTypeFromConfigurationClassId(configurationClassId);
+				_protocolType.Name = _protocolType.Name.ToUpper();
 			}
 		}
 

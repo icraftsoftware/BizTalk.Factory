@@ -16,44 +16,44 @@
 
 #endregion
 
-using System.Transactions;
-using Microsoft.Adapters.Sql;
-using Microsoft.BizTalk.Adapter.Wcf.Config;
+using System.ServiceModel;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class WcfSqlAdapterOutboundFixture
+	public class WcfNetTcpAdapterOutboundFixture
 	{
 		[Test]
 		public void SerializeToXml()
 		{
-			var osa = new WcfSqlAdapter.Outbound(
+			var nta = new WcfNetTcpAdapter.Outbound(
 				a => {
-					a.Address = new SqlAdapterConnectionUri { InboundId = "AvailableBatches", Server = "localhost", InitialCatalog = "BizTalkFactoryTransientStateDb" };
-					a.IsolationLevel = IsolationLevel.ReadCommitted;
-					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
-					a.PropagateFaultMessage = true;
-					a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
+					a.SecurityMode = SecurityMode.Message;
+					a.MessageClientCredentialType = MessageCredentialType.Windows;
 				});
-			var xml = ((IAdapterBindingSerializerFactory) osa).GetAdapterBindingSerializer().Serialize();
+			var xml = ((IAdapterBindingSerializerFactory) nta).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
 					"<CustomProps>" +
-						"<BindingType vt=\"8\">sqlBinding</BindingType>" +
-						"<BindingConfiguration vt=\"8\">&lt;binding name=\"sqlBinding\" /&gt;</BindingConfiguration>" +
-						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
-						"<StaticAction vt=\"8\">TypedProcedure/dbo/usp_batch_AddPart</StaticAction>" +
+						"<MaxReceivedMessageSize vt=\"3\">65535</MaxReceivedMessageSize>" +
+						"<EnableTransaction vt=\"11\">0</EnableTransaction>" +
+						"<TransactionProtocol vt=\"8\">OleTransactions</TransactionProtocol>" +
+						"<SecurityMode vt=\"8\">Message</SecurityMode>" +
+						"<MessageClientCredentialType vt=\"8\">Windows</MessageClientCredentialType>" +
+						"<AlgorithmSuite vt=\"8\">Basic256</AlgorithmSuite>" +
+						"<TransportClientCredentialType vt=\"8\">Windows</TransportClientCredentialType>" +
+						"<TransportProtectionLevel vt=\"8\">EncryptAndSign</TransportProtectionLevel>" +
 						"<UseSSO vt=\"11\">0</UseSSO>" +
 						"<InboundBodyLocation vt=\"8\">UseBodyElement</InboundBodyLocation>" +
 						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
 						"<OutboundBodyLocation vt=\"8\">UseBodyElement</OutboundBodyLocation>" +
 						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
 						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
-						"<EnableTransaction vt=\"11\">-1</EnableTransaction>" +
-						"<IsolationLevel vt=\"8\">ReadCommitted</IsolationLevel>" +
+						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
+						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"</CustomProps>"));
 		}
 

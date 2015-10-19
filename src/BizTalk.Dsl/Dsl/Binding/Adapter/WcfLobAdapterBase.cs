@@ -29,23 +29,22 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfAdapterBase<TBinding, TConfig> : AdapterBase, IAdapter, IAdapterBindingSerializerFactory, IAdapterConfigTimeouts
+	public abstract class WcfLobAdapterBase<TBinding, TConfig> : AdapterBase, IAdapter, IAdapterBindingSerializerFactory, IAdapterConfigTimeouts
 		where TBinding : StandardBindingElement,
 			new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
-			//IAdapterConfigBinding,
-			//IAdapterConfigEndpointBehavior,
+			IAdapterConfigBinding,
+			IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		protected WcfAdapterBase(string bindingConfigurationElementName)
+		protected WcfLobAdapterBase(string bindingConfigurationElementName)
 		{
 			_configurationProxy = new ConfigurationProxy();
 			_bindingConfigurationElement = new TBinding { Name = bindingConfigurationElementName };
-			// TODO custom _adapterConfig = new TConfig { BindingType = _bindingConfigurationElement.Name };
-			_adapterConfig = new TConfig();
+			_adapterConfig = new TConfig { BindingType = _bindingConfigurationElement.Name };
 		}
 
 		#region IAdapter Members
@@ -103,7 +102,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		/// <summary>
-		/// Gets or sets the interval of time after which the open method, invoked by a communication object, times out.
+		/// Gets the interval of time after which the open method, invoked by a communication object, times out.
 		/// </summary>
 		/// <remarks>
 		/// The interval of time provided for a connection to open before the transport raises an exception. The default
@@ -148,15 +147,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected virtual void Save(IPropertyBag propertyBag)
 		{
-			// TODO custom _adapterConfig.BindingConfiguration = GetBindingElementXml();
+			_adapterConfig.BindingConfiguration = GetBindingElementXml();
 			_adapterConfig.Save(propertyBag as Microsoft.BizTalk.ExplorerOM.IPropertyBag);
 		}
 
-		//TODO custom private string GetBindingElementXml()
-		//{
-		//	_configurationProxy.SetBindingElement(_bindingConfigurationElement);
-		//	return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
-		//}
+		private string GetBindingElementXml()
+		{
+			_configurationProxy.SetBindingElement(_bindingConfigurationElement);
+			return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
+		}
 
 		protected string GetEndpointBehaviorElementXml(IEnumerable<IEndpointBehavior> endpointBehaviors)
 		{

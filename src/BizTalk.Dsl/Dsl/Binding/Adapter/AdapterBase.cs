@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				return new ProtocolType {
 					Capabilities = capabilities,
 					ConfigurationClsid = configurationClassId.ToString(),
-					Name = name.ToUpper()
+					Name = name
 				};
 			}
 		}

@@ -80,5 +80,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OrderedProcessing vt=\"11\">0</OrderedProcessing>" +
 						"</CustomProps>"));
 		}
+
+		[Test]
+		[Ignore("TODO")]
+		public void Validate()
+		{
+			Assert.Fail("TODO");
+		}
 	}
 }

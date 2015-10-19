@@ -129,7 +129,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				set { _adapterConfig.UserName = value; }
 			}
 
-			// ReSharper disable once InconsistentNaming
 			public bool UseSSO
 			{
 				get { return _adapterConfig.UseSSO; }

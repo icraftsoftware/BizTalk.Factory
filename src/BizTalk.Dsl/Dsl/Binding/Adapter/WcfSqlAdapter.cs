@@ -28,7 +28,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfSqlAdapter<TConfig> : WcfAdapterBase<SqlAdapterBindingConfigurationElement, TConfig>
+	public abstract class WcfSqlAdapter<TConfig> : WcfLobAdapterBase<SqlAdapterBindingConfigurationElement, TConfig>
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
@@ -88,6 +88,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected override void Validate()
 		{
 			// TODO _adapterConfig.Identity
+			_adapterConfig.Validate();
 		}
 
 		#endregion
@@ -121,6 +122,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region Behavior Tab - EndpointBehavior Settings
 
 		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+
+		#endregion
+
+		#region Binding Tab - General Settings
+
+		/// <summary>
+		/// Gets or sets the interval of time after which the receive method, invoked by a communication object, times
+		/// out.
+		/// </summary>
+		/// <remarks>
+		/// The interval of time that a connection can remain inactive, during which no application messages are received,
+		/// before it is dropped. The default value is 10 minute.
+		/// </remarks>
+		/// <returns>
+		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the receive method to time out.
+		/// </returns>
+		/// <exception cref="T:ArgumentOutOfRangeException">
+		/// The value is less than zero or too large.
+		/// </exception>
+		public TimeSpan ReceiveTimeout
+		{
+			get { return _bindingConfigurationElement.ReceiveTimeout; }
+			set { _bindingConfigurationElement.ReceiveTimeout = value; }
+		}
 
 		#endregion
 
@@ -159,99 +184,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _adapterConfig.Identity; }
 			set { _adapterConfig.Identity = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - General Settings
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the close method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to close before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the close method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan CloseTimeout
-		{
-			get { return _bindingConfigurationElement.CloseTimeout; }
-			set { _bindingConfigurationElement.CloseTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets the interval of time after which the open method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to open before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the open method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan OpenTimeout
-		{
-			get { return _bindingConfigurationElement.OpenTimeout; }
-			set { _bindingConfigurationElement.OpenTimeout = value; }
-		}
-
-		///// <summary>
-		///// Gets the name of the binding.
-		///// </summary>
-		///// <returns>
-		///// The name of the binding.
-		///// </returns>
-		//TODO ?? public string Name ??
-		//{
-		//	get { return _bindingConfigurationElement.Name; }
-		//	private set { _bindingConfigurationElement.Name = value; }
-		//}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the receive method, invoked by a communication object, times
-		/// out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time that a connection can remain inactive, during which no application messages are received,
-		/// before it is dropped. The default value is 10 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the receive method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan ReceiveTimeout
-		{
-			get { return _bindingConfigurationElement.ReceiveTimeout; }
-			set { _bindingConfigurationElement.ReceiveTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the send method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a write operation to complete before the transport raises an exception. The
-		/// default value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the send method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan SendTimeout
-		{
-			get { return _bindingConfigurationElement.SendTimeout; }
-			set { _bindingConfigurationElement.SendTimeout = value; }
 		}
 
 		#endregion
