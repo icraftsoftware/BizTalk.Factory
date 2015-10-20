@@ -26,15 +26,23 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetTcpAdapter<TConfig> : WcfAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>
-		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
+	public abstract class WcfCustomAdapter<TBinding, TConfig> : WcfCustomAdapterBase<EndpointAddress, TBinding, TConfig>
+		where TBinding : StandardBindingElement,
+			new()
+		where TConfig : AdapterConfig,
+			IAdapterConfigIdentity,
+			IAdapterConfigBinding,
+			IAdapterConfigEndpointBehavior,
+			IAdapterConfigInboundMessageMarshalling,
+			IAdapterConfigOutboundMessageMarshalling,
+			new()
 	{
-		static WcfNetTcpAdapter()
+		static WcfCustomAdapter()
 		{
-			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("7fd2dfcd-6a7b-44f9-8387-29457fd2eaaf"));
+			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("af081f69-38ca-4d5b-87df-f0344b12557a"));
 		}
 
-		protected WcfNetTcpAdapter() : base(_protocolType, "netTcpBinding") { }
+		protected WcfCustomAdapter() : base(_protocolType, "customBinding") { }
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;

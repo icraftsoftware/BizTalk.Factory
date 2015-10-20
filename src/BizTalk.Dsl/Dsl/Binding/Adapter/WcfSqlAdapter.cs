@@ -17,18 +17,16 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel.Description;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfSqlAdapter<TConfig> : WcfLobAdapterBase<SqlAdapterBindingConfigurationElement, TConfig>
+	public abstract class WcfSqlAdapter<TConfig> : WcfCustomAdapterBase<SqlAdapterConnectionUri, SqlAdapterBindingConfigurationElement, TConfig>
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
@@ -42,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("59b35d03-6a06-4734-a249-ef561254ecf7"));
 		}
 
-		protected WcfSqlAdapter() : base("sqlBinding")
+		protected WcfSqlAdapter() : base(_protocolType, "sqlBinding")
 		{
 			// Binding Tab - BizTalk Settings
 			EnableBizTalkCompatibilityMode = true;
@@ -62,36 +60,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
-
-		#region Base Class Member Overrides
-
-		protected override Uri GetAddress()
-		{
-			return Address.Uri;
-		}
-
-		protected override ProtocolType GetProtocolType()
-		{
-			return _protocolType;
-		}
-
-		protected override void Save(IPropertyBag propertyBag)
-		{
-			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorElementXml(EndpointBehaviors);
-			base.Save(propertyBag);
-		}
-
-		#endregion
-
-		#region Base Class Member Overrides
-
-		protected override void Validate()
-		{
-			// TODO _adapterConfig.Identity
-			_adapterConfig.Validate();
-		}
-
-		#endregion
 
 		#region Binding Tab - BizTalk Settings
 
@@ -116,12 +84,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _bindingConfigurationElement.EnablePerformanceCounters; }
 			set { _bindingConfigurationElement.EnablePerformanceCounters = value; }
 		}
-
-		#endregion
-
-		#region Behavior Tab - EndpointBehavior Settings
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
 
 		#endregion
 
@@ -176,18 +138,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region General Tab - Endpoint Address Settings
-
-		public SqlAdapterConnectionUri Address { get; set; }
-
-		public string Identity
-		{
-			get { return _adapterConfig.Identity; }
-			set { _adapterConfig.Identity = value; }
-		}
-
-		#endregion
-
 		#region Binding Tab - Connection Settings
 
 		/// <summary>
@@ -238,44 +188,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _bindingConfigurationElement.XmlStoredProcedureRootNodeNamespace; }
 			set { _bindingConfigurationElement.XmlStoredProcedureRootNodeNamespace = value; }
-		}
-
-		#endregion
-
-		#region Messages Tab - Inbound BizTalk Message Body Settings
-
-		public InboundMessageBodySelection InboundBodyLocation
-		{
-			get { return _adapterConfig.InboundBodyLocation; }
-			set { _adapterConfig.InboundBodyLocation = value; }
-		}
-
-		public string InboundBodyPathExpression
-		{
-			get { return _adapterConfig.InboundBodyPathExpression; }
-			set { _adapterConfig.InboundBodyPathExpression = value; }
-		}
-
-		public MessageBodyFormat InboundNodeEncoding
-		{
-			get { return _adapterConfig.InboundNodeEncoding; }
-			set { _adapterConfig.InboundNodeEncoding = value; }
-		}
-
-		#endregion
-
-		#region Messages Tab - Outbound WCF Message Body Settings
-
-		public OutboundMessageBodySelection OutboundBodyLocation
-		{
-			get { return _adapterConfig.OutboundBodyLocation; }
-			set { _adapterConfig.OutboundBodyLocation = value; }
-		}
-
-		public string OutboundXmlTemplate
-		{
-			get { return _adapterConfig.OutboundXmlTemplate; }
-			set { _adapterConfig.OutboundXmlTemplate = value; }
 		}
 
 		#endregion

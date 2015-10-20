@@ -172,6 +172,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private class DummyAdapter : AdapterBase, IInboundAdapter, IOutboundAdapter, IAdapterBindingSerializerFactory, IDslSerializer
 		{
+			public DummyAdapter() : base(new ProtocolType { Name = "Test Dummy" }) { }
+
 			#region IAdapterBindingSerializerFactory Members
 
 			public IDslSerializer GetAdapterBindingSerializer()
@@ -207,17 +209,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				get { return @"c:\files\drops\*.xml"; }
 			}
 
-			public ProtocolType ProtocolType
-			{
-				get { return new ProtocolType { Name = "Test Dummy" }; }
-			}
-
 			public void Load(IPropertyBag propertyBag)
-			{
-				throw new NotSupportedException();
-			}
-
-			public void Save(IPropertyBag propertyBag)
 			{
 				throw new NotSupportedException();
 			}
@@ -225,6 +217,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			#endregion
 
 			#region Base Class Member Overrides
+
+			protected override string GetAddress()
+			{
+				throw new NotSupportedException();
+			}
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				throw new NotSupportedException();
+			}
 
 			protected override void Validate() { }
 

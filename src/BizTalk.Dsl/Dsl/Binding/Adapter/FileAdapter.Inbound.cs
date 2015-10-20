@@ -49,10 +49,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#region Base Class Member Overrides
 
-			protected override string Address
+			protected override string GetAddress()
 			{
-				get { return System.IO.Path.Combine(ReceiveFolder, FileMask); }
+				return System.IO.Path.Combine(ReceiveFolder, FileMask);
 			}
+
+			protected override void Validate()
+			{
+				if (ReceiveFolder.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source folder.");
+				if (FileMask.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source file mask.");
+				if (!Path.IsNetworkPath(ReceiveFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
 
 			protected override void Save(IPropertyBag propertyBag)
 			{
@@ -67,17 +78,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				propertyBag.WriteAdapterCustomProperty("RemoveReceivedFileMaxInterval", Convert.ToUInt32(FileRemovingSettings.MaxRetryInterval.TotalMilliseconds));
 				propertyBag.WriteAdapterCustomProperty("RemoveReceivedFileRetryCount", FileRemovingSettings.RetryCount);
 				propertyBag.WriteAdapterCustomProperty("RenameReceivedFiles", RenameReceivedFiles);
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				if (ReceiveFolder.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source folder.");
-				if (FileMask.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source file mask.");
-				if (!Path.IsNetworkPath(ReceiveFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
 			}
 
 			#endregion

@@ -25,7 +25,7 @@ using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract partial class FileAdapter : AdapterBase, IAdapter, IAdapterBindingSerializerFactory
+	public abstract partial class FileAdapter : AdapterBase
 	{
 		static FileAdapter()
 		{
@@ -35,45 +35,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				var configurationClassId = new Guid((string) classIdKey.GetValue(string.Empty));
 				// [HKCR\Wow6432Node\CLSID\{5E49E3A6-B4FC-4077-B44C-22F34A242FDB}\BizTalk]
-				_protocolType = GetProtocolTypeFromConfigurationClassId(configurationClassId);
-				_protocolType.Name = _protocolType.Name.ToUpper();
+				var protocolType = GetProtocolTypeFromConfigurationClassId(configurationClassId);
+				protocolType.Name = protocolType.Name.ToUpper();
+				_protocolType = protocolType;
 			}
 		}
 
-		protected FileAdapter()
+		protected FileAdapter() : base(_protocolType)
 		{
 			NetworkCredentials = new Credentials();
 		}
 
-		#region IAdapter Members
+		#region Base Class Member Overrides
 
-		string IAdapter.Address
+		protected override void Save(IPropertyBag propertyBag)
 		{
-			get { return Address; }
-		}
-
-		ProtocolType IAdapter.ProtocolType
-		{
-			get { return _protocolType; }
-		}
-
-		void IAdapter.Load(IPropertyBag propertyBag)
-		{
-			throw new NotSupportedException();
-		}
-
-		void IAdapter.Save(IPropertyBag propertyBag)
-		{
-			Save(propertyBag);
-		}
-
-		#endregion
-
-		#region IAdapterBindingSerializerFactory Members
-
-		IDslSerializer IAdapterBindingSerializerFactory.GetAdapterBindingSerializer()
-		{
-			return new AdapterBindingSerializer(this);
+			if (NetworkCredentials.Username.IsNullOrEmpty()) return;
+			propertyBag.WriteAdapterCustomProperty("Username", NetworkCredentials.Username);
+			propertyBag.WriteAdapterCustomProperty("Password", NetworkCredentials.Password);
 		}
 
 		#endregion
@@ -86,15 +65,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// network drive.
 		/// </remarks>
 		public Credentials NetworkCredentials { get; set; }
-
-		protected abstract string Address { get; }
-
-		protected virtual void Save(IPropertyBag propertyBag)
-		{
-			if (NetworkCredentials.Username.IsNullOrEmpty()) return;
-			propertyBag.WriteAdapterCustomProperty("Username", NetworkCredentials.Username);
-			propertyBag.WriteAdapterCustomProperty("Password", NetworkCredentials.Password);
-		}
 
 		private static readonly ProtocolType _protocolType;
 	}

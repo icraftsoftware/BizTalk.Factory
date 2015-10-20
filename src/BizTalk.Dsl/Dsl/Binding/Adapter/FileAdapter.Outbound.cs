@@ -46,10 +46,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#region Base Class Member Overrides
 
-			protected override string Address
+			protected override string GetAddress()
 			{
-				get { return System.IO.Path.Combine(DestinationFolder, FileName); }
+				return System.IO.Path.Combine(DestinationFolder, FileName);
 			}
+
+			protected override void Validate()
+			{
+				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination folder.");
+				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination file name.");
+				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
+				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
 
 			protected override void Save(IPropertyBag propertyBag)
 			{
@@ -62,27 +74,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination folder.");
-				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination file name.");
-				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
-				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
-			}
-
-			#endregion
-
 			/// <summary>
 			/// Allow cache on write.
 			/// </summary>
 			public bool AllowCacheOnWrite { get; set; }
-
-			/// <summary>
-			/// File content writing mode.
-			/// </summary>
-			public CopyMode Mode { get; set; }
 
 			/// <summary>
 			/// Destination folder.
@@ -102,6 +97,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// </list>
 			/// </remarks>
 			public string FileName { get; set; }
+
+			/// <summary>
+			/// File content writing mode.
+			/// </summary>
+			public CopyMode Mode { get; set; }
 
 			/// <summary>
 			/// Use temporary file while writing.

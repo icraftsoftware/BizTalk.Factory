@@ -16,27 +16,24 @@
 
 #endregion
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Deployment.Binding;
+using Moq;
+using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetTcpAdapter<TConfig> : WcfAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>
-		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
+	[TestFixture]
+	public class WcfCustomAdapterFixture
 	{
-		static WcfNetTcpAdapter()
+		[Test]
+		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("7fd2dfcd-6a7b-44f9-8387-29457fd2eaaf"));
+			var mock = new Mock<WcfCustomAdapter<WSHttpBindingElement, CustomRLConfig>> { CallBase = true };
+			var wsa = mock.Object as IAdapter;
+			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-Custom"));
+			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(907));
+			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("af081f69-38ca-4d5b-87df-f0344b12557a"));
 		}
-
-		protected WcfNetTcpAdapter() : base(_protocolType, "netTcpBinding") { }
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

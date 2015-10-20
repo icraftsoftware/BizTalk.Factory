@@ -16,6 +16,7 @@
 
 #endregion
 
+using Microsoft.BizTalk.Deployment.Binding;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void DelegatesValidateCall()
 		{
-			var adapterMock = new Mock<AdapterBase> { CallBase = true };
+			var adapterMock = new Mock<AdapterBase>(new ProtocolType()) { CallBase = true };
 
 			((ISupportValidation) adapterMock.Object).Validate();
 
@@ -38,7 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void EnvironmentOverridesAreAppliedForGivenEnvironment()
 		{
-			var adapterMock = new Mock<AdapterBase> { CallBase = true };
+			var adapterMock = new Mock<AdapterBase>(new ProtocolType()) { CallBase = true };
 
 			((ISupportEnvironmentOverride) adapterMock.Object).ApplyEnvironmentOverrides("ACC");
 
@@ -48,7 +49,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void EnvironmentOverridesAreSkippedWhenNoGivenEnvironment()
 		{
-			var adapterMock = new Mock<AdapterBase> { CallBase = true };
+			var adapterMock = new Mock<AdapterBase>(new ProtocolType()) { CallBase = true };
 
 			((ISupportEnvironmentOverride) adapterMock.Object).ApplyEnvironmentOverrides(string.Empty);
 

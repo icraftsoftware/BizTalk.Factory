@@ -18,12 +18,13 @@
 
 using System;
 using Be.Stateless.Extensions;
+using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class AdapterBase : ISupportEnvironmentOverride, ISupportValidation
+	public abstract class AdapterBase : IAdapter, IAdapterBindingSerializerFactory
 	{
 		protected static ProtocolType GetProtocolTypeFromConfigurationClassId(Guid configurationClassId)
 		{
@@ -41,16 +42,38 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 		}
 
-		#region ISupportEnvironmentOverride Members
+		protected AdapterBase(ProtocolType protocolType)
+		{
+			if (protocolType == null) throw new ArgumentNullException("protocolType");
+			_protocolType = protocolType;
+		}
+
+		#region IAdapter Members
+
+		string IAdapter.Address
+		{
+			get { return GetAddress(); }
+		}
+
+		ProtocolType IAdapter.ProtocolType
+		{
+			get { return _protocolType; }
+		}
+
+		void IAdapter.Load(IPropertyBag propertyBag)
+		{
+			throw new NotSupportedException();
+		}
+
+		void IAdapter.Save(IPropertyBag propertyBag)
+		{
+			Save(propertyBag);
+		}
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
 			if (!environment.IsNullOrEmpty()) ApplyEnvironmentOverrides(environment);
 		}
-
-		#endregion
-
-		#region ISupportValidation Members
 
 		void ISupportValidation.Validate()
 		{
@@ -59,8 +82,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		#region IAdapterBindingSerializerFactory Members
+
+		IDslSerializer IAdapterBindingSerializerFactory.GetAdapterBindingSerializer()
+		{
+			return new AdapterBindingSerializer(this);
+		}
+
+		#endregion
+
+		protected abstract string GetAddress();
+
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 
+		protected abstract void Save(IPropertyBag propertyBag);
+
 		protected abstract void Validate();
+
+		private readonly ProtocolType _protocolType;
 	}
 }

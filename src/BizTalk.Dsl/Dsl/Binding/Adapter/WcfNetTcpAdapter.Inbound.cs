@@ -28,6 +28,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Inbound
 
+		// <see href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
+		// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>
 		{
@@ -80,7 +82,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to 00:05:00.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public TimeSpan LeaseTimeout
 			{
 				get { return _adapterConfig.LeaseTimeout; }
@@ -103,7 +104,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to 200.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public int MaxConcurrentCalls
 			{
 				get { return _adapterConfig.MaxConcurrentCalls; }
@@ -129,7 +129,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public int MaxReceivedMessageSize
 			{
 				get { return _adapterConfig.MaxReceivedMessageSize; }
@@ -153,8 +152,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <see cref="System.ServiceModel.SecurityMode.Transport"/>.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 			public SecurityMode SecurityMode
 			{
 				get { return _adapterConfig.SecurityMode; }
@@ -171,8 +168,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport Properties Dialog Box,
 			/// Receive, Security Tab</see>. Box, Receive, Security Tab.
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 			public bool UseSSO
 			{
 				get { return _adapterConfig.UseSSO; }
@@ -197,8 +192,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <see cref="TcpClientCredentialType.Windows"/>.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 			public TcpClientCredentialType TransportClientCredentialType
 			{
 				get { return _adapterConfig.TransportClientCredentialType; }
@@ -213,7 +206,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// It defaults to <see cref="ProtectionLevel.EncryptAndSign"/>.
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public ProtectionLevel TransportProtectionLevel
 			{
 				get { return _adapterConfig.TransportProtectionLevel; }
@@ -239,8 +231,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <see cref="MessageCredentialType.Windows"/>.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 			public MessageCredentialType MessageClientCredentialType
 			{
 				get { return _adapterConfig.MessageClientCredentialType; }
@@ -261,8 +251,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 			public SecurityAlgorithmSuiteValue AlgorithmSuite
 			{
 				get { return _adapterConfig.AlgorithmSuite; }
@@ -287,7 +275,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to an <see cref="string.Empty"/> string.
 			/// </para>
 			/// </remarks>
-			/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public string ServiceCertificateThumbprint
 			{
 				get { return _adapterConfig.ServiceCertificate; }
@@ -305,7 +292,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// It defauts to <see cref="bool.True"/>.
 			/// </remarks>
-			/// <see href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public bool SuspendRequestMessageOnFailure
 			{
 				get { return _adapterConfig.SuspendMessageOnFailure; }
@@ -319,7 +305,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// It defauts to <see cref="bool.True"/>.
 			/// </remarks>
-			/// <see href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 			public bool IncludeExceptionDetailInFaults
 			{
 				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
