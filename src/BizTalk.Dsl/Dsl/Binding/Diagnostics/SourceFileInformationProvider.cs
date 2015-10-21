@@ -82,7 +82,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Diagnostics
 				}
 
 				// throwing InvalidOperationException means we might need to increase the Enumerable.Range count argument
-				if (_fileName.IsNullOrEmpty() && _lineNumber == 0) throw new InvalidOperationException("Cannot determine source file information.");
+				if (_fileName.IsNullOrEmpty() && _lineNumber == 0)
+				{
+					Debugger.Break();
+					throw new InvalidOperationException("Cannot determine source file information. Binding assembly's PDB might not be found.");
+				}
 			}
 		}
 

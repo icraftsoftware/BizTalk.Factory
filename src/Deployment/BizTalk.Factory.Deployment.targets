@@ -967,6 +967,10 @@
     <Message Text="Copying fluent DSL-based binding assemblies to redist folder..." />
 
     <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ApplicationBindingsQualified)" Condition=" '@(ApplicationBindings)' != '' " />
+    <Copy SourceFiles="@(ApplicationBindings -> '%(LocationPath)\%(Filename).pdb')"
+          DestinationFiles="@(ApplicationBindings -> '$(RedistDir)\%(Filename).pdb')"
+          Condition="Exists('%(LocationPath)\%(Filename).pdb')"
+          ContinueOnError="true" />
 
     <Message Text="Copyied fluent DSL-based binding assemblies to redist folder." />
   </Target>
