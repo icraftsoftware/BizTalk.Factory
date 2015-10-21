@@ -58,13 +58,13 @@
     <IncludeComponents>true</IncludeComponents>
     <IncludeInstallUtilForComponents>true</IncludeInstallUtilForComponents>
     <IncludeMessagingBindings>false</IncludeMessagingBindings>
-    <IncludeOrchestrations Condition=" '$(TargetEnvironment)' == 'DEV' ">true</IncludeOrchestrations>
-    <IncludeOrchestrations Condition=" '$(TargetEnvironment)' != 'DEV' ">false</IncludeOrchestrations>
     <IncludePipelineComponents>true</IncludePipelineComponents>
     <IncludePipelines>true</IncludePipelines>
     <IncludeSchemas>true</IncludeSchemas>
     <IncludeSSO>true</IncludeSSO>
     <IncludeTransforms>true</IncludeTransforms>
+    <IncludeTestArtifacts Condition=" '$(IncludeTestArtifacts)' == '' ">false</IncludeTestArtifacts>
+    <IncludeOrchestrations>$(IncludeTestArtifacts)</IncludeOrchestrations>
   </PropertyGroup>
 
   <!-- Controlling of BizTalk Factory's Specific Deployment Tasks -->

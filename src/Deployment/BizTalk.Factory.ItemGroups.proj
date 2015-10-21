@@ -277,10 +277,10 @@
   -->
 
   <ItemGroup>
-    <ApplicationBindings Include="Be.Stateless.BizTalk.TestArtifacts.Binding.dll" Condition=" '$(TargetEnvironment)' == 'DEV' ">
+    <ApplicationBindings Include="Be.Stateless.BizTalk.TestArtifacts.Binding.dll" Condition=" '$(IncludeTestArtifacts)' == 'true' ">
       <LocationPath>..\BizTalk.TestArtifacts.Binding\bin\$(Configuration)</LocationPath>
     </ApplicationBindings>
-    <ApplicationBindings Include="Be.Stateless.BizTalk.Binding.dll" Condition=" '$(TargetEnvironment)' != 'DEV' ">
+    <ApplicationBindings Include="Be.Stateless.BizTalk.Binding.dll" Condition=" '$(IncludeTestArtifacts)' != 'true' ">
       <LocationPath>..\BizTalk.Binding\bin\$(Configuration)</LocationPath>
     </ApplicationBindings>
   </ItemGroup>
@@ -292,7 +292,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Orchestrations Include="Be.Stateless.BizTalk.TestArtifacts.dll" Condition=" '$(TargetEnvironment)' == 'DEV' ">
+    <Orchestrations Include="Be.Stateless.BizTalk.TestArtifacts.dll" Condition=" '$(IncludeTestArtifacts)' == 'true' ">
       <LocationPath>..\BizTalk.TestArtifacts\bin\$(Configuration)</LocationPath>
     </Orchestrations>
   </ItemGroup>
