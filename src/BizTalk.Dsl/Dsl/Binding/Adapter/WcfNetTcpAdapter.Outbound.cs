@@ -69,6 +69,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region Base Class Member Overrides
+
+			protected override void Validate()
+			{
+				_adapterConfig.Address = Address.Uri.ToString();
+				base.Validate();
+			}
+
+			#endregion
+
 			#region General Tab - SOAP Action Header Settings
 
 			/// <summary>

@@ -66,6 +66,41 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region Base Class Member Overrides
+
+			protected override void Validate()
+			{
+				_adapterConfig.Address = Address.Uri.ToString();
+				base.Validate();
+			}
+
+			#endregion
+
+			#region Binding Tab - General Settings
+
+			/// <summary>
+			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
+			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
+			/// property to limit exposure to denial of service (DoS) attacks. 
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class in the buffered transfer mode to
+			/// communicate with an endpoint. For the buffered transport mode, the <see cref="NetTcpBinding"/>.<see
+			/// cref="NetTcpBinding.MaxBufferSize"/> property is always equal to the value of this property.
+			/// </para>
+			/// <para>
+			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
+			/// </para>
+			/// </remarks>
+			public int MaxReceivedMessageSize
+			{
+				get { return _adapterConfig.MaxReceivedMessageSize; }
+				set { _adapterConfig.MaxReceivedMessageSize = value; }
+			}
+
+			#endregion
+
 			#region Binding Tab - Connection Pool Settings
 
 			/// <summary>
@@ -112,27 +147,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - General Settings
+			#region Security Tab - Service Certificate Settings
 
 			/// <summary>
-			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
-			/// property to limit exposure to denial of service (DoS) attacks. 
+			/// Specify the thumbprint of the X.509 certificate for this receive location that the clients use to
+			/// authenticate the service. The certificate to be used for this property must be installed into the My store
+			/// in the Current User location.
 			/// </summary>
 			/// <remarks>
 			/// <para>
-			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class in the buffered transfer mode to
-			/// communicate with an endpoint. For the buffered transport mode, the <see cref="NetTcpBinding"/>.<see
-			/// cref="NetTcpBinding.MaxBufferSize"/> property is always equal to the value of this property.
+			/// You must install the service certificate into the Current User location of the user account for the receive
+			/// handler hosting this receive location.
 			/// </para>
 			/// <para>
-			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
+			/// It defaults to an <see cref="string.Empty"/> string.
 			/// </para>
 			/// </remarks>
-			public int MaxReceivedMessageSize
+			public string ServiceCertificateThumbprint
 			{
-				get { return _adapterConfig.MaxReceivedMessageSize; }
-				set { _adapterConfig.MaxReceivedMessageSize = value; }
+				get { return _adapterConfig.ServiceCertificate; }
+				set { _adapterConfig.ServiceCertificate = value; }
 			}
 
 			#endregion
@@ -255,30 +289,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.AlgorithmSuite; }
 				set { _adapterConfig.AlgorithmSuite = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Service Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for this receive location that the clients use to
-			/// authenticate the service. The certificate to be used for this property must be installed into the My store
-			/// in the Current User location.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// You must install the service certificate into the Current User location of the user account for the receive
-			/// handler hosting this receive location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ServiceCertificateThumbprint
-			{
-				get { return _adapterConfig.ServiceCertificate; }
-				set { _adapterConfig.ServiceCertificate = value; }
 			}
 
 			#endregion

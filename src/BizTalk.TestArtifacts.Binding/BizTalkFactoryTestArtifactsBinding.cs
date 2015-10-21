@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.ServiceModel;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.EnvironmentSettings;
@@ -36,7 +37,7 @@ namespace Be.Stateless.BizTalk
 						sp.Name = SendPortName.Towards("TestArtifacts").About("Dummy").FormattedAs.None;
 						sp.ReceivePipeline = new ReceivePipeline<PassThruReceive>();
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>();
-						sp.State = ServiceState.Enlisted;
+						sp.State = ServiceState.Unenlisted;
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
 								a.Address = new SqlAdapterConnectionUri { InitialCatalog = "BizTalkFactoryTransientStateDb", Server = CommonSettings.ProcessingDatabaseServer };
@@ -55,7 +56,7 @@ namespace Be.Stateless.BizTalk
 									rl.Enabled = false;
 									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>();
 									rl.SendPipeline = new SendPipeline<PassThruTransmit>();
-									// TODO rl.Transport.Adapter = new ???.Inbound(a => { });
+									rl.Transport.Adapter = new WcfNetTcpAdapter.Inbound(a => { a.Address = new EndpointAddress("net.tcp://localhost/dummy.svc"); });
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}));
 					}));

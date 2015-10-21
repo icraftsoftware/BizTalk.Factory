@@ -58,7 +58,8 @@
     <IncludeComponents>true</IncludeComponents>
     <IncludeInstallUtilForComponents>true</IncludeInstallUtilForComponents>
     <IncludeMessagingBindings>false</IncludeMessagingBindings>
-    <IncludeOrchestrations>false</IncludeOrchestrations>
+    <IncludeOrchestrations Condition=" '$(TargetEnvironment)' == 'DEV' ">true</IncludeOrchestrations>
+    <IncludeOrchestrations Condition=" '$(TargetEnvironment)' != 'DEV' ">false</IncludeOrchestrations>
     <IncludePipelineComponents>true</IncludePipelineComponents>
     <IncludePipelines>true</IncludePipelines>
     <IncludeSchemas>true</IncludeSchemas>
