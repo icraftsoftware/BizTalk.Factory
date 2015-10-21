@@ -22,7 +22,7 @@ using Microsoft.BizTalk.PipelineEditor.PipelineFile;
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	/// <summary>
-	/// Overrides <see cref="ComponentInfo"/> serialization to able to inject a binding-compliant <see
+	/// Overrides <see cref="ComponentInfo"/> serialization to be able to inject a binding-compliant <see
 	/// cref="PropertyBag"/>.
 	/// </summary>
 	public class ComponentBinding : ComponentInfo
