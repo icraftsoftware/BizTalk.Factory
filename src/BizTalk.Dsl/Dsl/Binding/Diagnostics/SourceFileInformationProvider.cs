@@ -62,7 +62,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Diagnostics
 			if (_fileName.IsNullOrEmpty())
 			{
 				// walk up the stack frames...
-				var stackFrame = Enumerable.Range(4, 20)
+				var stackFrame = Enumerable.Range(1, 20)
 					.Select(i => new StackFrame(i, true))
 					.FirstOrDefault(
 						f => f.GetFileName() != null && f.GetMethod().IfNotNull(

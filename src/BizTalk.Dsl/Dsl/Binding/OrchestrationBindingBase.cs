@@ -31,6 +31,7 @@ using Microsoft.XLANGs.Core;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
+	// TODO ISupportEnvironmentSensitivity should be a ModuleRef level and not OrchestrationBindingBase one
 	public abstract class OrchestrationBindingBase<T>
 		: IOrchestrationBinding,
 			IProvideSourceFileInformation,

@@ -41,6 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// Namespace</see>
 	/// </para>
 	/// </remarks>
+	/// <seealso href="https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx"/>
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 	public class ApplicationBindingVisitor : ApplicationBindingVisitorBase
 	{
@@ -61,6 +62,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
 		{
+			// TODO Support multiple assemblies with orchestrations, i.e. multiple ModuleRef
 			var moduleRef = CreateModuleRef(orchestrationBinding);
 			BindingInfo.ModuleRefCollection.Add(moduleRef);
 			var serviceRef = CreateServiceRef(orchestrationBinding);
@@ -165,6 +167,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 					// see Microsoft.BizTalk.OrchestrationDesigner.PortBinding, Microsoft.BizTalk.OrchestrationDesigner
 					// where 0=Physical, 1=Logical, 2=Direct, 3=Dynamic
 					// however it never seems to be set to an other value than 1 in binding exports
+					//	TODO support BindingOption other values
 					BindingOption = 1,
 					// see Microsoft.BizTalk.ExplorerOM.PortModifier (Import Indicates an Outbound port of an orchestration,
 					// Export Indicates an Inbound port of an orchestration)

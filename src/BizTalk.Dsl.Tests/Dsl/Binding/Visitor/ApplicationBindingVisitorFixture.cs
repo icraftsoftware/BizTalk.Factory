@@ -26,43 +26,6 @@ using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
-	/*
-	 * TODO https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx
-	 * TODO https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.serviceportref.aspx
-	 * 
-	 * TODO Modifier in <Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
-	 * TODO BindingOption in <Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
-	 * TODO Type in <Host Name="BiMI_PxHost" Type="1" Trusted="false" />
-	 * 
-	 * TODO Support multiple assemblies with orchestrations, i.e. multiple ModuleRef
-	 * 
-	 * TODO ISupportEnvironmentSensitivity should be a ModuleRef level and not OrchestrationBindingBase one
-	 * 
-	<ModuleRef Name="Net.Ores.Bimi.AT.Orchestrations" Version="1.2.0.0" Culture="neutral" PublicKeyToken="e08b1081243611df" FullName="Net.Ores.Bimi.AT.Orchestrations, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e08b1081243611df">
-		<Services>
-			<Service Name="Net.Ores.Bimi.AT.Orchestrations.RequestEAN.Process" State="Unenlisted" TrackingOption="None">
-				<Ports>
-					<Port Name="ReceiveInternalRequestEANPort" Modifier="2" BindingOption="1">
-						<SendPortRef xsi:nil="true" />
-						<DistributionListRef xsi:nil="true" />
-						<ReceivePortRef Name="AT.RP1.Uniwall" />
-					</Port>
-					<Port Name="SendNewEANRequestPort" Modifier="1" BindingOption="1">
-						<!-- #if GetProperty("TargetEnvironment") == "DEV" || GetProperty("TargetEnvironment") == "BLD" -->
-						<SendPortRef Name="AT.SP1.Indexis.BusinessMasterData.FILE" />
-						<!-- #endif -->
-						<!-- #if GetProperty("TargetEnvironment") == "ACC" || GetProperty("TargetEnvironment") == "PRD" -->
-						<SendPortRef Name="AT.SP1.Indexis.BusinessMasterData.MQSC" />
-						<!-- #endif -->
-						<DistributionListRef xsi:nil="true" />
-						<ReceivePortRef xsi:nil="true" />
-					</Port>
-				</Ports>
-				<Roles />
-				<Host Name="BiMI_PxHost" Type="1" Trusted="false" />
-			</Service>
- 	 */
-
 	[TestFixture]
 	public class ApplicationBindingVisitorFixture
 	{
