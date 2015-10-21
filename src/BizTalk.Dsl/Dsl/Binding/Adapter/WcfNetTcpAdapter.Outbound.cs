@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		// <see href="https://msdn.microsoft.com/en-us/library/bb226460.aspx"/>
 		// <seealso href="https://msdn.microsoft.com/en-us/library/bb226379.aspx"/>
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>
+		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>, IOutboundAdapter
 		{
 			public Outbound()
 			{
@@ -154,7 +154,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// clients and no messages are suspended.
 			/// </para>
 			/// <para>
-			/// It defaults to <see cref="bool.False"/>.
+			/// It defaults to <c>False</c>.
 			/// </para>
 			/// </remarks>
 			public bool EnableTransaction
@@ -313,7 +313,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// destination server.
 			/// </summary>
 			/// <remarks>
-			/// It defaults to <see cref="bool.False"/>.
+			/// It defaults to <c>False</c>.
 			/// </remarks>
 			public bool UseSSO
 			{
@@ -335,7 +335,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			/// <summary>
 			/// Specify the user name to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <see cref="bool.False"/>.
+			/// property is set to <c>False</c>.
 			/// </summary>
 			/// <remarks>
 			/// <para>
@@ -353,7 +353,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			/// <summary>
 			/// Specify the password to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <see cref="bool.False"/>.
+			/// property is set to <c>False</c>.
 			/// </summary>
 			/// <remarks>
 			/// It defaults to <see cref="string.Empty"/>.
@@ -375,11 +375,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// <list type="bullet">
 			/// <item>
-			/// <see cref="bool.True"/> &#8212; Route the message that fails outbound processing to a subscribing
-			/// application (such as another receive port or orchestration schedule).
+			/// <c>True</c> &#8212; Route the message that fails outbound processing to a subscribing application (such as
+			/// another receive port or orchestration schedule).
 			/// </item>
 			/// <item>
-			/// <see cref="bool.False"/> &#8212; Suspend failed messages and generate a negative acknowledgment (NACK).
+			/// <c>False</c> &#8212; Suspend failed messages and generate a negative acknowledgment (NACK).
 			/// </item>
 			/// </list>
 			/// </para>
@@ -387,7 +387,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// This property is valid only for solicit-response ports.
 			/// </para>
 			/// <para>
-			/// It defauts to <see cref="bool.True"/>.
+			/// It defauts to <c>True</c>.
 			/// </para>
 			/// </remarks>
 			public bool PropagateFaultMessage

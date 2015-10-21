@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		// <see href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
 		// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>
+		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>, IInboundAdapter
 		{
 			public Inbound()
 			{
@@ -290,7 +290,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// failure or a routing failure.
 			/// </summary>
 			/// <remarks>
-			/// It defauts to <see cref="bool.True"/>.
+			/// It defauts to <c>True</c>.
 			/// </remarks>
 			public bool SuspendRequestMessageOnFailure
 			{
@@ -303,7 +303,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// client for debugging purposes.
 			/// </summary>
 			/// <remarks>
-			/// It defauts to <see cref="bool.True"/>.
+			/// It defauts to <c>True</c>.
 			/// </remarks>
 			public bool IncludeExceptionDetailInFaults
 			{
