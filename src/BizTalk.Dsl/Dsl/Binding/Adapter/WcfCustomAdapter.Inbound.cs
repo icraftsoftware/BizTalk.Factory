@@ -16,23 +16,34 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Moq;
-using NUnit.Framework;
+using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	[TestFixture]
-	public class WcfCustomAdapterFixture
+	public abstract partial class WcfCustomAdapter
 	{
-		[Test]
-		public void ProtocolTypeSettingsAreReadFromRegistry()
-		{
-			var mock = new Mock<WcfCustomAdapter<CustomRLConfig>> { CallBase = true };
-			var wsa = mock.Object as IAdapter;
-			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-Custom"));
-			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(907));
-			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("af081f69-38ca-4d5b-87df-f0344b12557a"));
+		#region Nested Type: Inbound
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
+		public class Inbound : WcfCustomAdapter<CustomRLConfig>, IInboundAdapter {
+			protected override string GetAddress()
+			{
+				throw new System.NotImplementedException();
+			}
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				throw new System.NotImplementedException();
+			}
+
+			protected override void Validate()
+			{
+				throw new System.NotImplementedException();
+			}
 		}
+
+		#endregion
 	}
 }

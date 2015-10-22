@@ -17,40 +17,21 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.ServiceModel;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
-using Be.Stateless.Linq.Extensions;
+using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
-using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomAdapter<TConfig> : WcfAdapterBase<EndpointAddress, TConfig>, IAdapterConfigTimeouts
-		where TConfig : AdapterConfig,
-			IAdapterConfigIdentity,
-			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
-			IAdapterConfigInboundMessageMarshalling,
-			IAdapterConfigOutboundMessageMarshalling,
-			new()
+	public abstract class WcfStandardAdapterBase<TAddress, TBinding, TConfig> : WcfAdapterBase<TAddress, TConfig>, IAdapterConfigTimeouts
+		where TBinding : StandardBindingElement, new()
+		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
 	{
-		static WcfCustomAdapter()
+		protected WcfStandardAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType)
 		{
-			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("af081f69-38ca-4d5b-87df-f0344b12557a"));
-		}
-
-		protected WcfCustomAdapter() : base(_protocolType)
-		{
-			_bindingConfigurationElement = new CustomBindingElement { Name = "customBinding" };
-			_configurationProxy = new ConfigurationProxy();
-			_adapterConfig.BindingType = "customBinding";
+			if (bindingType.IsNullOrEmpty()) throw new ArgumentNullException("bindingType");
+			_bindingConfigurationElement = new TBinding { Name = bindingType };
 		}
 
 		#region IAdapterConfigTimeouts Members
@@ -114,50 +95,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Base Class Member Overrides
-
-		protected override void Save(IPropertyBag propertyBag)
-		{
-			_adapterConfig.BindingConfiguration = GetBindingElementXml();
-			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorElementXml(EndpointBehaviors);
-			base.Save(propertyBag);
-		}
-
-		#endregion
-
-		#region Behavior Tab - EndpointBehavior Settings
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
-
-		#endregion
-
-		private string GetBindingElementXml()
-		{
-			_bindingConfigurationElement.Name = _adapterConfig.BindingType;
-			_configurationProxy.SetBindingElement(_bindingConfigurationElement);
-			return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
-		}
-
-		protected string GetEndpointBehaviorElementXml(IEnumerable<IEndpointBehavior> endpointBehaviors)
-		{
-			var endpointBehaviorElement = new EndpointBehaviorElement("EndpointBehavior");
-			endpointBehaviors.Cast<BehaviorExtensionElement>().Each(b => endpointBehaviorElement.Add(b));
-			_configurationProxy.SetEndpointBehaviorElement(endpointBehaviorElement);
-			return _configurationProxy.GetEndpointBehaviorElementXml();
-		}
-
-		protected string GetServiceBehaviorElementXml(IEnumerable<IServiceBehavior> serviceBehaviors)
-		{
-			var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
-			serviceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
-			_configurationProxy.SetServiceBehaviorElement(serviceBehaviorElement);
-			return _configurationProxy.GetServiceBehaviorElementXml();
-		}
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		protected readonly CustomBindingElement _bindingConfigurationElement;
-		private readonly ConfigurationProxy _configurationProxy;
+		protected readonly TBinding _bindingConfigurationElement;
 	}
 }

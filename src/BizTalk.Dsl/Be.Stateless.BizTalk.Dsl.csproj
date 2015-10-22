@@ -126,14 +126,17 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfAdapterBase.cs" />
-    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfLobAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfStandardAdapterBase.cs" />
     <Compile Include="Dsl\Binding\ApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingBase.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensions.cs" />

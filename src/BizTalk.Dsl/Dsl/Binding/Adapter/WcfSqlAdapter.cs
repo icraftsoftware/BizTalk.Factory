@@ -26,7 +26,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfSqlAdapter<TConfig> : WcfCustomAdapterBase<SqlAdapterConnectionUri, SqlAdapterBindingConfigurationElement, TConfig>
+	public abstract class WcfSqlAdapter<TConfig> : WcfLobAdapterBase<SqlAdapterConnectionUri, SqlAdapterBindingConfigurationElement, TConfig>
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
@@ -83,30 +83,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _bindingConfigurationElement.EnablePerformanceCounters; }
 			set { _bindingConfigurationElement.EnablePerformanceCounters = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - General Settings
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the receive method, invoked by a communication object, times
-		/// out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time that a connection can remain inactive, during which no application messages are received,
-		/// before it is dropped. The default value is 10 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the receive method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan ReceiveTimeout
-		{
-			get { return _bindingConfigurationElement.ReceiveTimeout; }
-			set { _bindingConfigurationElement.ReceiveTimeout = value; }
 		}
 
 		#endregion

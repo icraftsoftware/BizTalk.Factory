@@ -16,10 +16,7 @@
 
 #endregion
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.ServiceModel.Configuration;
-using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
@@ -27,77 +24,13 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfAdapterBase<TAddress, TBinding, TConfig> : AdapterBase, IAdapterConfigTimeouts
-		where TBinding : StandardBindingElement, new()
+	public abstract class WcfAdapterBase<TAddress, TConfig> : AdapterBase
 		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
 	{
-		protected WcfAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType)
+		protected WcfAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
-			if (bindingType.IsNullOrEmpty()) throw new ArgumentNullException("bindingType");
-			_bindingConfigurationElement = new TBinding { Name = bindingType };
 			_adapterConfig = new TConfig();
 		}
-
-		#region IAdapterConfigTimeouts Members
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the close method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to close before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the close method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan CloseTimeout
-		{
-			get { return _bindingConfigurationElement.CloseTimeout; }
-			set { _bindingConfigurationElement.CloseTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the open method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to open before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the open method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan OpenTimeout
-		{
-			get { return _bindingConfigurationElement.OpenTimeout; }
-			set { _bindingConfigurationElement.OpenTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the send method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a write operation to complete before the transport raises an exception. The
-		/// default value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the send method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan SendTimeout
-		{
-			get { return _bindingConfigurationElement.SendTimeout; }
-			set { _bindingConfigurationElement.SendTimeout = value; }
-		}
-
-		#endregion
 
 		#region Base Class Member Overrides
 
@@ -302,6 +235,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#endregion
 
 		protected readonly TConfig _adapterConfig;
-		protected readonly TBinding _bindingConfigurationElement;
 	}
 }

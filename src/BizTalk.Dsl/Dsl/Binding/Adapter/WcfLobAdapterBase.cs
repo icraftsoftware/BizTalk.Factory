@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Configuration;
@@ -28,7 +29,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfCustomAdapterBase<TAddress, TBinding, TConfig> : WcfAdapterBase<TAddress, TBinding, TConfig>
+	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfStandardAdapterBase<TAddress, TBinding, TConfig>
 		where TBinding : StandardBindingElement,
 			new()
 		where TConfig : AdapterConfig,
@@ -39,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		protected WcfCustomAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType, bindingType)
+		protected WcfLobAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType, bindingType)
 		{
 			_configurationProxy = new ConfigurationProxy();
 			_adapterConfig.BindingType = bindingType;
@@ -56,6 +57,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		#region Binding Tab - General Settings
+
+		/// <summary>
+		/// Gets or sets the interval of time after which the receive method, invoked by a communication object, times
+		/// out.
+		/// </summary>
+		/// <remarks>
+		/// The interval of time that a connection can remain inactive, during which no application messages are received,
+		/// before it is dropped. The default value is 10 minute.
+		/// </remarks>
+		/// <returns>
+		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the receive method to time out.
+		/// </returns>
+		/// <exception cref="T:ArgumentOutOfRangeException">
+		/// The value is less than zero or too large.
+		/// </exception>
+		public TimeSpan ReceiveTimeout
+		{
+			get { return _bindingConfigurationElement.ReceiveTimeout; }
+			set { _bindingConfigurationElement.ReceiveTimeout = value; }
+		}
+
+		#endregion
+
 		#region Behavior Tab - EndpointBehavior Settings
 
 		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
@@ -64,6 +89,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		private string GetBindingElementXml()
 		{
+			_bindingConfigurationElement.Name = _adapterConfig.BindingType;
 			_configurationProxy.SetBindingElement(_bindingConfigurationElement);
 			return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
 		}
