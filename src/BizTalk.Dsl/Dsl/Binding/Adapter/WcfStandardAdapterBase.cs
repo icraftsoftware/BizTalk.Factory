@@ -17,8 +17,8 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel.Configuration;
-using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Deployment.Binding;
 
@@ -28,10 +28,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
 	{
-		protected WcfStandardAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType)
+		static WcfStandardAdapterBase()
 		{
-			if (bindingType.IsNullOrEmpty()) throw new ArgumentNullException("bindingType");
-			_bindingConfigurationElement = new TBinding { Name = bindingType };
+			_bindingName = WcfBindingRegistry.GetBindingName<TBinding>();
+		}
+
+		protected WcfStandardAdapterBase(ProtocolType protocolType) : base(protocolType)
+		{
+			_bindingConfigurationElement = new TBinding { Name = _bindingName };
 		}
 
 		#region IAdapterConfigTimeouts Members
@@ -94,6 +98,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly string _bindingName;
 
 		protected readonly TBinding _bindingConfigurationElement;
 	}

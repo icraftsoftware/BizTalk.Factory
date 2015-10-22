@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("7fd2dfcd-6a7b-44f9-8387-29457fd2eaaf"));
 		}
 
-		protected WcfNetTcpAdapter() : base(_protocolType, "netTcpBinding") { }
+		protected WcfNetTcpAdapter() : base(_protocolType) { }
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;

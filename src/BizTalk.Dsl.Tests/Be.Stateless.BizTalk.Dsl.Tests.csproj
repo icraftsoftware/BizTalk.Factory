@@ -127,6 +127,8 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBaseFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.InboundFixture.cs" />

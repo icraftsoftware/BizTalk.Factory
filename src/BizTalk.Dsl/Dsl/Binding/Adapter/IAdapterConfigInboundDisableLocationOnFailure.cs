@@ -16,24 +16,17 @@
 
 #endregion
 
-using System.ServiceModel.Configuration;
-using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Moq;
-using NUnit.Framework;
-
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	[TestFixture]
-	public class WcfCustomAdapterFixture
+	public interface IAdapterConfigInboundDisableLocationOnFailure
 	{
-		[Test]
-		public void ProtocolTypeSettingsAreReadFromRegistry()
-		{
-			var mock = new Mock<WcfCustomAdapter<BasicHttpBindingElement, CustomRLConfig>> { CallBase = true };
-			var wsa = mock.Object as IAdapter;
-			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-Custom"));
-			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(907));
-			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("af081f69-38ca-4d5b-87df-f0344b12557a"));
-		}
+		/// <summary>
+		/// Specify whether to disable the receive location that fails inbound processing due to a receive pipeline
+		/// failure or a routing failure.
+		/// </summary>
+		/// <remarks>
+		/// It defaults to <c>False</c>
+		/// </remarks>
+		bool DisableLocationOnFailure { get; set; }
 	}
 }

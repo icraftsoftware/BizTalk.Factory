@@ -38,9 +38,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		protected WcfLobAdapterBase(ProtocolType protocolType, string bindingType) : base(protocolType, bindingType)
+		protected WcfLobAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
-			_adapterConfig.BindingType = bindingType;
+			_adapterConfig.BindingType = _bindingConfigurationElement.Name;
 		}
 
 		#region Base Class Member Overrides
@@ -51,6 +51,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
 			base.Save(propertyBag);
 		}
+
+		#endregion
+
+		#region Behavior Tab - EndpointBehavior Settings
+
+		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
 
 		#endregion
 
@@ -75,12 +81,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _bindingConfigurationElement.ReceiveTimeout; }
 			set { _bindingConfigurationElement.ReceiveTimeout = value; }
 		}
-
-		#endregion
-
-		#region Behavior Tab - EndpointBehavior Settings
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
 
 		#endregion
 	}

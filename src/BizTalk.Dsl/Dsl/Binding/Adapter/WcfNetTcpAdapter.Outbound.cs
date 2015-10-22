@@ -28,10 +28,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Outbound
 
-		// <see href="https://msdn.microsoft.com/en-us/library/bb226460.aspx"/>
-		// <seealso href="https://msdn.microsoft.com/en-us/library/bb226379.aspx"/>
+		/// <summary>
+		/// The WCF-NetTcp adapter provides connected cross-computer or cross-process communication in an environment in
+		/// which both services and clients are WCF based. It provides full access to SOAP security, reliability, and
+		/// transaction features. This adapter uses the TCP transport, and messages have binary encoding.
+		/// </summary>
+		/// <remarks>
+		/// You use the WCF-NetTcp send adapter to call a WCF service through the typeless contract by using the TCP
+		/// protocol.
+		/// </remarks>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226419.aspx">What Is the WCF-NetTcp Adapter?</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226460.aspx">How to Configure a WCF-NetTcp Send Port</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226379.aspx">WCF-NetTcp Transport Properties Dialog Box, Send, Security Tab</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>, IOutboundAdapter
+		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>, IOutboundAdapter, IAdapterConfigOutboundAction, IAdapterConfigOutboundPropagateFaultMessage
 		{
 			public Outbound()
 			{
@@ -69,54 +80,32 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region IAdapterConfigOutboundAction Members
+
+			public string StaticAction
+			{
+				get { return _adapterConfig.StaticAction; }
+				set { _adapterConfig.StaticAction = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundPropagateFaultMessage Members
+
+			public bool PropagateFaultMessage
+			{
+				get { return _adapterConfig.PropagateFaultMessage; }
+				set { _adapterConfig.PropagateFaultMessage = value; }
+			}
+
+			#endregion
+
 			#region Base Class Member Overrides
 
 			protected override void Validate()
 			{
 				_adapterConfig.Address = Address.Uri.ToString();
 				base.Validate();
-			}
-
-			#endregion
-
-			#region General Tab - SOAP Action Header Settings
-
-			/// <summary>
-			/// Specify the SOAPAction header field for outgoing messages. This property can also be set through the
-			/// message context property <see cref="WCF.Action"/> in a pipeline or orchestration.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// You can specify this value in two different ways: the single action format and the action mapping format.
-			/// </para>
-			/// <para>
-			/// If you set this property in the single action format &#8212; for example,
-			/// <![CDATA[http://contoso.com/svc/operation1]]>&#8212;the SOAPAction header for outgoing messages is always
-			/// set to the value specified in this property.
-			/// </para>
-			/// <para>
-			/// If you set this property in the action mapping format, the outgoing SOAPAction header is determined by the
-			/// <see cref="BTS.Operation"/> context property. For example, if this property is set to the following XML
-			/// format and the <see cref="BTS.Operation"/> property is set to <c>operation1</c>, the WCF send adapter uses
-			/// <![CDATA[http://contoso.com/svc/operation1]]> for the outgoing SOAPAction header.
-			/// <code><![CDATA[<BtsActionMapping>
-			///   <Operation Name="operation1" Action="http://contoso.com/svc/operation1" />
-			///   <Operation Name="operation2" Action="http://contoso.com/svc/operation2" />
-			/// </BtsActionMapping>]]></code>
-			/// </para>
-			/// <para>
-			/// If outgoing messages come from an orchestration port, orchestration instances dynamically set the
-			/// BTS.Operation property with the operation name of the port. If outgoing messages are routed with
-			/// content-based routing, you can set the <see cref="BTS.Operation"/> property in pipeline components.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string StaticAction
-			{
-				get { return _adapterConfig.StaticAction; }
-				set { _adapterConfig.StaticAction = value; }
 			}
 
 			#endregion
@@ -183,6 +172,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.TransactionProtocol; }
 				set { _adapterConfig.TransactionProtocol = value; }
+			}
+
+			#endregion
+
+			#region Security Tab - Client Certificate Settings
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the ClientCredentialsType property is set to Certificate.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificateThumbprint
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
 			}
 
 			#endregion
@@ -293,29 +305,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the ClientCredentialsType property is set to Certificate.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ClientCertificateThumbprint
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
-			}
-
-			#endregion
-
 			#region Security Tab - User Name Credentials Settings
 
 			/// <summary>
@@ -372,38 +361,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.Password; }
 				set { _adapterConfig.Password = value; }
-			}
-
-			#endregion
-
-			#region Messages Tab - Error Handling Settings
-
-			/// <summary>
-			/// Specify whether to route or suspend messages failed in outbound processing.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// <list type="bullet">
-			/// <item>
-			/// <c>True</c> &#8212; Route the message that fails outbound processing to a subscribing application (such as
-			/// another receive port or orchestration schedule).
-			/// </item>
-			/// <item>
-			/// <c>False</c> &#8212; Suspend failed messages and generate a negative acknowledgment (NACK).
-			/// </item>
-			/// </list>
-			/// </para>
-			/// <para>
-			/// This property is valid only for solicit-response ports.
-			/// </para>
-			/// <para>
-			/// It defauts to <c>True</c>.
-			/// </para>
-			/// </remarks>
-			public bool PropagateFaultMessage
-			{
-				get { return _adapterConfig.PropagateFaultMessage; }
-				set { _adapterConfig.PropagateFaultMessage = value; }
 			}
 
 			#endregion

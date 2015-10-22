@@ -28,10 +28,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Inbound
 
-		// <see href="https://msdn.microsoft.com/en-us/library/bb226412.aspx"/>
-		// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx"/>
+		/// <summary>
+		/// The WCF-NetTcp adapter provides connected cross-computer or cross-process communication in an environment in
+		/// which both services and clients are WCF based. It provides full access to SOAP security, reliability, and
+		/// transaction features. This adapter uses the TCP transport, and messages have binary encoding.
+		/// </summary>
+		/// <remarks>
+		/// You use the WCF-NetTcp receive adapter to receive WCF service requests through the TCP protocol. A receive
+		/// location that uses the WCF-NetTcp receive adapter can be configured as one-way or request-response (two-way).
+		/// </remarks>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226419.aspx">What Is the WCF-NetTcp Adapter?</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226412.aspx">How to Configure a WCF-NetTcp Receive Location</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport Properties Dialog Box, Receive, Security Tab</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>, IInboundAdapter
+		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>,
+			IInboundAdapter,
+			IAdapterConfigInboundIncludeExceptionDetailInFaults,
+			IAdapterConfigInboundSuspendRequestMessageOnFailure
 		{
 			public Inbound()
 			{
@@ -66,37 +80,32 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region IAdapterConfigInboundIncludeExceptionDetailInFaults Members
+
+			public bool IncludeExceptionDetailInFaults
+			{
+				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
+				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundSuspendRequestMessageOnFailure Members
+
+			public bool SuspendRequestMessageOnFailure
+			{
+				get { return _adapterConfig.SuspendMessageOnFailure; }
+				set { _adapterConfig.SuspendMessageOnFailure = value; }
+			}
+
+			#endregion
+
 			#region Base Class Member Overrides
 
 			protected override void Validate()
 			{
 				_adapterConfig.Address = Address.Uri.ToString();
 				base.Validate();
-			}
-
-			#endregion
-
-			#region Binding Tab - General Settings
-
-			/// <summary>
-			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
-			/// property to limit exposure to denial of service (DoS) attacks. 
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class in the buffered transfer mode to
-			/// communicate with an endpoint. For the buffered transport mode, the <see cref="NetTcpBinding"/>.<see
-			/// cref="NetTcpBinding.MaxBufferSize"/> property is always equal to the value of this property.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
-			/// </para>
-			/// </remarks>
-			public int MaxReceivedMessageSize
-			{
-				get { return _adapterConfig.MaxReceivedMessageSize; }
-				set { _adapterConfig.MaxReceivedMessageSize = value; }
 			}
 
 			#endregion
@@ -143,6 +152,31 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.MaxConcurrentCalls; }
 				set { _adapterConfig.MaxConcurrentCalls = value; }
+			}
+
+			#endregion
+
+			#region Binding Tab - General Settings
+
+			/// <summary>
+			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
+			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
+			/// property to limit exposure to denial of service (DoS) attacks. 
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class in the buffered transfer mode to
+			/// communicate with an endpoint. For the buffered transport mode, the <see cref="NetTcpBinding"/>.<see
+			/// cref="NetTcpBinding.MaxBufferSize"/> property is always equal to the value of this property.
+			/// </para>
+			/// <para>
+			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
+			/// </para>
+			/// </remarks>
+			public int MaxReceivedMessageSize
+			{
+				get { return _adapterConfig.MaxReceivedMessageSize; }
+				set { _adapterConfig.MaxReceivedMessageSize = value; }
 			}
 
 			#endregion
@@ -289,36 +323,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.AlgorithmSuite; }
 				set { _adapterConfig.AlgorithmSuite = value; }
-			}
-
-			#endregion
-
-			#region Messages Tab - Error Handling Settings
-
-			/// <summary>
-			/// Specify whether to suspend the request message that fails inbound processing due to a receive pipeline
-			/// failure or a routing failure.
-			/// </summary>
-			/// <remarks>
-			/// It defauts to <c>True</c>.
-			/// </remarks>
-			public bool SuspendRequestMessageOnFailure
-			{
-				get { return _adapterConfig.SuspendMessageOnFailure; }
-				set { _adapterConfig.SuspendMessageOnFailure = value; }
-			}
-
-			/// <summary>
-			/// Specify whether to include managed exception information in the detail of SOAP faults returned to the
-			/// client for debugging purposes.
-			/// </summary>
-			/// <remarks>
-			/// It defauts to <c>True</c>.
-			/// </remarks>
-			public bool IncludeExceptionDetailInFaults
-			{
-				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
-				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
 			}
 
 			#endregion

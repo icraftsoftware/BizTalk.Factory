@@ -23,6 +23,8 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
+	// see What Are the WCF Adapters?, https://msdn.microsoft.com/en-us/library/bb245975.aspx
+	// see WCF Adapters Property Schema and Properties, https://msdn.microsoft.com/en-us/library/bb245991.aspx
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract class WcfAdapterBase<TAddress, TConfig> : AdapterBase
 		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
@@ -53,6 +55,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		protected readonly TConfig _adapterConfig;
 
 		#region General Tab - Endpoint Address Settings
 
@@ -233,7 +237,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		protected readonly TConfig _adapterConfig;
 	}
 }

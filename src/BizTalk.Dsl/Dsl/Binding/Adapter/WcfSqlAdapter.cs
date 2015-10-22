@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("59b35d03-6a06-4734-a249-ef561254ecf7"));
 		}
 
-		protected WcfSqlAdapter() : base(_protocolType, "sqlBinding")
+		protected WcfSqlAdapter() : base(_protocolType)
 		{
 			// Binding Tab - BizTalk Settings
 			EnableBizTalkCompatibilityMode = true;

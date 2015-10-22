@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
@@ -30,7 +31,8 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomAdapter<TConfig> : WcfAdapterBase<EndpointAddress, TConfig>, IAdapterConfigTimeouts
+	public abstract class WcfCustomAdapter<TBinding, TConfig> : WcfStandardAdapterBase<EndpointAddress, TBinding, TConfig>
+		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
@@ -46,70 +48,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected WcfCustomAdapter() : base(_protocolType)
 		{
-			_bindingConfigurationElement = new CustomBindingElement { Name = "customBinding" };
-			_adapterConfig.BindingType = "customBinding";
+			_adapterConfig.BindingType = _bindingConfigurationElement.Name;
+
+			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
-
-		#region IAdapterConfigTimeouts Members
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the close method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to close before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the close method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan CloseTimeout
-		{
-			get { return _bindingConfigurationElement.CloseTimeout; }
-			set { _bindingConfigurationElement.CloseTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the open method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a connection to open before the transport raises an exception. The default
-		/// value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the open method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan OpenTimeout
-		{
-			get { return _bindingConfigurationElement.OpenTimeout; }
-			set { _bindingConfigurationElement.OpenTimeout = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the interval of time after which the send method, invoked by a communication object, times out.
-		/// </summary>
-		/// <remarks>
-		/// The interval of time provided for a write operation to complete before the transport raises an exception. The
-		/// default value is 1 minute.
-		/// </remarks>
-		/// <returns>
-		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the send method to time out.
-		/// </returns>
-		/// <exception cref="T:ArgumentOutOfRangeException">
-		/// The value is less than zero or too large.
-		/// </exception>
-		public TimeSpan SendTimeout
-		{
-			get { return _bindingConfigurationElement.SendTimeout; }
-			set { _bindingConfigurationElement.SendTimeout = value; }
-		}
-
-		#endregion
 
 		#region Base Class Member Overrides
 
@@ -122,6 +64,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		#region Binding Tab
+
+		public TBinding Binding
+		{
+			get { return _bindingConfigurationElement; }
+		}
+
+		#endregion
+
 		#region Behavior Tab - EndpointBehavior Settings
 
 		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
@@ -130,7 +81,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;
-
-		protected readonly CustomBindingElement _bindingConfigurationElement;
 	}
 }

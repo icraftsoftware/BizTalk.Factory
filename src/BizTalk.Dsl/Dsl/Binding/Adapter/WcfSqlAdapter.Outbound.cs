@@ -27,8 +27,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Outbound
 
+		/// <summary>
+		/// The Microsoft BizTalk Adapter for SQL Server exposes the SQL Server database as a WCF service. Adapter clients
+		/// can perform operations on the SQL Server database by exchanging SOAP messages with the adapter. The adapter
+		/// consumes the SOAP message and makes appropriate ADO.NET calls to perform the operation. The adapter returns
+		/// the response from the SQL Server database back to the client in the form of SOAP messages.
+		/// </summary>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd788149.aspx">Overview of BizTalk Adapter for SQL Server</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd787981.aspx">Working with BizTalk Adapter for SQL Server Binding Properties</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfSqlAdapter<CustomTLConfig>, IOutboundAdapter
+		public class Outbound : WcfSqlAdapter<CustomTLConfig>, IOutboundAdapter, IAdapterConfigOutboundAction, IAdapterConfigOutboundPropagateFaultMessage
 		{
 			public Outbound()
 			{
@@ -45,6 +54,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region IAdapterConfigOutboundAction Members
+
+			public string StaticAction
+			{
+				get { return _adapterConfig.StaticAction; }
+				set { _adapterConfig.StaticAction = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundPropagateFaultMessage Members
+
+			public bool PropagateFaultMessage
+			{
+				get { return _adapterConfig.PropagateFaultMessage; }
+				set { _adapterConfig.PropagateFaultMessage = value; }
+			}
+
+			#endregion
+
 			#region Base Class Member Overrides
 
 			protected override void Validate()
@@ -54,16 +83,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				// TODO Proxy Settings
 				// TODO see Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMapping and Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMappingHelper.CreateXml(BtsActionMapping btsActionMapping)
 				// TODO validate BtsActionMapping against orchestration ports' actions
+				_adapterConfig.Address = Address.Uri.ToString();
+				base.Validate();
+				_adapterConfig.Address = null;
 			}
 
 			#endregion
 
-			#region General Tab - SOAP Action Header Settings
+			#region Binding Tab - Miscellaneous Settings
 
-			public string StaticAction
+			/// <summary>
+			/// Determines whether the adapter does a "SET IDENTITY_INSERT ON" before an INSERT or UPDATE operation.
+			/// </summary>
+			public bool AllowIdentityInsert
 			{
-				get { return _adapterConfig.StaticAction; }
-				set { _adapterConfig.StaticAction = value; }
+				get { return _bindingConfigurationElement.AllowIdentityInsert; }
+				set { _bindingConfigurationElement.AllowIdentityInsert = value; }
 			}
 
 			#endregion
@@ -91,44 +126,53 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Miscellaneous Settings
-
-			/// <summary>
-			/// Determines whether the adapter does a "SET IDENTITY_INSERT ON" before an INSERT or UPDATE operation.
-			/// </summary>
-			public bool AllowIdentityInsert
-			{
-				get { return _bindingConfigurationElement.AllowIdentityInsert; }
-				set { _bindingConfigurationElement.AllowIdentityInsert = value; }
-			}
-
-			#endregion
-
 			#region Credentials Tab - User Name Credentials Settings
 
+			/// <summary>
+			/// Specify the affiliate application to use for Enterprise Single Sign-On (SSO).
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <see cref="string.Empty"/>.
+			/// </remarks>
 			public string AffiliateApplicationName
 			{
 				get { return _adapterConfig.AffiliateApplicationName; }
 				set { _adapterConfig.AffiliateApplicationName = value; }
 			}
 
+			/// <summary>
+			/// Specify the password to use for authentication with the destination server when the <see cref="UseSSO"/>
+			/// property is set to <c>False</c>.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <see cref="string.Empty"/>.
+			/// </remarks>
 			public string Password
 			{
 				get { return _adapterConfig.Password; }
 				set { _adapterConfig.Password = value; }
 			}
 
-			public CredentialUse CredentialUse
-			{
-				get { return _adapterConfig.UseCredentials; }
-			}
-
+			/// <summary>
+			/// Specify the user name to use for authentication with the destination server when the <see cref="UseSSO"/>
+			/// property is set to <c>False</c>. You do not have to use the domain\user format for this property.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <see cref="string.Empty"/>.
+			/// </remarks>
 			public string UserName
 			{
 				get { return _adapterConfig.UserName; }
 				set { _adapterConfig.UserName = value; }
 			}
 
+			/// <summary>
+			/// Specify whether to use Single Sign-On to retrieve client credentials for authentication with the
+			/// destination server.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <c>False</c>.
+			/// </remarks>
 			public bool UseSSO
 			{
 				get { return _adapterConfig.UseSSO; }
@@ -137,58 +181,39 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Credentials Tab - Proxy Settings
-
-			public string ProxyAddress
-			{
-				get { return _adapterConfig.ProxyAddress; }
-				set { _adapterConfig.ProxyAddress = value; }
-			}
-
-			public string ProxyPassword
-			{
-				get { return _adapterConfig.ProxyPassword; }
-				set { _adapterConfig.ProxyPassword = value; }
-			}
-
-			public ProxySelection ProxyToUse
-			{
-				get { return _adapterConfig.ProxyToUse; }
-				set { _adapterConfig.ProxyToUse = value; }
-			}
-
-			public string ProxyUserName
-			{
-				get { return _adapterConfig.ProxyUserName; }
-				set { _adapterConfig.ProxyUserName = value; }
-			}
-
-			public bool UseProxy
-			{
-				get { return _adapterConfig.UseProxy; }
-				set { _adapterConfig.UseProxy = value; }
-			}
-
-			#endregion
-
-			#region Messages Tab - Error Handling Settings
-
-			public bool PropagateFaultMessage
-			{
-				get { return _adapterConfig.PropagateFaultMessage; }
-				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
 			#region Messages Tab - Transactions Settings
 
+			/// <summary>
+			/// Specify whether a message is submitted to the MessageBox database using the transaction flowed from
+			/// clients.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// If this property is set to True, the clients are required to submit messages using the transaction protocol
+			/// specified in the TransactionProtocol property. If the clients submit messages outside the transactional
+			/// scope then this receive location returns an exception back to the clients, and no messages are suspended.
+			/// </para>
+			/// <para>
+			/// The option is available only for one-way receive locations. If the clients submit messages in a
+			/// transactional context for request-response receive locations, then an exception is returned back to the
+			/// clients and no messages are suspended.
+			/// </para>
+			/// <para>
+			/// It defaults to <c>False</c>.
+			/// </para>
+			/// </remarks>
 			public bool EnableTransaction
 			{
 				get { return _adapterConfig.EnableTransaction; }
 				set { _adapterConfig.EnableTransaction = value; }
 			}
 
+			/// <summary>
+			/// Specify the transaction protocol to be used with this receive location.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <see cref="TransactionProtocolValue.OleTransactions"/>.
+			/// </remarks>
 			public IsolationLevel IsolationLevel
 			{
 				get { return _adapterConfig.IsolationLevel; }

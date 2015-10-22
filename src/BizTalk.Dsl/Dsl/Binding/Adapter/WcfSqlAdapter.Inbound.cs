@@ -32,8 +32,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	{
 		#region Nested Type: Inbound
 
+		/// <summary>
+		/// The Microsoft BizTalk Adapter for SQL Server exposes the SQL Server database as a WCF service. Adapter clients
+		/// can perform operations on the SQL Server database by exchanging SOAP messages with the adapter. The adapter
+		/// consumes the SOAP message and makes appropriate ADO.NET calls to perform the operation. The adapter returns
+		/// the response from the SQL Server database back to the client in the form of SOAP messages.
+		/// </summary>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd788149.aspx">Overview of BizTalk Adapter for SQL Server</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd787981.aspx">Working with BizTalk Adapter for SQL Server Binding Properties</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfSqlAdapter<CustomRLConfig>, IInboundAdapter
+		public class Inbound : WcfSqlAdapter<CustomRLConfig>,
+			IInboundAdapter,
+			IAdapterConfigInboundCredentials,
+			IAdapterConfigInboundDisableLocationOnFailure,
+			IAdapterConfigInboundIncludeExceptionDetailInFaults,
+			IAdapterConfigInboundSuspendRequestMessageOnFailure
 		{
 			public Inbound()
 			{
@@ -63,6 +77,64 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region IAdapterConfigInboundCredentials Members
+
+			public CredentialSelection CredentialType
+			{
+				get { return _adapterConfig.CredentialType; }
+				set { _adapterConfig.CredentialType = value; }
+			}
+
+			public string UserName
+			{
+				get { return _adapterConfig.UserName; }
+				set { _adapterConfig.UserName = value; }
+			}
+
+			public string Password
+			{
+				get { return _adapterConfig.Password; }
+				set { _adapterConfig.Password = value; }
+			}
+
+			public string AffiliateApplicationName
+			{
+				get { return _adapterConfig.AffiliateApplicationName; }
+				set { _adapterConfig.AffiliateApplicationName = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundDisableLocationOnFailure Members
+
+			public bool DisableLocationOnFailure
+			{
+				get { return _adapterConfig.DisableLocationOnFailure; }
+				set { _adapterConfig.DisableLocationOnFailure = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundIncludeExceptionDetailInFaults Members
+
+			public bool IncludeExceptionDetailInFaults
+			{
+				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
+				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundSuspendRequestMessageOnFailure Members
+
+			public bool SuspendRequestMessageOnFailure
+			{
+				get { return _adapterConfig.SuspendMessageOnFailure; }
+				set { _adapterConfig.SuspendMessageOnFailure = value; }
+			}
+
+			#endregion
+
 			#region Base Class Member Overrides
 
 			protected override void Save(IPropertyBag propertyBag)
@@ -71,13 +143,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				base.Save(propertyBag);
 			}
 
+			#endregion
+
+			#region Base Class Member Overrides
+
 			protected override void Validate()
 			{
-				//base.Validate();
-				// TODO validate Notification Settings if InboundOperation.Notification 
-				// TODO validate Polling Settings if different than InboundOperation.Notification
-				// TODO validate Polling Credentials Settings, i.e. user name + password if CredentialSelection.UserAccount
-				// TODO validate Polling Credentials Settings, i.e. AffiliateApplicationName if CredentialSelection.GetCredentials
+				_adapterConfig.Address = Address.Uri.ToString();
+				base.Validate();
+				_adapterConfig.Address = null;
 			}
 
 			#endregion
@@ -95,11 +169,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Behavior Tab - ServiceBehavior Settings
-
 			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
-
-			#endregion
 
 			#region Binding Tab - Notification Settings
 
@@ -165,56 +235,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _bindingConfigurationElement.PollWhileDataFound; }
 				set { _bindingConfigurationElement.PollWhileDataFound = value; }
-			}
-
-			#endregion
-
-			#region Other Tab - Credentials Settings
-
-			public CredentialSelection CredentialType
-			{
-				get { return _adapterConfig.CredentialType; }
-				set { _adapterConfig.CredentialType = value; }
-			}
-
-			public string UserName
-			{
-				get { return _adapterConfig.UserName; }
-				set { _adapterConfig.UserName = value; }
-			}
-
-			public string Password
-			{
-				get { return _adapterConfig.Password; }
-				set { _adapterConfig.Password = value; }
-			}
-
-			public string AffiliateApplicationName
-			{
-				get { return _adapterConfig.AffiliateApplicationName; }
-				set { _adapterConfig.AffiliateApplicationName = value; }
-			}
-
-			#endregion
-
-			#region Messages Tab - Error Handling Settings
-
-			public bool DisableLocationOnFailure
-			{
-				get { return _adapterConfig.DisableLocationOnFailure; }
-				set { _adapterConfig.DisableLocationOnFailure = value; }
-			}
-
-			public bool IncludeExceptionDetailInFaults
-			{
-				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
-				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
-			}
-
-			public bool SuspendRequestMessageOnFailure
-			{
-				get { return _adapterConfig.SuspendMessageOnFailure; }
-				set { _adapterConfig.SuspendMessageOnFailure = value; }
 			}
 
 			#endregion
