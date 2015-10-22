@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel.Description;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
@@ -66,7 +67,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override void Save(IPropertyBag propertyBag)
 			{
-				_adapterConfig.ServiceBehaviorConfiguration = GetServiceBehaviorElementXml(ServiceBehaviors);
+				_adapterConfig.ServiceBehaviorConfiguration = ServiceBehaviors.GetServiceBehaviorElementXml();
 				base.Save(propertyBag);
 			}
 

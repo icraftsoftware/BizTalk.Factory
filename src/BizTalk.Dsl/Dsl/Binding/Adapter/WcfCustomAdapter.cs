@@ -19,13 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
-using Be.Stateless.Linq.Extensions;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
@@ -49,7 +47,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected WcfCustomAdapter() : base(_protocolType)
 		{
 			_bindingConfigurationElement = new CustomBindingElement { Name = "customBinding" };
-			_configurationProxy = new ConfigurationProxy();
 			_adapterConfig.BindingType = "customBinding";
 		}
 
@@ -118,8 +115,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected override void Save(IPropertyBag propertyBag)
 		{
-			_adapterConfig.BindingConfiguration = GetBindingElementXml();
-			_adapterConfig.EndpointBehaviorConfiguration = GetEndpointBehaviorElementXml(EndpointBehaviors);
+			_adapterConfig.BindingConfiguration = _bindingConfigurationElement.GetBindingElementXml(_bindingConfigurationElement.Name);
+			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
 			base.Save(propertyBag);
 		}
 
@@ -131,33 +128,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		private string GetBindingElementXml()
-		{
-			_bindingConfigurationElement.Name = _adapterConfig.BindingType;
-			_configurationProxy.SetBindingElement(_bindingConfigurationElement);
-			return _configurationProxy.GetBindingElementXml(_bindingConfigurationElement.Name);
-		}
-
-		protected string GetEndpointBehaviorElementXml(IEnumerable<IEndpointBehavior> endpointBehaviors)
-		{
-			var endpointBehaviorElement = new EndpointBehaviorElement("EndpointBehavior");
-			endpointBehaviors.Cast<BehaviorExtensionElement>().Each(b => endpointBehaviorElement.Add(b));
-			_configurationProxy.SetEndpointBehaviorElement(endpointBehaviorElement);
-			return _configurationProxy.GetEndpointBehaviorElementXml();
-		}
-
-		protected string GetServiceBehaviorElementXml(IEnumerable<IServiceBehavior> serviceBehaviors)
-		{
-			var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
-			serviceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
-			_configurationProxy.SetServiceBehaviorElement(serviceBehaviorElement);
-			return _configurationProxy.GetServiceBehaviorElementXml();
-		}
-
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;
 
 		protected readonly CustomBindingElement _bindingConfigurationElement;
-		private readonly ConfigurationProxy _configurationProxy;
 	}
 }
