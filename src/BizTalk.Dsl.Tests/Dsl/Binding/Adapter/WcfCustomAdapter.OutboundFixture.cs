@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.Binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
 					a.StaticAction = "http://services.ores.net/mail/2011/11/IMailService/SendMessage";
 
-					/* TODO
+					/* TODO Identity
             <Identity vt="8">
               <identity>
                 <servicePrincipalName value="${MailServiceIdentity}" />
