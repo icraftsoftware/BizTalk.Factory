@@ -73,8 +73,8 @@ namespace Be.Stateless.IO
 		/// <param name="disposing"></param>
 		protected override void Dispose(bool disposing)
 		{
-			// <see href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
-			// <see href="http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P"/>
+			// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
+			// <seealso href="http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P"/>
 
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("FileStreamTransacted is {0}.", disposing ? "disposing" : "finalizing");
 

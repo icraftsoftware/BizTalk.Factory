@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace Be.Stateless.IO
 	/// inserted.
 	/// </para>
 	/// </remarks>
-	/// <see href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+	/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 	public class StringStream : Stream
 	{
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Be.Stateless.IO
 		/// <param name="string">
 		/// The <see cref="string"/> to wrap.
 		/// </param>
-		/// <see href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public StringStream(string @string)
 		{
 			if (@string.IsNullOrEmpty()) throw new ArgumentNullException("string");
@@ -75,6 +75,11 @@ namespace Be.Stateless.IO
 			get { return false; }
 		}
 
+		public override void Flush()
+		{
+			throw new NotSupportedException();
+		}
+
 		/// <summary>
 		/// When overridden in a derived class, gets the length in bytes of the stream.
 		/// </summary>
@@ -91,7 +96,7 @@ namespace Be.Stateless.IO
 		/// The length of the string multiplied by two, since a <see cref="string"/> is a series of Unicode UTF-16 code
 		/// points and each code point is 2 bytes. Notice the length will also account for the extra 2-byte BOM preamble.
 		/// </remarks>
-		/// <see href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public override long Length
 		{
 			get { return _byteLength; }
@@ -105,11 +110,6 @@ namespace Be.Stateless.IO
 				if (value < 0 || value > _byteLength) throw new ArgumentOutOfRangeException("value");
 				_position = (int) value;
 			}
-		}
-
-		public override void Flush()
-		{
-			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace Be.Stateless.IO
 		/// the whole point of this exercise is to avoid extraneous allocations for large strings, that would have been a
 		/// bit counterproductive.
 		/// </remarks>
-		/// <see href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
+		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			var bytesRead = 0;

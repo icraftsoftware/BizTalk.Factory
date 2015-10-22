@@ -31,7 +31,7 @@ namespace Be.Stateless.Data.Objects.Extensions
 	/// context.Categories.Include(ca => ca.Products.Include(p => p.Order_Details).Include(od => od.Orders))
 	/// ]]>
 	/// </remarks>
-	/// <see href="http://msmvps.com/blogs/matthieu/archive/2008/06/06/entity-framework-include-with-func-next.aspx" />
+	/// <seealso href="http://msmvps.com/blogs/matthieu/archive/2008/06/06/entity-framework-include-with-func-next.aspx" />
 	public static class ObjectQueryExtensions
 	{
 		public static ObjectQuery<T1> Include<T1, T2>(this ObjectQuery<T1> query, Expression<Func<T1, T2>> selector)

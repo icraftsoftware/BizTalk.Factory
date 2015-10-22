@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Message
 	/// <summary>
 	/// Message type to use when one needs to send a text message from an orchestration.
 	/// </summary>
-	/// <see href = "http://msdn.microsoft.com/en-us/library/ee253435" />
+	/// <seealso href = "http://msdn.microsoft.com/en-us/library/ee253435" />
 	[CustomFormatter(typeof(StringContentFormatter))]
 	[Serializable]
 	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]

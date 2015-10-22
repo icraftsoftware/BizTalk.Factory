@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,13 +24,10 @@ namespace Be.Stateless.Linq
 	/// <summary>
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	/// <see href="http://brendan.enrick.com/blog/linq-your-collections-with-iequalitycomparer-and-lambda-expressions/"/>
+	/// <seealso href="http://brendan.enrick.com/blog/linq-your-collections-with-iequalitycomparer-and-lambda-expressions/"/>
 	public class LambdaComparer<T> : IEqualityComparer<T>
 	{
-		public LambdaComparer(Func<T, T, bool> comparer)
-			: this(comparer, o => 0)
-		{
-		}
+		public LambdaComparer(Func<T, T, bool> comparer) : this(comparer, o => 0) { }
 
 		public LambdaComparer(Func<T, T, bool> comparer, Func<T, int> hasher)
 		{

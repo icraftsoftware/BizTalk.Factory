@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,23 +24,29 @@ namespace Be.Stateless.BizTalk.Message
 	/// <summary>
 	/// Message type to use when one needs to send a base 64 encoded text message from an orchestration.
 	/// </summary>
-	/// <see href = "http://msdn.microsoft.com/en-us/library/ee253435" />
+	/// <seealso href = "http://msdn.microsoft.com/en-us/library/ee253435" />
 	[CustomFormatter(typeof(StringContentFormatter))]
 	[Serializable]
 	public class Base64StringMessageContent : StringMessageContent
 	{
-		public Base64StringMessageContent(string content) : base(content)
-		{
-		}
+		#region Operators
 
 		public static implicit operator Base64StringMessageContent(string content)
 		{
 			return new Base64StringMessageContent(content);
 		}
 
+		#endregion
+
+		public Base64StringMessageContent(string content) : base(content) { }
+
+		#region Base Class Member Overrides
+
 		protected override byte[] GetBytes()
 		{
 			return Convert.FromBase64String(_content);
 		}
+
+		#endregion
 	}
 }
