@@ -26,7 +26,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class WcfStandardAdapterBase<TAddress, TBinding, TConfig> : WcfAdapterBase<TAddress, TConfig>, IAdapterConfigTimeouts
 		where TBinding : StandardBindingElement, new()
-		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
+		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
+			IAdapterConfigIdentity,
+			IAdapterConfigInboundMessageMarshalling,
+			IAdapterConfigOutboundMessageMarshalling,
+			new()
 	{
 		static WcfStandardAdapterBase()
 		{

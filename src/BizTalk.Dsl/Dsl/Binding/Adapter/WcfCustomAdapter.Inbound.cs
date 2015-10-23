@@ -142,17 +142,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
-				_adapterConfig.Address = null;
-			}
-
-			#endregion
-
 			/// <summary>
 			/// Specify whether to preserve message order when processing messages received over the NetMsmq binding.
 			/// </summary>

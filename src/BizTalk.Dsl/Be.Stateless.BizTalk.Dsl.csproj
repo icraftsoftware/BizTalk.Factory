@@ -46,6 +46,10 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Adapters.SAP, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.SAP.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Adapters.Sql, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.Sql.dll</HintPath>
@@ -127,12 +131,15 @@
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\Extensions\ConfigurationProxyExtensions.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigBizTalkCompatibilityMode.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundCredentials.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundDisableLocationOnFailure.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundIncludeExceptionDetailInFaults.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundSuspendRequestMessageOnFailure.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundCredentials.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundPropagateFaultMessage.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundAction.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBindingRegistry.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Outbound.cs" />
@@ -142,6 +149,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfLobAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfStandardAdapterBase.cs" />

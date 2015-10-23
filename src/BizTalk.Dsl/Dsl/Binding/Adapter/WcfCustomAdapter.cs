@@ -34,6 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	public abstract class WcfCustomAdapter<TBinding, TConfig> : WcfStandardAdapterBase<EndpointAddress, TBinding, TConfig>
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
@@ -64,20 +65,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab
-
 		public TBinding Binding
 		{
 			get { return _bindingConfigurationElement; }
 		}
 
-		#endregion
-
-		#region Behavior Tab - EndpointBehavior Settings
-
 		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
-
-		#endregion
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;

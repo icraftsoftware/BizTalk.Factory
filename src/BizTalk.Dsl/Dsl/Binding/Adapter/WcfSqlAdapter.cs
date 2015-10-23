@@ -18,16 +18,17 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.ServiceModel.Description;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfSqlAdapter<TConfig> : WcfLobAdapterBase<SqlAdapterConnectionUri, SqlAdapterBindingConfigurationElement, TConfig>
+	public abstract class WcfSqlAdapter<TConfig> : WcfLobAdapterBase<SqlAdapterConnectionUri, SqlAdapterBindingConfigurationElement, TConfig>,
+		IAdapterConfigBizTalkCompatibilityMode,
+		IAdapterConfigPerformanceCounters
 		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
@@ -57,15 +58,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			// Binding Tab - Transaction Settings
 			UseAmbientTransaction = true;
-
-			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
 
-		#region Binding Tab - BizTalk Settings
+		#region IAdapterConfigBizTalkCompatibilityMode Members
 
-		/// <summary>
-		/// Whether the adapter will be used with BizTalk Server.
-		/// </summary>
 		public bool EnableBizTalkCompatibilityMode
 		{
 			get { return _bindingConfigurationElement.EnableBizTalkCompatibilityMode; }
@@ -74,11 +70,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab - Diagnostics Settings
+		#region IAdapterConfigPerformanceCounters Members
 
-		/// <summary>
-		/// Determines whether performance counters are enabled or not.
-		/// </summary>
 		public bool EnablePerformanceCounters
 		{
 			get { return _bindingConfigurationElement.EnablePerformanceCounters; }

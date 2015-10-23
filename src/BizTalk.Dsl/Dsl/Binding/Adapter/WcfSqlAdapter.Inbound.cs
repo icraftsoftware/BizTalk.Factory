@@ -145,17 +145,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
-				_adapterConfig.Address = null;
-			}
-
-			#endregion
-
 			#region Binding Tab - Inbound Settings
 
 			/// <summary>
@@ -168,8 +157,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
-
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 
 			#region Binding Tab - Notification Settings
 
@@ -238,6 +225,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
+
+			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 		}
 
 		#endregion

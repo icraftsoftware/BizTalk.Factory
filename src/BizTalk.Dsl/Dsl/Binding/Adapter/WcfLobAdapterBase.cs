@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
@@ -31,6 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TBinding : StandardBindingElement,
 			new()
 		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
@@ -41,6 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected WcfLobAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
 			_adapterConfig.BindingType = _bindingConfigurationElement.Name;
+			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
 
 		#region Base Class Member Overrides
@@ -54,11 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Behavior Tab - EndpointBehavior Settings
-
 		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
-
-		#endregion
 
 		#region Binding Tab - General Settings
 
@@ -67,8 +66,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// out.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The interval of time that a connection can remain inactive, during which no application messages are received,
 		/// before it is dropped. The default value is 10 minute.
+		/// </para>
+		/// <para>
+		/// For inbound operations such as receiving IDOCs, it is recommend to set the timeout to the maximum possible
+		/// value, which is 24.20:31:23.6470000 (24 days). When using the adapter with BizTalk Server, setting the timeout
+		/// to a large value does not impact the functionality of the adapter.
+		/// </para>
 		/// </remarks>
 		/// <returns>
 		/// The <see cref="T:Timespan"/> that specifies the interval of time to wait for the receive method to time out.

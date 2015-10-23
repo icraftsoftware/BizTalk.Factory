@@ -42,7 +42,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226379.aspx">WCF-NetTcp Transport Properties Dialog Box, Send, Security Tab</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>, IOutboundAdapter, IAdapterConfigOutboundAction, IAdapterConfigOutboundPropagateFaultMessage
+		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>,
+			IOutboundAdapter,
+			IAdapterConfigOutboundAction,
+			IAdapterConfigOutboundPropagateFaultMessage,
+			IAdapterConfigOutboundCredentials
 		{
 			public Outbound()
 			{
@@ -68,9 +72,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				MessageClientCredentialType = MessageCredentialType.Windows;
 				AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 
-				// Security Tab - User Name Credentials Settings
-				UseSSO = false;
-
 				// Messages Tab - Error Handling Settings
 				PropagateFaultMessage = true;
 			}
@@ -90,22 +91,40 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region IAdapterConfigOutboundCredentials Members
+
+			public bool UseSSO
+			{
+				get { return _adapterConfig.UseSSO; }
+				set { _adapterConfig.UseSSO = value; }
+			}
+
+			public string AffiliateApplicationName
+			{
+				get { return _adapterConfig.AffiliateApplicationName; }
+				set { _adapterConfig.AffiliateApplicationName = value; }
+			}
+
+			public string UserName
+			{
+				get { return _adapterConfig.UserName; }
+				set { _adapterConfig.UserName = value; }
+			}
+
+			public string Password
+			{
+				get { return _adapterConfig.Password; }
+				set { _adapterConfig.Password = value; }
+			}
+
+			#endregion
+
 			#region IAdapterConfigOutboundPropagateFaultMessage Members
 
 			public bool PropagateFaultMessage
 			{
 				get { return _adapterConfig.PropagateFaultMessage; }
 				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
 			}
 
 			#endregion
@@ -176,29 +195,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the ClientCredentialsType property is set to Certificate.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ClientCertificateThumbprint
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
-			}
-
-			#endregion
-
 			#region Security Tab - Security Mode Settings
 
 			/// <summary>
@@ -218,6 +214,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.SecurityMode; }
 				set { _adapterConfig.SecurityMode = value; }
+			}
+
+			#endregion
+
+			#region Security Tab - Client Certificate Settings
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the ClientCredentialsType property is set to Certificate.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificateThumbprint
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
 			}
 
 			#endregion
@@ -301,66 +320,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.AlgorithmSuite; }
 				set { _adapterConfig.AlgorithmSuite = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - User Name Credentials Settings
-
-			/// <summary>
-			/// Specify whether to use Single Sign-On to retrieve client credentials for authentication with the
-			/// destination server.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool UseSSO
-			{
-				get { return _adapterConfig.UseSSO; }
-				set { _adapterConfig.UseSSO = value; }
-			}
-
-			/// <summary>
-			/// Specify the affiliate application to use for Enterprise Single Sign-On (SSO).
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
-			public string AffiliateApplicationName
-			{
-				get { return _adapterConfig.AffiliateApplicationName; }
-				set { _adapterConfig.AffiliateApplicationName = value; }
-			}
-
-			/// <summary>
-			/// Specify the user name to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// You do not have to use the domain\user format for this property.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </para>
-			/// </remarks>
-			public string UserName
-			{
-				get { return _adapterConfig.UserName; }
-				set { _adapterConfig.UserName = value; }
-			}
-
-			/// <summary>
-			/// Specify the password to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
-			public string Password
-			{
-				get { return _adapterConfig.Password; }
-				set { _adapterConfig.Password = value; }
 			}
 
 			#endregion

@@ -60,7 +60,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 				// Security Tab - Security Mode Settings
 				SecurityMode = SecurityMode.Transport;
-				UseSSO = false;
 
 				// Security Tab - Transport Security Settings
 				TransportClientCredentialType = TcpClientCredentialType.Windows;
@@ -96,16 +95,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.SuspendMessageOnFailure; }
 				set { _adapterConfig.SuspendMessageOnFailure = value; }
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
 			}
 
 			#endregion

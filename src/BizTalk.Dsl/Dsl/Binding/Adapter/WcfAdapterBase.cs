@@ -27,7 +27,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	// see WCF Adapters Property Schema and Properties, https://msdn.microsoft.com/en-us/library/bb245991.aspx
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract class WcfAdapterBase<TAddress, TConfig> : AdapterBase
-		where TConfig : AdapterConfig, IAdapterConfigIdentity, IAdapterConfigInboundMessageMarshalling, IAdapterConfigOutboundMessageMarshalling, new()
+		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
+			IAdapterConfigIdentity,
+			IAdapterConfigInboundMessageMarshalling,
+			IAdapterConfigOutboundMessageMarshalling, new()
 	{
 		protected WcfAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
@@ -51,12 +55,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			// TODO identity
 			// TODO outbound & inbound msg config (body location, ...): outbound only for SP, inbound only for RL, both for 2-way
+			// TODO PropagateFaultMessage for two-way only
+			// TODO IsolationLevel iif EnableTransaction
+			// TODO Proxy Settings
+			// TODO see Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMapping and Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMappingHelper.CreateXml(BtsActionMapping btsActionMapping)
+			// TODO validate BtsActionMapping against orchestration ports' actions
+			_adapterConfig.Address = GetAddress();
 			_adapterConfig.Validate();
+			_adapterConfig.Address = null;
 		}
 
 		#endregion
-
-		protected readonly TConfig _adapterConfig;
 
 		#region General Tab - Endpoint Address Settings
 
@@ -237,5 +246,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		protected readonly TConfig _adapterConfig;
 	}
 }

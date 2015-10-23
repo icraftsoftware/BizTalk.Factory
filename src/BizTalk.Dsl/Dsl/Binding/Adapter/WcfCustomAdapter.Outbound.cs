@@ -43,15 +43,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226446.aspx">How to Configure a WCF-Custom Send Port</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound<TBinding> : WcfCustomAdapter<TBinding, CustomTLConfig>, IOutboundAdapter, IAdapterConfigOutboundAction,
-			IAdapterConfigOutboundPropagateFaultMessage
+		public class Outbound<TBinding> : WcfCustomAdapter<TBinding, CustomTLConfig>,
+			IOutboundAdapter,
+			IAdapterConfigOutboundAction,
+			IAdapterConfigOutboundPropagateFaultMessage,
+			IAdapterConfigOutboundCredentials
 			where TBinding : StandardBindingElement, new()
 		{
 			public Outbound()
 			{
-				// Security Tab - User Name Credentials Settings
-				UseSSO = false;
-
 				// Messages Tab - Error Handling Settings
 				PropagateFaultMessage = true;
 			}
@@ -71,78 +71,40 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region IAdapterConfigOutboundPropagateFaultMessage Members
+			#region IAdapterConfigOutboundCredentials Members
 
-			public bool PropagateFaultMessage
-			{
-				get { return _adapterConfig.PropagateFaultMessage; }
-				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
-				_adapterConfig.Address = null;
-			}
-
-			#endregion
-
-			#region Credentials Tab - User Name Credentials Settings
-
-			/// <summary>
-			/// Specify the affiliate application to use for Enterprise Single Sign-On (SSO).
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
 			public string AffiliateApplicationName
 			{
 				get { return _adapterConfig.AffiliateApplicationName; }
 				set { _adapterConfig.AffiliateApplicationName = value; }
 			}
 
-			/// <summary>
-			/// Specify the password to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
 			public string Password
 			{
 				get { return _adapterConfig.Password; }
 				set { _adapterConfig.Password = value; }
 			}
 
-			/// <summary>
-			/// Specify the user name to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>. You do not have to use the domain\user format for this property.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
 			public string UserName
 			{
 				get { return _adapterConfig.UserName; }
 				set { _adapterConfig.UserName = value; }
 			}
 
-			/// <summary>
-			/// Specify whether to use Single Sign-On to retrieve client credentials for authentication with the
-			/// destination server.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
 			public bool UseSSO
 			{
 				get { return _adapterConfig.UseSSO; }
 				set { _adapterConfig.UseSSO = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundPropagateFaultMessage Members
+
+			public bool PropagateFaultMessage
+			{
+				get { return _adapterConfig.PropagateFaultMessage; }
+				set { _adapterConfig.PropagateFaultMessage = value; }
 			}
 
 			#endregion

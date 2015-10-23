@@ -25,8 +25,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract partial class WcfSqlAdapter
 	{
-		#region Nested Type: Outbound
-
 		/// <summary>
 		/// The Microsoft BizTalk Adapter for SQL Server exposes the SQL Server database as a WCF service. Adapter clients
 		/// can perform operations on the SQL Server database by exchanging SOAP messages with the adapter. The adapter
@@ -37,7 +35,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd787981.aspx">Working with BizTalk Adapter for SQL Server Binding Properties</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfSqlAdapter<CustomTLConfig>, IOutboundAdapter, IAdapterConfigOutboundAction, IAdapterConfigOutboundPropagateFaultMessage
+		public class Outbound : WcfSqlAdapter<CustomTLConfig>,
+			IOutboundAdapter,
+			IAdapterConfigOutboundAction,
+			IAdapterConfigOutboundCredentials,
+			IAdapterConfigOutboundPropagateFaultMessage
 		{
 			public Outbound()
 			{
@@ -64,28 +66,40 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region IAdapterConfigOutboundCredentials Members
+
+			public string AffiliateApplicationName
+			{
+				get { return _adapterConfig.AffiliateApplicationName; }
+				set { _adapterConfig.AffiliateApplicationName = value; }
+			}
+
+			public string Password
+			{
+				get { return _adapterConfig.Password; }
+				set { _adapterConfig.Password = value; }
+			}
+
+			public string UserName
+			{
+				get { return _adapterConfig.UserName; }
+				set { _adapterConfig.UserName = value; }
+			}
+
+			public bool UseSSO
+			{
+				get { return _adapterConfig.UseSSO; }
+				set { _adapterConfig.UseSSO = value; }
+			}
+
+			#endregion
+
 			#region IAdapterConfigOutboundPropagateFaultMessage Members
 
 			public bool PropagateFaultMessage
 			{
 				get { return _adapterConfig.PropagateFaultMessage; }
 				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			protected override void Validate()
-			{
-				// TODO PropagateFaultMessage for two-way only
-				// TODO IsolationLevel iif EnableTransaction
-				// TODO Proxy Settings
-				// TODO see Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMapping and Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMappingHelper.CreateXml(BtsActionMapping btsActionMapping)
-				// TODO validate BtsActionMapping against orchestration ports' actions
-				_adapterConfig.Address = Address.Uri.ToString();
-				base.Validate();
-				_adapterConfig.Address = null;
 			}
 
 			#endregion
@@ -122,61 +136,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _bindingConfigurationElement.ChunkSize; }
 				set { _bindingConfigurationElement.ChunkSize = value; }
-			}
-
-			#endregion
-
-			#region Credentials Tab - User Name Credentials Settings
-
-			/// <summary>
-			/// Specify the affiliate application to use for Enterprise Single Sign-On (SSO).
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
-			public string AffiliateApplicationName
-			{
-				get { return _adapterConfig.AffiliateApplicationName; }
-				set { _adapterConfig.AffiliateApplicationName = value; }
-			}
-
-			/// <summary>
-			/// Specify the password to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
-			public string Password
-			{
-				get { return _adapterConfig.Password; }
-				set { _adapterConfig.Password = value; }
-			}
-
-			/// <summary>
-			/// Specify the user name to use for authentication with the destination server when the <see cref="UseSSO"/>
-			/// property is set to <c>False</c>. You do not have to use the domain\user format for this property.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="string.Empty"/>.
-			/// </remarks>
-			public string UserName
-			{
-				get { return _adapterConfig.UserName; }
-				set { _adapterConfig.UserName = value; }
-			}
-
-			/// <summary>
-			/// Specify whether to use Single Sign-On to retrieve client credentials for authentication with the
-			/// destination server.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool UseSSO
-			{
-				get { return _adapterConfig.UseSSO; }
-				set { _adapterConfig.UseSSO = value; }
 			}
 
 			#endregion
@@ -222,6 +181,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 		}
+
+		#region Nested Type: Outbound
 
 		#endregion
 	}
