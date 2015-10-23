@@ -45,6 +45,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// It defaults to <c>False</c>.
 		/// </para>
 		/// </remarks>
-		public bool EnablePerformanceCounters { get; set; }
+		bool EnablePerformanceCounters { get; set; }
 	}
 }
