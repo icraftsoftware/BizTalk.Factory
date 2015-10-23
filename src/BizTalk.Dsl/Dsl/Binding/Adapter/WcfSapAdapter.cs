@@ -190,18 +190,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		/// <summary>
 		/// <para>
-		/// The SAP system does not enforce correct values to be specified for DATS, TIMS, and NUMC fields. So, if
-		/// invalid values are present in the SAP data store for DATS, TIMS, and NUMC fields and a client program tries
-		/// to read the values using the SAP adapter, the adapter throws an exception.
+		/// The SAP system does not enforce correct values to be specified for DATS, TIMS, and NUMC fields. So, if invalid
+		/// values are present in the SAP data store for DATS, TIMS, and NUMC fields and a client program tries to read
+		/// the values using the SAP adapter, the adapter throws an exception.
 		/// </para>
 		/// <para>
 		/// Also, the SAP system has special values for representing minimum and maximum values for the DATS, TIMS, and
-		/// NUMC fields for which there is no equivalent .NET type. For example, the minimum and maximum values for a
-		/// DATS field are 00000000 and 99999999 respectively, for which there is no equivalent .NET type <see
+		/// NUMC fields for which there is no equivalent .NET type. For example, the minimum and maximum values for a DATS
+		/// field are 00000000 and 99999999 respectively, for which there is no equivalent .NET type <see
 		/// cref="DateTime"/>. Moreover, converting the minimum and maximum values for DATS fields to <see
-		/// cref="DateTime"/>.<see cref="DateTime.MinValue"/> and <see cref="DateTime"/>.<see
-		/// cref="DateTime.MaxValue"/> is not feasible because the minimum or maximum value for DATS field and minimum
-		/// or maximum value for a .NET <see cref="DateTime"/> type are not the same.
+		/// cref="DateTime"/>.<see cref="DateTime.MinValue"/> and <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>
+		/// is not feasible because the minimum or maximum value for DATS field and minimum or maximum value for a .NET
+		/// <see cref="DateTime"/> type are not the same.
 		/// </para>
 		/// </summary>
 		/// <remarks>
@@ -216,13 +216,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <item>
 		/// <term><see cref="SapDataTypesBehavior.DateTimeMaxToDats"/></term>
 		/// <description>
-		/// Specifies the behavior the adapter should follow to send a DATS value when the adapter client sends the
-		/// value <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>, which is "9999-12-31T23:59:59.9999999". You
-		/// could set this to the following values:
+		/// Specifies the behavior the adapter should follow to send a DATS value when the adapter client sends the value
+		/// <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>, which is "9999-12-31T23:59:59.9999999". You could set
+		/// this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends the <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends the <see
+		/// cref="DateTime"/>.<see cref="DateTime.MaxValue"/>.
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
@@ -235,13 +235,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <item>
 		/// <term><see cref="SapDataTypesBehavior.DateTimeMaxToTims"/></term>
 		/// <description>
-		/// Specifies the behavior the adapter should follow to send a TIMS value when the adapter client sends the
-		/// value <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>, which is "9999-12-31T23:59:59.9999999". You
-		/// could set this to the following values:
+		/// Specifies the behavior the adapter should follow to send a TIMS value when the adapter client sends the value
+		/// <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/>, which is "9999-12-31T23:59:59.9999999". You could set
+		/// this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends the <see cref="DateTime"/>.<see cref="DateTime.MaxValue"/> value.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends the <see
+		/// cref="DateTime"/>.<see cref="DateTime.MaxValue"/> value.
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
@@ -254,18 +254,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <item>
 		/// <term><see cref="SapDataTypesBehavior.DateTimeMinToDats"/></term>
 		/// <description>
-		/// Specifies the behavior the adapter should follow to send a DATS value when the adapter client sends the
-		/// value <see cref="DateTime"/>.<see cref="DateTime.MinValue"/>, which is "0001-01-01T00:00:00". You could set
-		/// this to the following values:
+		/// Specifies the behavior the adapter should follow to send a DATS value when the adapter client sends the value
+		/// <see cref="DateTime"/>.<see cref="DateTime.MinValue"/>, which is "0001-01-01T00:00:00". You could set this to
+		/// the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends the <see cref="DateTime"/>.<see cref="DateTime.MinValue"/> value.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends the <see
+		/// cref="DateTime"/>.<see cref="DateTime.MinValue"/> value.
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
-		/// sends the When set to this, the adapter sends the specified value to SAP if the client program sends the
-		/// <see cref="DateTime"/>.<see cref="DateTime.MinValue"/> value.
+		/// sends the When set to this, the adapter sends the specified value to SAP if the client program sends the <see
+		/// cref="DateTime"/>.<see cref="DateTime.MinValue"/> value.
 		/// </item>
 		/// </list>
 		/// Default is 00010101.
@@ -274,13 +274,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <item>
 		/// <term><see cref="SapDataTypesBehavior.DateTimeMinToTims"/></term>
 		/// <description>
-		/// Specifies the behavior the adapter should follow to send a TIMS value when the adapter client sends the
-		/// value <see cref="DateTime"/>.<see cref="DateTime.MinValue"/>, which is "0001-01-01T00:00:00". You could set
-		/// this to the following values:
+		/// Specifies the behavior the adapter should follow to send a TIMS value when the adapter client sends the value
+		/// <see cref="DateTime"/>.<see cref="DateTime.MinValue"/>, which is "0001-01-01T00:00:00". You could set this to
+		/// the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends the <see cref="DateTime"/>.<see cref="DateTime.MinValue"/> value
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends the <see
+		/// cref="DateTime"/>.<see cref="DateTime.MinValue"/> value
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
@@ -297,19 +297,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// DateTime value. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends a NULL DateTime value.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends a NULL DateTime
+		/// value.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.SKIP"/> &#8212; When set to this, the adapter skips the field and does not
-		/// send any value to SAP if the client program sends a NULL DateTime value.
+		/// "SKIP" &#8212; When set to this, the adapter skips the field and does not send any value to SAP if the client
+		/// program sends a NULL DateTime value.
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
 		/// sends a NULL DateTime value.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.SKIP"/>
+		/// Default is "SKIP".
 		/// </description>
 		/// </item>
 		/// <item>
@@ -319,19 +319,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <description>
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if the
-		/// client program sends a NULL DateTime value.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if the client program sends a NULL DateTime
+		/// value.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.SKIP"/> &#8212; When set to this, the adapter skips the field and does not
-		/// send any value to SAP if the client program sends a NULL DateTime value.
+		/// "SKIP" &#8212; When set to this, the adapter skips the field and does not send any value to SAP if the client
+		/// program sends a NULL DateTime value.
 		/// </item>
 		/// <item>
 		/// &lt;VALUE&gt; &#8212; When set to this, the adapter sends the specified value to SAP if the client program
 		/// sends a NULL DateTime value.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.SKIP"/>
+		/// Default is "SKIP".
 		/// </description>
 		/// </item>
 		/// <item>
@@ -341,19 +341,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// DATS.MAX value, which is 99999999, from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives a DATS.MAX value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives a DATS.MAX value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives a
-		/// DATS.MAX value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives a DATS.MAX value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.ERROR"/>
+		/// Default is "ERROR".
 		/// </description>
 		/// </item>
 		/// <item>
@@ -363,19 +361,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// DATS.MIN value, which is 00000000, from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives a DATS.MIN value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives a DATS.MIN value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives a
-		/// DATS.MIN value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives a DATS.MIN value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.ERROR"/>
+		/// Default is "ERROR".
 		/// </description>
 		/// </item>
 		/// <item>
@@ -385,16 +381,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// empty DATS value from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives an empty DATS value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives an empty DATS value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives
-		/// an empty DATS value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives an empty DATS value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
 		/// Default is 0001-01-01T00:00:00.
@@ -407,16 +401,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// empty NUMC value (all spaces) from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives an empty NUMC value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives an empty NUMC value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives
-		/// an empty NUMC value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives an empty NUMC value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter assumes that the specified value is a valid Int32 or
-		/// Int64 value and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter assumes that the specified value is a valid Int32 or Int64
+		/// value and returns it to the client program.
 		/// </item>
 		/// </list>
 		/// Default is 0.
@@ -429,16 +421,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// empty TIMS value from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives an empty TIMS value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives an empty TIMS value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives
-		/// an empty TIMS value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives an empty TIMS value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
 		/// Default is 0001-01-01T00:00:00.
@@ -451,19 +441,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// invalid DATS value from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives an invalid DATS value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives an invalid DATS value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives
-		/// an invalid DATS value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives an invalid DATS value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.ERROR"/>
+		/// Default is "ERROR".
 		/// </description>
 		/// </item>
 		/// <item>
@@ -473,16 +461,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// invalid NUMC value from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives an invalid NUMC value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives an invalid NUMC value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives
-		/// an invalid NUMC value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives an invalid NUMC value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter assumes that the specified value is a valid Int32 or
-		/// Int64 value and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter assumes that the specified value is a valid Int32 or Int64
+		/// value and returns it to the client program.
 		/// </item>
 		/// </list>
 		/// Default is 0.
@@ -495,19 +481,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// TIMS.MAX value from SAP. You could set this to the following values:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.ERROR"/> &#8212; When set to this, the adapter throws an error if it
-		/// receives a TIMS.MAX value from SAP.
+		/// "ERROR" &#8212; When set to this, the adapter throws an error if it receives a TIMS.MAX value from SAP.
 		/// </item>
 		/// <item>
-		/// <see cref="SapDataTypesBehavior.NULL"/> &#8212; When set to this, the adapter returns NULL if it receives a
-		/// TIMS.MAX value from SAP.
+		/// "NULL" &#8212; When set to this, the adapter returns NULL if it receives a TIMS.MAX value from SAP.
 		/// </item>
 		/// <item>
-		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format
-		/// and returns it to the client program.
+		/// &lt;VALUE&gt; &#8212; When set to this, the adapter parses the specified value in the XSD:DateTime format and
+		/// returns it to the client program.
 		/// </item>
 		/// </list>
-		/// Default is <see cref="SapDataTypesBehavior.ERROR"/>
+		/// Default is "ERROR".
 		/// </description>
 		/// </item>
 		/// </list>
