@@ -23,33 +23,27 @@ using Microsoft.BizTalk.Adapter.Wcf.Config;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract partial class WcfSqlAdapter
+	public partial class WcfOracleAdapter
 	{
+		#region Nested Type: Outbound
+
 		/// <summary>
-		/// The Microsoft BizTalk Adapter for SQL Server exposes the SQL Server database as a WCF service. Adapter clients
-		/// can perform operations on the SQL Server database by exchanging SOAP messages with the adapter. The adapter
-		/// consumes the SOAP message and makes appropriate ADO.NET calls to perform the operation. The adapter returns
-		/// the response from the SQL Server database back to the client in the form of SOAP messages.
+		/// The Microsoft BizTalk Adapter for Oracle Database exposes the Oracle database as a WCF service. Adapter
+		/// clients can perform operations on the Oracle database by exchanging SOAP messages with the adapter. The
+		/// adapter consumes the WCF message and makes appropriate ODP.NET calls to perform the operation. The adapter
+		/// returns the response from the Oracle database back to the client in the form of SOAP messages.
 		/// </summary>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd788149.aspx">Overview of BizTalk Adapter for SQL Server</seealso>.
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd787981.aspx">Working with BizTalk Adapter for SQL Server Binding Properties</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd788161.aspx">Overview of BizTalk Adapter for Oracle Database</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/dd788467.aspx">Working with BizTalk Adapter for Oracle Database Binding Properties</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfSqlAdapter<CustomTLConfig>,
-			IOutboundAdapter,
+		public class Outbound : WcfOracleAdapter<CustomTLConfig>,
+			IInboundAdapter,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundCredentials,
 			IAdapterConfigOutboundPropagateFaultMessage
 		{
-			public Outbound()
-			{
-				// Binding Tab - Buffering Settings
-				BatchSize = 20;
-				ChunkSize = 4096 * 1024;
-
-				// Binding Tab - Miscellaneous Settings
-				AllowIdentityInsert = false;
-			}
+			public Outbound() { }
 
 			public Outbound(Action<Outbound> adapterConfigurator) : this()
 			{
@@ -104,42 +98,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Miscellaneous Settings
-
-			/// <summary>
-			/// Determines whether the adapter does a "SET IDENTITY_INSERT ON" before an INSERT or UPDATE operation.
-			/// </summary>
-			public bool AllowIdentityInsert
-			{
-				get { return _bindingConfigurationElement.AllowIdentityInsert; }
-				set { _bindingConfigurationElement.AllowIdentityInsert = value; }
-			}
-
-			#endregion
-
-			#region Binding Tab - Buffering Settings
-
-			/// <summary>
-			/// The number of rows to buffer in memory before attempting an Insert, Update or Delete operation. A higher value
-			/// can improve performance, but requires more memory consumption.
-			/// </summary>
-			public int BatchSize
-			{
-				get { return _bindingConfigurationElement.BatchSize; }
-				set { _bindingConfigurationElement.BatchSize = value; }
-			}
-
-			/// <summary>
-			/// The size of the internal buffer used by the adapter during the SetXXX() operations.
-			/// </summary>
-			public int ChunkSize
-			{
-				get { return _bindingConfigurationElement.ChunkSize; }
-				set { _bindingConfigurationElement.ChunkSize = value; }
-			}
-
-			#endregion
-
 			#region Messages Tab - Transactions Settings
 
 			/// <summary>
@@ -182,8 +140,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 		}
-
-		#region Nested Type: Outbound
 
 		#endregion
 	}

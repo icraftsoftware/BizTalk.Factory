@@ -142,6 +142,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapterFixture.cs" />

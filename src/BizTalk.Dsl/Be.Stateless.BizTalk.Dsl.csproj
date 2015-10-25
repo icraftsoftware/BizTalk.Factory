@@ -153,6 +153,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfLobAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.Outbound.cs" />
