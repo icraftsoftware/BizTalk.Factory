@@ -41,6 +41,14 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Adapters.OracleDB, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.OracleDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Adapters.SAP, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.SAP.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Adapters.Sql, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.Sql.dll</HintPath>
@@ -112,6 +120,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
@@ -133,6 +142,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfSapAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapterFixture.cs" />
