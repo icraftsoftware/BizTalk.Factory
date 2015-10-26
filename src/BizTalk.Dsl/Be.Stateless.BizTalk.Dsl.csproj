@@ -143,6 +143,7 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundCredentials.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundPropagateFaultMessage.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundAction.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundTransactionIsolation.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBindingRegistry.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />

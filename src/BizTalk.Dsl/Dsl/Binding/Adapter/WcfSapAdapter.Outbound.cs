@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Transactions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -39,7 +40,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IOutboundAdapter,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundCredentials,
-			IAdapterConfigOutboundPropagateFaultMessage
+			IAdapterConfigOutboundPropagateFaultMessage,
+			IAdapterConfigOutboundTransactionIsolation
 		{
 			public Outbound() { }
 
@@ -96,19 +98,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Connection Settings
+			#region IAdapterConfigOutboundTransactionIsolation Members
 
-			/// <summary>
-			/// Determines whether the state acquired by the R/3 user context should be reset before returning a connection
-			/// back to the connection pool.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool ClearRfcContext
+			public bool EnableTransaction
 			{
-				get { return _bindingConfigurationElement.ClearRfcContext; }
-				set { _bindingConfigurationElement.ClearRfcContext = value; }
+				get { return _adapterConfig.EnableTransaction; }
+				set { _adapterConfig.EnableTransaction = value; }
+			}
+
+			public IsolationLevel IsolationLevel
+			{
+				get { return _adapterConfig.IsolationLevel; }
+				set { _adapterConfig.IsolationLevel = value; }
 			}
 
 			#endregion
@@ -129,6 +130,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _bindingConfigurationElement.AutoConfirmSentIdocs; }
 				set { _bindingConfigurationElement.AutoConfirmSentIdocs = value; }
+			}
+
+			#endregion
+
+			#region Binding Tab - Connection Settings
+
+			/// <summary>
+			/// Determines whether the state acquired by the R/3 user context should be reset before returning a connection
+			/// back to the connection pool.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <c>False</c>.
+			/// </remarks>
+			public bool ClearRfcContext
+			{
+				get { return _bindingConfigurationElement.ClearRfcContext; }
+				set { _bindingConfigurationElement.ClearRfcContext = value; }
 			}
 
 			#endregion

@@ -18,7 +18,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Security;
 using System.ServiceModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 
@@ -52,22 +51,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				// Binding Tab - Connection Pool Settings
 				LeaseTimeout = TimeSpan.FromMinutes(5);
 
-				// Binding Tab - Service Throttling Behaviour Settings
+				// Binding Tab - Service Throttling Behavior Settings
 				MaxConcurrentCalls = 200;
-
-				// Binding Tab - General Settings
-				MaxReceivedMessageSize = ushort.MaxValue;
-
-				// Security Tab - Security Mode Settings
-				SecurityMode = SecurityMode.Transport;
-
-				// Security Tab - Transport Security Settings
-				TransportClientCredentialType = TcpClientCredentialType.Windows;
-				TransportProtectionLevel = ProtectionLevel.EncryptAndSign;
-
-				// Security Tab - Message Security Settings
-				MessageClientCredentialType = MessageCredentialType.Windows;
-				AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 
 				// Messages Tab - Error Handling Settings
 				SuspendRequestMessageOnFailure = true;
@@ -145,31 +130,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - General Settings
-
-			/// <summary>
-			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
-			/// property to limit exposure to denial of service (DoS) attacks. 
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class in the buffered transfer mode to
-			/// communicate with an endpoint. For the buffered transport mode, the <see cref="NetTcpBinding"/>.<see
-			/// cref="NetTcpBinding.MaxBufferSize"/> property is always equal to the value of this property.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
-			/// </para>
-			/// </remarks>
-			public int MaxReceivedMessageSize
-			{
-				get { return _adapterConfig.MaxReceivedMessageSize; }
-				set { _adapterConfig.MaxReceivedMessageSize = value; }
-			}
-
-			#endregion
-
 			#region Security Tab - Service Certificate Settings
 
 			/// <summary>
@@ -197,25 +157,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			#region Security Tab - Security Mode Settings
 
 			/// <summary>
-			/// Specify the type of security that is used.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// For more information about the member names for the <see cref="SecurityMode"/> property, see the Security
-			/// mode property in <see href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport
-			/// Properties Dialog Box, Receive, Security Tab</see>.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="System.ServiceModel.SecurityMode.Transport"/>.
-			/// </para>
-			/// </remarks>
-			public SecurityMode SecurityMode
-			{
-				get { return _adapterConfig.SecurityMode; }
-				set { _adapterConfig.SecurityMode = value; }
-			}
-
-			/// <summary>
 			/// Specify whether to use Enterprise Single Sign-On (SSO) to retrieve client credentials to issue an SSO
 			/// ticket.
 			/// </summary>
@@ -229,89 +170,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.UseSSO; }
 				set { _adapterConfig.UseSSO = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Transport Security Settings
-
-			/// <summary>
-			/// Specify the type of credential to be used when performing the client authentication.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// For more information about the member names for the <see cref="TransportClientCredentialType"/> property,
-			/// see the Transport client credential type property in <see
-			/// href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport Properties Dialog Box,
-			/// Receive, Security Tab</see>.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="TcpClientCredentialType.Windows"/>.
-			/// </para>
-			/// </remarks>
-			public TcpClientCredentialType TransportClientCredentialType
-			{
-				get { return _adapterConfig.TransportClientCredentialType; }
-				set { _adapterConfig.TransportClientCredentialType = value; }
-			}
-
-			/// <summary>
-			/// Define security at the level of the TCP transport. Signing messages mitigates the risk of a third party
-			/// tampering with the message while it is being transferred. Encryption provides data-level privacy during
-			/// transport.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <see cref="ProtectionLevel.EncryptAndSign"/>.
-			/// </remarks>
-			public ProtectionLevel TransportProtectionLevel
-			{
-				get { return _adapterConfig.TransportProtectionLevel; }
-				set { _adapterConfig.TransportProtectionLevel = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Message Security Settings
-
-			/// <summary>
-			/// Specify the type of credential to be used when performing client authentication using message-based
-			/// security.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// For more information about the member names for the <see cref="MessageCredentialType"/> property, see the
-			/// Message client credential type property in <see
-			/// href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport Properties Dialog Box,
-			/// Receive, Security Tab</see>.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="MessageCredentialType.Windows"/>.
-			/// </para>
-			/// </remarks>
-			public MessageCredentialType MessageClientCredentialType
-			{
-				get { return _adapterConfig.MessageClientCredentialType; }
-				set { _adapterConfig.MessageClientCredentialType = value; }
-			}
-
-			/// <summary>
-			/// Specify the message encryption and key-wrap algorithms. These algorithms map to those specified in the
-			/// Security Policy Language (WS-SecurityPolicy) specification.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// For more information about the member names for the <see cref="AlgorithmSuite"/> property, see the
-			/// Algorithm suite property in <see href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp
-			/// Transport Properties Dialog Box, Receive, Security Tab</see>.
-			/// </para>
-			/// <para>
-			/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
-			/// </para>
-			/// </remarks>
-			public SecurityAlgorithmSuiteValue AlgorithmSuite
-			{
-				get { return _adapterConfig.AlgorithmSuite; }
-				set { _adapterConfig.AlgorithmSuite = value; }
 			}
 
 			#endregion

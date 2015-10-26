@@ -28,11 +28,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			var mock = new Mock<WcfNetTcpAdapter<CustomRLConfig>> { CallBase = true };
+			var mock = new Mock<WcfNetTcpAdapter<NetTcpRLConfig>> { CallBase = true };
 			var nta = mock.Object as IAdapter;
 			Assert.That(nta.ProtocolType.Name, Is.EqualTo("WCF-NetTcp"));
 			Assert.That(nta.ProtocolType.Capabilities, Is.EqualTo(907));
 			Assert.That(nta.ProtocolType.ConfigurationClsid, Is.EqualTo("7fd2dfcd-6a7b-44f9-8387-29457fd2eaaf"));
-		}		
+		}
 	}
 }

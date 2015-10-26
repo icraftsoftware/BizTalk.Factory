@@ -17,14 +17,27 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
+using System.ServiceModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
+using Microsoft.ServiceModel.Channels.Common;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	// see What Are the WCF Adapters?, https://msdn.microsoft.com/en-us/library/bb245975.aspx
-	// see WCF Adapters Property Schema and Properties, https://msdn.microsoft.com/en-us/library/bb245991.aspx
+	/// <summary>
+	/// Binding DSL base class for all WCF-based BizTalk Server Adapters.
+	/// </summary>
+	/// <typeparam name="TAddress">
+	/// The address configuration type to which the actual adpater will be connected to. It typically is either <see
+	/// cref="EndpointAddress"/> or derived from <see cref="ConnectionUri"/>.
+	/// </typeparam>
+	/// <typeparam name="TConfig">
+	/// The <see cref="AdapterConfig"/>-derived class that matches the adapter to be configured.
+	/// </typeparam>
+	/// <seealso href="https://msdn.microsoft.com/en-us/library/bb259952.aspx">WCF Adapters</seealso>
+	/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245975.aspx">What Are the WCF Adapters?</seealso>
+	/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract class WcfAdapterBase<TAddress, TConfig> : AdapterBase
 		where TConfig : AdapterConfig,
