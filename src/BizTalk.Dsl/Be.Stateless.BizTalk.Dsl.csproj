@@ -145,6 +145,8 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundAction.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundTransactionIsolation.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMapping.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMappingOperation.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBindingRegistry.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Outbound.cs" />

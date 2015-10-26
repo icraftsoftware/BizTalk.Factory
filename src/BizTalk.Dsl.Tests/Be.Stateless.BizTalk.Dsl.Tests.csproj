@@ -117,6 +117,10 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Oracle.DataAccess, Version=4.112.3.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Oracle.DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -142,6 +146,8 @@
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.OutboundFixture.cs" />
@@ -219,6 +225,7 @@
     <None Include="..\be.stateless.public.snk">
       <Link>be.stateless.public.snk</Link>
     </None>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

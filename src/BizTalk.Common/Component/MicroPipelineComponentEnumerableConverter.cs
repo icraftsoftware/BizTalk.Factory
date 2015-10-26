@@ -24,7 +24,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.Extensions;
@@ -93,8 +92,8 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			if (!components.Any()) return null;
 
-			var builder = new StringBuilder();
-			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			using (var stringWriter = new StringWriter())
+			using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
 				writer.WriteStartElement("mComponents");
 				foreach (var component in components)
@@ -102,9 +101,9 @@ namespace Be.Stateless.BizTalk.Component
 					component.Serialize(writer);
 				}
 				writer.WriteEndElement();
+				writer.Flush();
+				return stringWriter.ToString();
 			}
-
-			return builder.ToString();
 		}
 
 		#region Base Class Member Overrides
