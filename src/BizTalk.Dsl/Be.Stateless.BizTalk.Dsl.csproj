@@ -151,6 +151,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfLobAdapterBase.cs" />
