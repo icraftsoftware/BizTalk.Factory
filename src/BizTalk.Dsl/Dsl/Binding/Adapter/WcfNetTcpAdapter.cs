@@ -27,7 +27,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetTcpAdapter<TConfig> : WcfStandardAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>
+	public abstract class WcfNetTcpAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigIdentity,

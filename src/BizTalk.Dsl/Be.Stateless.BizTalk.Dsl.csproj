@@ -151,6 +151,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.Outbound.cs" />
@@ -167,7 +170,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfSapAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.cs" />
-    <Compile Include="Dsl\Binding\Adapter\WcfStandardAdapterBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfTwoWayAdapterBase.cs" />
     <Compile Include="Dsl\Binding\ApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingBase.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensions.cs" />

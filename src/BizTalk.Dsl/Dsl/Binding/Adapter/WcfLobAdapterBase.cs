@@ -28,7 +28,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfStandardAdapterBase<TAddress, TBinding, TConfig>
+	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>
 		where TBinding : StandardBindingElement,
 			new()
 		where TConfig : AdapterConfig,

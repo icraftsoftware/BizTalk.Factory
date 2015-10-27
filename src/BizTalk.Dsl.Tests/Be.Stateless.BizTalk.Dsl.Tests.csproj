@@ -143,6 +143,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetNamedPipeAdapterFixture.cs" />
