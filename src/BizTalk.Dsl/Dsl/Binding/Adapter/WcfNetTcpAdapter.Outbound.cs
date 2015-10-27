@@ -31,10 +31,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// which both services and clients are WCF based. It provides full access to SOAP security, reliability, and
 		/// transaction features. This adapter uses the TCP transport, and messages have binary encoding.
 		/// </summary>
-		/// <remarks>
-		/// You use the WCF-NetTcp send adapter to call a WCF service through the typeless contract by using the TCP
-		/// protocol.
-		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226419.aspx">What Is the WCF-NetTcp Adapter?</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226460.aspx">How to Configure a WCF-NetTcp Send Port</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226379.aspx">WCF-NetTcp Transport Properties Dialog Box, Send, Security Tab</seealso>.

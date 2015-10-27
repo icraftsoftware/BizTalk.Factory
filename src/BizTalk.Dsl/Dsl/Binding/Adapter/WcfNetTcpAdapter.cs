@@ -33,7 +33,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
-			IAdapterConfigTransactions,
 			IAdapterConfigNetTcpBinding,
 			IAdapterConfigNetTcpSecurity,
 			IAdapterConfigNetTcpTransactions,
