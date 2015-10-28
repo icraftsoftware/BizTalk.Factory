@@ -158,6 +158,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		public TAddress Address { get; set; }
 
+		/// <summary>
+		/// Specify the identity of the service that this receive location provides.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The values that can be specified for the Identity property differ according to the security configuration.
+		/// These settings enable the client to authenticate this receive location. In the handshake process between the
+		/// client and service, the Windows Communication Foundation (WCF) infrastructure will ensure that the identity of
+		/// the expected service matches the values of this element.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="string.Empty"/>.
+		/// </para>
+		/// </remarks>
+		/// <example>
+		/// XML Blob example:
+		/// <code><![CDATA[&lt;identity&gt;
+		///   &lt;userPrincipalName value="username@contoso.com" /&gt;
+		/// &lt;/identity&gt;]]>
+		/// </code>
+		/// </example>
 		public EndpointIdentity Identity
 		{
 			get { return _identity; }

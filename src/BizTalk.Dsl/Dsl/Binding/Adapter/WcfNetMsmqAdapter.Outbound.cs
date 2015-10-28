@@ -35,8 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246091.aspx">What Is the WCF-NetMsmq Adapter?</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245965.aspx">How to Configure a WCF-NetMsmq Send Port</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246035.aspx">WCF-NetMsmq Transport Properties Dialog Box, Send, Security Tab</seealso>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and
-		/// Properties</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Outbound : WcfNetMsmqAdapter<NetMsmqTLConfig>,
 			IOutboundAdapter,

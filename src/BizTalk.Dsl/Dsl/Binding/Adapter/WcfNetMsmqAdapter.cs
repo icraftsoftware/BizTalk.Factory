@@ -31,9 +31,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
+			IAdapterConfigServiceCertificate,
 			IAdapterConfigTransactions,
 			IAdapterConfigNetMsmqSecurity,
-			IAdapterConfigServiceCertificate,
 			new()
 	{
 		static WcfNetMsmqAdapter()
@@ -239,20 +239,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region Security Tab - Service Certificate Settings
 
 		/// <summary>
-		/// Specify the thumbprint of the X.509 certificate for this receive location that the clients use to
-		/// authenticate the service. The certificate to be used for this property must be installed into the My store
-		/// in the Current User location.
+		/// Specify the thumbprint of the X.509 certificate for a receive location or a send port.
 		/// </summary>
 		/// <remarks>
-		/// <para>
-		/// You must install the service certificate into the Current User location of the user account for the receive
-		/// handler hosting this receive location.
-		/// </para>
-		/// <para>
+		/// <list type="bullet">
+		/// <item>
+		/// Inbound &#8212; Specify the thumbprint of the X.509 certificate for this receive location that the clients use
+		/// to authenticate the service. The certificate to be used for this property must be installed into the My store
+		/// in the Current User location.
+		/// </item>
+		/// <item>
+		/// Outbound &#8212; Specify the thumbprint of the X.509 certificate for authenticating the service to which this
+		/// send port sends messages. The certificate to be used for this property must be installed into the Other People
+		/// store in the Local Machine location.
+		/// </item>
+		/// </list>
 		/// It defaults to an <see cref="string.Empty"/> string.
-		/// </para>
 		/// </remarks>
-		public string ServiceCertificateThumbprint
+		public string ServiceCertificate
 		{
 			get { return _adapterConfig.ServiceCertificate; }
 			set { _adapterConfig.ServiceCertificate = value; }

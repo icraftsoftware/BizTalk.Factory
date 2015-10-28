@@ -17,44 +17,43 @@
 #endregion
 
 using System.ServiceModel;
+using System.Text;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class WcfNetTcpAdapterInboundFixture
+	public class WcfBasicHttpAdapterOutboundFixture
 	{
 		[Test]
 		public void SerializeToXml()
 		{
-			var nta = new WcfNetTcpAdapter.Inbound(
+			var bha = new WcfBasicHttpAdapter.Outbound(
 				a => {
 					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
-					a.SecurityMode = SecurityMode.Message;
-					a.MessageClientCredentialType = MessageCredentialType.Windows;
+					a.SecurityMode = BasicHttpSecurityMode.Message;
+					a.TextEncoding = Encoding.Unicode;
 				});
-			var xml = ((IAdapterBindingSerializerFactory) nta).GetAdapterBindingSerializer().Serialize();
+			var xml = ((IAdapterBindingSerializerFactory) bha).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
 					"<CustomProps>" +
 						"<MaxReceivedMessageSize vt=\"3\">65535</MaxReceivedMessageSize>" +
-						"<EnableTransaction vt=\"11\">0</EnableTransaction>" +
-						"<TransactionProtocol vt=\"8\">OleTransactions</TransactionProtocol>" +
+						"<MessageEncoding vt=\"8\">Text</MessageEncoding>" +
+						"<TextEncoding vt=\"8\">utf-16</TextEncoding>" +
 						"<SecurityMode vt=\"8\">Message</SecurityMode>" +
-						"<MessageClientCredentialType vt=\"8\">Windows</MessageClientCredentialType>" +
+						"<MessageClientCredentialType vt=\"8\">UserName</MessageClientCredentialType>" +
 						"<AlgorithmSuite vt=\"8\">Basic256</AlgorithmSuite>" +
-						"<TransportClientCredentialType vt=\"8\">Windows</TransportClientCredentialType>" +
-						"<TransportProtectionLevel vt=\"8\">EncryptAndSign</TransportProtectionLevel>" +
+						"<TransportClientCredentialType vt=\"8\">None</TransportClientCredentialType>" +
+						"<UseAcsAuthentication vt=\"11\">0</UseAcsAuthentication>" +
 						"<UseSSO vt=\"11\">0</UseSSO>" +
-						"<MaxConcurrentCalls vt=\"3\">200</MaxConcurrentCalls>" +
-						"<LeaseTimeout vt=\"8\">00:05:00</LeaseTimeout>" +
+						"<ProxyToUse vt=\"8\">None</ProxyToUse>" +
 						"<InboundBodyLocation vt=\"8\">UseBodyElement</InboundBodyLocation>" +
 						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
 						"<OutboundBodyLocation vt=\"8\">UseBodyElement</OutboundBodyLocation>" +
 						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
-						"<SuspendMessageOnFailure vt=\"11\">-1</SuspendMessageOnFailure>" +
-						"<IncludeExceptionDetailInFaults vt=\"11\">-1</IncludeExceptionDetailInFaults>" +
+						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
 						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
