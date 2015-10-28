@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk
 		/// <remarks>
 		/// <para>
 		/// By convention, the 3rd and 4th tokens of the CLR namespace respectively denote the LOB/project and business
-		/// area/domain to which a process/flow belongs. For insance <c>Be.Stateless.Shopping.Customer</c>,
+		/// area/domain to which a process/flow belongs. For instance <c>Be.Stateless.Shopping.Customer</c>,
 		/// <c>Be.Stateless.Shopping.Invoicing</c>, and <c>Be.Stateless.Shopping.Shipping</c> cover 3 different business
 		/// areas (<c>Customer</c>, <c>Invoicing</c>, and <c>Shipping</c>) of the <c>Shopping</c> LOB/project.
 		/// </para>
@@ -68,7 +68,7 @@ namespace Be.Stateless.BizTalk
 			/// <remarks>
 			/// <para>
 			/// By convention, the 3rd and 4th tokens of the CLR namespace respectively denote the LOB/project and business
-			/// area/domain to which a process/flow belongs. For insance <c>Be.Stateless.Shopping.Customer</c>,
+			/// area/domain to which a process/flow belongs. For instance <c>Be.Stateless.Shopping.Customer</c>,
 			/// <c>Be.Stateless.Shopping.Invoicing</c>, and <c>Be.Stateless.Shopping.Shipping</c> cover 3 different
 			/// business areas (<c>Customer</c>, <c>Invoicing</c>, and <c>Shipping</c>) of the <c>Shopping</c> LOB/project.
 			/// </para>
@@ -101,7 +101,7 @@ namespace Be.Stateless.BizTalk
 			/// <remarks>
 			/// <para>
 			/// By convention, the 3rd and 4th tokens of the CLR namespace respectively denote the LOB/project and business
-			/// area/domain to which a process/flow belongs. For insance <c>Be.Stateless.Shopping.Customer</c>,
+			/// area/domain to which a process/flow belongs. For instance <c>Be.Stateless.Shopping.Customer</c>,
 			/// <c>Be.Stateless.Shopping.Invoicing</c>, and <c>Be.Stateless.Shopping.Shipping</c> cover 3 different
 			/// business areas (<c>Customer</c>, <c>Invoicing</c>, and <c>Shipping</c>) of the <c>Shopping</c> LOB/project.
 			/// </para>
