@@ -23,7 +23,7 @@
   <!-- fix deployment warnings, see https://biztalkdeployment.codeplex.com/discussions/545799, but we unfortunately have to duplicate BTDF targets -->
 
   <PropertyGroup>
-    <_CustomErrorRegularExpression>^(?i:(?!command succeeded).*(error).+)$</_CustomErrorRegularExpression>
+    <_CustomErrorRegularExpression>^(?i:(?!Saved )(?!command succeeded).*(error).+)$</_CustomErrorRegularExpression>
     <_CustomWarningRegularExpression>^(?i:(?!command succeeded).*(warning)(?!.+(may be necessary to restart the Host Instance|depends on the following assemblies that must be installed)).+)$</_CustomWarningRegularExpression>
   </PropertyGroup>
 

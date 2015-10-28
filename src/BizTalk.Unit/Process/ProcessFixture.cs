@@ -78,6 +78,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 			// eagerly compute process names, whose values will be written back to members (that's the wanted side-effect)
 			GetType().Assembly.GetReferencedAssemblies()
+				.Where(an => an.Name.Contains("Policies"))
 				.Select(a => Assembly.Load(a.FullName))
 				.Where(a => a.GetReferencedAssemblies().Any(an => an.FullName == targetReferencedAssemblyName))
 				.Select(a => a.GetTypes())
