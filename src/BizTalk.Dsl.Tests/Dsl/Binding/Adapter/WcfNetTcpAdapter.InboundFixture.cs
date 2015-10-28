@@ -29,6 +29,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var nta = new WcfNetTcpAdapter.Inbound(
 				a => {
+					//a.Address = new EndpointAddress("http://localhost:8000/stubservice", EndpointIdentity.CreateSpnIdentity("service_spn"), AddressHeader.CreateAddressHeader(""));
+					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.MessageClientCredentialType = MessageCredentialType.Windows;
 				});
@@ -57,6 +59,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
 						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
+						"<Identity vt=\"8\">&lt;identity&gt;\r\n  &lt;servicePrincipalName value=\"service_spn\" /&gt;\r\n&lt;/identity&gt;</Identity>" +
 						"</CustomProps>"));
 		}
 
