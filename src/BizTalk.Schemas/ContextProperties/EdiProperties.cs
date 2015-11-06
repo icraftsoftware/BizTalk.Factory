@@ -34,5 +34,17 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<Unb31, string> UNB3_1
 			= new MessageContextProperty<Unb31, string>();
+
+		public static readonly MessageContextProperty<DestinationPartyReceiverIdentifier, string> DestinationPartyReceiverIdentifier
+			= new MessageContextProperty<DestinationPartyReceiverIdentifier, string>();
+
+		public static readonly MessageContextProperty<DestinationPartyReceiverQualifier, string> DestinationPartyReceiverQualifier
+			= new MessageContextProperty<DestinationPartyReceiverQualifier, string>();
+
+		public static readonly MessageContextProperty<DestinationPartySenderIdentifier, string> DestinationPartySenderIdentifier
+			= new MessageContextProperty<DestinationPartySenderIdentifier, string>();
+
+		public static readonly MessageContextProperty<DestinationPartySenderQualifier, string> DestinationPartySenderQualifier
+			= new MessageContextProperty<DestinationPartySenderQualifier, string>();
 	}
 }
