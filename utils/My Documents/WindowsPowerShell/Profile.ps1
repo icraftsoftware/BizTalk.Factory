@@ -88,7 +88,7 @@ if (-not $global:options) {
 
 # setup Set-Location shortcut functions after TFS workspaces defined locally
 if (Get-VisualStudioVersionNumbers) {
-    Get-Workspaces -Uri https://tfs.codeplex.com/tfs/TFS14 | New-WorkspaceShortcut
+    Get-Workspaces -Uri https://tfs.codeplex.com/tfs/TFS14 | New-WorkspaceShortcut -Prefix '_'
 }
 Set-Variable -Name windowTitle `
     -Value (' - ' + 'Windows PowerShell' + (?: { Test-32bitProcess } { ' x86' } { '' } ) + (?: { Test-Elevated } { ' (Administrator)' } { '' } )) `

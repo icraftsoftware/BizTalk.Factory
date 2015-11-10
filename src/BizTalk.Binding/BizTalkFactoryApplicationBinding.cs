@@ -55,7 +55,6 @@ namespace Be.Stateless.BizTalk
 						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 								pipeline.Encoder<MicroPipelineComponent>(
 									pc => {
 										pc.Components = new IMicroPipelineComponent[] {
@@ -80,7 +79,6 @@ namespace Be.Stateless.BizTalk
 						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 								pipeline.Encoder<MicroPipelineComponent>(
 									pc => {
 										pc.Components = new IMicroPipelineComponent[] {
@@ -105,7 +103,6 @@ namespace Be.Stateless.BizTalk
 						sp.State = ServiceState.Started;
 						sp.SendPipeline = new SendPipeline<XmlTransmit>(
 							pipeline => {
-								pipeline.PreAssembler<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 								pipeline.Encoder<MicroPipelineComponent>(
 									pc => {
 										pc.Components = new IMicroPipelineComponent[] {
@@ -154,12 +151,7 @@ namespace Be.Stateless.BizTalk
 						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
 							pipeline => {
 								pipeline.PreAssembler<MicroPipelineComponent>(
-									pc => {
-										pc.Components = new IMicroPipelineComponent[] {
-											new FailedMessageRoutingEnabler(),
-											new ActivityTracker()
-										};
-									});
+									pc => { pc.Components = new IMicroPipelineComponent[] { new ActivityTracker() }; });
 							});
 						sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
 						sp.Transport.Host = CommonSettings.TransmitHost;
@@ -175,7 +167,6 @@ namespace Be.Stateless.BizTalk
 								pipeline.PreAssembler<MicroPipelineComponent>(
 									pc => {
 										pc.Components = new IMicroPipelineComponent[] {
-											new FailedMessageRoutingEnabler(),
 											new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
 										};
 									});
@@ -203,7 +194,6 @@ namespace Be.Stateless.BizTalk
 											pipeline.Decoder<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
-														new FailedMessageRoutingEnabler(),
 														new BatchTracker(),
 														new EnvelopeBuilder(),
 														new ContextPropertyExtractor()
@@ -246,7 +236,6 @@ namespace Be.Stateless.BizTalk
 									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
@@ -290,7 +279,6 @@ namespace Be.Stateless.BizTalk
 									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
@@ -308,7 +296,6 @@ namespace Be.Stateless.BizTalk
 									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
@@ -337,7 +324,6 @@ namespace Be.Stateless.BizTalk
 									rl.Enabled = true;
 									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
 										pipeline => {
-											pipeline.Decoder<MicroPipelineComponent>(pc => { pc.Components = new IMicroPipelineComponent[] { new FailedMessageRoutingEnabler() }; });
 											pipeline.Validator<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
@@ -372,7 +358,6 @@ namespace Be.Stateless.BizTalk
 											pipeline.Decoder<MicroPipelineComponent>(
 												pc => {
 													pc.Components = new IMicroPipelineComponent[] {
-														new FailedMessageRoutingEnabler(),
 														new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
 													};
 												});

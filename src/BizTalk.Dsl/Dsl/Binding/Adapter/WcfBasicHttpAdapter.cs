@@ -73,8 +73,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <remarks>
 		/// <para>
 		/// The WCF-BasicHttp adapter leverages the <see cref="BasicHttpBinding"/> class in the buffered transfer mode to
-		/// communicate with an endpoint. For the buffered transport mode, the <see cref="BasicHttpBinding"/>.<see
-		/// cref="BasicHttpBinding.MaxBufferSize"/> property is always equal to the value of this property.
+		/// communicate with an endpoint. For the buffered transport mode, the <see cref="HttpBindingBase"/>.<see
+		/// cref="HttpBindingBase.MaxBufferSize"/> property is always equal to the value of this property.
 		/// </para>
 		/// <para>
 		/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.

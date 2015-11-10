@@ -32,6 +32,7 @@ namespace Be.Stateless.BizTalk.MicroPipelines
 			Version = new Version(1, 0);
 			VersionDependentGuid = new Guid("0047c469-92fe-42bf-af61-ed3ce3307a16");
 			Stages.Decode
+				.AddComponent(new FailedMessageRoutingEnablerComponent())
 				.AddComponent(new MicroPipelineComponent { Enabled = true });
 		}
 	}

@@ -33,6 +33,7 @@ namespace Be.Stateless.BizTalk.MicroPipelines
 			Version = new Version(1, 0);
 			VersionDependentGuid = new Guid("8d963ace-3047-4858-bdb6-6d43d9d89eea");
 			Stages.PreAssemble
+				.AddComponent(new FailedMessageRoutingEnablerComponent())
 				.AddComponent(new MicroPipelineComponent { Enabled = true });
 			Stages.Assemble
 				.AddComponent(new XmlAsmComp());
