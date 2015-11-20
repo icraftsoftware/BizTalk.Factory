@@ -156,7 +156,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform 
       @retry_attempts=0, 
       @retry_interval=0, 
       @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_Process" /SERVER "${MonitoringDatabaseServer}" /WARNASERROR  /CHECKPOINTING OFF /LOGGER "{94150B25-6AEB-4C0D-996D-D37D1C4FDEDA}";3 /REPORTING E', 
+      @command=N'/SQL "\BAM_DM_Process" /SERVER "${MonitoringDatabaseServer}" /WARNASERROR  /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
       @database_name=N'master', 
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -172,7 +172,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform 
       @retry_attempts=0, 
       @retry_interval=0, 
       @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_ProcessingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{94150B25-6AEB-4C0D-996D-D37D1C4FDEDA}";3 /REPORTING E', 
+      @command=N'/SQL "\BAM_DM_ProcessingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
       @database_name=N'master', 
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -188,7 +188,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform 
       @retry_attempts=0, 
       @retry_interval=0, 
       @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_ProcessMessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{94150B25-6AEB-4C0D-996D-D37D1C4FDEDA}";3 /REPORTING E', 
+      @command=N'/SQL "\BAM_DM_ProcessMessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
       @database_name=N'master', 
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -204,7 +204,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform 
       @retry_attempts=0, 
       @retry_interval=0, 
       @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_MessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{94150B25-6AEB-4C0D-996D-D37D1C4FDEDA}";3 /REPORTING E', 
+      @command=N'/SQL "\BAM_DM_MessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
       @database_name=N'master', 
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
