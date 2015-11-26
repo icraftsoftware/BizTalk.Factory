@@ -22,6 +22,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
@@ -52,6 +53,11 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			public string SenderName { get; set; }
 
 			public string Any { get; set; }
+
+			public string ClaimFileName
+			{
+				get { return Url.Replace("\\", string.Empty) + ".chk"; }
+			}
 		}
 
 		#endregion
@@ -170,12 +176,24 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			}
 		}
 
-		protected void ReleaseToken(string tokenUrl)
+		/// <summary>
+		/// Moves the claimed file described by the the given <see cref="ClaimToken"/>, and releases the token,
+		/// as a real claim store agent would do. 
+		/// </summary>
+		/// <param name="token"></param>
+		protected void ReleaseToken(ClaimToken token)
 		{
-			ReleaseTokens(new[] { tokenUrl });
+			Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(CheckOutFolder, token.Url)));
+			File.Move(Path.Combine(CheckInFolder, token.ClaimFileName), Path.Combine(CheckOutFolder, token.Url));
+			ReleaseTokensFromDatabase(new[] { token.Url });
 		}
 
-		protected void ReleaseTokens(string[] tokenUrls)
+		internal void ReleaseTokenFromDatabase(string tokenUrl)
+		{
+			ReleaseTokensFromDatabase(new[] { tokenUrl });
+		}
+
+		internal void ReleaseTokensFromDatabase(string[] tokenUrls)
 		{
 			using (var cnx = Connection)
 			using (var cmd = new SqlCommand("usp_claim_Release", cnx))

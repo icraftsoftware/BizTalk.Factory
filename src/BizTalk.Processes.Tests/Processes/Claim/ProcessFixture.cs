@@ -51,7 +51,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					InsertToken(tu, correlationTokens[i]);
 					new StringStream("This payload has been claimed to disk.").DropToFolder(CheckOutFolder, tu);
 				});
-			ReleaseTokens(tokenUrls);
+			ReleaseTokensFromDatabase(tokenUrls);
 
 			correlationTokens.Each(
 				ct => {
@@ -78,7 +78,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 				+ "<optional-content><node>value</node></optional-content>";
 			InsertToken(tokenUrl, correlationToken, "text-message-type-2", receiverName, senderName, extraContent);
 			new StringStream("This payload has been claimed to disk.").DropToFolder(CheckOutFolder, tokenUrl);
-			ReleaseToken(tokenUrl);
+			ReleaseTokenFromDatabase(tokenUrl);
 
 			// Unidentified process because check-in phase has been skipped and no Claim.Check process name could have been inserted in context
 			var process = TrackingRepository.SingleProcess(
@@ -172,14 +172,11 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 				var url = reader.AsMessageBodyCaptureDescriptor().Data;
 				Assert.That(token.Url, Is.EqualTo(url));
 			}
-			var claimFileName = token.Url.Replace("\\", string.Empty) + ".chk";
+			var claimFileName = token.ClaimFileName;
 			Assert.That(File.Exists(Path.Combine(CheckInFolder, claimFileName)));
 
 			// move the claimed payload from the check-in folder to the check-out one as the ClaimStoreAgent would do
-			// ReSharper disable once AssignNullToNotNullAttribute
-			Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(CheckOutFolder, token.Url)));
-			File.Move(Path.Combine(CheckInFolder, claimFileName), Path.Combine(CheckOutFolder, token.Url));
-			ReleaseToken(token.Url);
+			ReleaseToken(token);
 
 			// message check-out phase
 			tokenMessagingStep = process.SingleMessagingStep(
@@ -217,7 +214,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
-		protected override IEnumerable<string> SystemOutputFolders
+		protected internal override IEnumerable<string> SystemOutputFolders
 		{
 			get { return new[] { DropFolders.OUTPUT_FOLDER }; }
 		}
