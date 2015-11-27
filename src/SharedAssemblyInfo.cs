@@ -35,5 +35,4 @@ using log4net.Config;
 [assembly: AssemblyCopyright("Copyright © 2012 - 2015 François Chabot, Yves Dierick")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyTrademark("be.stateless BizTalk Factory")]
-[assembly: Repository("biztalk-factory-repository")]
 [assembly: XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
