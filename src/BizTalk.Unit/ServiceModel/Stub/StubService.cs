@@ -29,7 +29,7 @@ using Microsoft.BizTalk.Component.Interop;
 namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 {
 	[ServiceBehavior(AddressFilterMode = AddressFilterMode.Any,
-		ConcurrencyMode = ConcurrencyMode.Single,
+		ConcurrencyMode = ConcurrencyMode.Multiple,
 		InstanceContextMode = InstanceContextMode.Single,
 		ValidateMustUnderstand = false)]
 	internal class StubService : IStubService
@@ -125,7 +125,6 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 
 			if (operationCallSetup.MustAbort)
 			{
-				OperationContext.Current.Channel.Abort();
 				return null;
 			}
 
