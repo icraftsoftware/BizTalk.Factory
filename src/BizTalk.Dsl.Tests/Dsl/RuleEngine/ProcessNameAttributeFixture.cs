@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Dynamic;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.RuleEngine.Extensions;
 using NUnit.Framework;
@@ -26,6 +27,19 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 	[TestFixture]
 	public class ProcessNameAttributeFixture
 	{
+		[Test]
+		public void GetProcessNamesFromType()
+		{
+			var expected = new[] {
+				typeof(TestProcesses).FullName + ".One",
+				typeof(TestProcesses).FullName + ".Two"
+			};
+
+			var processNames = typeof(TestProcesses).GetProcessNames();
+
+			Assert.That(processNames, Is.EquivalentTo(expected));
+		}
+
 		[Test]
 		public void GetProcessNamesFromTypeList()
 		{
@@ -51,19 +65,6 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			var processNames = ProcessNameAttribute.GetProcessNames(new[] { typeof(string), typeof(ProcessNameAttributeFixture) });
 
 			Assert.That(processNames.Any(), Is.False);
-		}
-
-		[Test]
-		public void GetProcessNamesFromType()
-		{
-			var expected = new[] {
-				typeof(TestProcesses).FullName + ".One",
-				typeof(TestProcesses).FullName + ".Two"
-			};
-
-			var processNames = typeof(TestProcesses).GetProcessNames();
-
-			Assert.That(processNames, Is.EquivalentTo(expected));
 		}
 
 		[Test]
@@ -142,10 +143,15 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			Assert.That(propertyInfo.GetProcessName(), Is.EqualTo(typeof(ReflectableProcessNames).FullName + "." + "ProcessOne"));
 		}
 
+		[Test]
+		public void MyMethod()
+		{
+			Assert.That(ReflectableProcessNames.ProcessFour, Is.EqualTo(typeof(ReflectableProcessNames).FullName + "." + "ProcessFour"));
+		}
+
 #pragma warning disable 169, 649
 		// ReSharper disable InconsistentNaming
 		// ReSharper disable UnusedAutoPropertyAccessor.Global
-		// ReSharper disable UnusedAutoPropertyAccessor.Local
 		// ReSharper disable UnusedMember.Local
 		public static class ReflectableProcessNames
 		{
@@ -156,6 +162,12 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 			[ProcessName]
 			public static int ProcessThree;
+
+			[ProcessName]
+			public static string ProcessFour
+			{
+				get { return ProcessNameHelper.ComputeProcessName(); }
+			}
 		}
 
 		private class UnreflectableProcessNames
@@ -165,7 +177,6 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 		}
 
 		// ReSharper restore UnusedMember.Local
-		// ReSharper restore UnusedAutoPropertyAccessor.Local
 		// ReSharper restore UnusedAutoPropertyAccessor.Global
 		// ReSharper restore InconsistentNaming
 #pragma warning restore 169, 649
