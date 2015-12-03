@@ -132,17 +132,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			}
 		}
 
-		protected void InsertToken(string tokenUrl, string correlationToken)
-		{
-			InsertToken(tokenUrl, correlationToken, null, null, null, null);
-		}
-
-		protected void InsertToken(string tokenUrl, string correlationToken, string messageType, string receiverName, string senderName)
-		{
-			InsertToken(tokenUrl, correlationToken, messageType, receiverName, senderName, null);
-		}
-
-		protected void InsertToken(string tokenUrl, string correlationToken, string messageType, string receiverName, string senderName, string any)
+		internal void InsertToken(string tokenUrl, string correlationToken, string messageType = null, string receiverName = null, string senderName = null, string any = null)
 		{
 			const string cmdText = "INSERT claim_Tokens (Url, CorrelationToken, MessageType, ReceiverName, SenderName, [Any])"
 				+ " VALUES(@url, @correlationToken, @messageType, @receiverName, @senderName, @any)";
@@ -154,6 +144,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 				cmd.Parameters.AddWithValue("@messageType", messageType.IsNullOrEmpty() ? (object) DBNull.Value : messageType);
 				cmd.Parameters.AddWithValue("@receiverName", receiverName.IsNullOrEmpty() ? (object) DBNull.Value : receiverName);
 				cmd.Parameters.AddWithValue("@senderName", senderName.IsNullOrEmpty() ? (object) DBNull.Value : senderName);
+				// ReSharper disable once PossibleNullReferenceException
 				cmd.Parameters.AddWithValue("@any", any.IsNullOrEmpty() ? (object) DBNull.Value : any.Trim());
 				cnx.Open();
 				cmd.ExecuteNonQuery();
@@ -161,8 +152,8 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		}
 
 		/// <summary>
-		/// Moves the claimed file described by the the given <see cref="ClaimToken"/>, and releases the token,
-		/// as a real claim store agent would do. 
+		/// Moves the claimed file described by the the given <see cref="ClaimToken"/>, and releases the token, as a real
+		/// claim store agent would do. 
 		/// </summary>
 		/// <param name="token"></param>
 		protected void ReleaseToken(ClaimToken token)
@@ -196,10 +187,6 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			}
 		}
 
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ClaimBasedProcessFixture));
-
-		#region Setup/Teardown
-
 		[SetUp]
 		public void BizTalkFactoryClaimBasedProcessFixtureSetup()
 		{
@@ -212,6 +199,6 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			ClearTokens();
 		}
 
-		#endregion
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(ClaimBasedProcessFixture));
 	}
 }
