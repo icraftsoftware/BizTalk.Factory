@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -172,8 +172,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 				var url = reader.AsMessageBodyCaptureDescriptor().Data;
 				Assert.That(token.Url, Is.EqualTo(url));
 			}
-			var claimFileName = token.ClaimFileName;
-			Assert.That(File.Exists(Path.Combine(CheckInFolder, claimFileName)));
+			Assert.That(File.Exists(token.ClaimFilePath));
 
 			// move the claimed payload from the check-in folder to the check-out one as the ClaimStoreAgent would do
 			ReleaseToken(token);

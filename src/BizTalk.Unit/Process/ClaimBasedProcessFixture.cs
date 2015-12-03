@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		protected class ClaimToken
 		{
-			public string Url { get; set; }
+			public string Any { get; set; }
 
 			public string CorrelationToken { get; set; }
 
@@ -52,28 +52,12 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 			public string SenderName { get; set; }
 
-			public string Any { get; set; }
+			public string Url { get; set; }
 
-			public string ClaimFileName
+			internal string ClaimFilePath
 			{
-				get { return Url.Replace("\\", string.Empty) + ".chk"; }
+				get { return Path.Combine(BizTalkFactorySettings.ClaimStoreCheckInDirectory, Url.Replace("\\", string.Empty) + ".chk"); }
 			}
-		}
-
-		#endregion
-
-		#region Setup/Teardown
-
-		[SetUp]
-		public void BizTalkFactoryClaimBasedProcessFixtureSetup()
-		{
-			ClearTokens();
-		}
-
-		[TearDown]
-		public void BizTalkFactoryClaimBasedProcessFixtureTearDown()
-		{
-			ClearTokens();
 		}
 
 		#endregion
@@ -183,8 +167,9 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		/// <param name="token"></param>
 		protected void ReleaseToken(ClaimToken token)
 		{
+			// ReSharper disable once AssignNullToNotNullAttribute
 			Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(CheckOutFolder, token.Url)));
-			File.Move(Path.Combine(CheckInFolder, token.ClaimFileName), Path.Combine(CheckOutFolder, token.Url));
+			File.Move(Path.Combine(CheckInFolder, token.ClaimFilePath), Path.Combine(CheckOutFolder, token.Url));
 			ReleaseTokensFromDatabase(new[] { token.Url });
 		}
 
@@ -212,5 +197,21 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ClaimBasedProcessFixture));
+
+		#region Setup/Teardown
+
+		[SetUp]
+		public void BizTalkFactoryClaimBasedProcessFixtureSetup()
+		{
+			ClearTokens();
+		}
+
+		[TearDown]
+		public void BizTalkFactoryClaimBasedProcessFixtureTearDown()
+		{
+			ClearTokens();
+		}
+
+		#endregion
 	}
 }
