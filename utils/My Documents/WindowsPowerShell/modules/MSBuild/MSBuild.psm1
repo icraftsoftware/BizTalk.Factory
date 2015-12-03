@@ -381,11 +381,13 @@ function Get-VisualStudioVersionNumbers
     $installedVisualStudioVersionNumbers = $MyInvocation.MyCommand.Module.PrivateData['InstalledVisualStudioVersionNumbers']
 
     if ($installedVisualStudioVersionNumbers -eq $null) {
-        $path = if (Test-64bitArchitecture) { 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio' } else { 'HKLM:\SOFTWARE\Microsoft\VisualStudio' }
-        $installedVisualStudioVersionNumbers = Get-ChildItem -Path $path |
-            Where-Object { $_.GetValue('InstallDir') } |
-            Select-Object -ExpandProperty PSChildName |
-            Where-Object { $_ -match '^\d+\.\d+$' }
+        $path = ?: { Test-64bitArchitecture } { 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio' } { 'HKLM:\SOFTWARE\Microsoft\VisualStudio' }
+        if (Test-Path $path) {
+            $installedVisualStudioVersionNumbers = Get-ChildItem -Path $path |
+                Where-Object { $_.GetValue('InstallDir') } |
+                Select-Object -ExpandProperty PSChildName |
+                Where-Object { $_ -match '^\d+\.\d+$' }
+        }
         $installedVisualStudioVersionNumbers = @($installedVisualStudioVersionNumbers)
         $MyInvocation.MyCommand.Module.PrivateData['InstalledVisualStudioVersionNumbers'] = $installedVisualStudioVersionNumbers
     }

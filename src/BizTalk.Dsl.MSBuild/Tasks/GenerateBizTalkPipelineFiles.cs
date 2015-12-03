@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -41,6 +42,8 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 		{
 			try
 			{
+				BizTalkAssemblyResolver.Register(msg => Log.LogMessage(msg));
+
 				// TODO refactor this in task ResolveReferencedBizTalkPipelineAssemblies
 				var pipelineTypes = PipelineDefinitionAssemblies
 					.Select(ra => ra.GetMetadata("Identity"))
@@ -76,6 +79,10 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 			{
 				Log.LogErrorFromException(exception, true, true, null);
 				return false;
+			}
+			finally
+			{
+				BizTalkAssemblyResolver.Unregister();
 			}
 		}
 

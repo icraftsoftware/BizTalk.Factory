@@ -211,6 +211,7 @@
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBase.cs" />
     <Compile Include="Dsl\Binding\Visitor\BizTalkServiceConfiguratorVisitor.cs" />
     <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderConfiguratorVisitor.cs" />
+    <Compile Include="Dsl\BizTalkAssemblyResolver.cs" />
     <Compile Include="Install\ApplicationInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
