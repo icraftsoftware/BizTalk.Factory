@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Be.Stateless.BizTalk.Dsl.RuleEngine;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
@@ -228,8 +229,23 @@ namespace Be.Stateless.BizTalk.Unit.Process
 					_logger.DebugFormat("Emptying folder '{0}'.", d);
 					Directory.GetFiles(d).Each(
 						f => {
-							_logger.DebugFormat("Deleting file '{0}'.", f);
-							File.Delete(f);
+							var attempts = 0;
+							while (File.Exists(f))
+							{
+								try
+								{
+									attempts++;
+									_logger.DebugFormat("Attempting to delete file '{0}'.", f);
+									File.Delete(f);
+								}
+								catch (Exception exception)
+								{
+									_logger.DebugFormat("Exception encountered while attempting to delete file '{0}'. {1}", f, exception);
+									if (attempts == 5)
+										throw;
+									Thread.Sleep(TimeSpan.FromSeconds(1));
+								}
+							}
 						});
 					CleanFolders(Directory.GetDirectories(d));
 				});
