@@ -68,7 +68,7 @@
     <ItemGroup>
       <EnvironmentSettingsFiles
         Include="@(None);@(Content)"
-        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename)%(Extension), '(?i:^.+\.SettingsFileGenerator\.xml$)'))"/>
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename)%(Extension), '(?i:^(?:.+\.)?SettingsFileGenerator\.xml$)'))"/>
     </ItemGroup>
   </Target>
 
