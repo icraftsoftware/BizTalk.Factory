@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,15 +88,6 @@ namespace Be.Stateless.BizTalk.Unit.Process
 				.ToArray();
 		}
 
-		// ReSharper disable once MemberCanBePrivate.Global
-		// ReSharper disable once UnusedAutoPropertyAccessor.Global
-		protected DateTime StartTime { get; private set; }
-
-		protected MessageBoxServiceInstance[] BizTalkServiceInstances
-		{
-			get { return GetRunningOrSuspendedServiceInstances(new BizTalkOperations()).ToArray(); }
-		}
-
 		/// <summary>
 		/// Input system (e.g. Claim Check) folders where input files are dropped.
 		/// </summary>
@@ -137,6 +128,11 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		protected internal virtual IEnumerable<string> SystemOutputFolders
 		{
 			get { return Enumerable.Empty<string>(); }
+		}
+
+		protected MessageBoxServiceInstance[] BizTalkServiceInstances
+		{
+			get { return GetRunningOrSuspendedServiceInstances(new BizTalkOperations()).ToArray(); }
 		}
 
 		/// <summary>
@@ -182,6 +178,8 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		{
 			get { return Enumerable.Empty<string>(); }
 		}
+
+		protected DateTime StartTime { get; private set; }
 
 		private IEnumerable<string> AllFolders
 		{
@@ -241,8 +239,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 								catch (Exception exception)
 								{
 									_logger.DebugFormat("Exception encountered while attempting to delete file '{0}'. {1}", f, exception);
-									if (attempts == 5)
-										throw;
+									if (attempts == 5) throw;
 									Thread.Sleep(TimeSpan.FromSeconds(1));
 								}
 							}

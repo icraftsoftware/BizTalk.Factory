@@ -54,7 +54,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 			public string Url { get; set; }
 
-			internal string ClaimFilePath
+			internal string FilePath
 			{
 				get { return Path.Combine(BizTalkFactorySettings.ClaimStoreCheckInDirectory, Url.Replace("\\", string.Empty) + ".chk"); }
 			}
@@ -160,7 +160,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		{
 			// ReSharper disable once AssignNullToNotNullAttribute
 			Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(CheckOutFolder, token.Url)));
-			File.Move(Path.Combine(CheckInFolder, token.ClaimFilePath), Path.Combine(CheckOutFolder, token.Url));
+			File.Move(Path.Combine(CheckInFolder, token.FilePath), Path.Combine(CheckOutFolder, token.Url));
 			ReleaseTokensFromDatabase(new[] { token.Url });
 		}
 

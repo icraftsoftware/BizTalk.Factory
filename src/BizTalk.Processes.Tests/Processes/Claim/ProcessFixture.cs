@@ -172,7 +172,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 				var url = reader.AsMessageBodyCaptureDescriptor().Data;
 				Assert.That(token.Url, Is.EqualTo(url));
 			}
-			Assert.That(File.Exists(token.ClaimFilePath));
+			Assert.That(File.Exists(token.FilePath));
 
 			// move the claimed payload from the check-in folder to the check-out one as the ClaimStoreAgent would do
 			ReleaseToken(token);
