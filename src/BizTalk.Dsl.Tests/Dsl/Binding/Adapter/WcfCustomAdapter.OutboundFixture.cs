@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.Binding.Security.Mode = SecurityMode.Transport;
 					a.Binding.Security.Transport.ProtectionLevel = ProtectionLevel.Sign;
 					a.Binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
-					a.StaticAction = "http://services.ores.net/mail/2011/11/IMailService/SendMessage";
+					a.StaticAction = "http://services.biztalk.net/mail/2011/11/IMailService/SendMessage";
 
 					/* TODO Identity
             <Identity vt="8">
@@ -61,7 +61,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"&lt;/binding&gt;" +
 						"</BindingConfiguration>" +
 						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
-						"<StaticAction vt=\"8\">http://services.ores.net/mail/2011/11/IMailService/SendMessage" +
+						"<StaticAction vt=\"8\">http://services.biztalk.net/mail/2011/11/IMailService/SendMessage" +
 						"</StaticAction><UseSSO vt=\"11\">0</UseSSO>" +
 						"<InboundBodyLocation vt=\"8\">UseBodyElement</InboundBodyLocation>" +
 						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
