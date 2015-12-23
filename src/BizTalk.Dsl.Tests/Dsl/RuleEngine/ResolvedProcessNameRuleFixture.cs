@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 			ExecutePolicy();
 
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(TestProcesses.Two).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.Two).HasBeenWritten());
 		}
 
 		[Test]
@@ -42,7 +42,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 			ExecutePolicy();
 
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(TestProcesses.One).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.One).HasBeenWritten());
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 			ExecutePolicy();
 
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(TestProcesses.Three).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.Three).HasBeenWritten());
 		}
 
 		[Test]
@@ -62,7 +62,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 			ExecutePolicy();
 
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(TestProcesses.Four).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.Four).HasBeenWritten());
 		}
 
 		public class ResolvedProcessNameRuleet : RuleSet
@@ -74,25 +74,25 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 				Rules.Add(
 					Rule("QualifiedProperty")
 						.If(() => Context.Read(BtsProperties.IsRequestResponse))
-						.Then(() => Context.Write(TrackingProperties.ProcessName, TestProcesses.One))
+						.Then(() => Context.Write(TrackingProperties.ProcessName, Dummy.Processes.One))
 					);
 
 				Rules.Add(
 					Rule("QualifiedField")
 						.If(() => Context.Read(BtsProperties.IsSolicitResponse))
-						.Then(() => Context.Write(TrackingProperties.ProcessName, TestProcesses.Two))
+						.Then(() => Context.Write(TrackingProperties.ProcessName, Dummy.Processes.Two))
 					);
 
 				Rules.Add(
 					Rule("StaticConst")
 						.If(() => Context.Read(BtsProperties.AckRequired))
-						.Then(() => Context.Write(TrackingProperties.ProcessName, TestProcesses.Three))
+						.Then(() => Context.Write(TrackingProperties.ProcessName, Dummy.Processes.Three))
 					);
 
 				Rules.Add(
 					Rule("UnqualifiedField")
 						.If(() => Context.Read(BtsProperties.SuppressRoutingFailureDiagnosticInfo))
-						.Then(() => Context.Write(TrackingProperties.ProcessName, TestProcesses.Four))
+						.Then(() => Context.Write(TrackingProperties.ProcessName, Dummy.Processes.Four))
 					);
 			}
 		}

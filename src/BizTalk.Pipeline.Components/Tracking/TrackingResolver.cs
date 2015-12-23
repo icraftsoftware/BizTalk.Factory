@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Factory;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.Extensions;
@@ -65,7 +66,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			{
 				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that'd
 				// be overkill just to get back constant default process name; besides what if policy execution fails
-				processName = UNIDENTIFIED_PROCESS_NAME;
+				processName = Default.Processes.Unidentified;
 			}
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Resolved process name to '{0}'.", processName);
 			return processName;
@@ -92,8 +93,6 @@ namespace Be.Stateless.BizTalk.Tracking
 			}
 			return value;
 		}
-
-		internal const string UNIDENTIFIED_PROCESS_NAME = "Be.Stateless.BizTalk.Factory.DefaultProcesses.Unidentified";
 
 		private static Func<PolicyName, IBaseMessage, TrackingResolver> _factory =
 			(trackingResolutionPolicy, message) => new TrackingResolver(trackingResolutionPolicy, message);

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	{
 		protected OrchestrationProcessInstaller()
 		{
-			ExcludedTypes = new List<Type>();
+			ExcludedTypes = Enumerable.Empty<Type>();
 		}
 
 		#region Base Class Member Overrides
@@ -36,15 +36,18 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		{
 			get
 			{
-				var orchestrationAssembly = GetType().Assembly;
-				var orchestrationTypes = orchestrationAssembly.GetTypes()
-					.Where(type => typeof(Service).IsAssignableFrom(type) && !ExcludedTypes.Contains(type));
-				return orchestrationTypes.Select(type => type.Namespace).ToArray();
+				return _processNames ?? (_processNames = GetType().Assembly.GetTypes()
+					.Where(t => typeof(Service).IsAssignableFrom(t))
+					.Except(ExcludedTypes)
+					.Select(type => type.Namespace)
+					.ToArray());
 			}
 		}
 
 		#endregion
 
-		protected ICollection<Type> ExcludedTypes { get; set; }
+		protected IEnumerable<Type> ExcludedTypes { get; set; }
+
+		private string[] _processNames;
 	}
 }

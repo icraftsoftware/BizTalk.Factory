@@ -141,6 +141,7 @@
     <Compile Include="Tracking\Messaging\ActivityFactoryFixture.cs" />
     <Compile Include="Tracking\Messaging\MessagingStepFixture.cs" />
     <Compile Include="Tracking\Messaging\ProcessFixture.cs" />
+    <Compile Include="Tracking\Messaging\ProcessNamesFixture.cs" />
     <Compile Include="Tracking\Messaging\ProcessReferenceFixture.cs" />
     <Compile Include="Tracking\Processing\OrchestrationProcessInstallerFixture.cs">
       <SubType>Component</SubType>

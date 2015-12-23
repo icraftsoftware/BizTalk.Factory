@@ -16,8 +16,10 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.RuleEngine;
+using Be.Stateless.BizTalk.Tracking.Messaging;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Install
@@ -29,9 +31,13 @@ namespace Be.Stateless.BizTalk.Install
 		public void DiscoverProcessNames()
 		{
 			var expected = new[] {
-				typeof(TestProcesses).FullName + ".One",
-				typeof(TestProcesses).FullName + ".Two",
-				typeof(ProcessNameAttributeFixture.ReflectableProcessNames) + ".ProcessOne"
+				Dummy.Processes.Four,
+				Dummy.Processes.One,
+				Dummy.Processes.Three,
+				Dummy.Processes.Two,
+				UnitTesting.Processes.ProcessOne,
+				UnitTesting.Processes.ProcessTwo,
+				UnitTesting.Processes.ProcessSix
 			};
 
 			var processNames = ProcessNames;
@@ -60,6 +66,16 @@ namespace Be.Stateless.BizTalk.Install
 			var ruleSets = RuleSets.Select(r => r.GetType().FullName);
 
 			Assert.That(ruleSets, Is.EquivalentTo(expected));
+		}
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+		private class UnitTesting : ProcessNames<UnitTesting>
+		{
+			public string ProcessOne { get; private set; }
+
+			public string ProcessSix { get; private set; }
+
+			public string ProcessTwo { get; private set; }
 		}
 	}
 }

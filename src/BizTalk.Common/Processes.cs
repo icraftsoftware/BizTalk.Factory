@@ -16,11 +16,10 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.Dsl.RuleEngine;
+using Be.Stateless.BizTalk.Tracking.Messaging;
 
 namespace Be.Stateless.BizTalk
 {
-	// ReSharper disable UnusedAutoPropertyAccessor.Global
 	namespace Factory
 	{
 		/// <summary>
@@ -41,13 +40,12 @@ namespace Be.Stateless.BizTalk
 		/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 		/// </para>
 		/// </remarks>
-		public static class DefaultProcesses
+		public class Default : ProcessNames<Default>
 		{
 			/// <summary>
 			/// Default name for failed messaging-only flows.
 			/// </summary>
-			[ProcessName]
-			public static string Failed { get; set; }
+			public string Failed { get; private set; }
 
 			/// <summary>
 			/// Default name for unidentified messaging-only flows.
@@ -56,11 +54,10 @@ namespace Be.Stateless.BizTalk
 			/// This property has only been declared so as to be automatically deployed in the BizTalkFactoryMgmtDb with
 			/// other messaging-only flow names. It is never used anywhere but in testing code.
 			/// </remarks>
-			[ProcessName]
-			public static string Unidentified { get; set; }
+			public string Unidentified { get; private set; }
 		}
 
-		namespace Processes
+		namespace Services
 		{
 			/// <summary>
 			/// BizTalk Factory's process names.
@@ -80,19 +77,17 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
-			public static class Batch
+			public class Batch : ProcessNames<Batch>
 			{
 				/// <summary>
 				/// Name of the batch aggregating messaging-only process/flow.
 				/// </summary>
-				[ProcessName]
-				public static string Aggregate { get; set; }
+				public string Aggregate { get; private set; }
 
 				/// <summary>
 				/// Name of the batch releasing messaging-only process/flow.
 				/// </summary>
-				[ProcessName]
-				public static string Release { get; set; }
+				public string Release { get; private set; }
 			}
 
 			/// <summary>
@@ -113,13 +108,12 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
-			public static class Claim
+			public class Claim : ProcessNames<Claim>
 			{
 				/// <summary>
 				/// Name of the claim check messaging-only process/flow.
 				/// </summary>
-				[ProcessName]
-				public static string Check { get; set; }
+				public string Check { get; private set; }
 			}
 		}
 	}

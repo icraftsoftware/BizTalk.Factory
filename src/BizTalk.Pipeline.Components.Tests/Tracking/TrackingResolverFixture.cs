@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Factory;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Microsoft.BizTalk.Message.Interop;
@@ -110,9 +111,9 @@ namespace Be.Stateless.BizTalk.Tracking
 			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
 			var processName = sut.ResolveProcessName();
 
-			Assert.That(processName, Is.EqualTo(TrackingResolver.UNIDENTIFIED_PROCESS_NAME));
+			Assert.That(processName, Is.EqualTo(Default.Processes.Unidentified));
 
-			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, TrackingResolver.UNIDENTIFIED_PROCESS_NAME), Times.Never());
+			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, Default.Processes.Unidentified), Times.Never());
 			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Once());
 		}
 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				if (_logger.IsInfoEnabled) _logger.Debug("Associating the batch being released with its parts.");
 				var activityFactory = (IBatchProcessActivityFactory) _pipelineContext.ActivityFactory();
 				var process = batchTrackingContext.ProcessActivityId.IsNullOrEmpty()
-					? activityFactory.CreateProcess(_message, PROCESS_NAME)
+					? activityFactory.CreateProcess(_message, BizTalk.Factory.Services.Batch.Processes.Release)
 					: activityFactory.FindProcess(batchTrackingContext.ProcessActivityId);
 
 				process.TrackActivity();
@@ -78,8 +78,6 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				if (_logger.IsInfoEnabled) _logger.Debug("The batch being released cannot be associated with its parts because their ActivityIDs have not been captured.");
 			}
 		}
-
-		internal const string PROCESS_NAME = "Be.Stateless.BizTalk.Factory.Processes.Batch.Release";
 
 		private static Func<IPipelineContext, IBaseMessage, BatchReleaseProcessActivityTracker> _factory =
 			(pipelineContext, message) => new BatchReleaseProcessActivityTracker(pipelineContext, message);

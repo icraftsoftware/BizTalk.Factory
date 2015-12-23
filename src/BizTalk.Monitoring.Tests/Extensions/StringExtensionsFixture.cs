@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,11 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		[Test]
 		public void ToFriendlyProcessName()
 		{
-			Assert.That("Be.Stateless.BizTalk.Factory.DefaultProcesses.Failed".ToFriendlyProcessName(), Is.EqualTo("Factory/Failed"));
-			Assert.That("Be.Stateless.BizTalk.Factory.DefaultProcesses.Unidentified".ToFriendlyProcessName(), Is.EqualTo("Factory/Unidentified"));
-			Assert.That("Be.Stateless.BizTalk.Factory.Processes.Batching.Aggregator".ToFriendlyProcessName(), Is.EqualTo("Factory/Batching/Aggregator"));
-			Assert.That("Be.Stateless.BizTalk.Factory.Processes.Batching.Releaser".ToFriendlyProcessName(), Is.EqualTo("Factory/Batching/Releaser"));
+			Assert.That(Factory.Default.Processes.Failed.ToFriendlyProcessName(), Is.EqualTo("Factory/Failed"));
+			Assert.That(Factory.Default.Processes.Unidentified.ToFriendlyProcessName(), Is.EqualTo("Factory/Unidentified"));
+			Assert.That(Factory.Services.Batch.Processes.Aggregate.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Aggregate"));
+			Assert.That(Factory.Services.Batch.Processes.Release.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Release"));
+			Assert.That(Factory.Services.Claim.Processes.Check.ToFriendlyProcessName(), Is.EqualTo("Factory/Claim/Check"));
 		}
 	}
 }

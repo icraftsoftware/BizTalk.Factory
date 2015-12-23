@@ -19,8 +19,9 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Be.Stateless.BizTalk.Dsl.RuleEngine;
+using System.Reflection;
 using Be.Stateless.BizTalk.Tracking;
+using Be.Stateless.BizTalk.Tracking.Messaging;
 using Microsoft.RuleEngine;
 using RuleSet = Be.Stateless.BizTalk.Dsl.RuleEngine.RuleSet;
 
@@ -38,7 +39,22 @@ namespace Be.Stateless.BizTalk.Install
 
 		protected override string[] ProcessNames
 		{
-			get { return _processNames ?? (_processNames = ProcessNameAttribute.GetProcessNames(GetType().Assembly.GetExportedTypes())); }
+			get
+			{
+				// TODO refactor to ProcessNames<>
+				return _processNames ?? (_processNames = GetType().Assembly.GetTypes()
+					.Where(
+						type => type.BaseType != null
+							&& type.BaseType.IsGenericType
+							&& type.BaseType.GetGenericTypeDefinition() == typeof(ProcessNames<>))
+					.SelectMany(
+						t => {
+							var instance = t.GetProperty("Processes", BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public)
+								.GetValue(null);
+							return t.GetProperties().Select(pi => (string) pi.GetValue(instance));
+						})
+					.ToArray());
+			}
 		}
 
 		public override void Uninstall(IDictionary savedState)

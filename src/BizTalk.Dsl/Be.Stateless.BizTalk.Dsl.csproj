@@ -308,7 +308,6 @@
     <Compile Include="Dsl\RuleEngine\RuleList.cs" />
     <Compile Include="Dsl\RuleEngine\Antecedent.cs" />
     <Compile Include="Dsl\RuleEngine\Consequent.cs" />
-    <Compile Include="Dsl\RuleEngine\ProcessNameAttribute.cs" />
     <Compile Include="Dsl\RuleEngine\Rule.cs" />
     <Compile Include="Dsl\RuleEngine\RuleSet.cs" />
     <Compile Include="Dsl\Schema.cs" />

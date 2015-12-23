@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,23 +16,20 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+using Be.Stateless.BizTalk.Tracking.Messaging;
+
 namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 {
-	// ReSharper disable UnusedAutoPropertyAccessor.Global
-	// ReSharper disable UnassignedField.Global
-	// ReSharper disable InconsistentNaming
-	// ReSharper disable FieldCanBeMadeReadOnly.Global
-	// ReSharper disable ConvertToConstant.Global
-	public static class TestProcesses
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+	public class Dummy : ProcessNames<Dummy>
 	{
-		[ProcessName]
-		public static string One { get; set; }
+		public string Four { get; private set; }
 
-		public const string Three = "Be.Stateless.BizTalk.RuleEngine.Dsl.TestProcesses.Three";
+		public string One { get; private set; }
 
-		[ProcessName]
-		public static string Two;
+		public string Three { get; private set; }
 
-		public static string Four = "Be.Stateless.BizTalk.RuleEngine.Dsl.TestProcesses.Four";
+		public string Two { get; private set; }
 	}
 }

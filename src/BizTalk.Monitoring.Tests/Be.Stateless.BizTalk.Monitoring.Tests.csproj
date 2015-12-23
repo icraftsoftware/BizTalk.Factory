@@ -68,6 +68,10 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68e5cfcc-205d-4526-923c-09f5f46058e4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Monitoring\Be.Stateless.BizTalk.Monitoring.csproj">
       <Project>{0A651B96-1A09-42AC-BFF5-2A26B02A2B18}</Project>
       <Name>Be.Stateless.BizTalk.Monitoring</Name>

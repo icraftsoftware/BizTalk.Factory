@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			ExecutePolicy();
 
 			Facts
-				.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(TestProcesses.One).HasBeenWritten())
+				.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.One).HasBeenWritten())
 				.Verify(Context.Property(BizTalkFactoryProperties.MapTypeName).WithValue(Transform<TransformBase>.MapTypeName).HasBeenWritten());
 		}
 
@@ -79,7 +79,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 							() => Context.Read(BtsProperties.MessageType) == "Z_IDOC#SIX" && Context.Read(BtsProperties.InboundTransportType) == "WCF-SAP"
 						)
 						.Then(
-							() => Context.Write(TrackingProperties.ProcessName, TestProcesses.One),
+							() => Context.Write(TrackingProperties.ProcessName, Dummy.Processes.One),
 							() => Context.Write(BizTalkFactoryProperties.MapTypeName, Transform<TransformBase>.MapTypeName)
 						)
 					);

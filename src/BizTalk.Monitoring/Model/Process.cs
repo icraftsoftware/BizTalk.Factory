@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,22 +32,18 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		#region IActivity Members
 
 		public long? RecordID { get; set; }
+
 		public string ActivityID { get; set; }
+
 		public DateTime BeginTime { get; set; }
+
 		public string Name { get; set; }
+
 		public string Status { get; set; }
+
 		public DateTime LastModified { get; set; }
 
 		#endregion
-
-		public virtual List<MessagingStep> MessagingSteps { get; set; }
-		public virtual List<ProcessingStep> ProcessingSteps { get; set; }
-
-		public DateTime? EndTime { get; set; }
-		public string InterchangeID { get; set; }
-		public string Value1 { get; set; }
-		public string Value2 { get; set; }
-		public string Value3 { get; set; }
 
 		public string AggregatedStatus
 		{
@@ -58,10 +54,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
-		public string FriendlyName
-		{
-			get { return Name.ToFriendlyProcessName(); }
-		}
+		public DateTime? EndTime { get; set; }
 
 		public int FailedStepsCount
 		{
@@ -72,6 +65,21 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
-		public const string UNIDENTIFIED_PROCESS_NAME = "Be.Stateless.BizTalk.Factory.DefaultProcesses.Unidentified";
+		public string FriendlyName
+		{
+			get { return Name.ToFriendlyProcessName(); }
+		}
+
+		public string InterchangeID { get; set; }
+
+		public virtual List<MessagingStep> MessagingSteps { get; set; }
+
+		public virtual List<ProcessingStep> ProcessingSteps { get; set; }
+
+		public string Value1 { get; set; }
+
+		public string Value2 { get; set; }
+
+		public string Value3 { get; set; }
 	}
 }

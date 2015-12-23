@@ -60,7 +60,6 @@
     <Compile Include="Policies\Send\Batch\ReleaseProcessResolver.cs" />
     <Compile Include="Policies\Send\Claim\ProcessResolver.cs" />
     <Compile Include="Policies\Send\FailedProcessResolver.cs" />
-    <Compile Include="Processes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

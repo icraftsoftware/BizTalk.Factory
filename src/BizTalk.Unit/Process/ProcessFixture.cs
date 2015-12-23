@@ -19,11 +19,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
-using Be.Stateless.BizTalk.Dsl.RuleEngine;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Operations;
@@ -31,63 +30,11 @@ using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Unit.Process
 {
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 	public abstract class ProcessFixture
 	{
-		#region Setup/Teardown
-
-		[TestFixtureSetUp]
-		protected void BizTalkFactoryProcessFixtureTestFixtureSetUp()
-		{
-			AllFolders.Each(
-				d => {
-					if (!Directory.Exists(d))
-					{
-						_logger.FineFormat("Creating folder '{0}'.", d);
-						Directory.CreateDirectory(d);
-					}
-				});
-		}
-
-		[SetUp]
-		protected void BizTalkFactoryProcessFixtureSetup()
-		{
-			_logger.InfoFormat("Running test '{0}'.", TestContext.CurrentContext.Test.FullName);
-			_logger.Debug("Emptying output folders.");
-			CleanFolders(AllOutputFolders);
-
-			StartTime = DateTime.UtcNow;
-		}
-
-		[TearDown]
-		protected void BizTalkFactoryProcessFixtureTearDown()
-		{
-			_logger.Debug("Terminating uncompleted BizTalk service instances.");
-			TerminateUncompletedBizTalkServiceInstances();
-
-			_logger.Debug("Emptying input folders.");
-			CleanFolders(AllInputFolders);
-		}
-
-		#endregion
-
-		protected ProcessFixture()
-		{
-			// compute values of ProcessNameAttribute-qualified members so that one can use them in unit test assertions
-
-			// only assemblies referencing the target assembly must be taken into account
-			var targetReferencedAssemblyName = typeof(ProcessNameAttribute).Assembly.GetName().FullName;
-
-			// eagerly compute process names, whose values will be written back to members (that's the wanted side-effect)
-			GetType().Assembly.GetReferencedAssemblies()
-				.Where(an => an.Name.Contains("Policies"))
-				.Select(a => Assembly.Load(a.FullName))
-				.Where(a => a.GetReferencedAssemblies().Any(an => an.FullName == targetReferencedAssemblyName))
-				.Select(a => a.GetTypes())
-				.Select(ProcessNameAttribute.GetProcessNames)
-				// ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-				.ToArray();
-		}
-
 		/// <summary>
 		/// Input system (e.g. Claim Check) folders where input files are dropped.
 		/// </summary>
@@ -253,6 +200,39 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			return bizTalkOperations
 				.GetServiceInstances().OfType<MessageBoxServiceInstance>()
 				.Where(i => (i.InstanceStatus & (InstanceStatus.RunningAll | InstanceStatus.SuspendedAll)) != InstanceStatus.None);
+		}
+
+		[TestFixtureSetUp]
+		protected void BizTalkFactoryProcessFixtureTestFixtureSetUp()
+		{
+			AllFolders.Each(
+				d => {
+					if (!Directory.Exists(d))
+					{
+						_logger.FineFormat("Creating folder '{0}'.", d);
+						Directory.CreateDirectory(d);
+					}
+				});
+		}
+
+		[SetUp]
+		protected void BizTalkFactoryProcessFixtureSetup()
+		{
+			_logger.InfoFormat("Running test '{0}'.", TestContext.CurrentContext.Test.FullName);
+			_logger.Debug("Emptying output folders.");
+			CleanFolders(AllOutputFolders);
+
+			StartTime = DateTime.UtcNow;
+		}
+
+		[TearDown]
+		protected void BizTalkFactoryProcessFixtureTearDown()
+		{
+			_logger.Debug("Terminating uncompleted BizTalk service instances.");
+			TerminateUncompletedBizTalkServiceInstances();
+
+			_logger.Debug("Emptying input folders.");
+			CleanFolders(AllInputFolders);
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ProcessFixture));

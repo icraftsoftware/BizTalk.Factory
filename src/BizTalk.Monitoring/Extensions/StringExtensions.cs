@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		private static readonly string[] _friendlyNameTokens = { "Area", "SubArea", "Process" };
 
 		private static readonly string _friendlyNameRegex = string.Format(
-			@".+\.(?<{0}>\w+)\.(?:.*Processes|Orchestrations)(?:\.(?<{1}>\w+))?\.(?<{2}>\w*)",
+			@".+\.(?<{0}>\w+)\.(?:Default|Orchestrations|.*Processes|Services)(?:\.(?<{1}>\w+))?\.(?<{2}>\w*)",
 			// ReSharper disable once CoVariantArrayConversion
 			_friendlyNameTokens);
 	}

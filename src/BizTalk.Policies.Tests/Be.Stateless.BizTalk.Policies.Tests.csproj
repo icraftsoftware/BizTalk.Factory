@@ -59,7 +59,6 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Policies\DefaultUnidentifiedProcessNameFixture.cs" />
     <Compile Include="Policies\Send\Batch\AggregateProcessResolverFixture.cs" />
     <Compile Include="Policies\Send\Batch\ReleaseProcessResolverFixture.cs" />
     <Compile Include="Policies\Send\Claim\ProcessResolverFixture.cs" />
@@ -67,6 +66,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68e5cfcc-205d-4526-923c-09f5f46058e4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>

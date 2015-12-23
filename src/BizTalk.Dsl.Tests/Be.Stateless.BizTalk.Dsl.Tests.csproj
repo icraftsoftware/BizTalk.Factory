@@ -208,11 +208,10 @@
     <Compile Include="Dsl\RuleEngine\MemberAccessRuleFixture.cs" />
     <Compile Include="Dsl\RuleEngine\MessageContextPropertyAccessFixture.cs" />
     <Compile Include="Dsl\RuleEngine\MultiRulePolicyFixture.cs" />
-    <Compile Include="Dsl\RuleEngine\ProcessNameAttributeFixture.cs" />
     <Compile Include="Dsl\RuleEngine\ResolvedProcessNameRuleFixture.cs" />
     <Compile Include="Dsl\RuleEngine\StaticMemberAccessRuleFixture.cs" />
     <Compile Include="Dsl\RuleEngine\SchemaAndTransformRuleFixture.cs" />
-    <Compile Include="Dsl\RuleEngine\TestProcesses.cs" />
+    <Compile Include="Dsl\RuleEngine\Dummy.cs" />
     <Compile Include="Dsl\RuleEngine\TypeMemberAccessRuleFixture.cs" />
     <Compile Include="Dsl\RuleEngine\UnsupportedRuleFixture.cs" />
     <Compile Include="Dsl\RuleEngine\WriteFromContextRuleFixture.cs" />

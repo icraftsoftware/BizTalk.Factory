@@ -75,22 +75,19 @@ namespace Be.Stateless.BizTalk.Tracking
 			}
 
 			Console.WriteLine("Registering process names.");
-			// TODO use sproc instead
 			// insert or update in case process name has not been previously deleted
 			const string upsertCmdText = @"MERGE INTO monitoring_ProcessDescriptors PD
 USING (SELECT @name AS Name) NPD ON PD.Name = NPD.Name
 WHEN NOT MATCHED THEN INSERT (Name) VALUES (NPD.Name);";
 			using (var cnx = MgmtDbConnection)
+			using (var cmd = new SqlCommand(upsertCmdText, cnx))
 			{
-				using (var cmd = new SqlCommand(upsertCmdText, cnx))
+				cmd.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar));
+				cnx.Open();
+				foreach (var processName in ProcessNames)
 				{
-					cmd.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar));
-					cnx.Open();
-					foreach (var processName in ProcessNames)
-					{
-						cmd.Parameters["@name"].Value = processName;
-						cmd.ExecuteNonQuery();
-					}
+					cmd.Parameters["@name"].Value = processName;
+					cmd.ExecuteNonQuery();
 				}
 			}
 		}
@@ -104,19 +101,16 @@ WHEN NOT MATCHED THEN INSERT (Name) VALUES (NPD.Name);";
 			}
 
 			Console.WriteLine("Unregistering process names.");
-			// TODO use sproc instead
 			const string deleteCmdText = "DELETE FROM monitoring_ProcessDescriptors WHERE Name=@name";
 			using (var cnx = MgmtDbConnection)
+			using (var cmd = new SqlCommand(deleteCmdText, cnx))
 			{
-				using (var cmd = new SqlCommand(deleteCmdText, cnx))
+				cmd.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar));
+				cnx.Open();
+				foreach (var processName in ProcessNames)
 				{
-					cmd.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar));
-					cnx.Open();
-					foreach (var processName in ProcessNames)
-					{
-						cmd.Parameters["@name"].Value = processName;
-						cmd.ExecuteNonQuery();
-					}
+					cmd.Parameters["@name"].Value = processName;
+					cmd.ExecuteNonQuery();
 				}
 			}
 		}
@@ -131,7 +125,6 @@ WHEN NOT MATCHED THEN INSERT (Name) VALUES (NPD.Name);";
 			};
 			using (var cnx = new SqlConnection(builder.ConnectionString))
 			{
-				// TODO use sproc instead if one exists in master or elsewhere...
 				var cmd = new SqlCommand(string.Format("SELECT DB_ID('{0}')", MANAGEMENT_DATABASE_NAME), cnx);
 				cnx.Open();
 				return cmd.ExecuteScalar() != DBNull.Value;

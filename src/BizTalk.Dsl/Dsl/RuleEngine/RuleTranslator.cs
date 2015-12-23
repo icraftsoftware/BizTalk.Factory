@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Dsl.RuleEngine.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
+using Be.Stateless.BizTalk.Tracking.Messaging;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.RuleEngine;
 
@@ -196,27 +196,30 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 		{
 			var member = expression.Member;
 
-			// handle ProcessNameAttribute-qualified fields or properties
-			if (member.IsProcessName())
-			{
-				var value = member.GetProcessName();
-				return new Constant(value);
-			}
-
 			var reflectedType = member.ReflectedType;
-
-			// handle RuleSet.Schema<T>
-			if (reflectedType != null && reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Schema<>))
+			if (reflectedType != null)
 			{
-				var value = Expression.Lambda(expression).Compile().DynamicInvoke();
-				return new Constant(value);
-			}
+				// handle RuleSet.Schema<T>
+				if (reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Schema<>))
+				{
+					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
+					return new Constant(value);
+				}
 
-			// handle RuleSet.Transform<T>
-			if (reflectedType != null && reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Transform<>))
-			{
-				var value = Expression.Lambda(expression).Compile().DynamicInvoke();
-				return new Constant(value);
+				// handle RuleSet.Transform<T>
+				if (reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Transform<>))
+				{
+					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
+					return new Constant(value);
+				}
+
+				var reflectedBaseType = reflectedType.BaseType;
+				// handle ProcessNames<T>-derived types' members
+				if (reflectedBaseType != null && reflectedBaseType.IsGenericType && reflectedBaseType.GetGenericTypeDefinition() == typeof(ProcessNames<>))
+				{
+					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
+					return new Constant(value);
+				}
 			}
 
 			// handle MessageContextProperty<TP, TV>

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2015 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using Be.Stateless.Reflection;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
 using NUnit.Framework;
 
@@ -26,11 +27,22 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	[TestFixture]
 	public class OrchestrationProcessInstallerFixture : OrchestrationProcessInstaller
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			Reflector.SetField((OrchestrationProcessInstaller) this, "_processNames", null);
+		}
+
+		#endregion
+
 		[Test]
-		public void DiscoverProcessNames()
+		public void DiscoverProcessNamesForAllOrchestrations()
 		{
 			var expected = new[] {
-				typeof(Orchestration1).Namespace, typeof(Orchestration2).Namespace
+				typeof(Orchestration1).Namespace,
+				typeof(Orchestration2).Namespace
 			};
 
 			var processNames = ProcessNames;
@@ -39,7 +51,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		}
 
 		[Test]
-		public void DiscoverProcessNamesWhenSomeOrchestrationIsExcluded()
+		public void DiscoverProcessNamesForSomeOrchestrations()
 		{
 			var expected = new[] {
 				typeof(Orchestration2).Namespace
