@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Be.Stateless.Extensions;
 using Microsoft.Win32;
 
@@ -62,6 +63,9 @@ namespace Be.Stateless.BizTalk.Dsl
 			// unexisting resource assemblies
 			if (args.Name.StartsWith("Microsoft.BizTalk.Pipeline.Components.resources, Version=3.0.")) return null;
 			if (args.Name.StartsWith("Microsoft.ServiceModel.Channels.resources, Version=3.0.")) return null;
+
+			// unexisting xml serializers
+			if (Regex.IsMatch(args.Name, @"Microsoft\..+\.XmlSerializers, Version=")) return null;
 
 			var name = new AssemblyName(args.Name);
 			var locationPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

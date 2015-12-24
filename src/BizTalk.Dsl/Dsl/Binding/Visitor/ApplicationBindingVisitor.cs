@@ -150,9 +150,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 				// TODO allow to change TackingOption
 				TrackingOption = OrchestrationTrackingTypes.None
 			};
+			// ensure service ref port collection is initialized even if there are only direct ports
+			var serviceRefPorts = serviceRef.Ports;
 			foreach (var portBinding in orchestrationBinding.PortBindings)
 			{
-				serviceRef.Ports.Add(CreateServicePortRef(portBinding));
+				serviceRefPorts.Add(CreateServicePortRef(portBinding));
 			}
 			// TODO Roles = 
 			return serviceRef;

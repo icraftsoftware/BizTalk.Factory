@@ -20,7 +20,6 @@ using System.ServiceModel;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.EnvironmentSettings;
-using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.Adapters.Sql;
 using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
@@ -61,7 +60,9 @@ namespace Be.Stateless.BizTalk
 								}));
 					}));
 			Orchestrations.Add(
-				new ProcessOrchestrationBinding(
+				new Orchestrations.Direct.ProcessOrchestrationBinding(
+					o => { o.Host = CommonSettings.ReceiveHost; }),
+				new Orchestrations.Dummy.ProcessOrchestrationBinding(
 					o => {
 						o.ReceivePort = _batchReceivePort;
 						o.RequestResponsePort = _twoWayReceivePort;
@@ -69,7 +70,8 @@ namespace Be.Stateless.BizTalk
 						o.SolicitResponsePort = _twoWaySendPort;
 						o.Host = CommonSettings.ReceiveHost;
 						o.State = ServiceState.Unenlisted;
-					}));
+					})
+				);
 		}
 
 		private readonly IReceivePort<NamingConvention> _twoWayReceivePort;

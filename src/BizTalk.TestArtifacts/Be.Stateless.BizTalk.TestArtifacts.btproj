@@ -79,6 +79,13 @@
       <SubType>Task</SubType>
     </XLang>
   </ItemGroup>
+  <ItemGroup>
+    <XLang Include="Orchestrations\Direct\Process.odx">
+      <TypeName>Process</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Orchestrations.Direct</Namespace>
+      <SubType>Task</SubType>
+    </XLang>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\.imports\Be.Stateless.BizTalk.targets" />
