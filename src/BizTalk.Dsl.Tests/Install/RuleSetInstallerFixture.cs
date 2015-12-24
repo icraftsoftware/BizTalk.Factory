@@ -69,7 +69,7 @@ namespace Be.Stateless.BizTalk.Install
 		}
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-		private class UnitTesting : ProcessNames<UnitTesting>
+		private class UnitTesting : ProcessName<UnitTesting>
 		{
 			public string ProcessOne { get; private set; }
 

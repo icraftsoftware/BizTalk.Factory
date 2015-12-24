@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -25,9 +26,9 @@ using Be.Stateless.Reflection;
 
 namespace Be.Stateless.BizTalk.Tracking.Messaging
 {
-	public abstract class ProcessNames<T> where T : class, new()
+	public abstract class ProcessName<T> where T : class, new()
 	{
-		static ProcessNames()
+		static ProcessName()
 		{
 			const BindingFlags bindingFlags = BindingFlags.DeclaredOnly
 				| BindingFlags.NonPublic | BindingFlags.Public
@@ -62,5 +63,20 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		}
 
 		private static readonly T _processes;
+	}
+
+	internal static class ProcessNamesExtensions
+	{
+		public static IEnumerable<string> GetProcessNames(this Type type)
+		{
+			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public;
+			var instance = type.GetProperty("Processes", bindingFlags).GetValue(null);
+			return type.GetProperties().Select(pi => (string) pi.GetValue(instance));
+		}
+
+		public static bool IsProcessNameClass(this Type type)
+		{
+			return type.BaseType != null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(ProcessName<>);
+		}
 	}
 }

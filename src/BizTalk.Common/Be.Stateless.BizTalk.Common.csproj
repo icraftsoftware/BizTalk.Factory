@@ -103,7 +103,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Processes.cs" />
-    <Compile Include="Tracking\Messaging\ProcessNames.cs" />
+    <Compile Include="Tracking\Messaging\ProcessName.cs" />
     <Compile Include="Xml\EncodingXmlSerializer.cs" />
     <Compile Include="Xml\PolicyNameXmlSerializer.cs" />
     <Compile Include="Xml\RuntimeTypeXmlSerializer.cs" />

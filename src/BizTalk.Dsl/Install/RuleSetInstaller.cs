@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using System.Reflection;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Tracking.Messaging;
 using Microsoft.RuleEngine;
@@ -41,18 +40,9 @@ namespace Be.Stateless.BizTalk.Install
 		{
 			get
 			{
-				// TODO refactor to ProcessNames<>
 				return _processNames ?? (_processNames = GetType().Assembly.GetTypes()
-					.Where(
-						type => type.BaseType != null
-							&& type.BaseType.IsGenericType
-							&& type.BaseType.GetGenericTypeDefinition() == typeof(ProcessNames<>))
-					.SelectMany(
-						t => {
-							var instance = t.GetProperty("Processes", BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public)
-								.GetValue(null);
-							return t.GetProperties().Select(pi => (string) pi.GetValue(instance));
-						})
+					.Where(type => type.IsProcessNameClass())
+					.SelectMany(type => type.GetProcessNames())
 					.ToArray());
 			}
 		}

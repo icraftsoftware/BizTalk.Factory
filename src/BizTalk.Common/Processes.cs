@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk
 		/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 		/// </para>
 		/// </remarks>
-		public class Default : ProcessNames<Default>
+		public class Default : ProcessName<Default>
 		{
 			/// <summary>
 			/// Default name for failed messaging-only flows.
@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
-			public class Batch : ProcessNames<Batch>
+			public class Batch : ProcessName<Batch>
 			{
 				/// <summary>
 				/// Name of the batch aggregating messaging-only process/flow.
@@ -108,7 +108,7 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
-			public class Claim : ProcessNames<Claim>
+			public class Claim : ProcessName<Claim>
 			{
 				/// <summary>
 				/// Name of the claim check messaging-only process/flow.

@@ -22,7 +22,7 @@ using Be.Stateless.BizTalk.Tracking.Messaging;
 namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-	public class Dummy : ProcessNames<Dummy>
+	public class Dummy : ProcessName<Dummy>
 	{
 		public string Four { get; private set; }
 

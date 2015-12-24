@@ -23,7 +23,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Tracking.Messaging
 {
 	[TestFixture]
-	public class ProcessNamesFixture
+	public class ProcessNameFixture
 	{
 		[Test]
 		public void InstanceStringPropertyValuesAreComputed()
@@ -59,25 +59,25 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		}
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-		private class DiscoverableArea : ProcessNames<DiscoverableArea>
+		private class DiscoverableArea : ProcessName<DiscoverableArea>
 		{
 			public string ProcessOne { get; private set; }
 		}
 
 		[SuppressMessage("ReSharper", "UnusedMember.Local")]
-		private class UndiscoverableStatic : ProcessNames<UndiscoverableStatic>
+		private class UndiscoverableStatic : ProcessName<UndiscoverableStatic>
 		{
 			public static string ProcessTwo { get; private set; }
 		}
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-		private class UndiscoverableNonString : ProcessNames<UndiscoverableNonString>
+		private class UndiscoverableNonString : ProcessName<UndiscoverableNonString>
 		{
 			public int ProcessThree { get; private set; }
 		}
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
-		private class UndiscoverableNonPublic : ProcessNames<UndiscoverableNonPublic>
+		private class UndiscoverableNonPublic : ProcessName<UndiscoverableNonPublic>
 		{
 			internal string ProcessFour { get; private set; }
 		}

@@ -214,8 +214,8 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 				}
 
 				var reflectedBaseType = reflectedType.BaseType;
-				// handle ProcessNames<T>-derived types' members
-				if (reflectedBaseType != null && reflectedBaseType.IsGenericType && reflectedBaseType.GetGenericTypeDefinition() == typeof(ProcessNames<>))
+				// handle ProcessName<T>-derived types' members
+				if (reflectedBaseType != null && reflectedBaseType.IsGenericType && reflectedBaseType.GetGenericTypeDefinition() == typeof(ProcessName<>))
 				{
 					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
 					return new Constant(value);
