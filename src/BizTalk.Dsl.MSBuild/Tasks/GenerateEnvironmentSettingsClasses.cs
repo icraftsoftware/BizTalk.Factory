@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -36,6 +38,24 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Msbuild Task.")]
 	public class GenerateEnvironmentSettingsClasses : Task
 	{
+		#region Nested Type: Stringifier
+
+		private class Stringifier
+		{
+			public string Escape(string value)
+			{
+				// http://stackoverflow.com/questions/323640/can-i-convert-a-c-sharp-string-value-to-an-escaped-string-literal
+				using (var writer = new StringWriter())
+				using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+				{
+					provider.GenerateCodeFromExpression(new CodePrimitiveExpression(value), writer, null);
+					return writer.ToString();
+				}
+			}
+		}
+
+		#endregion
+
 		#region Nested Type: Typifier
 
 		[SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "XSLT Extension Object.")]
@@ -84,6 +104,7 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 					using (var writer = File.CreateText(settingsClassTaskItem.GetMetadata("FullPath")))
 					{
 						var arguments = new XsltArgumentList();
+						arguments.AddExtensionObject("urn:extensions.stateless.be:biztalk:environment-settings-class-generation:string:2015:10", new Stringifier());
 						arguments.AddExtensionObject("urn:extensions.stateless.be:biztalk:environment-settings-class-generation:typifier:2015:10", new Typifier());
 						arguments.AddParam("clr-namespace-name", string.Empty, ComputeNamespace(settingsClassTaskItem));
 						arguments.AddParam("clr-class-name", string.Empty, ComputeClassName(settingsClassTaskItem));

@@ -18,9 +18,9 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+                xmlns:string="urn:extensions.stateless.be:biztalk:environment-settings-class-generation:string:2015:10"
                 xmlns:type="urn:extensions.stateless.be:biztalk:environment-settings-class-generation:typifier:2015:10"
-                xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-                exclude-result-prefixes="msxsl">
+                xmlns:msxsl="urn:schemas-microsoft-com:xslt">
   <xsl:output method="text" indent="no"/>
 
   <xsl:param name="clr-namespace-name" />
@@ -224,9 +224,7 @@ namespace </xsl:text>
   </xsl:template>
 
   <xsl:template match="ss:Cell[ss:Data/@ss:Type='String']" mode="literal">
-    <xsl:text>@"</xsl:text>
-    <xsl:value-of select="ss:Data/text()" />
-    <xsl:text>"</xsl:text>
+    <xsl:value-of select="string:Escape(ss:Data/text())" />
   </xsl:template>
 
   <xsl:template match="ss:Cell[not(ss:Data/text())]" mode="literal">

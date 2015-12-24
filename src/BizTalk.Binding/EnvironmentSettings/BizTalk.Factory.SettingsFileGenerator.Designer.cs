@@ -38,22 +38,22 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 
 		public static string ClaimStoreAgentTargetHosts 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"-", @"-", @"*", @"*" }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
 		}
 
 		public static string ClaimStoreCheckInDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"C:\Files\Drops\BizTalk.Factory\CheckIn", @"C:\Files\Drops\BizTalk.Factory\CheckIn", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null }); }
 		}
 
 		public static string ClaimStoreCheckOutDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"C:\Files\Drops\BizTalk.Factory\CheckOut", @"C:\Files\Drops\BizTalk.Factory\CheckOut", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", null, null }); }
 		}
 
 		public static string QuartzAgentTargetHosts 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"-", @"-", @"*", @"*" }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
 		}
 
 		private static int TargetEnvironmentIndex
@@ -97,7 +97,7 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			return value;
 		}
 
-		private static readonly string[] _targetEnvironments = { null, @"DEV", @"BLD", @"ACC", @"PRD" };
+		private static readonly string[] _targetEnvironments = { null, "DEV", "BLD", "ACC", "PRD" };
 		private static int _targetEnvironmentsIndex = -1;
 	}
 }

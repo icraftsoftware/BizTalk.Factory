@@ -28,87 +28,87 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 	{
 		public static string BizTalkApplicationUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalk Application Users", @"BizTalk Application Users", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
 		}
 
 		public static string BizTalkIsolatedHostUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalk Isolated Host Users", @"BizTalk Isolated Host Users", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Isolated Host Users", "BizTalk Isolated Host Users", null, null }); }
 		}
 
 		public static string BizTalkServerAdministratorGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalk Server Administrators", @"BizTalk Server Administrators", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
 		}
 
 		public static string BizTalkServerOperatorEmail 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"biztalk.factory@stateless.be", @"biztalk.factory@stateless.be", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "biztalk.factory@stateless.be", "biztalk.factory@stateless.be", null, null }); }
 		}
 
 		public static string BizTalkServerAccountName 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BTS_USER", @"BTS_USER", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BTS_USER", "BTS_USER", null, null }); }
 		}
 
 		public static string BizTalkServerAccountPassword 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"p@ssw0rd", @"p@ssw0rd", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "p@ssw0rd", "p@ssw0rd", "some\"{\\~!()-+=?/\\|*-<>,.!@#$%^&*", null }); }
 		}
 
 		public static string SqlAgentAccountName 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"NT AUTHORITY\NetworkService", @"NT AUTHORITY\NetworkService", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "NT AUTHORITY\\NetworkService", "NT AUTHORITY\\NetworkService", null, null }); }
 		}
 
 		public static string SsoAppUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalk Application Users", @"BizTalk Application Users", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
 		}
 
 		public static string SsoAppAdminGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalk Server Administrators", @"BizTalk Server Administrators", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
 		}
 
 		public static string ManagementDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"localhost", @"localhost", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string MonitoringDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"localhost", @"localhost", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string ProcessingDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"localhost", @"localhost", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string IsolatedHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalkServerIsolatedHost", @"BizTalkServerIsolatedHost", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerIsolatedHost", "BizTalkServerIsolatedHost", null, null }); }
 		}
 
 		public static string ReceiveHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalkServerApplication", @"BizTalkServerApplication", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
 		}
 
 		public static string TransmitHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"BizTalkServerApplication", @"BizTalkServerApplication", null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
 		}
 
 		public static string LogDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"c:\files\logs", null, null, null }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "c:\\files\\logs", null, null, null }); }
 		}
 
 		public static string LogLevel 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, @"DEBUG", @"DEBUG", @"INFO", @"INFO" }); }
+			get { return ValueForTargetEnvironment(new string[] { null, "DEBUG", "DEBUG", "INFO", "INFO" }); }
 		}
 
 		private static int TargetEnvironmentIndex
@@ -152,7 +152,7 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			return value;
 		}
 
-		private static readonly string[] _targetEnvironments = { null, @"DEV", @"BLD", @"ACC", @"PRD" };
+		private static readonly string[] _targetEnvironments = { null, "DEV", "BLD", "ACC", "PRD" };
 		private static int _targetEnvironmentsIndex = -1;
 	}
 }
