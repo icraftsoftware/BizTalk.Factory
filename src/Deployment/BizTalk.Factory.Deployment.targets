@@ -574,7 +574,7 @@
     <Message Text="Deployed and applied databases customizations." />
   </Target>
 
-  <Target Name="SetupBizTalkBackupForCustomDatabases" Outputs="%(CustomDatabases.Identity)" Condition=" '$(IncludeDatabases)' == 'true' and '@(CustomDatabases)' != '' ">
+  <Target Name="SetupBizTalkBackupForCustomDatabases" Outputs="%(CustomDatabases.Identity)" Condition=" '$(IncludeDatabases)' == 'true' and '@(CustomDatabases)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' ">
     <Message Text="Setting up BizTalk backup for custom database '%(CustomDatabases.Identity)'..." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
 
     <!-- prepping script parameters and ensure there is always one and only one ${CustomDatabaseName} param -->
@@ -628,7 +628,7 @@
     <Message Text="Undeployed and reverted databases customizations." />
   </Target>
 
-  <Target Name="TeardownBizTalkBackupForCustomDatabases" Outputs="%(CustomDatabases.Identity)" Condition=" '$(IncludeDatabases)' == 'true' and '@(CustomDatabases)' != '' ">
+  <Target Name="TeardownBizTalkBackupForCustomDatabases" Outputs="%(CustomDatabases.Identity)" Condition=" '$(IncludeDatabases)' == 'true' and '@(CustomDatabases)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' ">
     <Message Text="Tearing down BizTalk backup for custom database '%(CustomDatabases.Identity)'..." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
 
     <!-- prepping script parameters and ensure there is always one and only one ${CustomDatabaseName} param -->
