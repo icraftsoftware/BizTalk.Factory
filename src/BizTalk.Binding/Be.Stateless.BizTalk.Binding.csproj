@@ -152,12 +152,12 @@
       <Link>be.stateless.public.snk</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="..\Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml">
+    <Content Include="..\Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml">
       <Link>EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml</Link>
-    </None>
-    <None Include="..\Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml">
+    </Content>
+    <Content Include="..\Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml">
       <Link>EnvironmentSettings\Common.SettingsFileGenerator.xml</Link>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
