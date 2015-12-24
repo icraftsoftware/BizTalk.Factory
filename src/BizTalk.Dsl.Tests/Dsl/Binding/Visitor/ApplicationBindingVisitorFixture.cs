@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			// initialize BindingInfo
 			visitor.VisitApplicationBinding(new TestApplication());
 
-			var binding = visitor.CreateModuleRef(new ProcessOrchestrationBinding());
+			var binding = visitor.CreateOrFindModuleRef(new ProcessOrchestrationBinding());
 
 			Assert.That(binding.FullName, Is.EqualTo(typeof(Process).Assembly.FullName));
 		}

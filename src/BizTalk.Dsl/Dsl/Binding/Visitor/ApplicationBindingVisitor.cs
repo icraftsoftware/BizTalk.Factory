@@ -62,9 +62,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
 		{
-			// TODO Support multiple assemblies with orchestrations, i.e. multiple ModuleRef
-			var moduleRef = CreateModuleRef(orchestrationBinding);
-			BindingInfo.ModuleRefCollection.Add(moduleRef);
+			var moduleRef = CreateOrFindModuleRef(orchestrationBinding);
+			// a ModuleRef just created has no ServiceRef in its Services collection yet
+			if (moduleRef.Services.Count == 0) BindingInfo.ModuleRefCollection.Add(moduleRef);
 			var serviceRef = CreateServiceRef(orchestrationBinding);
 			moduleRef.Services.Add(serviceRef);
 		}
@@ -114,7 +114,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return bi;
 		}
 
-		protected internal virtual ModuleRef CreateModuleRef(IOrchestrationBinding orchestrationBinding)
+		protected internal virtual ModuleRef CreateOrFindModuleRef(IOrchestrationBinding orchestrationBinding)
 		{
 			var serviceAssemblyName = orchestrationBinding.Type.Assembly.GetName();
 			var name = serviceAssemblyName.Name;
