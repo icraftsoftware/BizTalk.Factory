@@ -42,6 +42,7 @@ namespace Be.Stateless.BizTalk.Install
 				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
 
 				BizTalkAssemblyResolver.Register(msg => Context.LogMessage(msg));
+				BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyPath"]);
 				if (Context.Parameters.ContainsKey("BindingFilePath"))
 				{
 					var bindingFilePath = Context.Parameters["BindingFilePath"];
@@ -74,6 +75,7 @@ namespace Be.Stateless.BizTalk.Install
 				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
 
 				BizTalkAssemblyResolver.Register(msg => Context.LogMessage(msg));
+				BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyPath"]);
 				if (Context.Parameters.ContainsKey("TeardownFileAdapterPaths"))
 				{
 					var recurse = Context.Parameters.ContainsKey("Recurse");

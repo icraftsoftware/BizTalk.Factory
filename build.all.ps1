@@ -34,6 +34,8 @@ src\.nuget\NuGet.exe restore src\BizTalk.Factory.sln
 src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln
 
 Invoke-MSBuild -Project .\build.proj -Targets $Targets
+Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Debug
+Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Release
 
 # Now we copy the interesting build outputs to our dedicated directory structure
 
@@ -53,6 +55,7 @@ Remove-Item .exports\lib\debug\Be.Stateless.BizTalk.Pipeline.Definitions.* -Forc
 Copy-Item src\.imports\Be.Stateless.BizTalk.targets .exports\lib\debug -Force -PassThru | % { $_.Name }
 Copy-Item src\.imports\Be.Stateless.Dsl.targets .exports\lib\debug -Force -PassThru | % { $_.Name }
 Copy-Item src\BizTalk.ClaimStore.Agent\bin\Debug\*.* .exports\lib\debug -Include '*.Agent.exe','*.Agent.pdb','*.template.config' -Force -PassThru | % { $_.Name }
+Copy-Item src\Deployment\bin\Debug\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi .exports\BizTalk.Factory.Debug-1.0.0.msi -Force -PassThru | % { $_.Name }
 
 # Release Assemblies
 New-Item -Path . -Name .exports\lib\release -ItemType Directory -Force | Out-Null
@@ -64,6 +67,7 @@ Remove-Item .exports\lib\release\Be.Stateless.BizTalk.Pipeline.Definitions.* -Fo
 Copy-Item src\.imports\Be.Stateless.BizTalk.targets .exports\lib\release -Force -PassThru | % { $_.Name }
 Copy-Item src\.imports\Be.Stateless.Dsl.targets .exports\lib\release -Force -PassThru | % { $_.Name }
 Copy-Item src\BizTalk.ClaimStore.Agent\bin\release\*.* .exports\lib\release -Include '*.Agent.exe','*.Agent.pdb','*.template.config' -Force -PassThru | % { $_.Name }
+Copy-Item src\Deployment\bin\Release\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi .exports\BizTalk.Factory.Release-1.0.0.msi -Force -PassThru | % { $_.Name }
 
 # BizTalk.Web.Monitoring.Site
 New-Item -Path . -Name .exports\BizTalk.Web.Monitoring.Site -ItemType Directory -Force | Out-Null
@@ -90,3 +94,9 @@ Copy-Item 'utils\Decode Bindings\bindings-cleaner.xslt' '.exports\utils\Decode B
 New-Item -Path . -Name '.exports\utils\Deployment Tools' -ItemType Directory -Force | Out-Null
 Copy-Item 'utils\Deployment Tools\adapterXPaths.txt' '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
 Copy-Item src\Deployment\BizTalk.Factory.Deployment.targets '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
+
+# Update src\.imports\v4.5
+Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
+Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
+Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.Common.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
+Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.Extensions.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }

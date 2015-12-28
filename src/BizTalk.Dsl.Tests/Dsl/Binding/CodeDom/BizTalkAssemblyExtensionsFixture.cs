@@ -18,7 +18,6 @@
 
 using System.Linq;
 using System.Reflection;
-using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.Linq.Extensions;
 using NUnit.Framework;
 
@@ -33,9 +32,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			var orchestrationTypes = Assembly.GetExecutingAssembly().GetReferencedAssemblies()
 				.Distinct((a1, a2) => a1.FullName == a2.FullName).Select(Assembly.Load)
 				.Where(a => a.IsBizTalkAssembly())
-				.SelectMany(a => a.GetOrchestrations());
+				.SelectMany(a => a.GetOrchestrations())
+				.ToArray();
 
-			Assert.That(orchestrationTypes, Is.EqualTo(new[] { typeof(Process) }));
+			Assert.That(orchestrationTypes, Is.EqualTo(new[] { typeof(Orchestrations.Dummy.Process), typeof(Orchestrations.Direct.Process) }));
 		}
 	}
 }

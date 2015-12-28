@@ -26,5 +26,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		protected ReceiveLocation() { }
 
 		protected internal ReceiveLocation(Action<IReceiveLocation<TNamingConvention>> receiveLocationConfigurator) : base(receiveLocationConfigurator) { }
+
+		protected ReceiveLocationNamingConvention<TNamingConvention> ReceiveLocationName
+		{
+			get { return new ReceiveLocationNamingConvention<TNamingConvention>(); }
+		}
 	}
 }

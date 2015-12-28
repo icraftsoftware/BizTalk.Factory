@@ -17,7 +17,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Be.Stateless.Extensions;
@@ -27,11 +29,39 @@ namespace Be.Stateless.BizTalk.Dsl
 {
 	internal class BizTalkAssemblyResolver
 	{
+		static BizTalkAssemblyResolver()
+		{
+			// [HKLM\SOFTWARE\Microsoft\BizTalk Server\3.0]
+			using (var classes32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+			using (var btsKey = classes32.SafeOpenSubKey(@"SOFTWARE\Microsoft\BizTalk Server\3.0"))
+			{
+				_installPath = (string) btsKey.GetValue("InstallPath");
+			}
+
+			_defaultProbingPaths = new[] {
+				Path.Combine(_installPath, @"Developer Tools"),
+				Path.Combine(_installPath, @"SDK\Utilities\PipelineTools")
+			};
+
+			_instance = new BizTalkAssemblyResolver();
+		}
+
+		private static string BizTalkInstallPath
+		{
+			get { return _installPath; }
+		}
+
 		public static void Register(Action<string> log)
 		{
 			// TODO use log4net instead, but should work with both InstallUtil and MSBuild
 			_instance._log = log;
+			_instance._privateProbingPaths = Enumerable.Empty<string>();
 			AppDomain.CurrentDomain.AssemblyResolve += _instance.OnAssemblyResolve;
+		}
+
+		public static void RegisterProbingPaths(params string[] assemblyPaths)
+		{
+			_instance._privateProbingPaths = assemblyPaths.Select(Path.GetDirectoryName);
 		}
 
 		public static void Unregister()
@@ -41,62 +71,34 @@ namespace Be.Stateless.BizTalk.Dsl
 
 		private BizTalkAssemblyResolver() { }
 
-		private string BizTalkInstallPath
-		{
-			get
-			{
-				if (_installPath == null)
-				{
-					// [HKLM\SOFTWARE\Microsoft\BizTalk Server\3.0]
-					using (var classes32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
-					using (var btsKey = classes32.SafeOpenSubKey(@"SOFTWARE\Microsoft\BizTalk Server\3.0"))
-					{
-						_installPath = (string) btsKey.GetValue("InstallPath");
-					}
-				}
-				return _installPath;
-			}
-		}
-
 		private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
 		{
-			// unexisting resource assemblies
+			// inexisting resource assemblies
 			if (args.Name.StartsWith("Microsoft.BizTalk.Pipeline.Components.resources, Version=3.0.")) return null;
 			if (args.Name.StartsWith("Microsoft.ServiceModel.Channels.resources, Version=3.0.")) return null;
 
-			// unexisting xml serializers
-			if (Regex.IsMatch(args.Name, @"Microsoft\..+\.XmlSerializers, Version=")) return null;
+			// inexisting xml serializers
+			if (Regex.IsMatch(args.Name, @"(Microsoft|Be\.Stateless)\..+\.XmlSerializers, Version=")) return null;
 
-			var name = new AssemblyName(args.Name);
-			var locationPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-			// ReSharper disable once AssignNullToNotNullAttribute
-			var fullPath = Path.Combine(locationPath, name.Name + ".dll");
-			if (File.Exists(fullPath))
-			{
-				_log(string.Format("   Resolved assembly '{0}'.", fullPath));
-				return Assembly.LoadFile(fullPath);
-			}
+			var assemblyName = new AssemblyName(args.Name);
 
-			fullPath = Path.Combine(BizTalkInstallPath, @"SDK\Utilities\PipelineTools", name.Name + ".dll");
-			if (File.Exists(fullPath))
+			var resolutionPath = _defaultProbingPaths.Concat(_privateProbingPaths)
+				.Select(path => Path.Combine(path, assemblyName.Name + ".dll"))
+				.FirstOrDefault(File.Exists);
+			if (resolutionPath != null)
 			{
-				_log(string.Format("   Resolved assembly '{0}'.", fullPath));
-				return Assembly.LoadFile(fullPath);
-			}
-
-			fullPath = Path.Combine(BizTalkInstallPath, @"Developer Tools", name.Name + ".dll");
-			if (File.Exists(fullPath))
-			{
-				_log(string.Format("   Resolved assembly '{0}'.", fullPath));
-				return Assembly.LoadFile(fullPath);
+				_log(string.Format("   Resolved assembly '{0}'.", resolutionPath));
+				return Assembly.LoadFile(resolutionPath);
 			}
 
 			_log(string.Format("   Could not resolve assembly '{0}'.", args.Name));
 			return null;
 		}
 
-		private static readonly BizTalkAssemblyResolver _instance = new BizTalkAssemblyResolver();
-		private string _installPath;
+		private static readonly string[] _defaultProbingPaths;
+		private static readonly string _installPath;
+		private static readonly BizTalkAssemblyResolver _instance;
 		private Action<string> _log;
+		private IEnumerable<string> _privateProbingPaths;
 	}
 }

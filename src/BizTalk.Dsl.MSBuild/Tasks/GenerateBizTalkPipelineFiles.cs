@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -43,10 +42,13 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 			try
 			{
 				BizTalkAssemblyResolver.Register(msg => Log.LogMessage(msg));
+				var assemblyPaths = PipelineDefinitionAssemblies
+					.Select(ra => ra.GetMetadata("Identity"))
+					.ToArray();
+				BizTalkAssemblyResolver.RegisterProbingPaths(assemblyPaths);
 
 				// TODO refactor this in task ResolveReferencedBizTalkPipelineAssemblies
-				var pipelineTypes = PipelineDefinitionAssemblies
-					.Select(ra => ra.GetMetadata("Identity"))
+				var pipelineTypes = assemblyPaths
 					.Select(Assembly.LoadFrom)
 					// make sure all assemblies are loaded before proceeding with reflection
 					.ToArray()
@@ -55,6 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 					.SelectMany(a => a.GetTypes())
 					.Where(t => !t.IsAbstract && !t.IsGenericTypeDefinition)
 					.Where(t => typeof(ReceivePipeline).IsAssignableFrom(t) || typeof(SendPipeline).IsAssignableFrom(t));
+
 				// TODO delete all previously generated files
 
 				var outputs = new List<ITaskItem>();
