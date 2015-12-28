@@ -50,6 +50,7 @@ Get-ChildItem -Path src -Directory -Exclude '.*','*.Tests' `
     | % { Get-ChildItem -Path $_\bin\debug -Filter "*$($_.Name)*" -Include '*.dll','*.pdb', '*.xml' -Exclude '*.ClaimStore.*' -Recurse -ErrorAction Ignore } `
     | Copy-Item -Destination .exports\lib\debug -Force -PassThru | % { $_.Name }
 Remove-Item .exports\lib\debug\Be.Stateless.BizTalk.Pipeline.Definitions.* -Force
+Copy-Item src\.imports\Be.Stateless.BizTalk.targets .exports\lib\debug -Force -PassThru | % { $_.Name }
 Copy-Item src\.imports\Be.Stateless.Dsl.targets .exports\lib\debug -Force -PassThru | % { $_.Name }
 Copy-Item src\BizTalk.ClaimStore.Agent\bin\Debug\*.* .exports\lib\debug -Include '*.Agent.exe','*.Agent.pdb','*.template.config' -Force -PassThru | % { $_.Name }
 
@@ -60,6 +61,7 @@ Get-ChildItem -Path src -Directory -Exclude '.*','*.Tests' `
     | % { Get-ChildItem -Path $_\bin\release -Filter "*$($_.Name)*" -Include '*.dll','*.pdb', '*.xml' -Exclude '*.ClaimStore.*' -Recurse -ErrorAction Ignore } `
     | Copy-Item -Destination .exports\lib\release -Force -PassThru | % { $_.Name }
 Remove-Item .exports\lib\release\Be.Stateless.BizTalk.Pipeline.Definitions.* -Force
+Copy-Item src\.imports\Be.Stateless.BizTalk.targets .exports\lib\release -Force -PassThru | % { $_.Name }
 Copy-Item src\.imports\Be.Stateless.Dsl.targets .exports\lib\release -Force -PassThru | % { $_.Name }
 Copy-Item src\BizTalk.ClaimStore.Agent\bin\release\*.* .exports\lib\release -Include '*.Agent.exe','*.Agent.pdb','*.template.config' -Force -PassThru | % { $_.Name }
 
