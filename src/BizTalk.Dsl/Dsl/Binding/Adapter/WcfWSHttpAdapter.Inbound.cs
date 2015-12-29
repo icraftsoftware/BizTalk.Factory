@@ -22,21 +22,22 @@ using Microsoft.BizTalk.Adapter.Wcf.Config;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract partial class WcfBasicHttpAdapter
+	public abstract partial class WcfWSHttpAdapter
 	{
 		#region Nested Type: Inbound
 
 		/// <summary>
-		/// You can use the WCF-BasicHttp adapter to do cross-computer communication with legacy ASMX-based Web services
-		/// and clients that conform to the WS-I Basic Profile 1.1, using either the HTTP or HTTPS transport with text
-		/// encoding. However, you will not be able to take advantage of features that are supported by WS-* protocols.
+		/// You can use the WCF-WSHttp adapter to do cross-computer communication with services and clients that can
+		/// understand the next-generation Web service standards, using either the HTTP or HTTPS transport with text or
+		/// Message Transmission Optimization Mechanism (MTOM) encoding. The WCF-WSHttp adapter provides full access to
+		/// the SOAP security, reliability, and transaction features.
 		/// </summary>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246055.aspx">What Is the WCF-BasicHttp Adapter?</seealso>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb246064.aspx">How to Configure a WCF-BasicHttp Receive Location</seealso>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226322.aspx">WCF-BasicHttp Transport Properties Dialog Box, Receive, Security Tab</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245971.aspx">What Is the WCF-WSHttp Adapter?</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226482.aspx">How to Configure a WCF-WSHttp Receive Location</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties Dialog Box, Receive, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfBasicHttpAdapter<BasicHttpRLConfig>,
+		public class Inbound : WcfWSHttpAdapter<WSHttpRLConfig>,
 			IInboundAdapter,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,
 			IAdapterConfigInboundSuspendRequestMessageOnFailure
@@ -107,9 +108,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// <para>
 			/// For more information about the security configurations supporting SSO, see the section "Enterprise Single
-			/// Sign-On Supportability for the WCF-BasicHttp Receive Adapter" in <see
-			/// href="https://msdn.microsoft.com/en-us/library/bb226322.aspx">WCF-BasicHttp Transport Properties Dialog
-			/// Box, Receive, Security Tab</see>.
+			/// Sign-On Supportability for the WCF-WSHttp Receive Adapter" in <see
+			/// href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties Dialog Box,
+			/// Receive, Security Tab</see>.
 			/// </para>
 			/// <para>
 			/// It defaults to <c>False</c>.
