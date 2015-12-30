@@ -103,6 +103,9 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="GlobalArea.cs" />
+    <Compile Include="ProcessInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Tracking\Messaging\ProcessName.cs" />
     <Compile Include="Xml\EncodingXmlSerializer.cs" />
     <Compile Include="Xml\PolicyNameXmlSerializer.cs" />

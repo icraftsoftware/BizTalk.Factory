@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Install
 				UnitTesting.Processes.ProcessSix
 			};
 
-			var processNames = ProcessNames;
+			var processNames = GetProcessNames();
 
 			Assert.That(processNames, Is.EquivalentTo(expected));
 		}

@@ -23,6 +23,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Be.Stateless.BizTalk.Tracking.Messaging;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Tracking
@@ -45,8 +46,6 @@ namespace Be.Stateless.BizTalk.Tracking
 
 		#endregion
 
-		protected abstract string[] ProcessNames { get; }
-
 		private string DataSource
 		{
 			get { return Context.Parameters["Server"] ?? Context.Parameters["DataSource"]; }
@@ -64,6 +63,19 @@ namespace Be.Stateless.BizTalk.Tracking
 				};
 				return new SqlConnection(builder.ConnectionString);
 			}
+		}
+
+		private string[] ProcessNames
+		{
+			get { return _processNames ?? (_processNames = GetProcessNames() ?? new string[0]); }
+		}
+
+		protected virtual string[] GetProcessNames()
+		{
+			return GetType().Assembly.GetTypes()
+				.Where(type => type.IsProcessNameClass())
+				.SelectMany(type => type.GetProcessNames())
+				.ToArray();
 		}
 
 		private void RegisterProcessNames()
@@ -132,5 +144,6 @@ WHEN NOT MATCHED THEN INSERT (Name) VALUES (NPD.Name);";
 		}
 
 		private const string MANAGEMENT_DATABASE_NAME = "BizTalkFactoryMgmtDb";
+		private string[] _processNames;
 	}
 }

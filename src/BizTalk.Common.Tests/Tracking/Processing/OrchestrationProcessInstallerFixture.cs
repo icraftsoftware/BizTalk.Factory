@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using Be.Stateless.Reflection;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
 using NUnit.Framework;
 
@@ -27,16 +26,6 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	[TestFixture]
 	public class OrchestrationProcessInstallerFixture : OrchestrationProcessInstaller
 	{
-		#region Setup/Teardown
-
-		[SetUp]
-		public void SetUp()
-		{
-			Reflector.SetField((OrchestrationProcessInstaller) this, "_processNames", null);
-		}
-
-		#endregion
-
 		[Test]
 		public void DiscoverProcessNamesForAllOrchestrations()
 		{
@@ -45,7 +34,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				typeof(Orchestration2).Namespace
 			};
 
-			var processNames = ProcessNames;
+			var processNames = GetProcessNames();
 
 			Assert.That(processNames, Is.EquivalentTo(expected));
 		}
@@ -59,7 +48,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 
 			ExcludedTypes = new List<Type> { typeof(Orchestration1) };
 
-			var processNames = ProcessNames;
+			var processNames = GetProcessNames();
 
 			Assert.That(processNames, Is.EquivalentTo(expected));
 		}

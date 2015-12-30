@@ -20,7 +20,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using Be.Stateless.BizTalk.Tracking;
-using Be.Stateless.BizTalk.Tracking.Messaging;
 using Microsoft.RuleEngine;
 using RuleSet = Be.Stateless.BizTalk.Dsl.RuleEngine.RuleSet;
 
@@ -34,17 +33,6 @@ namespace Be.Stateless.BizTalk.Install
 		{
 			base.Install(stateSaver);
 			InstallRuleSet();
-		}
-
-		protected override string[] ProcessNames
-		{
-			get
-			{
-				return _processNames ?? (_processNames = GetType().Assembly.GetTypes()
-					.Where(type => type.IsProcessNameClass())
-					.SelectMany(type => type.GetProcessNames())
-					.ToArray());
-			}
 		}
 
 		public override void Uninstall(IDictionary savedState)
@@ -125,7 +113,6 @@ namespace Be.Stateless.BizTalk.Install
 			}
 		}
 
-		private string[] _processNames;
 		private RuleSet[] _ruleSets;
 	}
 }

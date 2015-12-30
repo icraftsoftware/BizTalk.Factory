@@ -32,22 +32,17 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 
 		#region Base Class Member Overrides
 
-		protected override string[] ProcessNames
+		protected override string[] GetProcessNames()
 		{
-			get
-			{
-				return _processNames ?? (_processNames = GetType().Assembly.GetTypes()
-					.Where(t => typeof(Service).IsAssignableFrom(t))
-					.Except(ExcludedTypes)
-					.Select(type => type.Namespace)
-					.ToArray());
-			}
+			return GetType().Assembly.GetTypes()
+				.Where(t => typeof(Service).IsAssignableFrom(t))
+				.Except(ExcludedTypes)
+				.Select(type => type.Namespace)
+				.ToArray();
 		}
 
 		#endregion
 
 		protected IEnumerable<Type> ExcludedTypes { get; set; }
-
-		private string[] _processNames;
 	}
 }
