@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Policies.Send
 		public void WriteProcessNameInContext()
 		{
 			ExecutePolicy();
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Default.Processes.Failed).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(GlobalArea.Processes.Failed).HasBeenWritten());
 		}
 	}
 }

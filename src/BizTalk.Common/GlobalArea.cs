@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Tracking.Messaging;
 
 namespace Be.Stateless.BizTalk
@@ -40,7 +41,8 @@ namespace Be.Stateless.BizTalk
 		/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 		/// </para>
 		/// </remarks>
-		public class Default : ProcessName<Default>
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+		public class GlobalArea : ProcessName<GlobalArea>
 		{
 			/// <summary>
 			/// Default name for failed messaging-only flows.
@@ -50,14 +52,10 @@ namespace Be.Stateless.BizTalk
 			/// <summary>
 			/// Default name for unidentified messaging-only flows.
 			/// </summary>
-			/// <remarks>
-			/// This property has only been declared so as to be automatically deployed in the BizTalkFactoryMgmtDb with
-			/// other messaging-only flow names. It is never used anywhere but in testing code.
-			/// </remarks>
 			public string Unidentified { get; private set; }
 		}
 
-		namespace Services
+		namespace ServiceArea
 		{
 			/// <summary>
 			/// BizTalk Factory's process names.
@@ -77,6 +75,7 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
+			[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 			public class Batch : ProcessName<Batch>
 			{
 				/// <summary>
@@ -108,6 +107,7 @@ namespace Be.Stateless.BizTalk
 			/// These tokens are of importance for the monitoring web site accompanying BizTalk Factory.
 			/// </para>
 			/// </remarks>
+			[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 			public class Claim : ProcessName<Claim>
 			{
 				/// <summary>

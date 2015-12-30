@@ -26,11 +26,11 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		[Test]
 		public void ToFriendlyProcessName()
 		{
-			Assert.That(Factory.Default.Processes.Failed.ToFriendlyProcessName(), Is.EqualTo("Factory/Failed"));
-			Assert.That(Factory.Default.Processes.Unidentified.ToFriendlyProcessName(), Is.EqualTo("Factory/Unidentified"));
-			Assert.That(Factory.Services.Batch.Processes.Aggregate.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Aggregate"));
-			Assert.That(Factory.Services.Batch.Processes.Release.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Release"));
-			Assert.That(Factory.Services.Claim.Processes.Check.ToFriendlyProcessName(), Is.EqualTo("Factory/Claim/Check"));
+			Assert.That(Factory.GlobalArea.Processes.Failed.ToFriendlyProcessName(), Is.EqualTo("Factory/Failed"));
+			Assert.That(Factory.GlobalArea.Processes.Unidentified.ToFriendlyProcessName(), Is.EqualTo("Factory/Unidentified"));
+			Assert.That(Factory.ServiceArea.Batch.Processes.Aggregate.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Aggregate"));
+			Assert.That(Factory.ServiceArea.Batch.Processes.Release.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Release"));
+			Assert.That(Factory.ServiceArea.Claim.Processes.Check.ToFriendlyProcessName(), Is.EqualTo("Factory/Claim/Check"));
 		}
 	}
 }

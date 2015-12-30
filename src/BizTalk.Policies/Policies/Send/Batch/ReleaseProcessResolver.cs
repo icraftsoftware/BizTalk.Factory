@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Policies.Send.Batch
 			Rules.Add(
 				Rule("BatchReleaseProcessName")
 					.If(() => Context.Read(TrackingProperties.ProcessName).IsNullOrEmpty())
-					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.Services.Batch.Processes.Release))
+					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.ServiceArea.Batch.Processes.Release))
 				);
 		}
 	}

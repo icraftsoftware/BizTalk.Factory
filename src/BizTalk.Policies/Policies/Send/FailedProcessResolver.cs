@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Policies.Send
 			Rules.Add(
 				Rule("DefaultFailedProcessName")
 					.If(() => Context.Read(TrackingProperties.ProcessName).IsNullOrEmpty())
-					.Then(() => Context.Write(TrackingProperties.ProcessName, Default.Processes.Failed))
+					.Then(() => Context.Write(TrackingProperties.ProcessName, GlobalArea.Processes.Failed))
 				);
 		}
 	}

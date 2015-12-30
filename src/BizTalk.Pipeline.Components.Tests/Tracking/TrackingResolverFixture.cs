@@ -111,9 +111,9 @@ namespace Be.Stateless.BizTalk.Tracking
 			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
 			var processName = sut.ResolveProcessName();
 
-			Assert.That(processName, Is.EqualTo(Default.Processes.Unidentified));
+			Assert.That(processName, Is.EqualTo(GlobalArea.Processes.Unidentified));
 
-			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, Default.Processes.Unidentified), Times.Never());
+			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, GlobalArea.Processes.Unidentified), Times.Never());
 			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Once());
 		}
 

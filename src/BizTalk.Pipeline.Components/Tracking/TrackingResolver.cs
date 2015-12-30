@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			{
 				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that'd
 				// be overkill just to get back constant default process name; besides what if policy execution fails
-				processName = Default.Processes.Unidentified;
+				processName = GlobalArea.Processes.Unidentified;
 			}
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Resolved process name to '{0}'.", processName);
 			return processName;

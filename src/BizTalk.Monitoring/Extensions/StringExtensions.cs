@@ -24,8 +24,8 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 	public static class StringExtensions
 	{
 		/// <summary>
-		/// Returns a process friendly, or short, name assembled by the catenation of the Area/SubArea/Process parts of a
-		/// process name.
+		/// Returns a process friendly, or short, name assembled by the concatenation of the Area/SubArea/Process parts of
+		/// a process name.
 		/// </summary>
 		/// <param name="processName">The comprehensive process name.</param>
 		/// <returns>The concatenated Area/SubArea/Process parts.</returns>
@@ -34,12 +34,12 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		/// <list type="ul">
 		///    <item>the Area: e.g Accounting, Invoicing, or Unknown</item>
 		///    <item>an optional SubArea: e.g. Switching</item>
-		///    <item>the Process Name: e.g. UpdateMasterData, ReceiveSupplierChangeAcknowledgements, or Failed</item>
+		///    <item>the Process Name: e.g. UpdateMasterData, ReceiveSupplierChangeAcknowledgments, or Failed</item>
 		/// </list>
 		/// given the following inputs:
 		/// <list type="ul">
 		///    <item>Be.Stateless.Project.Accounting.Orchestrations.Switching.UpdateMasterData</item>
-		///    <item>Be.Stateless.Project.Invoicing.Processes.Switching.ReceiveSupplierChangeAcknowledgements</item>
+		///    <item>Be.Stateless.Project.Invoicing.Processes.Switching.ReceiveSupplierChangeAcknowledgments</item>
 		///    <item>Be.Stateless.BizTalk.Unknown.Processes.Failed</item>
 		/// </list>
 		/// </remarks>
@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		private static readonly string[] _friendlyNameTokens = { "Area", "SubArea", "Process" };
 
 		private static readonly string _friendlyNameRegex = string.Format(
-			@".+\.(?<{0}>\w+)\.(?:Default|Orchestrations|.*Processes|Services)(?:\.(?<{1}>\w+))?\.(?<{2}>\w*)",
+			@".+\.(?<{0}>\w+)\.(?:\w+Area|Orchestrations|\w*Processes)(?:\.(?<{1}>\w+))?\.(?<{2}>\w*)",
 			// ReSharper disable once CoVariantArrayConversion
 			_friendlyNameTokens);
 	}
