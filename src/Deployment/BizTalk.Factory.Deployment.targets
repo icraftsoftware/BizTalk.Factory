@@ -115,7 +115,7 @@
       SetupBizTalkBackupForCustomDatabases;
       DeployFluentApplicationBindings;
       DeployPolicies;
-      RegisterOrchestrationProcessNames;
+      RegisterProcessNames;
       DeployWindowsServices;
       RegisterQuartzJobs;
     </CustomPostDeployDependsOn>
@@ -127,7 +127,7 @@
       PrepareAppForUndeploy;
       UnregisterQuartzJobs;
       UndeployWindowsServices;
-      UnregisterOrchestrationProcessNames;
+      UnregisterProcessNames;
       UndeployPolicies;
       UndeployFluentApplicationBindings;
       TeardownBizTalkBackupForCustomDatabases;
@@ -865,14 +865,14 @@
   </Target>
 
   <!--
-     ______ _                  _                          _ _           _   _               ____  _           _ _                 
-    |  ____| |                | |       /\               | (_)         | | (_)             |  _ \(_)         | (_)                
-    | |__  | |_   _  ___ _ __ | |_     /  \   _ __  _ __ | |_  ___ __ _| |_ _  ___  _ __   | |_) |_ _ __   __| |_ _ __   __ _ ___ 
+     ______ _                  _                          _ _           _   _               ____  _           _ _
+    |  ____| |                | |       /\               | (_)         | | (_)             |  _ \(_)         | (_)
+    | |__  | |_   _  ___ _ __ | |_     /  \   _ __  _ __ | |_  ___ __ _| |_ _  ___  _ __   | |_) |_ _ __   __| |_ _ __   __ _ ___
     |  __| | | | | |/ _ | '_ \| __|   / /\ \ | '_ \| '_ \| | |/ __/ _` | __| |/ _ \| '_ \  |  _ <| | '_ \ / _` | | '_ \ / _` / __|
     | |    | | |_| |  __| | | | |_   / ____ \| |_) | |_) | | | (_| (_| | |_| | (_) | | | | | |_) | | | | | (_| | | | | | (_| \__ \
     |_|    |_|\__,_|\___|_| |_|\__| /_/    \_| .__/| .__/|_|_|\___\__,_|\__|_|\___/|_| |_| |____/|_|_| |_|\__,_|_|_| |_|\__, |___/
-                                             | |   | |                                                                   __/ |    
-                                             |_|   |_|                                                                  |___/     
+                                             | |   | |                                                                   __/ |
+                                             |_|   |_|                                                                  |___/
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Fluent%20Application%20Bindings -->
 
   <ItemGroup >
@@ -1119,17 +1119,43 @@
   </Target>
 
   <!--
-      ____           _              _             _   _                   ____                     _   _____                              _   _
-     / __ \         | |            | |           | | (_)                 |  _ \                   | | |  __ \                            | \ | |
-    | |  | |_ __ ___| |__   ___ ___| |_ _ __ __ _| |_ _  ___  _ __ ______| |_) | __ _ ___  ___  __| | | |__) _ __ ___   ___ ___ ___ ___  |  \| | __ _ _ __ ___   ___ ___
-    | |  | | '__/ __| '_ \ / _ / __| __| '__/ _` | __| |/ _ \| '_ |______|  _ < / _` / __|/ _ \/ _` | |  ___| '__/ _ \ / __/ _ / __/ __| | . ` |/ _` | '_ ` _ \ / _ / __|
-    | |__| | | | (__| | | |  __\__ | |_| | | (_| | |_| | (_) | | | |     | |_) | (_| \__ |  __| (_| | | |   | | | (_) | (_|  __\__ \__ \ | |\  | (_| | | | | | |  __\__ \
-     \____/|_|  \___|_| |_|\___|___/\__|_|  \__,_|\__|_|\___/|_| |_|     |____/ \__,_|___/\___|\__,_| |_|   |_|  \___/ \___\___|___|___/ |_| \_|\__,_|_| |_| |_|\___|___/
+     _____                              _   _                        _____            _     _             _   _
+    |  __ \                            | \ | |                      |  __ \          (_)   | |           | | (_)
+    | |__) _ __ ___   ___ ___ ___ ___  |  \| | __ _ _ __ ___   ___  | |__) |___  __ _ _ ___| |_ _ __ __ _| |_ _  ___  _ __
+    |  ___| '__/ _ \ / __/ _ / __/ __| | . ` |/ _` | '_ ` _ \ / _ \ |  _  // _ \/ _` | / __| __| '__/ _` | __| |/ _ \| '_ \
+    | |   | | | (_) | (_|  __\__ \__ \ | |\  | (_| | | | | | |  __/ | | \ |  __| (_| | \__ | |_| | | (_| | |_| | (_) | | | |
+    |_|   |_|  \___/ \___\___|___|___/ |_| \_|\__,_|_| |_| |_|\___| |_|  \_\___|\__, |_|___/\__|_|  \__,_|\__|_|\___/|_| |_|
+                                                                                 __/ |
+                                                                                |___/
+    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Process%20Name%20Registration -->
 
+  <Target Name="RegisterProcessNames" Condition=" '$(DeployBizTalkMgmtDB)' == 'true' "
+          DependsOnTargets="RegisterComponentProcessNames;RegisterOrchestrationProcessNames">
+  </Target>
 
-    http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Orchestration-Based%20Process%20Names -->
+  <Target Name="UnregisterProcessNames" Condition=" '$(DeployBizTalkMgmtDB)' == 'true' "
+          DependsOnTargets="UnregisterComponentProcessNames;UnregisterOrchestrationProcessNames">
+  </Target>
 
-  <Target Name="RegisterOrchestrationProcessNames" Condition=" '$(IncludeOrchestrations)' == 'true' and '$(DeployBizTalkMgmtDB)' == 'true' ">
+  <Target Name="RegisterComponentProcessNames" Condition=" '$(IncludeComponents)' == 'true' and '@(ComponentsQualified)' != '' ">
+    <Message Text="Registering common process names..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /Server=$(ManagementDatabaseServer) &quot;@(ComponentsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' " />
+
+    <Message Text="Registered common process names." />
+  </Target>
+
+  <Target Name="UnregisterComponentProcessNames" Condition=" '$(IncludeComponents)' == 'true' and '@(ComponentsQualified)' != '' ">
+    <Message Text="Unregistering common process names..." />
+
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /u /ShowCallStack /Server=$(ManagementDatabaseServer) &quot;@(ComponentsQualified)&quot;"
+          Condition=" '%(Identity)' == '%(Identity)' " />
+
+    <Message Text="Unregistered common process names." />
+  </Target>
+
+  <Target Name="RegisterOrchestrationProcessNames" Condition=" '$(IncludeOrchestrations)' == 'true' and '@(OrchestrationsQualified)' != '' ">
     <Message Text="Registering orchestration process names..." />
 
     <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /Server=$(ManagementDatabaseServer) &quot;@(OrchestrationsQualified)&quot;"
@@ -1138,7 +1164,7 @@
     <Message Text="Registered orchestration process names." />
   </Target>
 
-  <Target Name="UnregisterOrchestrationProcessNames" Condition=" '$(IncludeOrchestrations)' == 'true' and '$(DeployBizTalkMgmtDB)' == 'true' ">
+  <Target Name="UnregisterOrchestrationProcessNames" Condition=" '$(IncludeOrchestrations)' == 'true' and '@(OrchestrationsQualified)' != '' ">
     <Message Text="Unregistering orchestration process names..." />
 
     <Exec Command="$(FrameworkDir)\InstallUtil.exe /u /ShowCallStack /Server=$(ManagementDatabaseServer) &quot;@(OrchestrationsQualified)&quot;"
@@ -1195,14 +1221,14 @@
   </Target>
 
   <!--
-     _____            _     _               ____                   _              _       _         
-    |  __ \          (_)   | |             / __ \                 | |            | |     | |        
-    | |__) |___  __ _ _ ___| |_ ___ _ __  | |  | |_   _  __ _ _ __| |_ ____      | | ___ | |__  ___ 
+     _____            _     _               ____                   _              _       _
+    |  __ \          (_)   | |             / __ \                 | |            | |     | |
+    | |__) |___  __ _ _ ___| |_ ___ _ __  | |  | |_   _  __ _ _ __| |_ ____      | | ___ | |__  ___
     |  _  // _ \/ _` | / __| __/ _ | '__| | |  | | | | |/ _` | '__| __|_  /  _   | |/ _ \| '_ \/ __|
     | | \ |  __| (_| | \__ | ||  __| |    | |__| | |_| | (_| | |  | |_ / /  | |__| | (_) | |_) \__ \
     |_|  \_\___|\__, |_|___/\__\___|_|     \___\_\\__,_|\__,_|_|   \__/___|  \____/ \___/|_.__/|___/
-                 __/ |                                                                              
-                |___/                                                                                 
+                 __/ |
+                |___/
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
 
   <PropertyGroup>
