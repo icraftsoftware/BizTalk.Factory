@@ -28,27 +28,30 @@ using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract partial class WcfCustomAdapter
+	public abstract class WcfCustomIsolatedAdapter
 	{
 		#region Nested Type: Inbound
 
 		/// <summary>
-		/// The WCF-Custom adapter is used to enable the use of WCF extensibility components in BizTalk Server. The
-		/// adapter enables complete flexibility of the WCF framework. It allows users to select and configure a WCF
-		/// binding for the receive location and send port. It also allows users to set the endpoint behaviors and
-		/// security settings.
+		/// The WCF-CustomIsolated adapter is used to enable the use of WCF extensibility components in BizTalk Server
+		/// with an isolated host. The adapter enables complete flexibility of the WCF framework. It allows users to
+		/// select and configure a WCF binding for the receive location, and to specify the endpoint behaviors and
+		/// security settings. This adapter can only be used by transports that are hosted in Internet Information
+		/// Services (IIS).
 		/// </summary>
 		/// <remarks>
-		/// You use the WCF-Custom receive adapter to receive WCF service requests through the bindings, service behavior,
-		/// endpoint behavior, security mechanism, and the source of the inbound message body that you selected and
-		/// configured in the transport properties dialog in the receive location. A receive location that uses the
-		/// WCF-Custom receive adapter can be configured as one-way or request-response (two-way).
+		/// The WCF-CustomIsolated adapter consists of a receive adapter only. You use the WCF-CustomIsolated receive
+		/// adapter to receive WCF service requests through WCF bindings, service behavior, endpoint behavior, security
+		/// mechanism, and the source of the inbound message body that you selected and configured for the receive
+		/// location running in an isolated host. A receive location that uses the WCF-CustomIsolated receive adapter can
+		/// be configured as one-way or request-response (two-way).
 		/// </remarks>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226367.aspx">What Is the WCF-Custom Adapter?</seealso>
-		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb259941.aspx">How to Configure a WCF-Custom Receive Location</seealso>.
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245951.aspx">WCF-CustomIsolated Adapter</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226389.aspx">What Is the WCF-CustomIsolated Adapter?</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226374.aspx">How to Configure a WCF-CustomIsolated Receive Location</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound<TBinding> : WcfCustomAdapter<TBinding, CustomRLConfig>,
+		public class Inbound<TBinding> : WcfCustomIsolatedAdapter<TBinding, CustomRLConfig>,
 			IInboundAdapter,
 			IAdapterConfigInboundCredentials,
 			IAdapterConfigInboundDisableLocationOnFailure,
