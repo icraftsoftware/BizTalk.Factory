@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundPropagateFaultMessage,
 			IAdapterConfigOutboundTransactionIsolation
 		{
-			public Outbound() { }
+			public Outbound()
+			{
+				// Messages Tab - Error Handling Settings
+				PropagateFaultMessage = true;
+			}
 
 			public Outbound(Action<Outbound> adapterConfigurator) : this()
 			{

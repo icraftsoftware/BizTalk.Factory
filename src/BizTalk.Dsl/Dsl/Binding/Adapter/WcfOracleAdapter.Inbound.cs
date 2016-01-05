@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public partial class WcfOracleAdapter
+	public abstract partial class WcfOracleAdapter
 	{
 		#region Nested Type: Inbound
 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,6 +50,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 				// Proxy Tab - General Settings
 				ProxyToUse = ProxySelection.None;
+
+				// Messages Tab - Error Handling Settings
+				PropagateFaultMessage = true;
 			}
 
 			public Outbound(Action<Outbound> adapterConfigurator) : this()
@@ -129,6 +132,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region Proxy Tab - General Settings
+
+			/// <summary>
+			/// Specify which proxy server to use for outgoing HTTP traffic.
+			/// </summary>
+			/// <remarks>
+			/// <list type="bullet">
+			/// <item>
+			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
+			/// port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
+			/// property.
+			/// </item>
+			/// </list>
+			/// It defaults to <see cref="ProxySelection.None"/>.
+			/// </remarks>
+			public ProxySelection ProxyToUse
+			{
+				get { return _adapterConfig.ProxyToUse; }
+				set { _adapterConfig.ProxyToUse = value; }
+			}
+
+			#endregion
+
 			#region Security Tab - Access Control Service Settings
 
 			/// <summary>
@@ -160,35 +192,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.IssuerSecret; }
 				set { _adapterConfig.IssuerSecret = value; }
-			}
-
-			#endregion
-
-			#region Proxy Tab - General Settings
-
-			/// <summary>
-			/// Specify which proxy server to use for outgoing HTTP traffic.
-			/// </summary>
-			/// <remarks>
-			/// <list type="bullet">
-			/// <item>
-			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
-			/// port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
-			/// property.
-			/// </item>
-			/// </list>
-			/// It defaults to <see cref="ProxySelection.None"/>.
-			/// </remarks>
-			public ProxySelection ProxyToUse
-			{
-				get { return _adapterConfig.ProxyToUse; }
-				set { _adapterConfig.ProxyToUse = value; }
 			}
 
 			#endregion

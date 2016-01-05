@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.ServiceModel;
 using System.Transactions;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -42,6 +43,7 @@ using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFact
 namespace Be.Stateless.BizTalk
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Instantiated by BindingGenerator at deployment time.")]
+	[SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
 	public class BizTalkFactoryApplicationBinding : Dsl.Binding.Convention.BizTalkFactory.ApplicationBinding<NamingConvention>
 	{
 		public BizTalkFactoryApplicationBinding()
@@ -179,6 +181,16 @@ namespace Be.Stateless.BizTalk
 						sp.Transport.Host = CommonSettings.TransmitHost;
 						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
 						sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckOut>.MessageType);
+					}),
+				SendPort(
+					sp => {
+						sp.Name = SendPortName.Towards("UnitTest").About("Stub").FormattedAs.Xml;
+						sp.State = ServiceState.Started;
+						sp.SendPipeline = new SendPipeline<XmlTransmit>();
+						sp.ReceivePipeline = new ReceivePipeline<XmlReceive>();
+						sp.Transport.Adapter = new WcfBasicHttpAdapter.Outbound(a => { a.Address = new EndpointAddress("http://localhost:8000/stubservice"); });
+						sp.Transport.Host = CommonSettings.TransmitHost;
+						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
 					}));
 			ReceivePorts.Add(
 				_batchReceivePort = ReceivePort(

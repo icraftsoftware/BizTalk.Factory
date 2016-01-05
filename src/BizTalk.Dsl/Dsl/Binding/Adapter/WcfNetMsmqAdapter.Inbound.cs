@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Security;
-using System.ServiceModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -190,6 +188,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region Binding Tab - Service Throttling Behaviour Settings
+
+			/// <summary>
+			/// Specify the number of concurrent calls to a single service instance. Calls in excess of the limit are
+			/// queued.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The range of this property is from 1 to <see cref="int.MaxValue"/>.
+			/// </para>
+			/// <para>
+			/// It defaults to 200.
+			/// </para>
+			/// </remarks>
+			public int MaxConcurrentCalls
+			{
+				get { return _adapterConfig.MaxConcurrentCalls; }
+				set { _adapterConfig.MaxConcurrentCalls = value; }
+			}
+
+			#endregion
+
 			#region Binding Tab - General Settings
 
 			/// <summary>
@@ -232,28 +252,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.OrderedProcessing; }
 				set { _adapterConfig.OrderedProcessing = value; }
-			}
-
-			#endregion
-
-			#region Binding Tab - Service Throttling Behaviour Settings
-
-			/// <summary>
-			/// Specify the number of concurrent calls to a single service instance. Calls in excess of the limit are
-			/// queued.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The range of this property is from 1 to <see cref="int.MaxValue"/>.
-			/// </para>
-			/// <para>
-			/// It defaults to 200.
-			/// </para>
-			/// </remarks>
-			public int MaxConcurrentCalls
-			{
-				get { return _adapterConfig.MaxConcurrentCalls; }
-				set { _adapterConfig.MaxConcurrentCalls = value; }
 			}
 
 			#endregion
