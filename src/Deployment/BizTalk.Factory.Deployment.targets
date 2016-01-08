@@ -62,6 +62,24 @@
   <Import Project="$(DeployTools)\MSBuild.Extension.Pack.targets" />
   <Import Project="BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" Condition=" '$(IgnoreStandardErrorWarningFormat)' == 'true' " />
 
+  <PropertyGroup>
+    <UndeployBizTalkMgmtDBfalseDependsOn>
+      CustomPreInitialize;
+      FrameworkInitialize;
+      CustomPostInitialize;
+      CustomUndeployTarget;
+      ConditionalHostStop;
+      UndeployComponents;
+      UndeployExternalAssemblies;
+      UndeploySharedAssemblies;
+      UndeployPipelineComponents;
+      UndeployCustomFunctoids;
+      UndeployVDirs;
+      UndeployBtsNtSvcExeConfig;
+      CustomPostUndeployTarget;
+    </UndeployBizTalkMgmtDBfalseDependsOn>
+  </PropertyGroup>
+
   <!--
      ____ _______ _____  ______   _______                   _     _____                            _                         _____       _           _   _
     |  _ |__   __|  __ \|  ____| |__   __|                 | |   |  __ \                          | |                       |_   _|     (_)         | | (_)
