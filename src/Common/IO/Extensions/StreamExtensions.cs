@@ -109,9 +109,12 @@ namespace Be.Stateless.IO.Extensions
 			Directory.CreateDirectory(folder);
 			var path = System.IO.Path.Combine(folder, name);
 			File.Delete(path);
-			stream.Save(path + ".tmp");
+			// save to a temporary, extensionless file with a GUID as name
+			var tempFileName = Guid.NewGuid().ToString("N");
+			var tempPath = System.IO.Path.Combine(folder, tempFileName);
+			stream.Save(tempPath);
 			stream.Close();
-			File.Move(path + ".tmp", path);
+			File.Move(tempPath, path);
 		}
 
 		/// <summary>
