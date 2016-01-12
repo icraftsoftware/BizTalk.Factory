@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Xml
 
 		public static implicit operator RuntimeTypeXmlSerializer(Type type)
 		{
-			return new RuntimeTypeXmlSerializer(type.AssemblyQualifiedName);
+			return new RuntimeTypeXmlSerializer(type.IfNotNull(t => t.AssemblyQualifiedName));
 		}
 
 		#endregion

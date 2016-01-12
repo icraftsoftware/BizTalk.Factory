@@ -149,6 +149,7 @@
     <Compile Include="Transform\RegexFunctionsFixture.cs" />
     <Compile Include="Xml\CompositeXmlReaderFixture.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentXmlReaderExtensionsFixture.cs" />
+    <Compile Include="Xml\RuntimeTypeXmlSerializerFixture.cs" />
     <Compile Include="Xml\Xsl\XslCompiledTransformDescriptorFixture.cs" />
     <Compile Include="XPath\ReactiveXPathExtractorCollectionFixture.cs" />
     <Compile Include="XPath\XPathExtractorEnumerableConverterFixture.cs" />
