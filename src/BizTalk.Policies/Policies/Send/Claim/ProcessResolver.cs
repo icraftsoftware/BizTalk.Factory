@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Policies.Send.Claim
 			Rules.Add(
 				Rule("ClaimCheckProcessResolver")
 					.If(() => Context.Read(TrackingProperties.ProcessName).IsNullOrEmpty())
-					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.ServiceArea.Claim.Processes.Check))
+					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.Areas.Claim.Processes.Check))
 				);
 		}
 	}

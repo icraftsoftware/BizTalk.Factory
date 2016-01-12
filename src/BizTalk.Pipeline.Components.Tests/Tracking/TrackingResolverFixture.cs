@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Factory;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Microsoft.BizTalk.Message.Interop;
@@ -111,9 +112,9 @@ namespace Be.Stateless.BizTalk.Tracking
 			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
 			var processName = sut.ResolveProcessName();
 
-			Assert.That(processName, Is.EqualTo(GlobalArea.Processes.Unidentified));
+			Assert.That(processName, Is.EqualTo(Default.Processes.Unidentified));
 
-			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, GlobalArea.Processes.Unidentified), Times.Never());
+			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, Default.Processes.Unidentified), Times.Never());
 			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Once());
 		}
 

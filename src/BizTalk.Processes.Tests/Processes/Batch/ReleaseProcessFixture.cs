@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Be.Stateless.BizTalk.Explorer;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
@@ -99,7 +100,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& p.Value1 == "*"
@@ -148,7 +149,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& p.Value1 == "*"
@@ -197,7 +198,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& p.Status == TrackingStatus.Completed
@@ -238,7 +239,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal));
@@ -258,7 +259,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -289,7 +290,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -312,7 +313,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -342,7 +343,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
@@ -372,7 +373,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
@@ -411,19 +412,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling processes
 			TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
 					&& p.Value2 == "one");
 			TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
 					&& p.Value2 == "two");
 			TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -445,7 +446,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling processes
 			var processesQuery = TrackingRepository.Processes.Where(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -488,7 +489,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 		{
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			var addPartMessage1 = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
@@ -499,7 +500,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage2 = process.SingleMessagingStep(
@@ -514,7 +515,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -556,7 +557,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -570,13 +571,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// a part is linked to both its aggregate and release processes
 			Assert.That(addPartMessage1.Processes.Count(), Is.EqualTo(2));
-			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate), Is.Not.Null);
-			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Release), Is.Not.Null);
+			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Aggregate), Is.Not.Null);
+			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
 
 			// a batch is linked to both its release and handling processes
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(), Is.EqualTo(2));
-			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Release), Is.Not.Null);
-			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.GlobalArea.Processes.Unidentified), Is.Not.Null);
+			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
+			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Default.Processes.Unidentified), Is.Not.Null);
 
 			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
@@ -586,7 +587,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 		{
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			var addPartMessage1 = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
@@ -597,7 +598,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage2 = process.SingleMessagingStep(
@@ -609,7 +610,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage3 = process.SingleMessagingStep(
@@ -623,7 +624,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch controlled release process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Release
+				p => p.Name == Factory.Areas.Batch.Processes.Release
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			// 1st part
@@ -658,7 +659,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling process
 			process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -672,13 +673,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// a part is linked to both its aggregate and release processes
 			Assert.That(addPartMessage1.Processes.Count(), Is.EqualTo(2));
-			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate), Is.Not.Null);
-			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Release), Is.Not.Null);
+			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Aggregate), Is.Not.Null);
+			Assert.That(addPartMessage1.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
 
 			// a batch is linked to both its release and handling processes
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(), Is.EqualTo(2));
-			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.ServiceArea.Batch.Processes.Release), Is.Not.Null);
-			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.GlobalArea.Processes.Unidentified), Is.Not.Null);
+			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
+			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Default.Processes.Unidentified), Is.Not.Null);
 
 			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
@@ -694,7 +695,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// batch content handling process
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1, StringComparison.Ordinal)
@@ -711,7 +712,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.Value2 == "partition-z");
 
 			// no batch release process has been created as no parts provide a MessagingStepActivityId that could be used to link a part to its batch
-			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(p => p.Name == Factory.ServiceArea.Batch.Processes.Release && p.BeginTime > StartTime), Is.EqualTo(0));
+			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(p => p.Name == Factory.Areas.Batch.Processes.Release && p.BeginTime > StartTime), Is.EqualTo(0));
 
 			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}

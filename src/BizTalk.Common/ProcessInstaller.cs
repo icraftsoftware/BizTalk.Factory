@@ -18,12 +18,12 @@
 
 using System.ComponentModel;
 using Be.Stateless.BizTalk.Factory;
-using Be.Stateless.BizTalk.Factory.ServiceArea;
+using Be.Stateless.BizTalk.Factory.Areas;
 
 namespace Be.Stateless.BizTalk
 {
 	/// <summary>
-	/// Register <see cref="GlobalArea"/>, <see cref="Batch"/> and <see cref="Claim"/> process names.
+	/// Register <see cref="Default"/>, <see cref="Batch"/> and <see cref="Claim"/> process names.
 	/// </summary>
 	[RunInstaller(true)]
 	public class ProcessInstaller : Tracking.ProcessInstaller { }

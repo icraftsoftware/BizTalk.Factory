@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
@@ -56,7 +57,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			correlationTokens.Each(
 				ct => {
 					// Unidentified process because check-in phase has been skipped and no Claim.Check process name could have been inserted in context
-					var process = TrackingRepository.SingleProcess(p => p.Name == Factory.GlobalArea.Processes.Unidentified && p.Value1 == ct && p.BeginTime > StartTime);
+					var process = TrackingRepository.SingleProcess(p => p.Name == Default.Processes.Unidentified && p.Value1 == ct && p.BeginTime > StartTime);
 					process.SingleMessagingStep(s => s.Name == "BizTalk.Factory.RL1.Claim.CheckOut.WCF-SQL.XML" && s.Value1 == ct && s.Status == TrackingStatus.Received);
 					process.SingleMessagingStep(s => s.Name == "BizTalk.Factory.SP1.UnitTest.Claim.Redeem.FILE.XML" && s.Value1 == ct && s.Status == TrackingStatus.Sent);
 				});
@@ -82,7 +83,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// Unidentified process because check-in phase has been skipped and no Claim.Check process name could have been inserted in context
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.GlobalArea.Processes.Unidentified
+				p => p.Name == Default.Processes.Unidentified
 					&& p.Value1 == correlationToken
 					&& p.Value2 == receiverName
 					&& p.Value3 == senderName
@@ -112,7 +113,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			ResourceManager.Load("Data.Payload.bin").DropToFolder(DropFolders.INPUT_FOLDER, "Payload.bin.claim");
 
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Claim.Processes.Check
+				p => p.Name == Factory.Areas.Claim.Processes.Check
 					&& p.BeginTime > StartTime,
 				TimeSpan.FromSeconds(60));
 			process.SingleMessagingStep(
@@ -136,7 +137,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			new FakeClaimStream().DropToFolder(DropFolders.INPUT_FOLDER, "large_message.xml.claim");
 
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Claim.Processes.Check
+				p => p.Name == Factory.Areas.Claim.Processes.Check
 					&& p.BeginTime > StartTime
 					&& p.Value1 == "embedded-correlation-token"
 					&& p.Value2 == "embedded-receiver-name"

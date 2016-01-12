@@ -55,7 +55,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, null).DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Batch.AddPart.FILE.XML"
@@ -83,7 +83,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 
 			var process = TrackingRepository.SingleProcess(
-				p => p.Name == Factory.ServiceArea.Batch.Processes.Aggregate
+				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime
 					&& p.Value2 == "partition-z");
 			process.SingleMessagingStep(

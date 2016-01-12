@@ -102,7 +102,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="GlobalArea.cs" />
+    <Compile Include="Default.cs" />
     <Compile Include="ProcessInstaller.cs">
       <SubType>Component</SubType>
     </Compile>

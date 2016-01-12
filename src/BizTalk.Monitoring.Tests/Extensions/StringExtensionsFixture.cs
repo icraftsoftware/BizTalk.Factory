@@ -16,6 +16,7 @@
 
 #endregion
 
+using Be.Stateless.BizTalk.Factory.Areas;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Monitoring.Extensions
@@ -23,14 +24,22 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 	[TestFixture]
 	public class StringExtensionsFixture
 	{
+		// todo: test source
 		[Test]
-		public void ToFriendlyProcessName()
+		[TestCaseSource("Cases")]
+		public void ToFriendlyProcessName(string processName, string expected)
 		{
-			Assert.That(Factory.GlobalArea.Processes.Failed.ToFriendlyProcessName(), Is.EqualTo("Factory/Failed"));
-			Assert.That(Factory.GlobalArea.Processes.Unidentified.ToFriendlyProcessName(), Is.EqualTo("Factory/Unidentified"));
-			Assert.That(Factory.ServiceArea.Batch.Processes.Aggregate.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Aggregate"));
-			Assert.That(Factory.ServiceArea.Batch.Processes.Release.ToFriendlyProcessName(), Is.EqualTo("Factory/Batch/Release"));
-			Assert.That(Factory.ServiceArea.Claim.Processes.Check.ToFriendlyProcessName(), Is.EqualTo("Factory/Claim/Check"));
+			Assert.That(processName.ToFriendlyProcessName(), Is.EqualTo(expected));
 		}
+
+		static readonly object[] Cases = {
+			new object[] {Default.Processes.Failed, "Factory/Failed"},
+			new object[] {Default.Processes.Unidentified, "Factory/Unidentified"},
+			new object[] {Batch.Processes.Aggregate, "Factory/Batch/Aggregate"},
+			new object[] {Batch.Processes.Release, "Factory/Batch/Release"},
+			new object[] {Claim.Processes.Check, "Factory/Claim/Check"},
+			new object[] {"Be.Stateless.Accounting.Orchestrations.Invoicing.UpdateMasterData", "Accounting/Invoicing/UpdateMasterData"},
+			new object[] {"Be.Stateless.Accounting.Orchestrations.UpdateMasterData", "Accounting/UpdateMasterData"}
+		};
 	}
 }

@@ -20,6 +20,7 @@ using System;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Factory;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.Extensions;
@@ -66,7 +67,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			{
 				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that'd
 				// be overkill just to get back constant default process name; besides what if policy execution fails
-				processName = GlobalArea.Processes.Unidentified;
+				processName = Default.Processes.Unidentified;
 			}
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Resolved process name to '{0}'.", processName);
 			return processName;

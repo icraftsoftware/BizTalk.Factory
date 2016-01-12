@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Policies.Send.Batch
 			Rules.Add(
 				Rule("BatchAggregateProcessName")
 					.If(() => Context.Read(TrackingProperties.ProcessName).IsNullOrEmpty())
-					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.ServiceArea.Batch.Processes.Aggregate))
+					.Then(() => Context.Write(TrackingProperties.ProcessName, Factory.Areas.Batch.Processes.Aggregate))
 				);
 		}
 	}

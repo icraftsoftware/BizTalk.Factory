@@ -65,7 +65,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 				if (_logger.IsInfoEnabled) _logger.Debug("Associating the batch being released with its parts.");
 				var activityFactory = (IBatchProcessActivityFactory) _pipelineContext.ActivityFactory();
 				var process = batchTrackingContext.ProcessActivityId.IsNullOrEmpty()
-					? activityFactory.CreateProcess(_message, BizTalk.Factory.ServiceArea.Batch.Processes.Release)
+					? activityFactory.CreateProcess(_message, BizTalk.Factory.Areas.Batch.Processes.Release)
 					: activityFactory.FindProcess(batchTrackingContext.ProcessActivityId);
 
 				process.TrackActivity();

@@ -18,6 +18,7 @@
 
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Factory;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Unit.RuleEngine;
 using NUnit.Framework;
 
@@ -38,7 +39,7 @@ namespace Be.Stateless.BizTalk.Policies.Send
 		public void WriteProcessNameInContext()
 		{
 			ExecutePolicy();
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(GlobalArea.Processes.Failed).HasBeenWritten());
+			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Default.Processes.Failed).HasBeenWritten());
 		}
 	}
 }

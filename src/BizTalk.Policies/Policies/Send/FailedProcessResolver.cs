@@ -19,6 +19,7 @@
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.RuleEngine;
 using Be.Stateless.BizTalk.Factory;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Policies.Send
@@ -30,7 +31,7 @@ namespace Be.Stateless.BizTalk.Policies.Send
 			Rules.Add(
 				Rule("DefaultFailedProcessName")
 					.If(() => Context.Read(TrackingProperties.ProcessName).IsNullOrEmpty())
-					.Then(() => Context.Write(TrackingProperties.ProcessName, GlobalArea.Processes.Failed))
+					.Then(() => Context.Write(TrackingProperties.ProcessName, Default.Processes.Failed))
 				);
 		}
 	}
