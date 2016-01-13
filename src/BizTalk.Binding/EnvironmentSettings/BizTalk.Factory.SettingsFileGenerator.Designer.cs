@@ -19,85 +19,60 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
 	[GeneratedCode("EnvironmentSettings", "1.0.0.0")]
-	public static class BizTalkFactorySettings
+	public class BizTalkFactorySettings : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
 	{
+		static BizTalkFactorySettings()
+		{
+			_instance = new BizTalkFactorySettings();
+		}
+
 		public static int BamArchiveWindowTimeLength 
 		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }); }
+			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }); }
 		}
 
 		public static int BamOnlineWindowTimeLength 
 		{
-			get { return ValueForTargetEnvironment(new int?[] { null, 15, 15, 15, 15 }); }
+			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 15, 15, 15, 15 }); }
 		}
 
 		public static string ClaimStoreAgentTargetHosts 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
 		}
 
 		public static string ClaimStoreCheckInDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null }); }
 		}
 
 		public static string ClaimStoreCheckOutDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", null, null }); }
 		}
 
 		public static string QuartzAgentTargetHosts 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
 		}
 
-		private static int TargetEnvironmentIndex
+		protected override string SettingsFileName
 		{
-			get
-			{
-				if (_targetEnvironmentsIndex < 0)
-				{
-					_targetEnvironmentsIndex = Array.IndexOf(_targetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
-				}
-				if (_targetEnvironmentsIndex < 0)
-					throw new InvalidOperationException(
-						string.Format(
-							"'{0}' is not a target environment declared in the 'BizTalk.Factory.SettingsFileGenerator.xml' file.",
-							BindingGenerationContext.Instance.TargetEnvironment));
-				return _targetEnvironmentsIndex;
-			}
+			get { return "BizTalk.Factory.SettingsFileGenerator"; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
+		protected override string[] TargetEnvironments
 		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value.Value;
+			get { return _targetEnvironments; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
-		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value;
-		}
-
+		private static readonly BizTalkFactorySettings _instance;
 		private static readonly string[] _targetEnvironments = { null, "DEV", "BLD", "ACC", "PRD" };
-		private static int _targetEnvironmentsIndex = -1;
 	}
 }

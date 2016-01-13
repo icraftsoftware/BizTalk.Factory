@@ -51,6 +51,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Install;
 
 namespace </xsl:text>
@@ -58,59 +59,39 @@ namespace </xsl:text>
     <xsl:text>
 {
 	[GeneratedCode("EnvironmentSettings", "1.0.0.0")]
-	public static class </xsl:text>
+	public class </xsl:text>
     <xsl:value-of select="$clr-class-name" />
-    <xsl:text>
-	{</xsl:text>
+    <xsl:text> : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
+	{
+		static </xsl:text>
+    <xsl:value-of select="$clr-class-name" />
+    <xsl:text>()
+		{
+			_instance = new </xsl:text>
+    <xsl:value-of select="$clr-class-name" />
+    <xsl:text>();
+		}
+</xsl:text>
     <xsl:apply-templates />
-    <xsl:text><![CDATA[
-		private static int TargetEnvironmentIndex
+    <xsl:text>
+		protected override string SettingsFileName
 		{
-			get
-			{
-				if (_targetEnvironmentsIndex < 0)
-				{
-					_targetEnvironmentsIndex = Array.IndexOf(_targetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
-				}
-				if (_targetEnvironmentsIndex < 0)
-					throw new InvalidOperationException(
-						string.Format(
-							"'{0}' is not a target environment declared in the ']]></xsl:text>
+			get { return "</xsl:text>
     <xsl:value-of select="$settings-file-name" />
-    <xsl:text><![CDATA[.xml' file.",
-							BindingGenerationContext.Instance.TargetEnvironment));
-				return _targetEnvironmentsIndex;
-			}
+    <xsl:text>"; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
+		protected override string[] TargetEnvironments
 		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value.Value;
+			get { return _targetEnvironments; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
-		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value;
-		}
-
-		private static readonly string[] _targetEnvironments = { ]]></xsl:text>
+		private static readonly </xsl:text>
+    <xsl:value-of select="$clr-class-name" />
+    <xsl:text> _instance;
+		private static readonly string[] _targetEnvironments = { </xsl:text>
     <xsl:apply-templates select="ss:Row[ss:Cell[1]/ss:Data/text()='TargetEnvironment']/ss:Cell" mode="values" />
     <xsl:text> };
-		private static int _targetEnvironmentsIndex = -1;
 	}
 }
 </xsl:text>
@@ -186,7 +167,7 @@ namespace </xsl:text>
     <xsl:value-of select="translate(ss:Data/text(), '.- ', '')"/>
     <xsl:text> 
 		{
-			get { return ValueForTargetEnvironment(new </xsl:text>
+			get { return _instance.ValueForTargetEnvironment(new </xsl:text>
     <xsl:value-of select="$type"/>
     <xsl:if test="$type != 'string'">?</xsl:if>
     <xsl:text>[] { </xsl:text>

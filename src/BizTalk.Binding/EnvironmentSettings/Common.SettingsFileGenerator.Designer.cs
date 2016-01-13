@@ -19,140 +19,115 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Runtime.CompilerServices;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
 	[GeneratedCode("EnvironmentSettings", "1.0.0.0")]
-	public static class CommonSettings
+	public class CommonSettings : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
 	{
+		static CommonSettings()
+		{
+			_instance = new CommonSettings();
+		}
+
 		public static string BizTalkApplicationUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
 		}
 
 		public static string BizTalkIsolatedHostUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Isolated Host Users", "BizTalk Isolated Host Users", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Isolated Host Users", "BizTalk Isolated Host Users", null, null }); }
 		}
 
 		public static string BizTalkServerAdministratorGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
 		}
 
 		public static string BizTalkServerOperatorEmail 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "biztalk.factory@stateless.be", "biztalk.factory@stateless.be", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "biztalk.factory@stateless.be", "biztalk.factory@stateless.be", null, null }); }
 		}
 
 		public static string BizTalkServerAccountName 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BTS_USER", "BTS_USER", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BTS_USER", "BTS_USER", null, null }); }
 		}
 
 		public static string BizTalkServerAccountPassword 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "p@ssw0rd", "p@ssw0rd", "some\"{\\~!()-+=?/\\|*-<>,.!@#$%^&*", null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "p@ssw0rd", "p@ssw0rd", "some\"{\\~!()-+=?/\\|*-<>,.!@#$%^&*", null }); }
 		}
 
 		public static string SqlAgentAccountName 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "NT AUTHORITY\\NetworkService", "NT AUTHORITY\\NetworkService", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "NT AUTHORITY\\NetworkService", "NT AUTHORITY\\NetworkService", null, null }); }
 		}
 
 		public static string SsoAppUserGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }
 		}
 
 		public static string SsoAppAdminGroup 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Server Administrators", "BizTalk Server Administrators", null, null }); }
 		}
 
 		public static string ManagementDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string MonitoringDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string ProcessingDatabaseServer 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "localhost", "localhost", null, null }); }
 		}
 
 		public static string IsolatedHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerIsolatedHost", "BizTalkServerIsolatedHost", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalkServerIsolatedHost", "BizTalkServerIsolatedHost", null, null }); }
 		}
 
 		public static string ReceiveHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
 		}
 
 		public static string TransmitHost 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalkServerApplication", "BizTalkServerApplication", null, null }); }
 		}
 
 		public static string LogDirectory 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "c:\\files\\logs", null, null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "c:\\files\\logs", null, null, null }); }
 		}
 
 		public static string LogLevel 
 		{
-			get { return ValueForTargetEnvironment(new string[] { null, "DEBUG", "DEBUG", "INFO", "INFO" }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "DEBUG", "DEBUG", "INFO", "INFO" }); }
 		}
 
-		private static int TargetEnvironmentIndex
+		protected override string SettingsFileName
 		{
-			get
-			{
-				if (_targetEnvironmentsIndex < 0)
-				{
-					_targetEnvironmentsIndex = Array.IndexOf(_targetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
-				}
-				if (_targetEnvironmentsIndex < 0)
-					throw new InvalidOperationException(
-						string.Format(
-							"'{0}' is not a target environment declared in the 'Common.SettingsFileGenerator.xml' file.",
-							BindingGenerationContext.Instance.TargetEnvironment));
-				return _targetEnvironmentsIndex;
-			}
+			get { return "Common.SettingsFileGenerator"; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
+		protected override string[] TargetEnvironments
 		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value.Value;
+			get { return _targetEnvironments; }
 		}
 
-		private static T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
-		{
-			var value = values[TargetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"'{0}' does not have a defined value neither for '{1}' or default target envirnoment.",
-						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
-			return value;
-		}
-
+		private static readonly CommonSettings _instance;
 		private static readonly string[] _targetEnvironments = { null, "DEV", "BLD", "ACC", "PRD" };
-		private static int _targetEnvironmentsIndex = -1;
 	}
 }
