@@ -88,6 +88,7 @@
     <Compile Include="Constraints\ConstraintExtensions.cs" />
     <Compile Include="Constraints\UncompletedInstanceConstraint.cs" />
     <Compile Include="Message\Mock.cs" />
+    <Compile Include="MicroComponent\MicroPipelineComponentFixture.cs" />
     <Compile Include="Process\ProcessFixture.cs" />
     <Compile Include="Process\ClaimBasedProcessFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System.IO;
 using System.Text;
+using Be.Stateless.BizTalk.Unit.MicroComponent;
 using Be.Stateless.IO.Extensions;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;

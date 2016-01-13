@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ using Microsoft.BizTalk.Message.Interop;
 using Moq;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.MicroComponent
+namespace Be.Stateless.BizTalk.Unit.MicroComponent
 {
 	[TestFixture]
 	public abstract class MicroPipelineComponentFixture
@@ -32,7 +32,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[SetUp]
 		public void MicroPipelineComponentFixtureSetUp()
 		{
-			MessageMock = new Unit.Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
+			MessageMock = new Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
 			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };
 			// default behaviour analogous to actual IPipelineContext implementation
 			PipelineContextMock
@@ -42,7 +42,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		#endregion
 
-		protected Unit.Message.Mock<IBaseMessage> MessageMock { get; set; }
+		protected Message.Mock<IBaseMessage> MessageMock { get; set; }
 
 		protected Mock<IPipelineContext> PipelineContextMock { get; set; }
 	}

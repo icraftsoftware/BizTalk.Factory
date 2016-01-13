@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
+using Be.Stateless.BizTalk.Unit.MicroComponent;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.IO;
 using Be.Stateless.IO.Extensions;
