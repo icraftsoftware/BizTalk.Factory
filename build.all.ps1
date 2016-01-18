@@ -39,7 +39,7 @@ Invoke-MSBuild -Project .\build.proj -Targets $Targets
 # Construct NuGet package version from assembly file version
 $version = (Get-Item .\src\Common\bin\release\Be.Stateless.Common.dll).VersionInfo
 $packageVersion = "$($version.ProductMajorPart).$($version.ProductMinorPart).$($version.ProductBuildPart)"
-src\.nuget\NuGet.exe pack src\BizTalk.Factory.nuspec -Version $packageVersion -NonInteractive -NoPackageAnalysis
+src\.nuget\NuGet.exe pack src\BizTalk.Factory.nuspec -Version $packageVersion -NonInteractive -NoPackageAnalysis -NoDefaultExcludes
 
 # Build the MSI installation packages for both configurations
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Debug
@@ -106,8 +106,8 @@ New-Item -Path . -Name '.exports\utils\Deployment Tools' -ItemType Directory -Fo
 Copy-Item 'utils\Deployment Tools\adapterXPaths.txt' '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
 Copy-Item src\Deployment\BizTalk.Factory.Deployment.targets '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
 
-# Update src\.imports\v4.5
-Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
-Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
-Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.Common.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
-Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.Extensions.dll src\.imports\v4.5 -Force -PassThru | % { $_.Name }
+# Update src\.imports
+Copy-Item src\BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.dll src\.imports -Force -PassThru | % { $_.Name }
+Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll src\.imports -Force -PassThru | % { $_.Name }
+Copy-Item src\Common\bin\Debug\Be.Stateless.Common.dll src\.imports -Force -PassThru | % { $_.Name }
+Copy-Item src\Extensions\bin\Debug\Be.Stateless.Extensions.dll src\.imports -Force -PassThru | % { $_.Name }

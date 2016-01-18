@@ -9,6 +9,10 @@
         <description>BizTalk Factory for BizTalk Server 2013 R2.</description>
     </metadata>
     <files>
+        <file src=".imports\Be.Stateless.Dsl.targets" target="assemblies\net45\Be.Stateless.Dsl.targets" />
+        <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.dll" target="assemblies\net45\Be.Stateless.BizTalk.Common.dll" />
+        <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Common.pdb" />
+        <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.xml" target="assemblies\net45\Be.Stateless.BizTalk.Common.xml" />
         <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.dll" />
         <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.dll" />
         <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" />

@@ -18,11 +18,11 @@
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)Be.Stateless.BizTalk.Dsl.MSBuild.dll"
              TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateBizTalkPipelineFiles" />
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)Be.Stateless.BizTalk.Dsl.MSBuild.dll"
              TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateEnvironmentSettingsClasses" />
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)$(TargetFrameworkVersion)\Be.Stateless.BizTalk.Dsl.MSBuild.dll"
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)Be.Stateless.BizTalk.Dsl.MSBuild.dll"
              TaskName="Be.Stateless.BizTalk.Dsl.MSBuild.Tasks.GenerateOrchestrationBindingFiles" />
 
   <Target Name="ResolveReferencedBizTalkAssemblies" DependsOnTargets="ResolveProjectReferences;ResolveAssemblyReferences">
