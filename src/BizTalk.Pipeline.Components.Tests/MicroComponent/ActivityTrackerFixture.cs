@@ -184,7 +184,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.TransmitWorkId)).Returns(transmitWorkId);
 
-			CacheMock.Setup(c => c.Remove(transmitWorkId)).Returns(trackingContext);
+			CacheMock.Setup(c => c.Get(transmitWorkId)).Returns(trackingContext);
 
 			var sut = CreateActivityTracker();
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);

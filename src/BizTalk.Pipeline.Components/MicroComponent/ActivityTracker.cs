@@ -144,7 +144,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			if (duration > -1)
 			{
 				_logger.Debug("Restoring cached tracking context");
-				var trackingContext = TrackingContextCache.Instance.Remove(message.GetProperty(BtsProperties.TransmitWorkId));
+				var trackingContext = TrackingContextCache.Instance.Get(message.GetProperty(BtsProperties.TransmitWorkId));
 				message.SetTrackingContext(trackingContext);
 			}
 		}

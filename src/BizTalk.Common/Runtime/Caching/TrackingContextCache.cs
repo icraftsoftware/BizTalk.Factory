@@ -97,6 +97,33 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 			return trackingContext;
 		}
 
+		/// <summary>
+		/// Returns a previously cached <see cref="TrackingContext"/>.
+		/// </summary>
+		/// <param name="key">
+		/// The cache entry identifier, or key, of the <see cref="TrackingContext"/> to retrieve.
+		/// </param>
+		/// <returns>
+		/// The <see cref="TrackingContext"/> that had been previously added to the cache.
+		/// </returns>
+		/// <exception cref="ArgumentNullException">
+		/// The key is null or empty.
+		/// </exception>
+		/// <exception cref="InvalidOperationException">
+		/// No entry has been found in cache for the given <paramref name="key"/>, 
+		/// or the <see cref="TrackingContext"/> is invalid.
+		/// </exception>
+		public virtual TrackingContext Get(string key)
+		{
+			if (key.IsNullOrEmpty()) throw new ArgumentNullException("key");
+
+			var cachedData = _cache.Get(key);
+			if (cachedData == null) throw new InvalidOperationException("TrackingContext could not be found in cache.");
+			var trackingContext = (TrackingContext) cachedData;
+			if (trackingContext.IsEmpty()) throw new InvalidOperationException("Invalid TrackingContext: None of its individual activity Ids is set.");
+			return trackingContext;
+		}
+
 		private static TrackingContextCache _instance = new TrackingContextCache();
 		private readonly MemoryCache _cache;
 	}
