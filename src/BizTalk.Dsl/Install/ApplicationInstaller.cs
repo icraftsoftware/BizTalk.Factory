@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ namespace Be.Stateless.BizTalk.Install
 				var targetEnvironment = Context.Parameters["TargetEnvironment"];
 				if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
 				BindingGenerationContext.Instance.TargetEnvironment = targetEnvironment;
+
+				var environmentSettingRootPath = Context.Parameters["EnvironmentSettingOverridesRootPath"];
+				if (!environmentSettingRootPath.IsNullOrEmpty()) BindingGenerationContext.Instance.EnvironmentSettingRootPath = environmentSettingRootPath;
 
 				BizTalkAssemblyResolver.Register(msg => Context.LogMessage(msg));
 				BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyPath"]);

@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Be.Stateless.BizTalk.Install;
 
@@ -27,6 +28,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		protected abstract string SettingsFileName { get; }
 
 		protected abstract string[] TargetEnvironments { get; }
+
+		private EnvironmentSettingOverrides SettingsOverrides
+		{
+			get
+			{
+				if (BindingGenerationContext.Instance.EnvironmentSettingRootPath != null && _environmentSettingOverrides == null)
+				{
+					_environmentSettingOverrides = new EnvironmentSettingOverrides(
+						Path.Combine(
+							BindingGenerationContext.Instance.EnvironmentSettingRootPath,
+							SettingsFileName + ".xml"));
+				}
+				return _environmentSettingOverrides;
+			}
+		}
 
 		private int TargetEnvironmentIndex
 		{
@@ -48,6 +64,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
 		{
+			if (SettingsOverrides != null) return SettingsOverrides.ValueTypeValueForTargetEnvironment<T>(propertyName, TargetEnvironmentIndex);
 			var value = values[TargetEnvironmentIndex] ?? values[0];
 			if (value == null)
 				throw new InvalidOperationException(
@@ -60,6 +77,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
 		{
+			if (SettingsOverrides != null) return SettingsOverrides.ReferenceTypeValueForTargetEnvironment<T>(propertyName, TargetEnvironmentIndex);
 			var value = values[TargetEnvironmentIndex] ?? values[0];
 			if (value == null)
 				throw new InvalidOperationException(
@@ -69,6 +87,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 						BindingGenerationContext.Instance.TargetEnvironment));
 			return value;
 		}
+
+		private EnvironmentSettingOverrides _environmentSettingOverrides;
 
 		private int _targetEnvironmentsIndex = -1;
 	}

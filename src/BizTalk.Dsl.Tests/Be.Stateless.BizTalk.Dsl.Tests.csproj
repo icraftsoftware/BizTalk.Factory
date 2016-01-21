@@ -171,6 +171,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
+    <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorFixture.cs" />
@@ -291,6 +292,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dsl\Pipeline\Data\XmlMicroPipelineDocument.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml">
+      <Link>Dsl\Binding\Data\BizTalk.Factory.SettingsFileGenerator.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

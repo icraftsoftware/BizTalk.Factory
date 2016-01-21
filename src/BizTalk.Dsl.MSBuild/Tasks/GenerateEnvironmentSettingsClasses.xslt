@@ -212,10 +212,4 @@ namespace </xsl:text>
     <xsl:text>null</xsl:text>
   </xsl:template>
 
-  <!--
-  <msxsl:script language="C#" implements-prefix="type">
-    <![CDATA[]]>
-  </msxsl:script>
-  -->
-
 </xsl:stylesheet>
