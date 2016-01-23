@@ -117,7 +117,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		/// Message whose associated <see cref="TrackingContext"/> will be returned.
 		/// </param>
 		/// <param name="throwOnEmpty">
-		/// <c>true</c> to throw an <see cref="InvalidOperationException"/> if none of the discrete acitivity Ids of the
+		/// <c>true</c> to throw an <see cref="InvalidOperationException"/> if none of the discrete activity Ids of the
 		/// <see cref="TrackingContext"/> are set in the <paramref name="message"/>'s context.
 		/// </param>
 		/// <returns>
@@ -126,7 +126,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		public static TrackingContext GetTrackingContext(this IBaseMessage message, bool throwOnEmpty)
 		{
 			var trackingContext = message.GetTrackingContext();
-			if (throwOnEmpty && trackingContext.IsEmpty()) throw new InvalidOperationException("Invalid TrackingContext: None of its discrete acitivity Ids are set.");
+			if (throwOnEmpty && trackingContext.IsEmpty()) throw new InvalidOperationException("Invalid TrackingContext: None of its discrete activity Ids are set.");
 			return trackingContext;
 		}
 
