@@ -41,7 +41,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			message.ResolvePluginType(BizTalkFactoryProperties.MessageFactoryTypeName, FactoryType)
+			message.ResolvePluginType(BizTalkFactoryProperties.MessageBodyStreamFactoryTypeName, FactoryType)
 				.AsPlugin<IMessageFactory>()
 				.IfNotNull(messageFactory => message.BodyPart.SetDataStream(messageFactory.CreateMessage(message), pipelineContext.ResourceTracker));
 			return message;

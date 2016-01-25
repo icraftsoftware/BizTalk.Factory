@@ -43,8 +43,8 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<MapTypeName, string> MapTypeName
 			= new MessageContextProperty<MapTypeName, string>();
 
-		public static readonly MessageContextProperty<MessageFactoryTypeName, string> MessageFactoryTypeName
-			= new MessageContextProperty<MessageFactoryTypeName, string>();
+		public static readonly MessageContextProperty<MessageBodyStreamFactoryTypeName, string> MessageBodyStreamFactoryTypeName
+			= new MessageContextProperty<MessageBodyStreamFactoryTypeName, string>();
 
 		public static readonly MessageContextProperty<OutboundTransportLocation, string> OutboundTransportLocation
 			= new MessageContextProperty<OutboundTransportLocation, string>();

@@ -114,7 +114,7 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		{
 			var messageMock = new MessageMock();
 
-			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageFactoryTypeName, typeof(ConfiguredMessageFactory));
+			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageBodyStreamFactoryTypeName, typeof(ConfiguredMessageFactory));
 
 			Assert.That(resolvedPluginType, Is.EqualTo(typeof(ConfiguredMessageFactory)));
 		}
@@ -123,9 +123,9 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		public void ResolvePluginTypeReturnsContextualPluginType()
 		{
 			var messageMock = new MessageMock();
-			messageMock.Setup(m => m.GetProperty(BizTalkFactoryProperties.MessageFactoryTypeName)).Returns(typeof(ContextualMessageFactory).AssemblyQualifiedName);
+			messageMock.Setup(m => m.GetProperty(BizTalkFactoryProperties.MessageBodyStreamFactoryTypeName)).Returns(typeof(ContextualMessageFactory).AssemblyQualifiedName);
 
-			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageFactoryTypeName, typeof(ConfiguredMessageFactory));
+			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageBodyStreamFactoryTypeName, typeof(ConfiguredMessageFactory));
 
 			Assert.That(resolvedPluginType, Is.EqualTo(typeof(ContextualMessageFactory)));
 		}
@@ -135,7 +135,7 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		{
 			var messageMock = new MessageMock();
 
-			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageFactoryTypeName, null);
+			var resolvedPluginType = messageMock.Object.ResolvePluginType(BizTalkFactoryProperties.MessageBodyStreamFactoryTypeName, null);
 
 			Assert.That(resolvedPluginType, Is.Null);
 		}
