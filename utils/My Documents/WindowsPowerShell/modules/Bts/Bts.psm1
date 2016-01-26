@@ -187,7 +187,32 @@ function Test-BizTalkProvider
 
 #endregion
 
-#region BizTalk Server Host (New/Update)
+#region BizTalk Server Host (Test/New/Update)
+
+<#
+.SYNOPSIS
+    Returns whether a Microsoft BizTalk Server host exists.
+.DESCRIPTION
+    This command will return $true if the Microsoft BizTalk Server host exists.
+.PARAMETER Name
+    The name of the BizTalk host.
+.OUTPUTS
+    True if the BizTalk Server host exists; False otherwise.
+.EXAMPLE
+    PS> Test-BizTalkHost -Name 'Transmit Host'
+.NOTES
+    © 2015 be.stateless.
+#>
+function Test-BizTalkHost
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name
+    )
+    [bool] (Get-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName MSBTS_HostSetting -Filter "Name='$Name'")
+}
 
 <#
 .SYNOPSIS
@@ -219,9 +244,9 @@ function Test-BizTalkProvider
 .EXAMPLE
     PS> New-BizTalkHost -Name 'Transmit Host' -Type InProcess -Group 'BizTalk Application Users' -WhatIf
 .LINK
-    http://psbiztalk.codeplex.com/Thread/View.aspx?ThreadId=232498
+    https://msdn.microsoft.com/en-us/library/aa560467.aspx, Creating, Updating, and Deleting a Host Instance Using WMI
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function New-BizTalkHost
 {
@@ -252,23 +277,21 @@ function New-BizTalkHost
         [switch]
         $Trusted
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Hosts'
-        if (Test-Path $Name) {
-            Write-Host "`t '$Name' host already exists."
-        }
-        elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating $Type '$Name' host")) {
-            Write-Verbose "`t Creating $Type '$Name' host with '$Group' Windows group..."
-            New-Item -Path:$Name -HostType:$Type -NtGroupName:$Group -AuthTrusted:$Trusted | Out-Default
-            Set-ItemProperty -Path:$Name -Name:Is32BitOnly -Value:$x86 | Out-Default
-            if ($Default) { Set-ItemProperty -Path:$Name -Name:IsDefault -Value:$Default | Out-Default }
-            Set-ItemProperty -Path:$Name -Name:HostTracking -Value:$Tracking | Out-Default
-            Write-Host "`t $Type '$Name' host has been created."
-        }
+    if (Test-BizTalkHost -Name $Name) {
+        Write-Host "`t '$Name' host already exists."
     }
-    finally {
-        Pop-Location
+    elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating $Type '$Name' host")) {
+        Write-Verbose "`t Creating $Type '$Name' host with '$Group' Windows group..."
+        New-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName MSBTS_HostSetting -Property @{
+            Name = $Name
+            HostType = [Uint32](?: { $Type -eq 'Isolated' } { 2 } { 1 })
+            NTGroupName = $Group
+            IsHost32BitOnly = [bool]$x86
+            IsDefault = [bool]$Default
+            HostTracking = [bool]$Tracking
+            AuthTrusted = [bool]$Trusted
+        } | Out-Null
+        Write-Host "`t $Type '$Name' host has been created."
     }
 }
 
@@ -296,7 +319,7 @@ function New-BizTalkHost
     PS> Update-BizTalkHost -Name 'Transmit Host' -x86:$false -Verbose
     With the -Verbose switch, this command will confirm this process is not 32 bit.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Update-BizTalkHost
 {
@@ -318,16 +341,10 @@ function Update-BizTalkHost
         [bool]
         $Trusted
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Hosts'
-
-        # ensure host exists as it'll throw otherwise
-        ($btsHost = Get-Item -Path $Name) | Out-Default
-
+    if (Test-BizTalkHost -Name $Name) {
         if ($PSBoundParameters.ContainsKey('x86')) {
             $subject = "'$Name' host's 32-bit only restriction"
-            Set-BizTalkHostProperty -Name $Name -Property Is32BitOnly -Value $x86 `
+            Set-BizTalkHostProperty -Name $Name -Property IsHost32BitOnly -Value $x86 `
                 -ActionToPerform ("{1} {0}" -f $Subject, (?: { $x86 } { 'Enabling' } { 'Disabling' } )) `
                 -PerformedAction ("{0} has been {1}" -f $Subject, (?: { $x86 } { 'enabled' } { 'disabled' } ))
         }
@@ -352,8 +369,8 @@ function Update-BizTalkHost
                 -PerformedAction ("{0} has been {1}" -f $Subject, (?: { $Trusted } { 'enabled' } { 'disabled' } ))
         }
     }
-    finally {
-        Pop-Location
+    else {
+        Write-Host "`t '$Name' host does not exists."
     }
 }
 
@@ -385,10 +402,11 @@ function Update-BizTalkHost
         $PerformedAction
     )
 
-    $original = Get-ItemProperty -Path $Name -Name $Property
-    if ($original -ne $value -and $PsCmdlet.ShouldProcess("BizTalk Group", $ActionToPerform)) {
+    $h = Get-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName MSBTS_HostSetting -Filter "Name='$Name'"
+    if ($h.$Property -ne $value -and $PsCmdlet.ShouldProcess("BizTalk Group", $ActionToPerform)) {
         Write-Verbose "`t $ActionToPerform..."
-        Set-ItemProperty -Path $Name -Name $Property -Value $Value | Out-Default
+        $h.$Property = $Value
+        $h | Set-CimInstance | Out-Null
         Write-Verbose "`t $PerformedAction."
     }
 }
@@ -413,7 +431,7 @@ function Update-BizTalkHost
     PS> Disable-BizTalkHostInstance -Name 'Transmit Host Instance' -Server 'BizTalkBox'
     Disables the BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Disable-BizTalkHostInstance
 {
@@ -426,19 +444,17 @@ function Disable-BizTalkHostInstance
         [string]
         $Server = $Env:COMPUTERNAME
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Host Instances'
-        $hostInstancePath = "*$Name $Server*"
-        $hostInstance = Get-Item $hostInstancePath
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
         if ($PsCmdlet.ShouldProcess("BizTalk Group", "Disabling '$Name' host instance on '$Server' server")) {
             Write-Verbose "`t '$Name' host instace on '$Server' server is being disabled..."
-            Set-ItemProperty -Path $hostInstance.Name -Name IsDisabled -Value $true
+            $hi = Get-CimInstance -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
+            $hi.IsDisabled = $true
+            $hi | Set-CimInstance
             Write-Verbose "`t '$Name' host instace on '$Server' server has been disabled."
         }
     }
-    finally {
-        Pop-Location
+    else {
+        Write-Host "`t '$Name' host instance on '$Server' server does not exists."
     }
 }
 
@@ -458,7 +474,7 @@ function Disable-BizTalkHostInstance
     PS> Enable-BizTalkHostInstance -Name 'Transmit Host Instance' -Server 'BizTalkBox'
     Enables the BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Enable-BizTalkHostInstance
 {
@@ -471,19 +487,17 @@ function Enable-BizTalkHostInstance
         [string]
         $Server = $Env:COMPUTERNAME
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Host Instances'
-        $hostInstancePath = "*$Name $Server*"
-        $hostInstance = Get-Item $hostInstancePath
-        if ($PsCmdlet.ShouldProcess("BizTalk Group", "Enabling '$Name' host instance on '$Server' server")) {
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
+        if ($PsCmdlet.ShouldProcess("BizTalk Group", "Disabling '$Name' host instance on '$Server' server")) {
             Write-Verbose "`t '$Name' host instace on '$Server' server is being enabled..."
-            Set-ItemProperty -Path $hostInstance.Name -Name IsDisabled -Value $false
+            $hi = Get-CimInstance -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
+            $hi.IsDisabled = $false
+            $hi | Set-CimInstance
             Write-Verbose "`t '$Name' host instace on '$Server' server has been enabled."
         }
     }
-    finally {
-        Pop-Location
+    else {
+        Write-Host "`t '$Name' host instance on '$Server' server does not exists."
     }
 }
 
@@ -510,8 +524,12 @@ function Enable-BizTalkHostInstance
     PS> New-BizTalkHost -Name 'Transmit Host' -Type InProcess -Group 'BizTalk Application Users' -WhatIf
 .EXAMPLE
     PS> New-BizTalkHost -Name 'Transmit Host' -Trusted:$false
+.LINK
+    https://msdn.microsoft.com/en-us/library/aa560568.aspx, Mapping and Installing Host Instances Using WMI
+.LINK
+    https://sandroaspbiztalkblog.wordpress.com/2013/09/05/powershell-to-configure-biztalk-server-host-and-host-instances-according-to-some-of-the-best-practices/
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function New-BizTalkHostInstance
 {
@@ -533,37 +551,111 @@ function New-BizTalkHostInstance
         $Server = $Env:COMPUTERNAME,
 
         [switch]
+        $Disabled,
+
+        [switch]
         $Started
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Host Instances'
-        $hostInstancePath = "*$Name $Server*"
-        if (Test-Path $hostInstancePath) {
-            Write-Host "`t '$Name' host instance on '$Server' server already exists."
-        }
-        elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating '$Name' host instance on '$Server' server")) {
-            Write-Verbose "`t Creating '$Name' host instance on '$Server' server..."
-            $credentials = New-Object -TypeName System.Management.Automation.PSCredential `
-                -ArgumentList $User, (ConvertTo-SecureString $Password -AsPlainText -Force)
-            New-Item -Path HostInstance -hostName $Name -RunningServer $Server -Credentials $credentials | Out-Default
-            Write-Host "`t '$Name' host instance on '$Server' server has been created."
-# TODO pass MinIOThreads, MaxIOThreads, MinWorkerThreads, MaxWorkerThreads as arguments
-#      typed as array, e.g. @(50, 1000) for both min and max, or @(50) for just min, or @(,1000) for just max
-#      set max iff max > current max or min iff min < current min unless -Force switch
-#            Initialize-BizTalkHostInstanceThreading -Name $Name -Server $Server
-            if ($Started) {
-                Start-BizTalkHostInstance -Name $Name -Server $Server
-            } else {
-                Stop-BizTalkHostInstance -Name $Name -Server $Server
-            }
-        }
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
+        Write-Host "`t '$Name' host instance on '$Server' server already exists."
     }
-    finally {
-        Pop-Location
+    elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating '$Name' host instance on '$Server' server")) {
+        Write-Verbose "`t Creating '$Name' host instance on '$Server' server..."
+        $shc = [WMIClass] 'root\MicrosoftBizTalkServer:MSBTS_ServerHost'
+        $sh = $shc.CreateInstance()
+        $sh.ServerName = $Server
+        $sh.HostName = $Name
+        $sh.Map() | Out-Null
+
+        $hic = [WMIClass] 'root\MicrosoftBizTalkServer:MSBTS_HostInstance'
+        $hi = $hic.CreateInstance()
+        $hi.Name = "Microsoft BizTalk Server $Name $Server"
+        # TODO $credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, (ConvertTo-SecureString $Password -AsPlainText -Force)
+        $hi.Install($User, $Password, $true) | Out-Null
+        if ($Disabled.IsPresent) {
+            $hi = Get-CimInstance -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
+            $hi.IsDisabled = [bool]$Disabled
+            $hi | Set-CimInstance
+        } elseif ($Started) {
+            $hi.Start() | Out-Null
+        } else {
+            $hi.Stop() | Out-Null
+        }
+        Write-Host "`t '$Name' host instance on '$Server' server has been created."
     }
 }
 
+<#
+.SYNOPSIS
+    Returns whether a Microsoft BizTalk Server host instance exists.
+.DESCRIPTION
+    This command will return $true if the Microsoft BizTalk Server host instance exists.
+.PARAMETER Name
+    The name of the BizTalk host.
+.PARAMETER Server
+    The server on which the host instance is tested for existence.
+.OUTPUTS
+    True if the BizTalk Server host instance exists; False otherwise.
+.EXAMPLE
+    PS> Test-BizTalkHostInstance -Name 'Transmit Host'
+.EXAMPLE
+    PS> Test-BizTalkHostInstance -Name 'Transmit Host' -Server 'ComputerName'
+.NOTES
+    © 2015 be.stateless.
+#>
+function Test-BizTalkHostInstance
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+
+        [string]
+        $Server = $Env:COMPUTERNAME
+    )
+    [bool] (Get-CimInstance -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'")
+}
+
+<#
+.SYNOPSIS
+    Remove a BizTalk Server host instance.
+.DESCRIPTION
+    Removes a BizTalk Server host instance.
+.PARAMETER Name
+    The name of the BizTalk host instance to remove.
+.PARAMETER Server
+    The server of the BizTalk host instance to remove.
+.EXAMPLE
+    PS> Remove-BizTalkHostInstance -Name 'Transmit Host Instance'
+    Removes the BizTalk Server host instance named 'Transmit Host Instance' on the local machine.
+.EXAMPLE
+    PS> Remove-BizTalkHostInstance -Name 'Transmit Host Instance' -Server 'BizTalkBox'
+    Removs the BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
+.LINK
+    https://msdn.microsoft.com/en-us/library/aa561820.aspx, Uninstalling and Un-Mapping a Host Instance Using WMI
+.NOTES
+    © 2015 be.stateless.
+#>
+function Remove-BizTalkHostInstance
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+
+        [string]
+        $Server = $Env:COMPUTERNAME
+    )
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
+        Write-Host 'Not Implemented.'
+        # TODO https://msdn.microsoft.com/en-us/library/aa561820.aspx, Uninstalling and Un-Mapping a Host Instance Using WMI
+    }
+    else {
+        Write-Host "`t '$Name' host instance on '$Server' server does not exists."
+    }
+}
 <#
 .SYNOPSIS
     Restarts a running BizTalk Server host instance.
@@ -582,7 +674,7 @@ function New-BizTalkHostInstance
     PS> Restart-BizTalkHostInstance -Name 'Transmit Host Instance' -Force -Server 'BizTalkBox'
     Restarts or start the BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Restart-BizTalkHostInstance
 {
@@ -598,23 +690,21 @@ function Restart-BizTalkHostInstance
         [switch]
         $Force
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Host Instances'
-        $hostInstancePath = "*$Name $Server*"
-        $hostInstance = Get-Item $hostInstancePath
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
         if ($PsCmdlet.ShouldProcess("BizTalk Group", "Restarting '$Name' host instance on '$Server' server")) {
+            $hostInstance = Get-WmiObject -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
             if ($Force -or $hostInstance.ServiceState -match "Running|Sart Pending") {
                 Write-Verbose "`t '$Name' host instace on '$Server' server is being restarted..."
-                BizTalkFactory.PowerShell.Extensions\Restart-HostInstance -Path $hostInstancePath
+                $hostInstance.Stop() | Out-Null
+                $hostInstance.Start() | Out-Null
                 Write-Verbose "`t '$Name' host instace on '$Server' server has been restarted."
             } else {
                 Write-Verbose "`t '$Name' host instace on '$Server' server does not need to be restarted as it is not started."
             }
         }
     }
-    finally {
-        Pop-Location
+    else {
+        Write-Host "`t '$Name' host instance on '$Server' server does not exists."
     }
 }
 
@@ -634,7 +724,7 @@ function Restart-BizTalkHostInstance
     PS> Start-BizTalkHostInstance -Name 'Transmit Host Instance' -Server 'BizTalkBox'
     Starts the BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Start-BizTalkHostInstance
 {
@@ -647,12 +737,16 @@ function Start-BizTalkHostInstance
         [string]
         $Server = $Env:COMPUTERNAME
     )
-    if ($PsCmdlet.ShouldProcess("BizTalk Group", "Starting '$Name' host instance on '$Server' server")) {
-        Assert-BizTalkProvider -Force
-        $hostInstancePath = "*$Name $Server*"
-        Write-Verbose "`t '$Name' host instace on '$Server' server is being started..."
-        BizTalkFactory.PowerShell.Extensions\Start-HostInstance -Path $hostInstancePath
-        Write-Verbose "`t '$Name' host instace on '$Server' server has been started."
+    if (Test-BizTalkHostInstance -Name $Name -Server $Server) {
+        if ($PsCmdlet.ShouldProcess("BizTalk Group", "Starting '$Name' host instance on '$Server' server")) {
+            Write-Verbose "`t '$Name' host instace on '$Server' server is being started..."
+            $hostInstance = Get-WmiObject -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
+            $hostInstance.Start() | Out-Null
+            Write-Verbose "`t '$Name' host instace on '$Server' server has been started."
+        }
+    }
+    else {
+        Write-Host "`t '$Name' host instance on '$Server' server does not exists."
     }
 }
 
@@ -672,7 +766,7 @@ function Start-BizTalkHostInstance
     PS> Stop-BizTalkHostInstance -Name 'Transmit Host Instance' -Server 'BizTalkBox'
     Stops sthe BizTalk Server host instance named 'Transmit Host Instance' on the machine named 'BizTalkBox'.
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Stop-BizTalkHostInstance
 {
@@ -686,80 +780,56 @@ function Stop-BizTalkHostInstance
         $Server = $Env:COMPUTERNAME
     )
     if ($PsCmdlet.ShouldProcess("BizTalk Group", "Stopping '$Name' host instance on '$Server' server")) {
-        Assert-BizTalkProvider -Force
-        $hostInstancePath = "*$Name $Server*"
         Write-Verbose "`t '$Name' host instace on '$Server' server is being stopped..."
-        BizTalkFactory.PowerShell.Extensions\Stop-HostInstance -Path $hostInstancePath
+        $hostInstance = Get-WmiObject -Namespace root/MicrosoftBizTalkServer -Class MSBTS_HostInstance -Filter "Name='Microsoft BizTalk Server $Name $Server'"
+        $hostInstance.Stop() | Out-Null
         Write-Verbose "`t '$Name' host instace on '$Server' server has been stopped."
-    }
-}
-
-<#
- # Private Helper Functions
- #>
-# set CLR Hosting parameters in accordance with http://msdn.microsoft.com/en-us/library/aa561380.aspx
-# but the values given there are obsolete and the one used here have been given by a Microsoft PFE
-function Initialize-BizTalkHostInstanceThreading
-{
-    [CmdletBinding()]
-    param(
-        [string]
-        $Name,
-
-        [string]
-        $Server = $Env:COMPUTERNAME
-    )
-
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Host Instances'
-        $hostInstancePath = "*$Name $Server*"
-        # ensure host instance exists and is not an Isolated host
-        if ((Test-Path $hostInstancePath) -and (Get-Item -Path $hostInstancePath).HostType -ne 'Isolated') {
-            Write-Verbose "`t Configuring \\$Server\$Name host instance's CLR threading..."
-            $hklm = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $Server)
-            $serviceKey = $hklm.OpenSubKey(('SYSTEM\CurrentControlSet\Services\BTSSvc$' + $Name), $true)
-            $clrKey = $serviceKey.CreateSubKey('CLR Hosting')
-            $restartNeeded = $false
-            if ($clrKey.GetValue('MaxIOThreads') -lt 1000) {
-                $restartNeeded = $true
-                $clrKey.SetValue('MaxIOThreads', 1000, 'dword')
-            }
-            if ($clrKey.GetValue('MaxWorkerThreads') -lt 500) {
-                $restartNeeded = $true
-                $clrKey.SetValue('MaxWorkerThreads', 500, 'dword')
-            }
-            if ($clrKey.GetValue('MinIOThreads') -lt 50) {
-                $restartNeeded = $true
-                $clrKey.SetValue('MinIOThreads', 50, 'dword')
-            }
-            if ($clrKey.GetValue('MinWorkerThreads') -lt 50) {
-                $restartNeeded = $true
-                $clrKey.SetValue('MinWorkerThreads', 50, 'dword')
-            }
-            Write-Verbose "`t \\$Server\$Name host instace's CLR threading has been configured."
-            if ($restartNeeded) {
-                Restart-BizTalkHostInstance -Name $Name -Server $Server
-            }
-        }
-    }
-    finally {
-        if ($clrKey -ne $null) {
-            $clrKey.Close()
-        }
-        if ($serviceKey -ne $null) {
-            $serviceKey.Close()
-        }
-        if ($hklm -ne $null) {
-            $hklm.Close()
-        }
-        Pop-Location
     }
 }
 
 #endregion
 
 #region BizTalk Server Adapter Handler (New/Remove)
+
+<#
+.SYNOPSIS
+    Returns whether a Microsoft BizTalk Server adapter handler exists.
+.DESCRIPTION
+    This command will return $true if the Microsoft BizTalk Server adapter handler exists.
+.PARAMETER Adapter
+    The name of the adapter whose existence is checked.
+.PARAMETER Host
+    The name of the host for which the existence of a handler is checked.
+.PARAMETER Direction
+    The direction of the adapter whose existence is checked.
+.OUTPUTS
+    True if the BizTalk Server adapter handler exists; False otherwise.
+.EXAMPLE
+    PS> Test-BizTalkAdapterHandler -Adapter FILE -Host BizTalkServerApplication -Direction Send
+.NOTES
+    © 2015 be.stateless.
+#>
+function Test-BizTalkAdapterHandler
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Adapter,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Host,
+
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('Receive','Send')]
+        [string]
+        $Direction
+    )
+    # MSBTS_SendHandler2 is to be used since BTS 2006 onwards, http://blogdoc.biztalk247.com/article.aspx?page=bb8f4d72-f38d-4eac-87c0-407e9c58c50b
+    $className = (?: {$Direction -eq 'Receive'} {'MSBTS_ReceiveHandler'} {'MSBTS_SendHandler2'})
+    [bool] (Get-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName $className -Filter "AdapterName='$Adapter' and HostName='$Host'")
+}
 
 <#
 .SYNOPSIS
@@ -776,8 +846,10 @@ function Initialize-BizTalkHostInstanceThreading
     Whether the handler to be created will be the default adapter's handler.
 .EXAMPLE
     PS> New-BizTalkAdapterHandler -Adapter
+.LINK
+    https://msdn.microsoft.com/en-us/library/aa560206.aspx, Creating an FTP Receive Handler Using WMI
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function New-BizTalkAdapterHandler
 {
@@ -799,35 +871,17 @@ function New-BizTalkAdapterHandler
         [switch]
         $Default
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Adapters'
-        if (Test-Path $Adapter) {
-            Set-Location $Adapter | Out-Default
-            $handlerPath = "$Adapter $Direction Handler ($Host)"
-            if (Test-Path $handlerPath) {
-                Write-Host "`t $Direction $Adapter handler for '$Host' host already exists."
-            }
-            elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating $Direction $Adapter handler for '$Host' host")) {
-                Write-Verbose "`t Creating $Direction $Adapter handler for '$Host' host...";
-                New-Item -Path '.\Dummy' -HostName $Host -Direction $Direction | Out-Default
-                Write-Host "`t $Direction $Adapter handler for '$Host' host has been created."
-                if ($Default -and $Direction -match "Send") {
-                    ($handler = Get-Item -Path $handlerPath) | Out-Default
-                    if (-not $handler.Default) {
-                        Write-Verbose "`t Setting $Direction $Adapter handler for '$Host' host as default..."
-                        Set-ItemProperty -Path $handler.Name -Name Default -Value $true | Out-Default
-                        Write-Verbose "`t $Direction $Adapter handler for '$Host' host has been set as default."
-                    }
-                }
-            }
-        }
-        else {
-            Write-Warning "$Adapter adapter does not exist."
-        }
+    if (Test-BizTalkAdapterHandler -Adapter $Adapter -Host $Host -Direction $Direction) {
+        Write-Host "`t $Direction $Adapter handler for '$Host' host already exists."
     }
-    finally {
-        Pop-Location
+    elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Creating $Direction $Adapter handler for '$Host' host")) {
+        Write-Verbose "`t Creating $Direction $Adapter handler for '$Host' host...";
+        # MSBTS_SendHandler2 is to be used since BTS 2006 onwards, http://blogdoc.biztalk247.com/article.aspx?page=bb8f4d72-f38d-4eac-87c0-407e9c58c50b
+        $className = (?: {$Direction -eq 'Receive'} {'MSBTS_ReceiveHandler'} {'MSBTS_SendHandler2'})
+        $properties = @{ AdapterName = $Adapter ; HostName = $Host }
+        if ($Direction -eq 'Send' -and $Default.IsPresent) { $properties.IsDefault = [bool]$Default }
+        New-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName $className -Property $properties | Out-Null
+        Write-Host "`t $Direction $Adapter handler for '$Host' host has been created."
     }
 }
 
@@ -845,7 +899,7 @@ function New-BizTalkAdapterHandler
 .EXAMPLE
     PS> Remove-BizTalkAdapterHandler -Adapter
 .NOTES
-    © 2012 be.stateless.
+    © 2015 be.stateless.
 #>
 function Remove-BizTalkAdapterHandler
 {
@@ -864,31 +918,30 @@ function Remove-BizTalkAdapterHandler
         [string]
         $Direction
     )
-    Assert-BizTalkProvider -Force
-    try {
-        Push-Location 'BizTalk:\Platform Settings\Adapters'
-        if (Test-Path $Adapter) {
-            Set-Location $Adapter | Out-Default
-            $handlerPath = "$Adapter $Direction Handler ($Host)"
-            if (-not (Test-Path $handlerPath)) {
-                Write-Warning "`t $Direction $Adapter handler for '$Host' host does not exist."
-            }
-            elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Removing $Direction $Adapter handler for '$Host' host")) {
-                Write-Verbose "`t Removing $Direction $Adapter handler for '$Host' host...";
-                Remove-Item -Path $handlerPath | Out-Default
-                Write-Host "`t $Direction $Adapter handler for '$Host' host has been removed."
-            }
-        }
-        else {
-            Write-Warning "$Adapter adapter does not exist."
-        }
+    if (-not (Test-BizTalkAdapterHandler -Adapter $Adapter -Host $Host -Direction $Direction)) {
+        Write-Host "`t $Direction $Adapter handler for '$Host' host does not exist."
     }
-    finally {
-        Pop-Location
+    elseif ($PsCmdlet.ShouldProcess("BizTalk Group", "Removing $Direction $Adapter handler for '$Host' host")) {
+        Write-Verbose "`t Removing $Direction $Adapter handler for '$Host' host...";
+        # MSBTS_SendHandler2 is to be used since BTS 2006 onwards, http://blogdoc.biztalk247.com/article.aspx?page=bb8f4d72-f38d-4eac-87c0-407e9c58c50b
+        $className = (?: {$Direction -eq 'Receive'} {'MSBTS_ReceiveHandler'} {'MSBTS_SendHandler2'})
+        # TODO fail if try to remove default send handler
+        Get-CimInstance -Namespace root/MicrosoftBizTalkServer -ClassName $className -Filter "AdapterName='$Adapter' and HostName='$Host'" | Remove-CimInstance
+        Write-Host "`t $Direction $Adapter handler for '$Host' host has been removed."
     }
 }
 
 #endregion
+
+
+
+# TODO TODO TODO
+# TODO TODO TODO
+# TODO TODO TODO
+# TODO TODO TODO
+# TODO TODO TODO
+
+
 
 #region BizTalk Server Application Bindings (Update)
 

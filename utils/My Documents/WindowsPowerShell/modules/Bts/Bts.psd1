@@ -25,7 +25,7 @@
     ModuleToProcess       = 'Bts.psm1'
     ModuleVersion         = '1.0'
     PowerShellVersion     = '3.0'
-    ProcessorArchitecture = 'x86'
+    ProcessorArchitecture = 'None'
     RequiredModules       = @('Psx')
 
     #AliasesToExport       = @('*')
