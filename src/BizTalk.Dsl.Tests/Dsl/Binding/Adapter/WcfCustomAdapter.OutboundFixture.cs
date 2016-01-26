@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,14 +39,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.Binding.Security.Transport.ProtectionLevel = ProtectionLevel.Sign;
 					a.Binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
 					a.StaticAction = "http://services.biztalk.net/mail/2011/11/IMailService/SendMessage";
-
-					/* TODO Identity
-            <Identity vt="8">
-              <identity>
-                <servicePrincipalName value="${MailServiceIdentity}" />
-              </identity>
-            </Identity>
-					 */
 				});
 			var xml = ((IAdapterBindingSerializerFactory) wca).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
