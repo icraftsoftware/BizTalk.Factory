@@ -94,6 +94,11 @@
     <!-- Required for BTDF to yield its ability to initialize BizTalk Server services to BizTalk Factory -->
     <ControlBizTalkAppStartOption>None</ControlBizTalkAppStartOption>
     <UseLegacyApplicationControl>true</UseLegacyApplicationControl>
+    <!-- Controlling of FILE Adapters' Physical Paths Deployment Tasks -->
+    <DeleteFileAdapterPhysicalPathsOnUndeploy Condition=" '$(Configuration)' != 'Server' ">DeleteRecursive</DeleteFileAdapterPhysicalPathsOnUndeploy>
+    <DeleteFileAdapterPhysicalPathsOnUndeploy Condition=" '$(Configuration)' == 'Server' ">Never</DeleteFileAdapterPhysicalPathsOnUndeploy>
+    <ManageFileAdapterPhysicalPaths Condition=" '$(Configuration)' != 'Server' ">true</ManageFileAdapterPhysicalPaths>
+    <ManageFileAdapterPhysicalPaths Condition=" '$(Configuration)' == 'Server' ">false</ManageFileAdapterPhysicalPaths>
   </PropertyGroup>
 
   <!-- Controlling of Misc Deployment Tasks -->

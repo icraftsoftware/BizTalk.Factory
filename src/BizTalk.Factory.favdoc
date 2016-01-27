@@ -3,6 +3,7 @@
   <folders>
     <Folder>
       <name>MSBuild Compilation</name>
+      <folders />
       <favorites>
         <Favorite>
           <name>Microsoft.Common.targets</name>
@@ -21,12 +22,8 @@
     </Folder>
     <Folder>
       <name>MSBuild Deployment Scripts</name>
+      <folders />
       <favorites>
-        <Favorite>
-          <name>test.btdfproj</name>
-          <path>Deployment\test.btdfproj</path>
-          <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\test.btdfproj</absolutePath>
-        </Favorite>
         <Favorite>
           <name>BizTalkDeploymentFramework.targets</name>
           <absolutePath>C:\Program Files (x86)\MSBuild\DeploymentFrameworkForBizTalk\5.0\BizTalkDeploymentFramework.targets</absolutePath>
@@ -59,18 +56,11 @@
           <path>Deployment\BizTalk.Factory.ItemGroups.proj</path>
           <absolutePath>C:\Files\Projects\be.stateless\BizTalkFactory\src\Deployment\BizTalk.Factory.ItemGroups.proj</absolutePath>
         </Favorite>
-        <Favorite>
-          <name>Babi.Deployment.btdfproj</name>
-          <absolutePath>C:\Files\Projects\net.ores\Babi2013\src\Deployment\Babi.Deployment.btdfproj</absolutePath>
-        </Favorite>
-        <Favorite>
-          <name>CommonDeployTargets.targets</name>
-          <absolutePath>C:\Files\Projects\net.ores\Babi2013\utils\Deployment Tools\CommonDeployTargets.targets</absolutePath>
-        </Favorite>
       </favorites>
     </Folder>
     <Folder>
       <name>Failed Process Alerting Job</name>
+      <folders />
       <favorites>
         <Favorite>
           <name>DropReportFailedBizTalkProcessJob.sql</name>
@@ -100,6 +90,7 @@
     </Folder>
     <Folder>
       <name>Babi SQL Scripts</name>
+      <folders />
       <favorites>
         <Favorite>
           <name>StartBamTrackingActivitiesMaintenanceJob.sql</name>
