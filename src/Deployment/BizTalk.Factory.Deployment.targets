@@ -916,7 +916,7 @@
           Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' ">
     <Message Text="Generating XML port bindings from fluent DSL-based bindings..." />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /BindingFilePath=&quot;%(BindingFilePath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /BindingFilePath=&quot;%(BindingFilePath)&quot; /EnvironmentSettingOverridesRootPath=&quot;$(EnvironmentSettingOverridesRootPath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' " />
 
     <Message Text="Generated XML port bindings from fluent DSL-based bindings." />
@@ -936,12 +936,12 @@
           Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(ManageFileAdapterPhysicalPaths)' == 'true' ">
     <Message Text="Deploying fluent file adapters' physical paths..." />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;BUILTIN\Users&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;BUILTIN\Users&quot; /EnvironmentSettingOverridesRootPath=&quot;$(EnvironmentSettingOverridesRootPath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' != 'Server' " />
 
     <Message Text="The BTSACCOUNT environment variable must be set up for automatic configuration of permissions for file adapter physical paths."
              Condition=" '%(ApplicationBindingsQualified.Identity)' == '%(ApplicationBindingsQualified.Identity)' and '$(Configuration)' == 'Server' and '$(BTSACCOUNT)' == ''" />
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;$(BTSACCOUNT)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;$(BTSACCOUNT)&quot; /EnvironmentSettingOverridesRootPath=&quot;$(EnvironmentSettingOverridesRootPath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' == 'Server' " />
 
     <Message Text="Deployed fluent file adapters' physical paths." />
@@ -951,7 +951,7 @@
           Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' and '$(DeployBizTalkMgmtDB)' == 'true' and '$(ControlBizTalkServicesState)' == 'true' ">
     <Message Text="Initializing BizTalk Server services..." />
 
-    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /InitializeServices &quot;@(ApplicationBindingsQualified)&quot;"
+    <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /InitializeServices /EnvironmentSettingOverridesRootPath=&quot;$(EnvironmentSettingOverridesRootPath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' " />
 
     <Message Text="Initialized BizTalk Server services." />

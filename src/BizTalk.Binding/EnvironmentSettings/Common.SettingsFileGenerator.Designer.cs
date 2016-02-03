@@ -25,7 +25,7 @@ using Be.Stateless.BizTalk.Install;
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
 	[GeneratedCode("EnvironmentSettings", "1.0.0.0")]
-	public class CommonSettings : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
+	public partial class CommonSettings : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
 	{
 		static CommonSettings()
 		{

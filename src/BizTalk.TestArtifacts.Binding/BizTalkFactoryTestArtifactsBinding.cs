@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,11 @@ namespace Be.Stateless.BizTalk
 						sp.State = ServiceState.Unenlisted;
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
-								a.Address = new SqlAdapterConnectionUri { InitialCatalog = "BizTalkFactoryTransientStateDb", Server = CommonSettings.ProcessingDatabaseServer };
+								a.Address = new SqlAdapterConnectionUri {
+									InitialCatalog = "BizTalkFactoryTransientStateDb",
+									Server = CommonSettings.ProcessingDatabaseHostName,
+									InstanceName = CommonSettings.ProcessingDatabaseInstanceName
+								};
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;

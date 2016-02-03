@@ -160,6 +160,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnvironmentSettings\CommonSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

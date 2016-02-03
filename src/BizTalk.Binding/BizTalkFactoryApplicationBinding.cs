@@ -67,7 +67,11 @@ namespace Be.Stateless.BizTalk
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
-								a.Address = new SqlAdapterConnectionUri { InitialCatalog = "BizTalkFactoryTransientStateDb", Server = CommonSettings.ProcessingDatabaseServer };
+								a.Address = new SqlAdapterConnectionUri {
+									InitialCatalog = "BizTalkFactoryTransientStateDb",
+									Server = CommonSettings.ProcessingDatabaseHostName,
+									InstanceName = CommonSettings.ProcessingDatabaseInstanceName
+								};
 								a.IsolationLevel = IsolationLevel.ReadCommitted;
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 							});
@@ -91,7 +95,11 @@ namespace Be.Stateless.BizTalk
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
-								a.Address = new SqlAdapterConnectionUri { InitialCatalog = "BizTalkFactoryTransientStateDb", Server = CommonSettings.ProcessingDatabaseServer };
+								a.Address = new SqlAdapterConnectionUri {
+									InitialCatalog = "BizTalkFactoryTransientStateDb",
+									Server = CommonSettings.ProcessingDatabaseHostName,
+									InstanceName = CommonSettings.ProcessingDatabaseInstanceName
+								};
 								a.IsolationLevel = IsolationLevel.ReadCommitted;
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_QueueControlledRelease";
 							});
@@ -115,7 +123,11 @@ namespace Be.Stateless.BizTalk
 							});
 						sp.Transport.Adapter = new WcfSqlAdapter.Outbound(
 							a => {
-								a.Address = new SqlAdapterConnectionUri { InitialCatalog = "BizTalkFactoryTransientStateDb", Server = CommonSettings.ProcessingDatabaseServer };
+								a.Address = new SqlAdapterConnectionUri {
+									InitialCatalog = "BizTalkFactoryTransientStateDb",
+									Server = CommonSettings.ProcessingDatabaseHostName,
+									InstanceName = CommonSettings.ProcessingDatabaseInstanceName
+								};
 								a.IsolationLevel = IsolationLevel.ReadCommitted;
 								a.StaticAction = "TypedProcedure/dbo/usp_claim_CheckIn";
 							});
@@ -217,7 +229,8 @@ namespace Be.Stateless.BizTalk
 											a.Address = new SqlAdapterConnectionUri {
 												InboundId = "AvailableBatches",
 												InitialCatalog = "BizTalkFactoryTransientStateDb",
-												Server = CommonSettings.ProcessingDatabaseServer
+												Server = CommonSettings.ProcessingDatabaseHostName,
+												InstanceName = CommonSettings.ProcessingDatabaseInstanceName
 											};
 											a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM vw_batch_NextAvailableBatch";
 											a.PollingStatement = "EXEC usp_batch_ReleaseNextBatch";
@@ -261,7 +274,8 @@ namespace Be.Stateless.BizTalk
 											a.Address = new SqlAdapterConnectionUri {
 												InboundId = "AvailableTokens",
 												InitialCatalog = "BizTalkFactoryTransientStateDb",
-												Server = CommonSettings.ProcessingDatabaseServer
+												Server = CommonSettings.ProcessingDatabaseHostName,
+												InstanceName = CommonSettings.ProcessingDatabaseInstanceName
 											};
 											a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM vw_claim_AvailableTokens";
 											a.PollingStatement = "EXEC usp_claim_CheckOut";

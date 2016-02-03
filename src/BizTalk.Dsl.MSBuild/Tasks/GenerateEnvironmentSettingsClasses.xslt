@@ -59,7 +59,7 @@ namespace </xsl:text>
     <xsl:text>
 {
 	[GeneratedCode("EnvironmentSettings", "1.0.0.0")]
-	public class </xsl:text>
+	public partial class </xsl:text>
     <xsl:value-of select="$clr-class-name" />
     <xsl:text> : Be.Stateless.BizTalk.Dsl.Binding.EnvironmentSettings
 	{
