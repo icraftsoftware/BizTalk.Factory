@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.BizTalk.Install;
+using Be.Stateless.Extensions;
 using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -72,9 +73,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			// ReSharper disable once AssignNullToNotNullAttribute
 			var values = _data
-				.SelectNodes("ss:Row[ss:Cell[1]/ss:Data[@ss:Type='String']/text()='" + propertyName + "']/ss:Cell[position() > 1]/ss:Data/text()", _nsm)
+				.SelectNodes("ss:Row[ss:Cell[1]/ss:Data[@ss:Type='String']/text()='" + propertyName + "']/ss:Cell[position() > 1]", _nsm)
 				.Cast<XmlNode>()
-				.Select(n => n.Value)
+				.Select(cell => cell.SelectSingleNode("ss:Data/text()").IfNotNull(data => data.Value))
 				.ToArray();
 			if (!values.Any())
 				throw new InvalidOperationException(
