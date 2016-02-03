@@ -75,7 +75,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var values = _data
 				.SelectNodes("ss:Row[ss:Cell[1]/ss:Data[@ss:Type='String']/text()='" + propertyName + "']/ss:Cell[position() > 1]", _nsm)
 				.Cast<XmlNode>()
-				.Select(cell => cell.SelectSingleNode("ss:Data/text()").IfNotNull(data => data.Value))
+				.Select(cell => cell.SelectSingleNode("ss:Data/text()", _nsm).IfNotNull(data => data.Value))
 				.ToArray();
 			if (!values.Any())
 				throw new InvalidOperationException(
