@@ -1,4 +1,5 @@
 ﻿#region Copyright & License
+
 // Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +13,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 #endregion
+
 namespace Be.Stateless.BizTalk.EnvironmentSettings
 {
 	public partial class CommonSettings
 	{
-		public static string ProcessingDatabaseInstanceName
-		{
-			get
-			{
-				var serverAndInstance = ProcessingDatabaseServer;
-				var indexOfSlash = serverAndInstance.IndexOf('\\');
-				return indexOfSlash >= 0 ? serverAndInstance.Substring(indexOfSlash + 1) : null;
-			}
-		}
-
 		public static string ProcessingDatabaseHostName
 		{
 			get
@@ -37,5 +30,14 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			}
 		}
 
+		public static string ProcessingDatabaseInstanceName
+		{
+			get
+			{
+				var serverAndInstance = ProcessingDatabaseServer;
+				var indexOfSlash = serverAndInstance.IndexOf('\\');
+				return indexOfSlash >= 0 ? serverAndInstance.Substring(indexOfSlash + 1) : null;
+			}
+		}
 	}
 }
