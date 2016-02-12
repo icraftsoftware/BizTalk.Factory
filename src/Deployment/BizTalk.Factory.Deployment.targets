@@ -288,7 +288,7 @@
       AccessRights="FullControl"
       MachineStore="$(_MachineStore)"
       Thumbprint="$(_Thumbprint)"
-      Condition=" '$(_MachineStore)' == 'true' " />
+      Condition=" '$(_MachineStore)' == 'true' and '$(_StoreName)' == 'My' " />
 
     <MSBuild.ExtensionPack.Security.Certificate
       TaskAction="SetUserRights"
@@ -296,7 +296,7 @@
       AccessRights="Read"
       MachineStore="$(_MachineStore)"
       Thumbprint="$(_Thumbprint)"
-      Condition=" '$(_MachineStore)' == 'true' " />
+      Condition=" '$(_MachineStore)' == 'true' and '$(_StoreName)' == 'My' " />
 
     <ItemGroup>
       <_Administrators Remove="@(_Administrators)" />
@@ -1251,7 +1251,7 @@
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
 
   <PropertyGroup>
-    <QuartzDirectory>C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
+    <QuartzDirectory Condition=" '$(QuartzDirectory)' == '' ">C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
   </PropertyGroup>
 
   <Target Name="RegisterQuartzJobs"
