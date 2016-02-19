@@ -366,6 +366,7 @@
       <ServiceStartModeParameter>ServiceStartMode</ServiceStartModeParameter>
       <ServiceStartModeArgument>disabled</ServiceStartModeArgument>
       <ServiceAssembly>Some.Service.exe</ServiceAssembly>
+      <ServiceName>Some Service</ServiceName>
       <Redistributables>
         Some.Common.dll;
         Some.Common.pdb;
@@ -383,6 +384,7 @@
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
       <ServiceStartModeArgument>auto</ServiceStartModeArgument>
       <ServiceAssembly>Be.Stateless.BizTalk.ClaimStore.Agent.exe</ServiceAssembly>
+      <ServiceName>BTF_CSA</ServiceName>
       <Redistributables>
         Be.Stateless.BizTalk.ClaimStore.Agent.pdb;
         Be.Stateless.BizTalk.ClaimStore.Agent.exe.template.config;
@@ -398,6 +400,7 @@
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
       <ServiceStartModeArgument>auto</ServiceStartModeArgument>
       <ServiceAssembly>Quartz.Server.exe</ServiceAssembly>
+      <ServiceName>QuartzServer</ServiceName>
       <Redistributables>
         QuartzJobs.xml;
         Common.Logging.dll;

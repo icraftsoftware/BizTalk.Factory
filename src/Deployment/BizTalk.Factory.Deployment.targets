@@ -99,9 +99,9 @@
     <PropertyGroup>
       <TargetsAfterLoadPropsFromEnvSettings>
         _PreprocessBindings;
-        StopQuartzAndClaimStoreAgentServices;
+        StopWindowsServices;
         _UpdateOrchestration;
-        StartQuartzAndClaimStoreAgentServices
+        StartWindowsServices
       </TargetsAfterLoadPropsFromEnvSettings>
     </PropertyGroup>
   </Target>
@@ -1257,6 +1257,8 @@
   <Target Name="RegisterQuartzJobs"
           Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+    
+    <!--TODO: only do this on QuartzAgentTargethosts -->
     <!-- Define a property to hold the single item value -->
     <PropertyGroup>
       <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
@@ -1360,6 +1362,32 @@
     <Message Text="Undeployed Windows Service '%(WindowsServicesQualified.Identity)'." Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
   </Target>
 
+  <Target Name="StartWindowsServices"
+          DependsOnTargets="BuildWindowsServicesQualified"
+          Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
+          Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
+
+    <Message Text="Starting windows service '%(WindowsServicesQualified.Identity)'..." />
+    
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="%(WindowsServicesQualified.ServiceName)"
+                                                   Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
+    
+    <Message Text="Started windows service '%(WindowsServicesQualified.Identity)'..." />
+  </Target>
+
+  <Target Name="StopWindowsServices"
+          DependsOnTargets="BuildWindowsServicesQualified"
+          Outputs="%(WindowsServicesQualified.Identity)%(WindowsServicesQualified.TargetHosts)"
+          Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
+
+    <Message Text="Stopping windows service '%(WindowsServicesQualified.Identity)'..." />
+    
+    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="%(WindowsServicesQualified.ServiceName)"
+                                                   Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
+    
+    <Message Text="Stopped windows service '%(WindowsServicesQualified.Identity)'..." />
+  </Target>
+
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="%(WindowsServices.TargetHosts)" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
@@ -1431,23 +1459,6 @@
     </ItemGroup>
 
     <Message Text="Copied Windows service redistributable files to redist folder." />
-  </Target>
-
-  <!-- TODO Review those targets -->
-  <Target Name="StartQuartzAndClaimStoreAgentServices">
-    <Message Text="Start Quartz and Claim store agent windows services" />
-    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="BizTalk Factory Claim Store Service Agent"
-                                                   Condition=" '$(IncludeClaimStoreAgentService)' == 'true' " />
-    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="QuartzServer"
-                                                   Condition="('$(TargetEnvironment)' == 'ACC' or '$(TargetEnvironment)' == 'PRD') and '$(NetworkZone)' == 'Internal' " />
-  </Target>
-
-  <Target Name="StopQuartzAndClaimStoreAgentServices">
-    <Message Text="Stop Quartz and Claim store agent windows services" />
-    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="BizTalk Factory Claim Store Service Agent"
-                                                   Condition=" '$(IncludeClaimStoreAgentService)' == 'true' " />
-    <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="QuartzServer"
-                                                   Condition="('$(TargetEnvironment)' == 'ACC' or '$(TargetEnvironment)' == 'PRD') and '$(NetworkZone)' == 'Internal' " />
   </Target>
 
 </Project>
