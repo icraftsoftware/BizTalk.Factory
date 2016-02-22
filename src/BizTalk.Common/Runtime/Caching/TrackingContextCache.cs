@@ -46,7 +46,8 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		}
 
 		/// <summary>
-		/// Adds a new <see cref="TrackingContext"/> in cache with an absolute expiration of <paramref name="duration"/>.
+		/// Adds a new or update an existing <see cref="TrackingContext"/> in cache with an absolute expiration 
+		/// of <paramref name="duration"/>.
 		/// </summary>
 		/// <param name="key">
 		/// The cache entry identifier, or key, at which to add the new <paramref name="trackingContext"/>.
@@ -58,7 +59,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		/// The duration, in seconds, after which the <paramref name="trackingContext"/> entry will be removed from the
 		/// cache.
 		/// </param>
-		public virtual void Add(string key, TrackingContext trackingContext, int duration)
+		public virtual void Set(string key, TrackingContext trackingContext, int duration)
 		{
 			if (key.IsNullOrEmpty()) throw new ArgumentNullException("key");
 			if (trackingContext.IsEmpty()) throw new ArgumentNullException("trackingContext");
@@ -66,9 +67,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 
 			var cacheItem = new CacheItem(key, trackingContext);
 			var policy = new CacheItemPolicy { AbsoluteExpiration = new DateTimeOffset(DateTime.UtcNow.AddSeconds(duration)) };
-			if (!_cache.Add(cacheItem, policy))
-				throw new InvalidOperationException(
-					string.Format("{0} already contains an entry for '{1}'.", GetType().Name, key));
+			_cache.Set(cacheItem, policy);
 		}
 
 		/// <summary>

@@ -130,7 +130,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			if (duration > -1)
 			{
 				_logger.DebugFormat("Caching current tracking context for {0} seconds", duration);
-				TrackingContextCache.Instance.Add(
+				TrackingContextCache.Instance.Set(
 					message.GetProperty(BtsProperties.TransmitWorkId),
 					message.GetTrackingContext(),
 					duration);
