@@ -1256,8 +1256,12 @@
   <Target Name="RegisterQuartzJobs"
           Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
-    
-    <!--TODO: only do this on QuartzAgentTargethosts -->
+
+    <!-- Check if we are running on a machine that hosts Quartz-->
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+      <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+
     <!-- Define a property to hold the single item value -->
     <PropertyGroup>
       <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
@@ -1265,19 +1269,27 @@
     <!-- read the current configuration value -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
                                        File="$(QuartzDirectory)Quartz.Server.exe.config"
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Condition=" '$(_CoincidingHosts)' != '' ">
       <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
     </MSBuild.ExtensionPack.Xml.XmlFile>
     <!-- Append the job file path to the current list of job files -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
                                        File="$(QuartzDirectory)Quartz.Server.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
-                                       Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)" />
+                                       Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)"
+                                       Condition=" '$(_CoincidingHosts)' != '' "/>
   </Target>
 
   <Target Name="UnregisterQuartzJobs"
           Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+
+    <!-- Check if we are running on a machine that hosts Quartz-->
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+      <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+
     <!-- Define a property to hold the single item value -->
     <PropertyGroup>
       <TempJobsFile>%(QuartzJobsFilesQualified.Fullpath)</TempJobsFile>
@@ -1285,7 +1297,8 @@
     <!-- read the current configuration value -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
                                        File="$(QuartzDirectory)Quartz.Server.exe.config"
-                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value">
+                                       XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
+                                       Condition=" '$(_CoincidingHosts)' != '' ">
       <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
     </MSBuild.ExtensionPack.Xml.XmlFile>
     <!-- remove the job file from the list -->
@@ -1296,7 +1309,8 @@
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
                                        File="$(QuartzDirectory)Quartz.Server.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
-                                       Value="$(NewJobsFilesList)" />
+                                       Value="$(NewJobsFilesList)" 
+                                       Condition=" '$(_CoincidingHosts)' != '' "/>
   </Target>
 
   <Target Name="CopyQuartzJobsFilesToRedist" Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' ">
