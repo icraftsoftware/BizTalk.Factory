@@ -92,8 +92,6 @@
 
   <!-- DEPRECATED: Use Target's BeforeTargets and AfterTargets attributes instead, see https://biztalkdeployment.codeplex.com/discussions/572131 -->
 
-  <Target Name="PatchDeploy" DependsOnTargets="SetPatchDeployProperties;LoadPropsFromEnvSettingsThenExecute" />
-
   <Target Name="SetPatchDeployProperties">
     <PropertyGroup>
       <TargetsAfterLoadPropsFromEnvSettings>
@@ -104,6 +102,7 @@
       </TargetsAfterLoadPropsFromEnvSettings>
     </PropertyGroup>
   </Target>
+  <Target Name="PatchDeploy" DependsOnTargets="SetPatchDeployProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <PropertyGroup>
     <!-- CustomPostInitialize is not called when preprocessing and importing bindings, and there is no need to have service config files being preprocessed again in that case -->
@@ -940,7 +939,7 @@
           Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' != 'Server' " />
 
     <Message Text="The BTSACCOUNT environment variable must be set up for automatic configuration of permissions for file adapter physical paths."
-             Condition=" '%(ApplicationBindingsQualified.Identity)' == '%(ApplicationBindingsQualified.Identity)' and '$(Configuration)' == 'Server' and '$(BTSACCOUNT)' == ''" />
+             Condition=" '%(ApplicationBindingsQualified.Identity)' == '%(ApplicationBindingsQualified.Identity)' and '$(Configuration)' == 'Server' and '$(BTSACCOUNT)' == '' " />
     <Exec Command="$(FrameworkDir)\InstallUtil.exe /ShowCallStack /TargetEnvironment=$(TargetEnvironment) /SetupFileAdapterPaths /Users=&quot;$(BTSACCOUNT)&quot; /EnvironmentSettingOverridesRootPath=&quot;$(EnvironmentSettingOverridesRootPath)&quot; &quot;@(ApplicationBindingsQualified)&quot;"
           Condition=" '%(Identity)' == '%(Identity)' and '$(Configuration)' == 'Server' " />
 
@@ -1309,7 +1308,7 @@
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
                                        File="$(QuartzDirectory)Quartz.Server.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
-                                       Value="$(NewJobsFilesList)" 
+                                       Value="$(NewJobsFilesList)"
                                        Condition=" '$(_CoincidingHosts)' != '' "/>
   </Target>
 
@@ -1381,10 +1380,10 @@
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
 
     <Message Text="Starting windows service '%(WindowsServicesQualified.Identity)'..." />
-    
+
     <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Start" ServiceName="%(WindowsServicesQualified.ServiceName)"
                                                    Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
-    
+
     <Message Text="Started windows service '%(WindowsServicesQualified.Identity)'..." />
   </Target>
 
@@ -1394,21 +1393,21 @@
           Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
 
     <Message Text="Stopping windows service '%(WindowsServicesQualified.Identity)'..." />
-    
+
     <MSBuild.ExtensionPack.Computer.WindowsService TaskAction="Stop" ServiceName="%(WindowsServicesQualified.ServiceName)"
                                                    Condition=" '%(WindowsServicesQualified.Identity)' != '' " />
-    
+
     <Message Text="Stopped windows service '%(WindowsServicesQualified.Identity)'..." />
   </Target>
-  
+
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    
+
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(WindowsServices.TargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
-    
-    <Message Text="Including service %(WindowsServices.Identity) for this host" Condition="'$(_CoincidingHosts)' != ''" />
+
+    <Message Text="Including service %(WindowsServices.Identity) for this host" Condition=" '$(_CoincidingHosts)' != '' " />
 
     <!-- keep only the services whose TargetHosts have CoincidingHosts -->
     <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
