@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,6 +60,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _protocolType; }
 		}
 
+		string IAdapter.PublicAddress
+		{
+			get { return GetPublicAddress(); }
+		}
+
 		void IAdapter.Load(IPropertyBag propertyBag)
 		{
 			throw new NotSupportedException();
@@ -92,6 +97,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#endregion
 
 		protected abstract string GetAddress();
+
+		protected virtual string GetPublicAddress()
+		{
+			return null;
+		}
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 

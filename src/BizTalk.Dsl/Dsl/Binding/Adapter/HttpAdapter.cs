@@ -16,21 +16,23 @@
 
 #endregion
 
-using Microsoft.BizTalk.Component.Interop;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public interface IAdapter : ISupportEnvironmentOverride, ISupportValidation
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
+	public abstract partial class HttpAdapter : AdapterBase
 	{
-		string Address { get; }
+		static HttpAdapter()
+		{
+			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("1c56d157-0553-4345-8a1f-55d2d1a3ffb6"));
+		}
 
-		ProtocolType ProtocolType { get; }
+		protected HttpAdapter() : base(_protocolType) { }
 
-		string PublicAddress { get; }
-
-		void Load(IPropertyBag propertyBag);
-
-		void Save(IPropertyBag propertyBag);
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

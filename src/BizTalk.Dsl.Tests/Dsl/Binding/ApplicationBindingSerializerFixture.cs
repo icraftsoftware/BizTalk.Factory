@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -92,6 +92,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 									);
 							})
 						);
+					a.ReceivePorts.Add(
+						new ReceivePort(
+							p => {
+								p.Name = "Control message receive port name";
+								p.ReceiveLocations.Add(
+									new ReceiveLocation(
+										l => {
+											l.Name = "Control message receive location name";
+											l.ReceivePipeline = new ReceivePipeline<PassThruReceive>();
+											l.Transport.Adapter = new HttpAdapter.Inbound(
+												ha => {
+													ha.Path = "/Control/BTSHTTPReceive.dll";
+													ha.ReturnCorrelationHandle = false;
+												});
+											l.Transport.Host = "Receive Host";
+										}));
+							}));
 					a.SendPorts.Add(
 						new SendPort(
 							p => {
@@ -99,6 +116,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 								p.Description = "Some useless test send port.";
 								p.SendPipeline = new SendPipeline<PassThruTransmit>();
 								p.Transport.Adapter = new FileAdapter.Outbound(fa => { fa.DestinationFolder = @"c:\files\drops"; });
+								p.Transport.Host = "Send Host";
+							}),
+						new SendPort(
+							p => {
+								p.Name = "Get document send port name";
+								p.SendPipeline = new SendPipeline<PassThruTransmit>();
+								p.Transport.Adapter = new HttpAdapter.Outbound(
+									ha => {
+										ha.Url = new Uri("http://localhost:8000/stubservice");
+										ha.EnableChunkedEncoding = false;
+										ha.MaxRedirects = 0;
+										ha.RequestTimeout = TimeSpan.FromMinutes(1);
+									});
 								p.Transport.Host = "Send Host";
 							})
 						);

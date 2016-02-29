@@ -57,7 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		internal T ValueTypeValueForTargetEnvironment<T>(string propertyName, int targetEnvironmentIndex) where T : struct
 		{
 			var values = ValuesForProperty(propertyName)
-				.Select(v => (T?) Convert.ChangeType(v, typeof(T)))
+				.Select(v => (T?) v.IfNotNull(v2 => Convert.ChangeType(v2, typeof(T))))
 				.ToArray();
 			var value = values[targetEnvironmentIndex] ?? values[0];
 			if (value == null)

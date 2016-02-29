@@ -16,21 +16,22 @@
 
 #endregion
 
-using Microsoft.BizTalk.Component.Interop;
-using Microsoft.BizTalk.Deployment.Binding;
+using Moq;
+using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public interface IAdapter : ISupportEnvironmentOverride, ISupportValidation
+	[TestFixture]
+	public class HttpAdapterFixture
 	{
-		string Address { get; }
-
-		ProtocolType ProtocolType { get; }
-
-		string PublicAddress { get; }
-
-		void Load(IPropertyBag propertyBag);
-
-		void Save(IPropertyBag propertyBag);
+		[Test]
+		public void ProtocolTypeSettingsAreReadFromRegistry()
+		{
+			var mock = new Mock<HttpAdapter> { CallBase = true };
+			var fa = mock.Object as IAdapter;
+			Assert.That(fa.ProtocolType.Name, Is.EqualTo("HTTP"));
+			Assert.That(fa.ProtocolType.Capabilities, Is.EqualTo(387));
+			Assert.That(fa.ProtocolType.ConfigurationClsid, Is.EqualTo("1c56d157-0553-4345-8a1f-55d2d1a3ffb6"));
+		}
 	}
 }

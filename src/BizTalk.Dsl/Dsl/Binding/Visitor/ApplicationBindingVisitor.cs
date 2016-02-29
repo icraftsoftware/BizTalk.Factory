@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -223,7 +223,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 				// TODO EncryptionCert = 
 				FromTime = receiveLocation.Transport.Schedule.ServiceWindow.StartTime,
 				// TODO Primary = 
-				// TODO PublicAddress =
+				PublicAddress = receiveLocation.Transport.Adapter.PublicAddress,
 				ReceiveHandler = new ReceiveHandlerRef {
 					// TODO HostTrusted = ,
 					Name = receiveLocation.Transport.Host,
@@ -237,7 +237,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 				ToTime = receiveLocation.Transport.Schedule.ServiceWindow.StopTime,
 				TransportType = receiveLocation.Transport.Adapter.ProtocolType,
 				TransportTypeData = ((IAdapterBindingSerializerFactory) receiveLocation.Transport.Adapter).GetAdapterBindingSerializer().Serialize()
-			};
+			}
+				;
 			if (receiveLocation.SendPipeline != null)
 			{
 				location.SendPipeline = CreateSendPipelineRef(receiveLocation.SendPipeline);
