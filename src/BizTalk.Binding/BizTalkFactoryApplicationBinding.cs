@@ -157,53 +157,8 @@ namespace Be.Stateless.BizTalk
 						sp.Transport.Host = CommonSettings.TransmitHost;
 						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
 						sp.Filter = new Filter(() => ErrorReportProperties.ErrorType == "FailedMessage");
-					}),
-				_batchSendPort = SendPort(
-					sp => {
-						sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-						sp.State = ServiceState.Started;
-						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
-							pipeline => {
-								pipeline.PreAssembler<MicroPipelineComponent>(
-									pc => { pc.Components = new IMicroPipelineComponent[] { new ActivityTracker() }; });
-							});
-						sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
-						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
-						sp.Filter = new Filter(() => BtsProperties.ReceivePortName == _batchReceivePort.Name);
-					}),
-				SendPort(
-					sp => {
-						sp.Name = SendPortName.Towards("UnitTest.Claim").About("Redeem").FormattedAs.Xml;
-						sp.State = ServiceState.Started;
-						sp.SendPipeline = new SendPipeline<PassThruTransmit>(
-							pipeline => {
-								pipeline.PreAssembler<MicroPipelineComponent>(
-									pc => {
-										pc.Components = new IMicroPipelineComponent[] {
-											new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
-										};
-									});
-							});
-						sp.Transport.Adapter = new FileAdapter.Outbound(
-							a => {
-								a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Out";
-								a.FileName = "Claim_%MessageID%.xml";
-							});
-						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
-						sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckOut>.MessageType);
-					}),
-				SendPort(
-					sp => {
-						sp.Name = SendPortName.Towards("UnitTest").About("Stub").FormattedAs.Xml;
-						sp.State = ServiceState.Started;
-						sp.SendPipeline = new SendPipeline<XmlTransmit>();
-						sp.ReceivePipeline = new ReceivePipeline<XmlReceive>();
-						sp.Transport.Adapter = new WcfBasicHttpAdapter.Outbound(a => { a.Address = new EndpointAddress("http://localhost:8000/stubservice"); });
-						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
-					}));
+					})
+				);
 			ReceivePorts.Add(
 				_batchReceivePort = ReceivePort(
 					rp => {
@@ -294,110 +249,172 @@ namespace Be.Stateless.BizTalk
 										});
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}));
-					}),
-				ReceivePort(
-					rp => {
-						rp.Name = ReceivePortName.Offwards("UnitTest");
-						rp.ReceiveLocations.Add(
-							ReceiveLocation(
-								rl => {
-									rl.Name = ReceiveLocationName.About("InputMessage").FormattedAs.Xml;
-									rl.Enabled = true;
-									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
-										pipeline => {
-											pipeline.Validator<MicroPipelineComponent>(
-												pc => {
-													pc.Components = new IMicroPipelineComponent[] {
-														new ContextPropertyExtractor(),
-														new ActivityTracker()
-													};
-												});
-										});
-									rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In"; });
-									rl.Transport.Host = CommonSettings.ReceiveHost;
-								}),
-							ReceiveLocation(
-								rl => {
-									rl.Name = ReceiveLocationName.About("Batch.AddPart").FormattedAs.Xml;
-									rl.Enabled = true;
-									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
-										pipeline => {
-											pipeline.Validator<MicroPipelineComponent>(
-												pc => {
-													pc.Components = new IMicroPipelineComponent[] {
-														new ContextPropertyExtractor {
-															Extractors = new[] {
-																new XPathExtractor(BizTalkFactoryProperties.EnvelopeSpecName, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']", ExtractionMode.Promote),
-																new XPathExtractor(BizTalkFactoryProperties.EnvelopePartition, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']"),
-																new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']"),
-																new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
-															}
-														},
-														new ActivityTracker()
-													};
-												});
-										});
-									rl.Transport.Adapter = new FileAdapter.Inbound(
-										a => {
-											a.FileMask = "*.xml.part";
-											a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
-										});
-									rl.Transport.Host = CommonSettings.ReceiveHost;
-								}),
-							ReceiveLocation(
-								rl => {
-									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.Xml;
-									rl.Enabled = true;
-									rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
-										pipeline => {
-											pipeline.Validator<MicroPipelineComponent>(
-												pc => {
-													pc.Components = new IMicroPipelineComponent[] {
-														new ContextPropertyExtractor {
-															Extractors = new[] {
-																new XPathExtractor(BizTalkFactoryProperties.CorrelationToken, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
-																new XPathExtractor(BizTalkFactoryProperties.OutboundTransportLocation, "/*[local-name()='Any']/*[local-name()='OutboundTransportLocation']"),
-																new XPathExtractor(BizTalkFactoryProperties.ReceiverName, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
-																new XPathExtractor(BizTalkFactoryProperties.SenderName, "/*[local-name()='Any']/*[local-name()='SenderName']"),
-																new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
-																new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
-																new XPathExtractor(TrackingProperties.Value3, "/*[local-name()='Any']/*[local-name()='SenderName']")
-															}
-														},
-														new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
-													};
-												});
-										});
-									rl.Transport.Adapter = new FileAdapter.Inbound(
-										a => {
-											a.FileMask = "*.xml.claim";
-											a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
-										});
-									rl.Transport.Host = CommonSettings.ReceiveHost;
-								}),
-							ReceiveLocation(
-								rl => {
-									rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.None;
-									rl.Enabled = true;
-									rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
-										pipeline => {
-											pipeline.Decoder<MicroPipelineComponent>(
-												pc => {
-													pc.Components = new IMicroPipelineComponent[] {
-														new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
-													};
-												});
-										});
-									rl.Transport.Adapter = new FileAdapter.Inbound(
-										a => {
-											a.FileMask = "*.bin.claim";
-											a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
-										});
-									rl.Transport.Host = CommonSettings.ReceiveHost;
-								})
-							);
-					}));
+					})
+				);
 		}
+
+		#region Base Class Member Overrides
+
+		protected override void ApplyEnvironmentOverrides(string environment)
+		{
+			if (environment.IsOneOf("DEV", "BLD"))
+			{
+				SendPorts.Add(
+					SendPort(
+						sp => {
+							sp.Name = SendPortName.Towards("UnitTest.Claim").About("Redeem").FormattedAs.Xml;
+							sp.State = ServiceState.Started;
+							sp.SendPipeline = new SendPipeline<PassThruTransmit>(
+								pipeline => {
+									pipeline.PreAssembler<MicroPipelineComponent>(
+										pc => {
+											pc.Components = new IMicroPipelineComponent[] {
+												new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
+											};
+										});
+								});
+							sp.Transport.Adapter = new FileAdapter.Outbound(
+								a => {
+									a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Out";
+									a.FileName = "Claim_%MessageID%.xml";
+								});
+							sp.Transport.Host = CommonSettings.TransmitHost;
+							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+							sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckOut>.MessageType);
+						}),
+					SendPort(
+						sp => {
+							sp.Name = SendPortName.Towards("UnitTest").About("Stub").FormattedAs.Xml;
+							sp.State = ServiceState.Started;
+							sp.SendPipeline = new SendPipeline<XmlTransmit>();
+							sp.ReceivePipeline = new ReceivePipeline<XmlReceive>();
+							sp.Transport.Adapter = new WcfBasicHttpAdapter.Outbound(a => { a.Address = new EndpointAddress("http://localhost:8000/stubservice"); });
+							sp.Transport.Host = CommonSettings.TransmitHost;
+							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+						}),
+					_batchSendPort = SendPort(
+						sp => {
+							sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
+							sp.State = ServiceState.Started;
+							sp.SendPipeline = new SendPipeline<PassThruTransmit>(
+								pipeline => {
+									pipeline.PreAssembler<MicroPipelineComponent>(
+										pc => { pc.Components = new IMicroPipelineComponent[] { new ActivityTracker() }; });
+								});
+							sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
+							sp.Transport.Host = CommonSettings.TransmitHost;
+							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+							sp.Filter = new Filter(() => BtsProperties.ReceivePortName == _batchReceivePort.Name);
+						})
+					);
+
+				ReceivePorts.Add(
+					ReceivePort(
+						rp => {
+							rp.Name = ReceivePortName.Offwards("UnitTest");
+							rp.ReceiveLocations.Add(
+								ReceiveLocation(
+									rl => {
+										rl.Name = ReceiveLocationName.About("InputMessage").FormattedAs.Xml;
+										rl.Enabled = true;
+										rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
+											pipeline => {
+												pipeline.Validator<MicroPipelineComponent>(
+													pc => {
+														pc.Components = new IMicroPipelineComponent[] {
+															new ContextPropertyExtractor(),
+															new ActivityTracker()
+														};
+													});
+											});
+										rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In"; });
+										rl.Transport.Host = CommonSettings.ReceiveHost;
+									}),
+								ReceiveLocation(
+									rl => {
+										rl.Name = ReceiveLocationName.About("Batch.AddPart").FormattedAs.Xml;
+										rl.Enabled = true;
+										rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
+											pipeline => {
+												pipeline.Validator<MicroPipelineComponent>(
+													pc => {
+														pc.Components = new IMicroPipelineComponent[] {
+															new ContextPropertyExtractor {
+																Extractors = new[] {
+																	new XPathExtractor(BizTalkFactoryProperties.EnvelopeSpecName, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']", ExtractionMode.Promote),
+																	new XPathExtractor(BizTalkFactoryProperties.EnvelopePartition, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']"),
+																	new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']"),
+																	new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
+																}
+															},
+															new ActivityTracker()
+														};
+													});
+											});
+										rl.Transport.Adapter = new FileAdapter.Inbound(
+											a => {
+												a.FileMask = "*.xml.part";
+												a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
+											});
+										rl.Transport.Host = CommonSettings.ReceiveHost;
+									}),
+								ReceiveLocation(
+									rl => {
+										rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.Xml;
+										rl.Enabled = true;
+										rl.ReceivePipeline = new ReceivePipeline<XmlReceive>(
+											pipeline => {
+												pipeline.Validator<MicroPipelineComponent>(
+													pc => {
+														pc.Components = new IMicroPipelineComponent[] {
+															new ContextPropertyExtractor {
+																Extractors = new[] {
+																	new XPathExtractor(BizTalkFactoryProperties.CorrelationToken, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
+																	new XPathExtractor(BizTalkFactoryProperties.OutboundTransportLocation, "/*[local-name()='Any']/*[local-name()='OutboundTransportLocation']"),
+																	new XPathExtractor(BizTalkFactoryProperties.ReceiverName, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
+																	new XPathExtractor(BizTalkFactoryProperties.SenderName, "/*[local-name()='Any']/*[local-name()='SenderName']"),
+																	new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
+																	new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
+																	new XPathExtractor(TrackingProperties.Value3, "/*[local-name()='Any']/*[local-name()='SenderName']")
+																}
+															},
+															new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
+														};
+													});
+											});
+										rl.Transport.Adapter = new FileAdapter.Inbound(
+											a => {
+												a.FileMask = "*.xml.claim";
+												a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
+											});
+										rl.Transport.Host = CommonSettings.ReceiveHost;
+									}),
+								ReceiveLocation(
+									rl => {
+										rl.Name = ReceiveLocationName.About("Claim.Desk").FormattedAs.None;
+										rl.Enabled = true;
+										rl.ReceivePipeline = new ReceivePipeline<PassThruReceive>(
+											pipeline => {
+												pipeline.Decoder<MicroPipelineComponent>(
+													pc => {
+														pc.Components = new IMicroPipelineComponent[] {
+															new ActivityTracker { TrackingModes = ActivityTrackingModes.Claim }
+														};
+													});
+											});
+										rl.Transport.Adapter = new FileAdapter.Inbound(
+											a => {
+												a.FileMask = "*.bin.claim";
+												a.ReceiveFolder = @"C:\Files\Drops\BizTalk.Factory\In";
+											});
+										rl.Transport.Host = CommonSettings.ReceiveHost;
+									})
+								);
+						}));
+			}
+		}
+
+		#endregion
 
 		private TimeSpan BatchReleasePollingInterval
 		{
@@ -420,6 +437,6 @@ namespace Be.Stateless.BizTalk
 		}
 
 		protected readonly IReceivePort<NamingConvention> _batchReceivePort;
-		protected readonly ISendPort<NamingConvention> _batchSendPort;
+		protected ISendPort<NamingConvention> _batchSendPort;
 	}
 }
