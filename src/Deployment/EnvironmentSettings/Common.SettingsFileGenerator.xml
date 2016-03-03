@@ -16,8 +16,8 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>3435</WindowHeight>
-  <WindowWidth>11063</WindowWidth>
+  <WindowHeight>11760</WindowHeight>
+  <WindowWidth>25200</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <TabRatio>151</TabRatio>
@@ -78,7 +78,7 @@
   </Style>
  </Styles>
  <Worksheet ss:Name="Settings">
-  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="33" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="35" x:FullColumns="1"
    x:FullRows="1" ss:StyleID="s62" ss:DefaultColumnWidth="51">
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="213.75"/>
    <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="75"/>
@@ -91,7 +91,7 @@
     <Cell ss:StyleID="s64"/>
     <Cell ss:StyleID="s64"/>
    </Row>
-   <Row ss:Height="13.125">
+   <Row ss:AutoFitHeight="0" ss:Height="13.3125">
     <Cell ss:StyleID="s65"><Data ss:Type="String">Environment Name:</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Default Values</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Development</Data></Cell>
@@ -99,7 +99,7 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Acceptance</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Production</Data></Cell>
    </Row>
-   <Row ss:Height="13.125">
+   <Row ss:AutoFitHeight="0" ss:Height="13.3125">
     <Cell ss:StyleID="s65"><Data ss:Type="String">Generate File?</Data></Cell>
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
@@ -107,7 +107,7 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
-   <Row ss:Height="13.125">
+   <Row ss:AutoFitHeight="0" ss:Height="13.3125">
     <Cell ss:StyleID="s65"><Data ss:Type="String">Settings File Name:</Data></Cell>
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"><Data ss:Type="String">DEV_Settings.xml</Data></Cell>
@@ -115,7 +115,7 @@
     <Cell ss:StyleID="s65"><Data ss:Type="String">ACC_Settings.xml</Data></Cell>
     <Cell ss:StyleID="s65"><Data ss:Type="String">PRD_Settings.xml</Data></Cell>
    </Row>
-   <Row ss:Height="13.125">
+   <Row ss:AutoFitHeight="0" ss:Height="13.3125">
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"/>
@@ -123,7 +123,7 @@
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"/>
    </Row>
-   <Row ss:Height="13.125">
+   <Row ss:AutoFitHeight="0" ss:Height="13.3125">
     <Cell ss:StyleID="s65"><Data ss:Type="String">Settings:</Data></Cell>
     <Cell ss:StyleID="s65"/>
     <Cell ss:StyleID="s65"/>
@@ -226,6 +226,22 @@
     <Cell ss:StyleID="s67"><Data ss:Type="String">NT AUTHORITY\NetworkService</Data></Cell>
     <Cell ss:StyleID="s67"/>
     <Cell ss:StyleID="s67"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"/>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s66"><Data ss:Type="String">QuartzAgentTargetHosts</Data></Cell>
+    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s67"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">*</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">*</Data></Cell>
    </Row>
    <Row>
     <Cell ss:StyleID="s66"/>
@@ -384,6 +400,9 @@
     </Pane>
     <Pane>
      <Number>0</Number>
+     <ActiveRow>20</ActiveRow>
+     <ActiveCol>0</ActiveCol>
+     <RangeSelection>R21</RangeSelection>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

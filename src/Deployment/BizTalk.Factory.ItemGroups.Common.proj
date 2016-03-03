@@ -134,6 +134,7 @@
     <CommonPropsFromEnvSettings Include="ManagementDatabaseServer;MonitoringDatabaseServer;ProcessingDatabaseServer" />
     <CommonPropsFromEnvSettings Include="SqlAgentAccountName" />
     <CommonPropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup" />
+    <CommonPropsFromEnvSettings Include="QuartzAgentTargetHosts" />
   </ItemGroup>
 
   <ItemGroup>

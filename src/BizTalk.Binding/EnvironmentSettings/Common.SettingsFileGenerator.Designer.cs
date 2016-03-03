@@ -67,6 +67,11 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			get { return _instance.ValueForTargetEnvironment(new string[] { null, "NT AUTHORITY\\NetworkService", "NT AUTHORITY\\NetworkService", null, null }); }
 		}
 
+		public static string QuartzAgentTargetHosts 
+		{
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
+		}
+
 		public static string SsoAppUserGroup 
 		{
 			get { return _instance.ValueForTargetEnvironment(new string[] { null, "BizTalk Application Users", "BizTalk Application Users", null, null }); }

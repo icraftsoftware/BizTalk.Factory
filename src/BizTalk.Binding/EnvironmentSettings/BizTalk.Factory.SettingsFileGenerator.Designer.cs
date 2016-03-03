@@ -57,11 +57,6 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 			get { return _instance.ValueForTargetEnvironment(new string[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", "C:\\Files\\Drops\\BizTalk.Factory\\CheckOut", null, null }); }
 		}
 
-		public static string QuartzAgentTargetHosts 
-		{
-			get { return _instance.ValueForTargetEnvironment(new string[] { null, "-", "-", "*", "*" }); }
-		}
-
 		protected override string SettingsFileName
 		{
 			get { return "BizTalk.Factory.SettingsFileGenerator"; }

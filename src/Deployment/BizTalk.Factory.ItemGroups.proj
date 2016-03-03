@@ -318,7 +318,6 @@
   <ItemGroup>
     <PropsFromEnvSettings Include="BamArchiveWindowTimeLength;BamOnlineWindowTimeLength" />
     <PropsFromEnvSettings Include="ClaimStoreAgentTargetHosts;ClaimStoreCheckInDirectory;ClaimStoreCheckOutDirectory" />
-    <PropsFromEnvSettings Include="QuartzAgentTargetHosts" />
   </ItemGroup>
 
   <ItemGroup>
