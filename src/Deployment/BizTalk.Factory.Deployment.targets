@@ -1301,7 +1301,7 @@
       <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
     </MSBuild.ExtensionPack.Xml.XmlFile>
     <!-- remove the job file from the list -->
-    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(CurrentQuartzJobsFiles)" OldValue=",$(TempJobsFile)" NewValue="">
+    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(CurrentQuartzJobsFiles)" OldValue=",$(TempJobsFile)" NewValue="" Condition=" '$(_CoincidingHosts)' != '' ">
       <Output PropertyName="NewJobsFilesList" TaskParameter="NewString"/>
     </MSBuild.ExtensionPack.Framework.TextString>
     <!-- Update with the new list -->
