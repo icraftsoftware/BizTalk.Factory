@@ -96,6 +96,7 @@
     <PropertyGroup>
       <TargetsAfterLoadPropsFromEnvSettings>
         _PreprocessBindings;
+        GenerateApplicationBindings;
         StopWindowsServices;
         _UpdateOrchestration;
         StartWindowsServices
