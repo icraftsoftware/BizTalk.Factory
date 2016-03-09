@@ -24,7 +24,7 @@
 
   <PropertyGroup>
     <_CustomErrorRegularExpression>^(?i:(?!Saved )(?!command succeeded).*(error).+)$</_CustomErrorRegularExpression>
-    <_CustomWarningRegularExpression>^(?i:(?!command succeeded).*(warning)(?!.+(may be necessary to restart the Host Instance|depends on the following assemblies that must be installed)).+)$</_CustomWarningRegularExpression>
+    <_CustomWarningRegularExpression>^(?i:(?!command succeeded).*(warning)(?!.+(may be necessary to restart the Host Instance|depends on the following assemblies that must be installed|Importing of party data failed\. Attempting|Orchestration ".*" not found in binding file)).+)$</_CustomWarningRegularExpression>
   </PropertyGroup>
 
   <Target Name="DeployPipelines" Condition=" '$(IncludePipelines)' == 'true' " DependsOnTargets="UndeployPipelines">
