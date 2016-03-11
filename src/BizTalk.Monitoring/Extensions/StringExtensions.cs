@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,26 +24,167 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 	public static class StringExtensions
 	{
 		/// <summary>
-		/// Returns a process friendly, or short, name assembled by the concatenation of the Project/Area/Process parts of
-		/// a process name.
+		/// Returns a process friendly, or short, name made from the concatenation of the Project/Area/Process tokens in a
+		/// comprehensive process name.
 		/// </summary>
-		/// <param name="processName">The comprehensive process name.</param>
-		/// <returns>The concatenated Project/Area/Process parts.</returns>
+		/// <param name="processName">
+		/// The comprehensive process name.
+		/// </param>
+		/// <returns>
+		/// The concatenated Project/Area/Process tokens.
+		/// </returns>
 		/// <remarks>
-		/// Regex isolation of the following tokens:
-		/// <list type="ul">
-		///    <item>the Project: e.g Factory</item>
-		///    <item>an Area: e.g. Switching</item>
-		///    <item>the Process Name: e.g. UpdateMasterData, ReceiveSupplierChangeAcknowledgments, or Failed</item>
-		/// </list>
-		/// given the following inputs:
-		/// <list type="ul">
-		///    <item>Be.Stateless.Factory.Orchestrations.Switching.UpdateMasterData</item>
-		///    <item>Be.Stateless.Factory.Areas.Switching.UpdateMasterData</item>
-		///    <item>Be.Stateless.Factory.Areas.Default.ReceiveSupplierChangeAcknowledgments</item>
-		///    <item>Be.Stateless.Factory.Areas.Unknown.Failed</item>
-		/// </list>
+		/// Tokens are isolated via a regular expression. Any Area named <c>Default</c> is skipped or equivalent to a
+		/// <c>null</c>, non-existing, area.
 		/// </remarks>
+		/// <example>
+		/// Given the following comprehensive process names
+		/// <list type="bullet">
+		/// <item><c>Be.Stateless.BizTalk.Factory.Areas.Default.Failed</c></item>
+		/// <item><c>Be.Stateless.BizTalk.Factory.Areas.Default.Unidentified</c></item>
+		/// <item><c>Be.Stateless.BizTalk.Factory.Areas.Batch.Aggregate</c></item>
+		/// <item><c>Be.Stateless.BizTalk.Factory.Areas.Batch.Release</c></item>
+		/// <item><c>Be.Stateless.BizTalk.Factory.Areas.Claim.Check</c></item>
+		/// <item><c>Be.Stateless.Accounting.Orchestrations.Invoicing.UpdateLedger</c></item>
+		/// <item><c>Be.Stateless.Accounting.Orchestrations.UpdateMasterData</c></item>
+		/// </list>
+		/// the friendly names are respectively
+		/// <list type="bullet">
+		/// <item>
+		/// <c>Factory/Failed</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Factory</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description>null</description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>Failed</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Factory/Unidentified</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Factory</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description>null</description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>Unidentified</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Factory/Batch/Aggregate</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Factory</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description><c>Batch</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>Aggregate</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Factory/Batch/Release</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Factory</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description><c>Batch</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>Release</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Factory/Claim/Check</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Factory</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description><c>Claim</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>Check</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Accounting/Invoicing/UpdateLedger</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Accounting</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description><c>Invoicing</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>UpdateLedger</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// <item>
+		/// <c>Accounting/UpdateMasterData</c> where
+		/// <para>
+		/// <list type="definition">
+		/// <item>
+		/// <term>Project</term>
+		/// <description><c>Accounting</c></description>
+		/// </item>
+		/// <item>
+		/// <term>Area</term>
+		/// <description>null</description>
+		/// </item>
+		/// <item>
+		/// <term>Process</term>
+		/// <description><c>UpdateMasterData</c></description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// </item>
+		/// </list>
+		/// </example>
 		public static string ToFriendlyProcessName(this string processName)
 		{
 			var match = Regex.Match(processName, _friendlyNameRegex, RegexOptions.Compiled);

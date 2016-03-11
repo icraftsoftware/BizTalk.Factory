@@ -58,6 +58,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.Sql.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.Admin">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Admin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.Framework, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Adapter.Wcf.Common, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Wcf.Common.dll</HintPath>
@@ -69,6 +76,10 @@
     <Reference Include="Microsoft.BizTalk.B2B.PartnerManagement, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.B2B.PartnerManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.BaseAdapter, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.BaseAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.BizTalk.Deployment, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -150,6 +161,8 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMapping.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMappingOperation.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.Outbound.cs" />

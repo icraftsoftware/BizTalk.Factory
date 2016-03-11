@@ -138,6 +138,8 @@
     <Compile Include="Dsl\Binding\Adapter\AdapterBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\HttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\HttpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Pop3AdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapterFixture.cs" />

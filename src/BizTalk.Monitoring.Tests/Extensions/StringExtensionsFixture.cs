@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,22 +24,21 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 	[TestFixture]
 	public class StringExtensionsFixture
 	{
-		// todo: test source
 		[Test]
-		[TestCaseSource("Cases")]
+		[TestCaseSource("_cases")]
 		public void ToFriendlyProcessName(string processName, string expected)
 		{
 			Assert.That(processName.ToFriendlyProcessName(), Is.EqualTo(expected));
 		}
 
-		static readonly object[] Cases = {
-			new object[] {Default.Processes.Failed, "Factory/Failed"},
-			new object[] {Default.Processes.Unidentified, "Factory/Unidentified"},
-			new object[] {Batch.Processes.Aggregate, "Factory/Batch/Aggregate"},
-			new object[] {Batch.Processes.Release, "Factory/Batch/Release"},
-			new object[] {Claim.Processes.Check, "Factory/Claim/Check"},
-			new object[] {"Be.Stateless.Accounting.Orchestrations.Invoicing.UpdateMasterData", "Accounting/Invoicing/UpdateMasterData"},
-			new object[] {"Be.Stateless.Accounting.Orchestrations.UpdateMasterData", "Accounting/UpdateMasterData"}
+		private static readonly object[] _cases = {
+			new object[] { Default.Processes.Failed, "Factory/Failed" },
+			new object[] { Default.Processes.Unidentified, "Factory/Unidentified" },
+			new object[] { Batch.Processes.Aggregate, "Factory/Batch/Aggregate" },
+			new object[] { Batch.Processes.Release, "Factory/Batch/Release" },
+			new object[] { Claim.Processes.Check, "Factory/Claim/Check" },
+			new object[] { "Be.Stateless.Accounting.Orchestrations.Invoicing.UpdateMasterData", "Accounting/Invoicing/UpdateMasterData" },
+			new object[] { "Be.Stateless.Accounting.Orchestrations.UpdateMasterData", "Accounting/UpdateMasterData" }
 		};
 	}
 }
