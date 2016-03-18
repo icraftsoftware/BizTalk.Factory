@@ -46,7 +46,10 @@ namespace Be.Stateless.BizTalk.Tracking
 	{
 		internal MessageBodyCaptureDescriptor(string data, MessageBodyCaptureMode captureMode)
 		{
-			if (data.IsNullOrEmpty()) throw new ArgumentNullException("data");
+			if (data == null) throw new ArgumentNullException("data");
+			// If we have a claimed message body, the data parameter must always contain the path to the claimed file,
+			// and thus may never be empty. Otherwise, an empty message body is possible and legal.
+			if (captureMode == MessageBodyCaptureMode.Claimed && data.Length == 0) throw new ArgumentException("Value cannot be empty, it is expected to be a relative path for claimed message bodies.", "data");
 			Data = data;
 			CaptureMode = captureMode;
 		}

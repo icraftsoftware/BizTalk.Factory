@@ -29,6 +29,7 @@ using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.SsoClient;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Unit.Resources;
+using Be.Stateless.Extensions;
 using Be.Stateless.IO;
 using Be.Stateless.IO.Extensions;
 using Be.Stateless.Linq.Extensions;
@@ -256,6 +257,31 @@ namespace Be.Stateless.BizTalk.Tracking
 			trackingStreamMock.Verify(
 				ts => ts.SetupCapture(It.Is<MessageBodyCaptureDescriptor>(cd => cd.CaptureMode == MessageBodyCaptureMode.Claimed), It.IsAny<Stream>()),
 				Times.Once());
+		}
+
+		[Test]
+		public void CaptureMessageBodyWithEmptyStreamWillHaveMessageUnclaimed()
+		{
+			SsoSettingsReaderMock
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Returns(Path.GetTempPath());
+			SsoSettingsReaderMock
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Returns(@"\\network\share");
+
+			var trackingStreamMock = new Mock<TrackingStream>(new MemoryStream()) { CallBase = true };
+
+			ClaimStore.Instance.SetupMessageBodyCapture(trackingStreamMock.Object, ActivityTrackingModes.Body, null);
+
+			trackingStreamMock.Verify(
+				ts => ts.SetupCapture(It.Is<MessageBodyCaptureDescriptor>(cd => cd.CaptureMode == MessageBodyCaptureMode.Claimed)),
+				Times.Never());
+			trackingStreamMock.Verify(
+				ts => ts.SetupCapture(It.Is<MessageBodyCaptureDescriptor>(cd => cd.CaptureMode == MessageBodyCaptureMode.Unclaimed)),
+				Times.Once());
+			trackingStreamMock.Verify(
+				ts => ts.SetupCapture(It.Is<MessageBodyCaptureDescriptor>(cd => cd.CaptureMode == MessageBodyCaptureMode.Claimed), It.IsAny<Stream>()),
+				Times.Never());
 		}
 
 		[Test]
