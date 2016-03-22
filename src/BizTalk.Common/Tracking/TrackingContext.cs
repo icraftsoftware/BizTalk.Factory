@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,15 +69,15 @@ namespace Be.Stateless.BizTalk.Tracking
 		}
 
 		/// <summary>
-		/// Whether none of the discrete acitivity Ids of the <see cref="TrackingContext"/> are set or not.
+		/// Whether none of the discrete activity Ids of the <see cref="TrackingContext"/> are set or not.
 		/// </summary>
 		/// <returns>
-		/// Returns <c>true</c> if none of the discrete acitivity Ids of the <see cref="TrackingContext"/> are set;
+		/// Returns <c>true</c> if none of the discrete activity Ids of the <see cref="TrackingContext"/> are set;
 		/// <c>false</c> otherwise.
 		/// </returns>
 		public bool IsEmpty()
 		{
-			return (ProcessActivityId.IsNullOrEmpty() && ProcessingStepActivityId.IsNullOrEmpty() && MessagingStepActivityId.IsNullOrEmpty());
+			return ProcessActivityId.IsNullOrEmpty() && ProcessingStepActivityId.IsNullOrEmpty() && MessagingStepActivityId.IsNullOrEmpty();
 		}
 	}
 }

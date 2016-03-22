@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 			if (!_logger.IsDebugEnabled) return;
 			_builder.AppendFormat("\n\tOperation: {0}", activityType);
 			_builder.AppendFormat("\n\tObject Type: {0}", classType);
-			_builder.AppendFormat("\n\tObject Instance Identifer: {0}", classInstanceId);
+			_builder.AppendFormat("\n\tObject Instance Identifier: {0}", classInstanceId);
 			LogMessage("FACT ACTIVITY");
 		}
 
@@ -81,7 +81,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		public void TrackAgendaUpdate(bool isAddition, string ruleName, object conflictResolutionCriteria)
 		{
 			if (!_logger.IsDebugEnabled) return;
-			_builder.AppendFormat("\n\tOperation: {0}", (isAddition ? "Add" : "Remove"));
+			_builder.AppendFormat("\n\tOperation: {0}", isAddition ? "Add" : "Remove");
 			_builder.AppendFormat("\n\tRule Name: {0}", ruleName);
 			_builder.AppendFormat("\n\tConflict Resolution Criteria: {0}", conflictResolutionCriteria);
 			LogMessage("AGENDA UPDATE");

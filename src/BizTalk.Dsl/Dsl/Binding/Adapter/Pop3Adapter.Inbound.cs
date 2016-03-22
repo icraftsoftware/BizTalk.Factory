@@ -19,11 +19,6 @@
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
-using Microsoft.BizTalk.Adapter.Common;
-using Microsoft.BizTalk.Adapter.Framework;
-using Microsoft.BizTalk.Adapter.POP3;
-using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
@@ -84,37 +79,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override string GetAddress()
 			{
-				throw new NotImplementedException();
+				return "POP3://" + MailServer + "#" + UserName;
 			}
-
-			protected override void Save(IPropertyBag propertyBag)
-			{
-				Uri = "POP3://" + MailServer + "#" + UserName;
-				var config = Serialize();
-				propertyBag.WriteAdapterCustomProperty("AdapterConfig", config);
-			}
-
-			protected override void Validate()
-			{
-				var config = Serialize();
-				var validator = new POP3AdapterManagement();
-				try
-				{
-					validator.ValidateConfiguration(ConfigType.ReceiveLocation, config);
-				}
-				catch (ValidationException exception)
-				{
-					throw new BindingException(exception.Message.Trim('\r', '\n', ' '), exception);
-				}
-			}
-
-			#endregion
-
-			#region URI
-
-			[EditorBrowsable(EditorBrowsableState.Never)]
-			[XmlElement("uri")]
-			public string Uri { get; set; }
 
 			#endregion
 
@@ -216,7 +182,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// </list>
 			/// </remarks>
 			[XmlElement("authenticationScheme")]
-			public AuthenticationScheme AuthenticationScheme { get; set; }
+#pragma warning disable 108
+				public AuthenticationScheme AuthenticationScheme { get; set; }
+#pragma warning disable 108
 
 			/// <summary>
 			/// Specify the user name to use for authentication with the POP3 server. This property requires a value.
@@ -270,35 +238,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			[XmlIgnore]
 			public TimeSpan PollingInterval
 			{
-				get { return TimeSpan.FromMinutes(XmlAliasedPollingInterval); }
+				get { return BuildTimeSpan(XmlAliasedPollingInterval, XmlAliasedPollingUnitOfMeasure); }
 				set
 				{
-					if (value.Seconds != 0)
-					{
-						XmlAliasedPollingUnitOfMeasure = PollingUnitOfMeasure.Seconds;
-						XmlAliasedPollingInterval = (uint) value.TotalSeconds;
-					}
-					else if (value.Minutes != 0)
-					{
-						XmlAliasedPollingUnitOfMeasure = PollingUnitOfMeasure.Minutes;
-						XmlAliasedPollingInterval = (uint) value.TotalMinutes;
-					}
-					else if (value.Hours != 0)
-					{
-						XmlAliasedPollingUnitOfMeasure = PollingUnitOfMeasure.Hours;
-						XmlAliasedPollingInterval = (uint) value.TotalHours;
-					}
-					else // if (value.Days != 0)
-					{
-						XmlAliasedPollingUnitOfMeasure = PollingUnitOfMeasure.Days;
-						XmlAliasedPollingInterval = (uint) value.TotalDays;
-					}
+					UnbuildTimeSpan(
+						value,
+						(q, u) => {
+							XmlAliasedPollingInterval = q;
+							XmlAliasedPollingUnitOfMeasure = u;
+						});
 				}
 			}
 
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("pollingInterval")]
-			public uint XmlAliasedPollingInterval { get; set; }
+			public int XmlAliasedPollingInterval { get; set; }
 
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("pollingUnitOfMeasure")]

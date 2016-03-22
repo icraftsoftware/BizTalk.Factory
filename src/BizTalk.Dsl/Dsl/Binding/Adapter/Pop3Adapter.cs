@@ -18,15 +18,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.BizTalk.Adapter.POP3;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract partial class Pop3Adapter : AdapterBase
+	public abstract partial class Pop3Adapter : LegacyAdapterBase<POP3AdapterManagement>
 	{
 		#region AuthenticationScheme Enum
 
@@ -53,47 +52,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region PollingUnitOfMeasure Enum
-
-		public enum PollingUnitOfMeasure
-		{
-			Seconds,
-
-			Minutes,
-
-			Hours,
-
-			Days
-		}
-
-		#endregion
-
 		static Pop3Adapter()
 		{
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("1787fcc1-9aaa-4bbd-9096-7eb77e3d9d9b"));
 		}
 
-		#region XML Serialization
-
-		private string Serialize()
-		{
-			var builder = new StringBuilder();
-			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
-			{
-				// http://stackoverflow.com/questions/625927/omitting-all-xsi-and-xsd-namespaces-when-serializing-an-object-in-net
-				var ns = new XmlSerializerNamespaces();
-				ns.Add(string.Empty, string.Empty);
-				var serializer = new XmlSerializer(GetType());
-				serializer.Serialize(writer, this, ns);
-			}
-			return builder.ToString();
-		}
-
-		#endregion
-
-
 		protected Pop3Adapter() : base(_protocolType) { }
-
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;

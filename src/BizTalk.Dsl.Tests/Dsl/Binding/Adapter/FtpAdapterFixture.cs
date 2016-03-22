@@ -16,29 +16,22 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Factory.Areas;
-using Be.Stateless.BizTalk.Unit.RuleEngine;
+using Moq;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Policies.Send
+namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
-	public class FailedProcessResolverFixture : PolicyFixture<FailedProcessResolver>
+	public class FtpAdapterFixture
 	{
 		[Test]
-		public void DoNotWriteProcessNameInContext()
+		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			Facts.Assert(Context.Property(TrackingProperties.ProcessName).WithValue("some-process-name"));
-			ExecutePolicy();
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithAnyValue().HasNotBeenWritten());
-		}
-
-		[Test]
-		public void WriteProcessNameInContext()
-		{
-			ExecutePolicy();
-			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Default.Processes.Failed).HasBeenWritten());
+			var mock = new Mock<FtpAdapter> { CallBase = true };
+			var fa = mock.Object as IAdapter;
+			Assert.That(fa.ProtocolType.Name, Is.EqualTo("FTP"));
+			Assert.That(fa.ProtocolType.Capabilities, Is.EqualTo(80907));
+			Assert.That(fa.ProtocolType.ConfigurationClsid, Is.EqualTo("3979ffed-0067-4cc6-9f5a-859a5db6e9bb"));
 		}
 	}
 }

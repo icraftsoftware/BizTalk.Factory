@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
 			Assert.That(sut.RequiresBodyTracking());
 
-			sut = (ActivityTrackingModes.Claim).DiscardBodyClaimChecking();
+			sut = ActivityTrackingModes.Claim.DiscardBodyClaimChecking();
 
 			Assert.That(sut.RequiresBodyArchiving(), Is.False);
 			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);

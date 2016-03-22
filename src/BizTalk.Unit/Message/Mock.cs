@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 
 		public void Verify(Expression<Action<IBaseMessage>> expression, Times times, string failMessage)
 		{
-			// intercept and rewrite IBaseMessage Verifys against IBaseMessageContext
+			// intercept and rewrite IBaseMessage Verify calls against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
 			{
@@ -212,7 +212,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			else
 			{
 				// ReSharper disable SuspiciousTypeConversion.Global
-				// let base class handle all other Verifys
+				// let base class handle all other Verify calls
 				Verify((Expression<Action<T>>) (Expression) expression, times, failMessage);
 				// ReSharper restore SuspiciousTypeConversion.Global
 			}
@@ -234,7 +234,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			var propertyArgument = methodCallExpression.Arguments[1];
 			if (!propertyArgument.Type.IsGenericType || propertyArgument.Type.GetGenericTypeDefinition() != typeof(MessageContextProperty<,>)) throw new NotSupportedException();
 			dynamic contextProperty = Expression.Lambda(propertyArgument).Compile().DynamicInvoke();
-			var qualifiedName= new XmlQualifiedName(contextProperty.Name, contextProperty.Namespace);
+			var qualifiedName = new XmlQualifiedName(contextProperty.Name, contextProperty.Namespace);
 			return qualifiedName;
 		}
 

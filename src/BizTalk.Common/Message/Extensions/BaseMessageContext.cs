@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 						return name.IndexOf("password", StringComparison.OrdinalIgnoreCase) > -1
 							? null
 							: new XElement(
-								((XNamespace) nsCache.Add(ns).Value) + "p",
+								(XNamespace) nsCache.Add(ns).Value + "p",
 								new XAttribute("n", name),
 								context.IsPromoted(name, ns) ? new XAttribute("promoted", true) : null,
 								value);

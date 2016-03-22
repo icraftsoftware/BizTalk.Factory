@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			Value3 = _message.GetProperty(TrackingProperties.Value3);
 
 			if (_message.HasFailed()) TrackFailureProperties();
-			else TrackSucessfulProperties();
+			else TrackSuccessfulProperties();
 		}
 
 		private void TrackFailureProperties()
@@ -158,7 +158,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 			Time = _message.GetProperty(ErrorReportProperties.FailureTime);
 		}
 
-		private void TrackSucessfulProperties()
+		private void TrackSuccessfulProperties()
 		{
 			MessageID = _message.MessageID.AsNormalizedActivityId();
 			MessageType = _message.GetProperty(BtsProperties.MessageType);

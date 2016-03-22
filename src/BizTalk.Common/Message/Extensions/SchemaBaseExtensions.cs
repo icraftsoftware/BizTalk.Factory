@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		/// </returns>
 		public static bool IsSchema(this Type type)
 		{
-			return (type != null && type.BaseType == typeof(SchemaBase));
+			return type != null && type.BaseType == typeof(SchemaBase);
 		}
 
 		/// <summary>

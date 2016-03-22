@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ namespace Be.Stateless.BizTalk.Streaming
 			{
 				var edgeEventsCount = 0;
 				stream.AfterLastReadEvent += (sender, args) => ++edgeEventsCount;
-				while ((stream.Read(tempBuffer, 0, tempBuffer.Length)) == tempBuffer.Length) { }
+				while (stream.Read(tempBuffer, 0, tempBuffer.Length) == tempBuffer.Length) { }
 				Assert.That(stream.ReadCompleted);
 				Assert.That(edgeEventsCount, Is.EqualTo(1));
 			}
@@ -125,7 +125,7 @@ namespace Be.Stateless.BizTalk.Streaming
 			{
 				var edgeEventsCount = 0;
 				stream.AfterLastReadEvent += (sender, args) => ++edgeEventsCount;
-				while ((stream.Read(tempBuffer, 0, tempBuffer.Length)) == tempBuffer.Length) { }
+				while (stream.Read(tempBuffer, 0, tempBuffer.Length) == tempBuffer.Length) { }
 				Assert.That(stream.ReadCompleted, Is.False);
 				Assert.That(edgeEventsCount, Is.EqualTo(0));
 			}
@@ -155,23 +155,17 @@ namespace Be.Stateless.BizTalk.Streaming
 				get { throw new NotSupportedException(); }
 			}
 
+			public override void Flush()
+			{
+				throw new NotSupportedException();
+			}
+
 			public override long Length
 			{
 				get { throw new NotSupportedException(); }
 			}
 
 			public override long Position { get; set; }
-
-			public override void Flush()
-			{
-				throw new NotSupportedException();
-			}
-
-			protected override int ReadInternal(byte[] buffer, int offset, int count)
-			{
-				// always read less bytes than requested
-				return _innerStream.Read(buffer, 0, count - 7);
-			}
 
 			public override long Seek(long offset, SeekOrigin origin)
 			{
@@ -181,6 +175,16 @@ namespace Be.Stateless.BizTalk.Streaming
 			public override void SetLength(long value)
 			{
 				throw new NotSupportedException();
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
+
+			protected override int ReadInternal(byte[] buffer, int offset, int count)
+			{
+				// always read less bytes than requested
+				return _innerStream.Read(buffer, 0, count - 7);
 			}
 
 			#endregion

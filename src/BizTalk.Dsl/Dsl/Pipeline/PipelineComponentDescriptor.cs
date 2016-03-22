@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,15 +29,19 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 	/// The pipeline component <see cref="Type"/> to wrap.
 	/// </typeparam>
 	/// <remarks>
-	/// This class is not meant to be used explicitly but only fulfils a Pipeline DSL scaffolding role.
+	/// This class is not meant to be used explicitly but only fulfills a Pipeline DSL scaffolding role.
 	/// </remarks>
 	internal class PipelineComponentDescriptor<T> : IPipelineComponentDescriptor
 		where T : IBaseComponent, IPersistPropertyBag
 	{
+		#region Operators
+
 		public static implicit operator T(PipelineComponentDescriptor<T> pipelineComponentDescriptor)
 		{
 			return pipelineComponentDescriptor._pipelineComponent;
 		}
+
+		#endregion
 
 		public PipelineComponentDescriptor(T pipelineComponent)
 		{

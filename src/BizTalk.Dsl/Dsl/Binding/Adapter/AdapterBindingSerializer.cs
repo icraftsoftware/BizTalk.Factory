@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			using (var stringWriter = new StringWriter())
 			using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { Indent = false, Encoding = Encoding.UTF8, OmitXmlDeclaration = true }))
 			{
-				var serializer = new XmlSerializer(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
+				var serializer = Stateless.Xml.Serialization.XmlSerializerFactory.Create(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
 				var absorbXsdAndXsiXmlns = new XmlSerializerNamespaces(new[] { new XmlQualifiedName(string.Empty, string.Empty) });
 				serializer.Serialize(writer, bindingProperties, absorbXsdAndXsiXmlns);
 				return stringWriter.ToString();
@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			using (var file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (var writer = XmlWriter.Create(file))
 			{
-				var serializer = new XmlSerializer(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
+				var serializer = Stateless.Xml.Serialization.XmlSerializerFactory.Create(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
 				serializer.Serialize(writer, bindingProperties);
 			}
 		}
@@ -62,7 +62,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var bindingProperties = GetBindingProperties();
 			using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = false, Encoding = Encoding.UTF8, OmitXmlDeclaration = true }))
 			{
-				var serializer = new XmlSerializer(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
+				var serializer = Stateless.Xml.Serialization.XmlSerializerFactory.Create(typeof(PropertyBag), new XmlRootAttribute("CustomProps"));
 				serializer.Serialize(writer, bindingProperties);
 			}
 		}

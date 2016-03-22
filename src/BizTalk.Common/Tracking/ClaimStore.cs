@@ -354,7 +354,7 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// asynchronously to a network-shared file system (see <see cref="CheckOutDirectory"/>). For this reason, the
 		/// business message body's payload will be replaced by a <see cref="Schemas.Xml.Claim.CheckIn"/> token message
 		/// that will mutate into a <see cref="Schemas.Xml.Claim.CheckOut"/> token message as soon as it can be redeemed
-		/// from the <see cref="ClaimStore"/>; that is when the the orginal business message body's payload has been made
+		/// from the <see cref="ClaimStore"/>; that is when the the original business message body's payload has been made
 		/// available in the <see cref="ClaimStore"/>.
 		/// </para>
 		/// <para>

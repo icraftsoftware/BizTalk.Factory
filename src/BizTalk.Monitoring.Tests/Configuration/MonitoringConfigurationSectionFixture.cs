@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ namespace Be.Stateless.BizTalk.Monitoring.Configuration
 		[Test]
 		public void ConfigurationSectionIsDeclaredButEmpty()
 		{
-			var monitoringConfiguration = ((MonitoringConfigurationSection) ConfigurationManager.GetSection(
-				"be.stateless.tests/biztalk/monitoring"));
+			var monitoringConfiguration = (MonitoringConfigurationSection) ConfigurationManager.GetSection("be.stateless.tests/biztalk/monitoring");
 			Assert.That(monitoringConfiguration, Is.Not.Null);
 			Assert.That(monitoringConfiguration, Is.TypeOf<MonitoringConfigurationSection>());
 			Assert.That(monitoringConfiguration, Is.Not.SameAs(MonitoringConfigurationSection.Default));
+			// ReSharper disable once PossibleNullReferenceException
 			Assert.That(monitoringConfiguration.ClaimStoreDirectory, Is.Null);
 		}
 
@@ -48,8 +48,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Configuration
 		[Test]
 		public void ConfigurationSectionIsNotDeclared()
 		{
-			var monitoringConfiguration = ((MonitoringConfigurationSection) ConfigurationManager.GetSection(
-				"be.stateless.tests/biztalk/undeclaredMonitoringSection"));
+			var monitoringConfiguration = (MonitoringConfigurationSection) ConfigurationManager.GetSection("be.stateless.tests/biztalk/undeclaredMonitoringSection");
 			Assert.That(monitoringConfiguration, Is.Null);
 		}
 	}

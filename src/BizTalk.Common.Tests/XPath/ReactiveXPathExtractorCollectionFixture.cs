@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Streaming;
@@ -28,6 +29,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.XPath
 {
 	[TestFixture]
+	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class ReactiveXPathExtractorCollectionFixture
 	{
 		#region Setup/Teardown

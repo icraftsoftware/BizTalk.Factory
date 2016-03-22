@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 	/// cref="string"/>.
 	/// </summary>
 	/// <remarks>
-	/// Notice that <see cref="PolicyName"/> provides assitance to <see cref="PolicyNameConverter"/> during the
+	/// Notice that <see cref="PolicyName"/> provides assistance to <see cref="PolicyNameConverter"/> during the
 	/// conversion process.
 	/// </remarks>
 	public class PolicyNameConverter : ExpandableObjectConverter

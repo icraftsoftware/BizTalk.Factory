@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		public void AccessingItemRenewsItWhenUsingSlidingExpiration()
 		{
 			// Note: the real MemoryCache from System.runtime.caching does not update sliding expiration
-			// data for expirations that are below 1 second, therefore we use longer timespans in this test
+			// data for expiration that is below 1 second, therefore we use longer timespans in this test
 			var value = new object();
 
 			_memoryCache.Add(new CacheItem("test", value), new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMilliseconds(2000.0) });

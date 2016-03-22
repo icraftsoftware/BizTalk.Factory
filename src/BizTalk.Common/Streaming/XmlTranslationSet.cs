@@ -100,7 +100,7 @@ namespace Be.Stateless.BizTalk.Streaming
 			var conflictingReplacements = items
 				// find MatchingPatterns declared multiple times
 				.GroupBy(i => i.MatchingPatternString)
-				// keep only those that have conflicting ReplacementPatterns, i.e. several disctinct ones
+				// keep only those that have conflicting ReplacementPatterns, i.e. several distinct ones
 				.Where(g => g.Distinct(new LambdaComparer<XmlNamespaceTranslation>((lns, rns) => lns.ReplacementPattern == rns.ReplacementPattern)).Count() > 1)
 				.ToArray();
 

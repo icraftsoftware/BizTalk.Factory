@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ namespace Be.Stateless.BizTalk.XPath
 				// see https://msdn.microsoft.com/en-us/library/system.xml.xmltextwriter(v=vs.110).aspx
 				// - XmlTextWriter also allows you to override the current namespace declaration
 				// ReSharper disable once AssignNullToNotNullAttribute
-				writer.WriteAttributeString("xmlns", "s" + (xds.Key).ToString(CultureInfo.InvariantCulture), null, xds.Value);
+				writer.WriteAttributeString("xmlns", "s" + xds.Key.ToString(CultureInfo.InvariantCulture), null, xds.Value);
 			}
 
 			Extractors.Each(

@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.Extensions;
@@ -24,6 +25,7 @@ using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
+	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract partial class HttpAdapter
 	{
 		#region Nested Type: Outbound
@@ -115,7 +117,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// It defaults to <see cref="HttpAdapter.AuthenticationScheme.Anonymous"/>.
 			/// </remarks>
+#pragma warning disable 108
 			public AuthenticationScheme AuthenticationScheme { get; set; }
+#pragma warning restore 108
 
 			/// <summary>
 			/// User name to use for authentication with the server.
@@ -279,18 +283,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			public string ContentType { get; set; }
 
 			#endregion
-		}
-
-		#endregion
-
-		#region AuthenticationScheme Enum
-
-		public enum AuthenticationScheme
-		{
-			Anonymous,
-			Basic,
-			Digest,
-			Kerberos
 		}
 
 		#endregion

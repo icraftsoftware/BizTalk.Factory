@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -26,6 +27,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.XPath
 {
 	[TestFixture]
+	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class XPathExtractorEnumerableSerializerFixture
 	{
 		[Test]
@@ -89,6 +91,7 @@ namespace Be.Stateless.BizTalk.XPath
 					() => sut.ReadXml(reader),
 					Throws.TypeOf<ConfigurationErrorsException>()
 						.With.InnerException.TypeOf<Microsoft.BizTalk.XPath.XPathException>()
+						// ReSharper disable once StringLiteralTypo
 						.With.InnerException.Message.StartsWith("Bad Query string encoundered in XPath:"));
 			}
 		}

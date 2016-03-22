@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 						v => v.VisitComponent(
 							It.Is<PipelineComponentDescriptor<FailedMessageRoutingEnablerComponent>>(
 								// ReSharper disable SuspiciousTypeConversion.Global
-								c => ReferenceEquals(((FailedMessageRoutingEnablerComponent) c), failedMessageRoutingEnablerComponent)
+								c => ReferenceEquals((FailedMessageRoutingEnablerComponent) c, failedMessageRoutingEnablerComponent)
 								// ReSharper restore SuspiciousTypeConversion.Global
 								)
 							)
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 								v => v.VisitComponent(
 									It.Is<PipelineComponentDescriptor<MessageConsumerComponent>>(
 										// ReSharper disable SuspiciousTypeConversion.Global
-										c => ReferenceEquals(((MessageConsumerComponent) c), messageConsumerComponent)
+										c => ReferenceEquals((MessageConsumerComponent) c, messageConsumerComponent)
 										// ReSharper restore SuspiciousTypeConversion.Global
 										)
 									)

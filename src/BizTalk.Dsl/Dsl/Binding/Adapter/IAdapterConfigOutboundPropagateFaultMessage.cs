@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// This property is valid only for solicit-response ports.
 		/// </para>
 		/// <para>
-		/// It defauts to <c>True</c>.
+		/// It defaults to <c>True</c>.
 		/// </para>
 		/// </remarks>
 		bool PropagateFaultMessage { get; set; }

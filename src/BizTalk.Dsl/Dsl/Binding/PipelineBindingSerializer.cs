@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			_pipeline = pipeline;
 		}
 
-		#region IPipelineSerializer Members
+		#region IDslSerializer Members
 
 		public string Serialize()
 		{
@@ -117,7 +117,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			overrides.Ignore<ComponentInfo>(ci => ci.Description);
 			overrides.Ignore<ComponentInfo>(ci => ci.Version);
 
-			return new XmlSerializer(typeof(Document), overrides);
+			return Stateless.Xml.Serialization.XmlSerializerFactory.Create(typeof(Document), overrides);
 		}
 
 		private readonly IVisitable<IPipelineVisitor> _pipeline;

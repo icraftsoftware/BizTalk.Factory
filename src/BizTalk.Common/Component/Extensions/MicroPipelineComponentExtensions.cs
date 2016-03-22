@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		{
 			var overrides = new XmlAttributeOverrides();
 			overrides.Add(component.GetType(), new XmlAttributes { XmlRoot = new XmlRootAttribute("mComponent") });
-			var serializer = new XmlSerializer(component.GetType(), overrides);
+			var serializer = Stateless.Xml.Serialization.XmlSerializerFactory.Create(component.GetType(), overrides);
 
 			var microPipelineComponentDedicatedXmlWriter = new MicroPipelineComponentDedicatedXmlWriter(writer, component);
 

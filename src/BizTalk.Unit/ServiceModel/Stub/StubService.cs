@@ -97,7 +97,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 				var sca = typeof(TContract).GetCustomAttributes(typeof(ServiceContractAttribute), false)
 					.Cast<ServiceContractAttribute>()
 					.Single();
-				var serviceName = (sca.Name ?? typeof(TContract).Name);
+				var serviceName = sca.Name ?? typeof(TContract).Name;
 				var operationName = operationContractAttribute.AsyncPattern ? methodInfo.Name.Substring("Begin".Length) : methodInfo.Name;
 				// http://msdn.microsoft.com/en-us/library/system.servicemodel.operationcontractattribute.action.aspx
 				return string.Format("{0}/{1}/{2}", sca.Namespace, serviceName, operationName);

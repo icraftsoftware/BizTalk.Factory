@@ -58,6 +58,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			get
 			{
 				if (_host == null) throw new InvalidOperationException(string.Format("{0} service host has not started yet.", typeof(SimpleServiceHost<TService, TChannel>).Name));
+				// ReSharper disable once PossibleNullReferenceException
 				return _host.Description.Endpoints.Find(typeof(TChannel));
 			}
 		}
@@ -76,6 +77,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			if (_host != null) throw new InvalidOperationException(string.Format("{0} service host has already started.", typeof(SimpleServiceHost<TService, TChannel>).Name));
 
 			_host = new ServiceHost(typeof(TService), address);
+			// ReSharper disable once PossibleNullReferenceException
 			var debugBehavior = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
 			debugBehavior.IncludeExceptionDetailInFaults = true;
 			_host.AddServiceEndpoint(typeof(TChannel), binding, string.Empty);
@@ -96,6 +98,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		private static void AddMexEndpoint(string scheme)
 		{
 			if (scheme == null) throw new ArgumentNullException("scheme");
+			// ReSharper disable once PossibleNullReferenceException
 			var debugBehavior = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
 			var metaDataBehavior = _host.Description.Behaviors.Find<ServiceMetadataBehavior>();
 			if (metaDataBehavior == null)
@@ -103,7 +106,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 				metaDataBehavior = new ServiceMetadataBehavior();
 				_host.Description.Behaviors.Add(metaDataBehavior);
 			}
-			debugBehavior.HttpHelpPageEnabled = metaDataBehavior.HttpGetEnabled = (scheme.IndexOf("http", StringComparison.OrdinalIgnoreCase) >= 0);
+			debugBehavior.HttpHelpPageEnabled = metaDataBehavior.HttpGetEnabled = scheme.IndexOf("http", StringComparison.OrdinalIgnoreCase) >= 0;
 			_host.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, CreateMexBindingForScheme(scheme), "mex");
 		}
 

@@ -121,7 +121,7 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			get
 			{
-				var resource = (_resourceManager.GetObject("COMPONENTICON", CultureInfo.InvariantCulture));
+				var resource = _resourceManager.GetObject("COMPONENTICON", CultureInfo.InvariantCulture);
 				return resource != null ? ((Bitmap) resource).GetHicon() : IntPtr.Zero;
 			}
 		}

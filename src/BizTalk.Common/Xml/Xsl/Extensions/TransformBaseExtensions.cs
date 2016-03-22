@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl.Extensions
 		/// </returns>
 		public static bool IsTransform(this Type type)
 		{
-			return (type != null && type.BaseType == typeof(TransformBase));
+			return type != null && type.BaseType == typeof(TransformBase);
 		}
 
 		/// <summary>

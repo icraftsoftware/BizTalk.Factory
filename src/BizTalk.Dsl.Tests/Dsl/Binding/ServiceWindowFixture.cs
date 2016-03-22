@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,8 +64,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var rl = new Microsoft.BizTalk.Deployment.Binding.ReceiveLocation();
 
-			Assert.That(((DateTime) ServiceWindow.None.StartTime), Is.EqualTo(rl.FromTime));
-			Assert.That(((DateTime) ServiceWindow.None.StopTime), Is.EqualTo(rl.ToTime));
+			Assert.That((DateTime) ServiceWindow.None.StartTime, Is.EqualTo(rl.FromTime));
+			Assert.That((DateTime) ServiceWindow.None.StopTime, Is.EqualTo(rl.ToTime));
 			Assert.That(ServiceWindow.None.Enabled, Is.False);
 		}
 	}

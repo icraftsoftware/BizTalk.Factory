@@ -25,6 +25,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract partial class HttpAdapter : AdapterBase
 	{
+		#region AuthenticationScheme Enum
+
+		public enum AuthenticationScheme
+		{
+			Anonymous,
+			Basic,
+			Digest,
+			Kerberos
+		}
+
+		#endregion
+
 		static HttpAdapter()
 		{
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("1c56d157-0553-4345-8a1f-55d2d1a3ffb6"));

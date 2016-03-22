@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -249,22 +249,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			Assert.That(binding.TrackingOption, Is.EqualTo(OrchestrationTrackingTypes.None));
 			Assert.That(binding.Ports.Count, Is.EqualTo(4));
 
-			Assert.That(binding.Ports[0].Modifier, Is.EqualTo(((int) PortModifier.Import)));
+			Assert.That(binding.Ports[0].Modifier, Is.EqualTo((int) PortModifier.Import));
 			Assert.That(binding.Ports[0].Name, Is.EqualTo("SendPort"));
 			Assert.That(binding.Ports[0].ReceivePortRef, Is.Null);
 			Assert.That(binding.Ports[0].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.OneWaySendPort()).Name));
-			Assert.That(binding.Ports[1].Modifier, Is.EqualTo(((int) PortModifier.Export)));
+			Assert.That(binding.Ports[1].Modifier, Is.EqualTo((int) PortModifier.Export));
 
 			Assert.That(binding.Ports[1].Name, Is.EqualTo("ReceivePort"));
 			Assert.That(binding.Ports[1].ReceivePortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.OneWayReceivePort()).Name));
 			Assert.That(binding.Ports[1].SendPortRef, Is.Null);
 
-			Assert.That(binding.Ports[2].Modifier, Is.EqualTo(((int) PortModifier.Export)));
+			Assert.That(binding.Ports[2].Modifier, Is.EqualTo((int) PortModifier.Export));
 			Assert.That(binding.Ports[2].Name, Is.EqualTo("RequestResponsePort"));
 			Assert.That(binding.Ports[2].ReceivePortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWayReceivePort()).Name));
 			Assert.That(binding.Ports[2].SendPortRef, Is.Null);
 
-			Assert.That(binding.Ports[3].Modifier, Is.EqualTo(((int) PortModifier.Import)));
+			Assert.That(binding.Ports[3].Modifier, Is.EqualTo((int) PortModifier.Import));
 			Assert.That(binding.Ports[3].Name, Is.EqualTo("SolicitResponsePort"));
 			Assert.That(binding.Ports[3].ReceivePortRef, Is.Null);
 			Assert.That(binding.Ports[3].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWaySendPort()).Name));

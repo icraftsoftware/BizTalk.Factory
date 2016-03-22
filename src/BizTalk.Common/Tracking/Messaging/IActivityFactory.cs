@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -110,10 +110,10 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 		/// <summary>
 		/// Creates a reference to the batch release <see cref="BatchReleaseProcessReference"/> tracking activity that was
-		/// initiatied by a <see cref="Batch.Release"/> control message.
+		/// initiated by a <see cref="Batch.Release"/> control message.
 		/// </summary>
 		/// <param name="processActivityId">
-		/// The <see cref="Process.ActivityId"/> of the batch release process that was initiatied by a <see
+		/// The <see cref="Process.ActivityId"/> of the batch release process that was initiated by a <see
 		/// cref="Batch.Release"/> control message.
 		/// </param>
 		/// <returns>

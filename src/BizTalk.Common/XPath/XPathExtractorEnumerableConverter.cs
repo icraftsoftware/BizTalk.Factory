@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.XPath
 	/// cref="string"/>.
 	/// </summary>
 	/// <remarks>
-	/// Notice that <see cref="XPathExtractorEnumerableConverter"/> delegates the XML serialization and deseriliazation
+	/// Notice that <see cref="XPathExtractorEnumerableConverter"/> delegates the XML serialization and deserialization
 	/// to <see cref="XPathExtractorEnumerableSerializer"/>.
 	/// </remarks>
 	/// <seealso cref="XPathExtractorEnumerableSerializer"/>

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Tracking
 {
@@ -55,18 +54,6 @@ namespace Be.Stateless.BizTalk.Tracking
 		}
 
 		/// <summary>
-		/// Either the message body's actual payload or the relative path to a file in the claim store where the message
-		/// body stream will be, or has been, committed to.
-		/// </summary>
-		/// <remarks>
-		/// If <see cref="CaptureMode"/> is equals to <see cref="MessageBodyCaptureMode.Unclaimed"/>, it denotes the
-		/// actual payload of the message body compressed and encoded as a Base64 string. If <see cref="CaptureMode"/> is
-		/// equals to <see cref="MessageBodyCaptureMode.Claimed"/>, it denotes the relative path to a file in the claim
-		/// store where the message body stream will be, or has been, committed to.
-		/// </remarks>
-		public string Data { get; private set; }
-
-		/// <summary>
 		/// Whether the payload of a message body is being captured directly into the BAM monitoring database or not, see
 		/// <see cref="MessageBodyCaptureMode.Unclaimed"/> and <see cref="MessageBodyCaptureMode.Claimed"/>
 		/// respectively.
@@ -78,5 +65,17 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// store where the message body stream will be, or has been, committed to.
 		/// </remarks>
 		public MessageBodyCaptureMode CaptureMode { get; private set; }
+
+		/// <summary>
+		/// Either the message body's actual payload or the relative path to a file in the claim store where the message
+		/// body stream will be, or has been, committed to.
+		/// </summary>
+		/// <remarks>
+		/// If <see cref="CaptureMode"/> is equals to <see cref="MessageBodyCaptureMode.Unclaimed"/>, it denotes the
+		/// actual payload of the message body compressed and encoded as a Base64 string. If <see cref="CaptureMode"/> is
+		/// equals to <see cref="MessageBodyCaptureMode.Claimed"/>, it denotes the relative path to a file in the claim
+		/// store where the message body stream will be, or has been, committed to.
+		/// </remarks>
+		public string Data { get; private set; }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Schemas.Xml;
@@ -26,6 +27,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Schema
 {
 	[TestFixture]
+	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class SchemaAnnotationsFixture
 	{
 		[Test]

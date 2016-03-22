@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ namespace Be.Stateless.BizTalk.Xml
 	/// <seealso cref="Microsoft.XLANGs.Core.Service.CompositeStreamReader"/>
 	public class CompositeXmlReader : XmlReaderWrapper
 	{
-		#region Nested type: CompoundXmlReader
+		#region Nested Type: CompoundXmlReader
 
 		private class CompoundXmlReader : XmlReaderWrapper
 		{
@@ -232,9 +232,9 @@ namespace Be.Stateless.BizTalk.Xml
 					return Read();
 
 				case CompositeReaderState.MessagePartWrapperClosingTag:
-					_state = (++_currentMessagePartIndex < _readers.Length
+					_state = ++_currentMessagePartIndex < _readers.Length
 						? CompositeReaderState.MessagePartWrapperOpeningTag
-						: CompositeReaderState.RootAggregateClosingTag);
+						: CompositeReaderState.RootAggregateClosingTag;
 					return InnerReader.Read();
 
 				case CompositeReaderState.RootAggregateClosingTag:

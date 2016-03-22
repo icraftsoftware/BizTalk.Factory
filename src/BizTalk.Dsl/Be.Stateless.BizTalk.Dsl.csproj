@@ -81,6 +81,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.BaseAdapter.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.CoreAdapterMgmt">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.CoreAdapterMgmt.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Deployment, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Deployment.dll</HintPath>
@@ -146,6 +149,9 @@
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\Extensions\ConfigurationProxyExtensions.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FtpAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FtpAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\FtpAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\HttpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\HttpAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\HttpAdapter.Outbound.cs" />
@@ -159,6 +165,7 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundAction.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundTransactionIsolation.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
+    <Compile Include="Dsl\Binding\Adapter\LegacyAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMapping.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMappingOperation.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.cs" />

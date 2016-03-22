@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ namespace Be.Stateless.BizTalk.Unit.Component
 		{
 			MessageMock = new Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
 			PipelineContextMock = new Mock<IPipelineContext> { DefaultValue = DefaultValue.Mock };
-			// default behaviour analogous to actual IPipelineContext implementation
+			// default behavior analogous to actual IPipelineContext implementation
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType(It.IsAny<string>()))
 				.Callback<string>(t => { throw new COMException("Could not locate document specification with type: " + t); });

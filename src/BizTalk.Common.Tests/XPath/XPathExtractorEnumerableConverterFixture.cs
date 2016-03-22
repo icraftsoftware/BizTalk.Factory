@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.BizTalk.Schema;
@@ -24,6 +25,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.XPath
 {
 	[TestFixture]
+	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class XPathExtractorEnumerableConverterFixture
 	{
 		[Test]
@@ -43,7 +45,8 @@ namespace Be.Stateless.BizTalk.XPath
 		[Test]
 		public void ConvertFrom()
 		{
-			var xml = string.Format(@"<san:Properties xmlns:s0='urn' xmlns:san='{0}'>
+			var xml = string.Format(
+				@"<san:Properties xmlns:s0='urn' xmlns:san='{0}'>
   <s0:Property1 xpath='*/some-node'/>
   <s0:Property2 promoted='true' xpath='*/other-node'/>
 </san:Properties>",

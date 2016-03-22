@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,7 +60,10 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		}
 
 		[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization but not supposed to be called.")]
-		public PolicyName() : base(string.Empty, 0, 0) { throw new NotSupportedException(); }
+		public PolicyName() : base(string.Empty, 0, 0)
+		{
+			throw new NotSupportedException();
+		}
 
 		public PolicyName(RuleSetInfo ruleSetInfo) : base(ruleSetInfo.Name, ruleSetInfo.MajorRevision, ruleSetInfo.MinorRevision) { }
 
@@ -165,7 +168,7 @@ namespace Be.Stateless.BizTalk.RuleEngine
 		{
 			unchecked
 			{
-				var hashCode = (Name != null ? Name.GetHashCode() : 0);
+				var hashCode = Name != null ? Name.GetHashCode() : 0;
 				hashCode = (hashCode * 397) ^ MajorRevision;
 				hashCode = (hashCode * 397) ^ MinorRevision;
 				return hashCode;

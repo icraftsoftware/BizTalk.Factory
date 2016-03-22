@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,11 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 	/// </remarks>
 	public static class BaseMessageEx
 	{
+		public static bool HasFailed(this IBaseMessage message)
+		{
+			return message.GetProperty(ErrorReportProperties.ErrorType) != null;
+		}
+
 		#region message direction and exchange pattern
 
 		public static MessageDirection FailedDirection(this IBaseMessage message)
@@ -59,7 +64,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		{
 			return (message.PortType().IsRequestResponse() && message.Direction().IsInbound())
 				|| (message.PortType().IsSolicitResponse() && message.Direction().IsOutbound())
-				|| (message.PortType().IsOneWay());
+				|| message.PortType().IsOneWay();
 		}
 
 		public static PortType PortType(this IBaseMessage message)
@@ -73,21 +78,16 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 
 		private static bool IsRequestResponse(IBaseMessage message)
 		{
-			return (message.GetProperty(BtsProperties.IsRequestResponse) ?? false);
+			return message.GetProperty(BtsProperties.IsRequestResponse) ?? false;
 		}
 
 		private static bool IsSolicitResponse(IBaseMessage message)
 		{
 			if (message.GetProperty(BtsProperties.IsSolicitResponse) ?? false) return true;
-			return (message.Direction().IsInbound() && (message.GetProperty(BtsProperties.WasSolicitResponse) ?? false));
+			return message.Direction().IsInbound() && (message.GetProperty(BtsProperties.WasSolicitResponse) ?? false);
 		}
 
 		#endregion
-
-		public static bool HasFailed(this IBaseMessage message)
-		{
-			return (message.GetProperty(ErrorReportProperties.ErrorType) != null);
-		}
 
 		#region message's tracking context accessor
 

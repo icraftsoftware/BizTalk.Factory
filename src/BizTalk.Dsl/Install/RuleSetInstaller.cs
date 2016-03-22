@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Be.Stateless.BizTalk.Tracking;
 using Microsoft.RuleEngine;
 using RuleSet = Be.Stateless.BizTalk.Dsl.RuleEngine.RuleSet;
 

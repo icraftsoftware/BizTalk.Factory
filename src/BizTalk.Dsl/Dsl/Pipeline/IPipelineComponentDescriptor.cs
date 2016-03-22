@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 	/// Merge BizTalk Server pipeline component's interfaces that are used and required by Pipeline DSL.
 	/// </summary>
 	/// <remarks>
-	/// This interface is not meant to be used explicitly but only fulfils a Pipeline DSL scaffolding role and is meant
+	/// This interface is not meant to be used explicitly but only fulfills a Pipeline DSL scaffolding role and is meant
 	/// to be used in conjunction with <see cref="PipelineComponentDescriptor{T}"/>.
 	/// </remarks>
 	public interface IPipelineComponentDescriptor : IBaseComponent, IPersistPropertyBag, ITypeDescriptor, IVisitable<IPipelineVisitor>

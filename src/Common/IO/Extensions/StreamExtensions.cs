@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ namespace Be.Stateless.IO.Extensions
 			if (!stream.CanRead) throw new InvalidOperationException("Cannot drain a non-readable stream.");
 			// Read and write in chunks of 1K
 			var tempBuffer = new byte[1024];
-			while ((stream.Read(tempBuffer, 0, tempBuffer.Length)) != 0) { }
+			while (stream.Read(tempBuffer, 0, tempBuffer.Length) != 0) { }
 		}
 
 		/// <summary>
@@ -173,8 +173,7 @@ namespace Be.Stateless.IO.Extensions
 		/// The threshold in bytes that the compressed stream cannot exceed.
 		/// </param>
 		/// <param name="encodedCompression">
-		/// The base64 encoding of the compressed stream if the latter's length does not execeed the compression
-		/// threshold.
+		/// The base64 encoding of the compressed stream if the latter's length does not exceed the compression threshold.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if the stream can be compressed without exceeding the <paramref name="threshold"/>; <c>false</c>

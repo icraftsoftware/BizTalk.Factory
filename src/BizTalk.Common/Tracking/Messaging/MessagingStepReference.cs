@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 	/// cref="Process"/>.
 	/// </summary>
 	/// <remarks>
-	/// Notice that <see cref="MessagingStepReference"/> will never begin, upodate, nor end an <see cref="EventStream"/>
+	/// Notice that <see cref="MessagingStepReference"/> will never begin, update, nor end an <see cref="EventStream"/>
 	/// activity.
 	/// </remarks>
 	internal sealed class MessagingStepReference : MessagingStep

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 
 			Assert.That(
 				() => message.Object.GetTrackingContext(true),
-				Throws.InvalidOperationException.With.Message.EqualTo("Invalid TrackingContext: None of its discrete acitivity Ids are set."));
+				Throws.InvalidOperationException.With.Message.EqualTo("Invalid TrackingContext: None of its discrete activity Ids are set."));
 		}
 
 		[Test]

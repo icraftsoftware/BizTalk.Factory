@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 	/// cref="SchemaBase"/>-derived schema.
 	/// </summary>
 	/// <typeparam name="T">
-	/// The type of the BizTalk Server schema to vaidate against.
+	/// The type of the BizTalk Server schema to validate against.
 	/// </typeparam>
 	public abstract class SchemaFixture<T> where T : SchemaBase, new()
 	{
@@ -75,7 +75,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="filepath">
 		/// The path of the XML file to load and validate.
@@ -97,7 +97,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="filepath">
 		/// The path of the XML file to load and validate.
@@ -122,10 +122,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="filepath">
 		/// The path of the XML file to load and validate.
@@ -148,10 +148,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="filepath">
 		/// The path of the XML file to load and validate.
@@ -214,7 +214,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="document">
 		/// The <see cref="XmlDocument"/> to validate.
@@ -236,7 +236,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="document">
 		/// The <see cref="XmlDocument"/> to validate.
@@ -261,10 +261,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="document">
 		/// The <see cref="XmlDocument"/> to validate.
@@ -287,10 +287,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="document">
 		/// The <see cref="XmlDocument"/> to validate.
@@ -353,7 +353,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="stream">
 		/// The <see cref="Stream"/> to validate.
@@ -375,7 +375,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="stream">
 		/// The <see cref="Stream"/> to validate.
@@ -400,10 +400,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="stream">
 		/// The <see cref="Stream"/> to validate.
@@ -426,10 +426,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="stream">
 		/// The <see cref="Stream"/> to validate.
@@ -496,7 +496,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> to validate.
@@ -520,7 +520,7 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> to validate.
@@ -547,10 +547,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> to validate.
@@ -575,10 +575,10 @@ namespace Be.Stateless.BizTalk.Unit.Schema
 		/// <typeparamref name="T3"/> BizTalk Server schemas.
 		/// </summary>
 		/// <typeparam name="T2">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <typeparam name="T3">
-		/// A supplementary type of the BizTalk Server schema to vaidate against.
+		/// A supplementary type of the BizTalk Server schema to validate against.
 		/// </typeparam>
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> to validate.

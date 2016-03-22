@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -172,7 +172,7 @@ namespace Be.Stateless.IO
 			while (bytesRead < count && _position < _byteLength)
 			{
 				var c = _string[(_position - 2) / 2];
-				buffer[offset + bytesRead] = (byte) (((_position - 2) % 2 == 0)
+				buffer[offset + bytesRead] = (byte) ((_position - 2) % 2 == 0
 					? c & 0xFF
 					: (c >> 8) & 0xFF);
 				_position++;

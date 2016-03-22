@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ namespace Be.Stateless.BizTalk.Component
 					.Using(new LambdaComparer<IMicroPipelineComponent>((lmc, rmc) => lmc.GetType() == rmc.GetType())));
 
 			// ReSharper disable once PossibleNullReferenceException
-			var microPipelineComponentDummyTen = ((MicroPipelineComponentDummyTen) ((IMicroPipelineComponent[]) result)[2]);
+			var microPipelineComponentDummyTen = (MicroPipelineComponentDummyTen) ((IMicroPipelineComponent[]) result)[2];
 			Assert.That(microPipelineComponentDummyTen.Encoding, Is.EqualTo(new UTF8Encoding(false)));
 			Assert.That(microPipelineComponentDummyTen.Modes, Is.EqualTo(XmlTranslationModes.Default));
 			Assert.That(microPipelineComponentDummyTen.Plugin, Is.EqualTo(typeof(DummyXmlTranslatorComponent)));
@@ -213,7 +213,7 @@ namespace Be.Stateless.BizTalk.Component
 				extractorComponent.Extractors,
 				Is.EqualTo(
 					new[] {
-						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node"),
 						new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
 					}));
 		}
@@ -265,7 +265,7 @@ namespace Be.Stateless.BizTalk.Component
 			var component = new DummyContextPropertyExtractorComponent {
 				Enabled = true,
 				Extractors = new[] {
-					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node"),
 					new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
 				}
 			};

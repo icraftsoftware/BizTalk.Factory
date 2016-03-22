@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		/// </summary>
 		/// <returns>
 		/// The <see cref="TrackingContext"/> that contains the BAM tracking activities identifiers for the current
-		/// process. Notice that, cntrary to <see cref="Initiate(XLANGMessage)"/>, <see
+		/// process. Notice that, contrary to <see cref="Initiate(XLANGMessage)"/>, <see
 		/// cref="TrackingContext.MessagingStepActivityId"/> will not be filled.
 		/// </returns>
 		/// <remarks>
@@ -80,7 +80,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		/// </param>
 		/// <returns>
 		/// The <see cref="TrackingContext"/> that contains the BAM tracking activities identifiers for the current
-		/// process. Notice that, cntrary to <see cref="Initiate(XLANGMessage)"/>, <see
+		/// process. Notice that, contrary to <see cref="Initiate(XLANGMessage)"/>, <see
 		/// cref="TrackingContext.MessagingStepActivityId"/> will not be filled.
 		/// </returns>
 		/// <remarks>
@@ -147,7 +147,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				activatingMessage.GetProperty(TrackingProperties.Value3));
 
 			// link inbound activating messaging step to its process
-			// only an orchestation can link an activating messaging step to its process
+			// only an orchestration can link an activating messaging step to its process
 			// as ProcessActivityId is initialized *by* the orchestration's first step
 			var messagingStep = new MessagingStep(activatingMessage);
 			process.AddStep(messagingStep);
@@ -213,7 +213,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		/// </summary>
 		/// <param name="trackingContext">
 		/// The <see cref="TrackingContext"/> that contains the <see cref="TrackingContext.ProcessActivityId"/> of the
-		/// process tracking activty.
+		/// process tracking activity.
 		/// </param>
 		/// <param name="message">
 		/// The message whose BAM tracking activity must be attached to the process tracking activity.

@@ -159,7 +159,7 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 		private static Stream Load(Assembly assembly, Type declaringType, string name)
 		{
 			var manifestResourceNames = assembly.GetManifestResourceNames();
-			// first, search for a namespace-qualifed name match, then for non namespace-qualifed name match, then fallback on actual argument's value
+			// first, search for a namespace-qualified name match, then for non namespace-qualified name match, then fallback on actual argument's value
 			var actualName = manifestResourceNames.SingleOrDefault(n => n.Equals(string.Format("{0}.{1}", declaringType.Namespace, name), StringComparison.Ordinal))
 				?? manifestResourceNames.SingleOrDefault(n => n.Equals(name, StringComparison.Ordinal))
 					?? name;
