@@ -31,10 +31,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region Nested Type: Boolean
 
 		/// <summary>
-		/// Serializes <see cref="bool"/> back and forth to Pascal-cased strings.
+		/// Hack to serialize <see cref="bool"/> back and forth to Pascal-cased strings.
 		/// </summary>
 		/// <remarks>
-		/// This class is intended to be used only with <see cref="LegacyAdapterBase"/>-derived classes.
+		/// This class is intended to be used only with <see cref="FtpAdapter"/>-derived classes.
 		/// </remarks>
 		public class Boolean : IXmlSerializable
 		{
@@ -43,6 +43,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			public static implicit operator Boolean(bool @bool)
 			{
 				return @bool ? True : False;
+			}
+
+			public static implicit operator bool(Boolean boolean)
+			{
+				return Convert.ToBoolean(boolean._value);
 			}
 
 			#endregion
@@ -95,7 +100,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		public enum FirewallType
 		{
-			NoFirewall,
+			[XmlEnum("NoFirewall")]
+			None,
 			Socks4,
 			Socks5
 		}

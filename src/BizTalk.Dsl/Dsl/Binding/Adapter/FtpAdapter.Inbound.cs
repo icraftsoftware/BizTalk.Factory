@@ -65,20 +65,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				// Firewall Settings
 				FirewallPort = 21;
-				FirewallType = FirewallType.NoFirewall;
+				FirewallType = FirewallType.None;
 				Mode = Mode.Active;
 
+				// FTP Settings
 				Port = 21;
 				ErrorThreshold = 10;
 				Representation = RepresentationType.Binary;
 
+				// Polling Settings
 				DeleteAfterDownload = true;
 				PollingInterval = TimeSpan.FromSeconds(60);
 				RedownloadInterval = TimeSpan.MinValue;
 
+				// SSL Settings
 				FtpsConnectionMode = FtpsConnectionMode.Explicit;
 				UseDataProtection = true;
 
+				// Tuning Parameters
 				ReceiveTimeout = TimeSpan.FromSeconds(90);
 			}
 
@@ -166,7 +170,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// Specify the type of firewall deployed.
 			/// </summary>
 			/// <remarks>
-			/// It defaults to <see cref="FtpAdapter.FirewallType.NoFirewall"/>.
+			/// It defaults to <see cref="FtpAdapter.FirewallType.None"/>.
 			/// </remarks>
 #pragma warning disable 108
 			[XmlElement("firewallType")]

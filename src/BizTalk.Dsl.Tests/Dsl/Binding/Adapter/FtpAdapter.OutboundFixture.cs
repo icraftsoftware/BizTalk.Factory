@@ -29,14 +29,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var pfa = new FtpAdapter.Outbound(
 				a => {
-					//a.MailServer = "pop3.world.com";
-					//a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
-					//a.UserName = "domain\\reader/owner";
-					//a.Password = "p@ssw0rd";
-					//a.UseSSL = true;
-					//a.BodyPartContentType = "text/";
-					//a.ErrorThreshold = 50;
-					//a.PollingInterval = TimeSpan.FromSeconds(15);
+					a.Server = "ftp.server.com";
+					a.Folder = "/in/from_bts/";
+					a.UserName = "ftpuser";
+					a.Password = "p@ssw0rd";
+					a.AfterPut = "cd /";
+					a.BeforePut = "cd /";
+					a.AllocateStorage = true;
+
+					a.ConnectionLimit = 10;
 				});
 			var xml = ((IAdapterBindingSerializerFactory) pfa).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
@@ -45,30 +46,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					"<CustomProps>" +
 						"<AdapterConfig vt=\"8\">" + SecurityElement.Escape(
 							"<Config>" +
-								"<uri>ftp://ftp.server.com:21//in/from_bts/%MessageID%.xml</uri>" +
+								"<uri>ftp://ftp.server.com:21//in/from_bts//%MessageID%.xml</uri>" +
+								"<firewallPort>21</firewallPort>" +
+								"<firewallType>NoFirewall</firewallType>" +
+								"<passiveMode>False</passiveMode>" +
 								"<serverAddress>ftp.server.com</serverAddress>" +
 								"<serverPort>21</serverPort>" +
-								"<password><![CDATA[******]]></password>" +
-								"<accountName>ftpaccount</accountName>" +
-								"<targetFolder>/in/from_bts</targetFolder>" +
+								"<targetFolder>/in/from_bts/</targetFolder>" +
 								"<targetFileName>%MessageID%.xml</targetFileName>" +
-								"<representationType>binary</representationType>" +
-								"<beforePut>cd /</beforePut>" +
+								"<userName>ftpuser</userName>" +
+								"<password>p@ssw0rd</password>" +
 								"<afterPut>cd /</afterPut>" +
+								"<beforePut>cd /</beforePut>" +
 								"<allocateStorage>True</allocateStorage>" +
-								"<appendIfExists>False</appendIfExists>" +
-								"<spoolingFolder>/in/from_bts/temp</spoolingFolder>" +
-								"<connectionLimit>10</connectionLimit>" +
-								"<passiveMode>False</passiveMode>" +
-								"<firewallType>Socks5</firewallType>" +
-								"<firewallAddress>firewall.com</firewallAddress>" +
-								"<firewallPort>21</firewallPort>" +
-								"<firewallUserName>fwuser</firewallUserName>" +
-								"<firewallPassword>******</firewallPassword>" +
-								"<useSsl>True</useSsl>" +
-								"<useDataProtection>True</useDataProtection>" +
+								"<representationType>binary</representationType>" +
 								"<ftpsConnMode>Explicit</ftpsConnMode>" +
-								"<clientCertificateHash>hash</clientCertificateHash>" +
+								"<useDataProtection>True</useDataProtection>" +
+								"<connectionLimit>10</connectionLimit>" +
 								"</Config>") +
 						"</AdapterConfig>" +
 						"</CustomProps>"));
@@ -77,22 +71,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void Validate()
 		{
-			var ofa = new FtpAdapter.Outbound(
-				a => {
-					//a.MailServer = "pop3.world.com";
-					//a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
-					//a.UserName = "owner";
-					//a.Password = "p@ssw0rd";
-					//a.UseSSL = true;
-					//a.BodyPartContentType = "text/";
-					//a.ErrorThreshold = 50;
-					//a.PollingInterval = TimeSpan.FromSeconds(15);
-				});
+			var ofa = new FtpAdapter.Outbound();
 			Assert.That(
 				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(
-						@"The format of the user name property is invalid for SPA authentication scheme. Make sure that the user name is specified as either <domain-name>\<user-name> or <machine-name>\<user-name>."));
+					.With.Message.EqualTo("The Server Address is not defined"));
 		}
 	}
 }
