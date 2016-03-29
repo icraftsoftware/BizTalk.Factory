@@ -109,10 +109,9 @@ namespace Be.Stateless.BizTalk.Streaming
 		/// A long value representing the length of the stream in bytes.
 		/// </returns>
 		/// <remarks>
-		/// If <see cref="InnerStream"/> is seekable (see <see cref="CanSeek"/>) the actual accurate length is returned
-		/// immediately. If <see cref="InnerStream"/> is not seekable, the <see cref="Length"/> will be computed while the
-		/// stream is being read and will consequently only be known accurately once the whole stream has been exhausted;
-		/// while being read, <see cref="Length"/> will therefore return minus one (<c>-1</c>).
+		/// The <see cref="Length"/> will be computed while the stream is being read and will consequently only be
+		/// available and known accurately once the whole stream has been exhausted. While being read, <see
+		/// cref="Length"/> will therefore throw a <see cref="T:System.NotSupportedException"/> exception.
 		/// </remarks>
 		/// <exception cref="T:System.NotSupportedException">
 		/// A class derived from Stream does not support seeking.
@@ -129,8 +128,15 @@ namespace Be.Stateless.BizTalk.Streaming
 				try
 				{
 					ThrowIfDisposed();
-					if (!ReadCompleted && !CanSeek) throw new NotSupportedException();
+					if (!CanSeek) throw new NotSupportedException();
 					return _length;
+				}
+				catch (NotSupportedException)
+				{
+					// avoid logging in this case as Microsoft.BizTalk.Internal.MessagePart.GetSize() systematically calls
+					// this getter without first calling CanSeek's getter as is expected against any Stream-derived class.
+					// see Microsoft.BizTalk.Messaging, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35
+					throw;
 				}
 				catch (Exception exception)
 				{
