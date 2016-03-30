@@ -1004,6 +1004,24 @@
 
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=MSMQ%20Queues -->
 
+  <ItemDefinitionGroup>
+    <!-- MSMQ receive queues ItemGroup default values -->
+    <MsmqReceiveQueues>
+      <Administrators>$(BizTalkGroupsDomain)\$(BizTalkServerAdministratorGroup)</Administrators>
+      <!-- By default, everybody is allowed to send messages (use of message-level security intended)-->
+      <Senders>Everyone;ANONYMOUS LOGON</Senders>
+      <Receivers>$(BizTalkGroupsDomain)\$(BizTalkApplicationUserGroup);$(BizTalkGroupsDomain)\$(BizTalkIsolatedHostUserGroup)</Receivers>
+    </MsmqReceiveQueues>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <!-- MSMQ dead letter queues ItemGroup default values -->
+    <MsmqDeadLetterQueues>
+      <Administrators>$(BizTalkGroupsDomain)\$(BizTalkServerAdministratorGroup)</Administrators>
+      <Senders>$(BizTalkGroupsDomain)\$(BizTalkApplicationUserGroup);$(BizTalkGroupsDomain)\$(BizTalkIsolatedHostUserGroup)</Senders>
+    </MsmqDeadLetterQueues>
+  </ItemDefinitionGroup>
+
   <Target Name="CreateMsmqQueues"
           Condition=" '$(IncludeMsmqQueues)' == 'true' and '@(MsmqReceiveQueues);@(MsmqDeadLetterQueues)' != '' "
           DependsOnTargets="CreateMsmqReceiveQueues;CreateMsmqDeadLetterQueues">
@@ -1021,11 +1039,14 @@
     <Message Text="Creating queue '.\private$\%(MsmqReceiveQueues.Identity)'..." Condition=" '$(_CoincidingHosts)' != '' " />
 
     <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
-      <_QueuePermissionSet Include="$(BizTalkGroupsDomain)\$(BizTalkServerAdministratorGroup)">
+      <_QueuePermissionSet Include="%(MsmqReceiveQueues.Administrators)">
         <Permissions>FullControl</Permissions>
       </_QueuePermissionSet>
-      <_QueuePermissionSet Include="$(BizTalkGroupsDomain)\$(BizTalkApplicationUserGroup);$(BizTalkGroupsDomain)\$(BizTalkIsolatedHostUserGroup)">
+      <_QueuePermissionSet Include="%(MsmqReceiveQueues.Receivers)">
         <Permissions>DeleteMessage,ReceiveMessage</Permissions>
+      </_QueuePermissionSet>
+      <_QueuePermissionSet Include="%(MsmqReceiveQueues.Senders)">
+        <Permissions>GenericWrite</Permissions>
       </_QueuePermissionSet>
     </ItemGroup>
 
@@ -1061,11 +1082,11 @@
     <Message Text="Creating dead letter queue '.\private$\%(MsmqDeadLetterQueues.Identity)'..." Condition=" '$(_CoincidingHosts)' != '' " />
 
     <ItemGroup Condition=" '$(_CoincidingHosts)' != '' ">
-      <_QueuePermissionSet Include="$(BizTalkGroupsDomain)\$(BizTalkServerAdministratorGroup)">
+      <_QueuePermissionSet Include="%(MsmqDeadLetterQueues.Administrators)">
         <Permissions>FullControl</Permissions>
       </_QueuePermissionSet>
-      <_QueuePermissionSet Include="$(BizTalkGroupsDomain)\$(BizTalkApplicationUserGroup);$(BizTalkGroupsDomain)\$(BizTalkIsolatedHostUserGroup)">
-        <Permissions>WriteMessage</Permissions>
+      <_QueuePermissionSet Include="%(MsmqDeadLetterQueues.Senders)">
+        <Permissions>GenericWrite</Permissions>
       </_QueuePermissionSet>
     </ItemGroup>
 
