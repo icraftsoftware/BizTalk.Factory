@@ -20,6 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
+using Microsoft.BizTalk.Adapter.Sftp;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
@@ -380,7 +381,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("pollingUnitOfMeasure")]
-			public PollingUnitOfMeasure XmlAliasedPollingUnitOfMeasure { get; set; }
+			public PollingIntervalUnit XmlAliasedPollingUnitOfMeasure { get; set; }
 
 			/// <summary>
 			/// Specify the interval after which the adapter downloads files again.

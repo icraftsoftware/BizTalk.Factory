@@ -19,6 +19,7 @@
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Microsoft.BizTalk.Adapter.Sftp;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
@@ -256,7 +257,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("pollingUnitOfMeasure")]
-			public PollingUnitOfMeasure XmlAliasedPollingUnitOfMeasure { get; set; }
+			public PollingIntervalUnit XmlAliasedPollingUnitOfMeasure { get; set; }
 
 			#endregion
 		}

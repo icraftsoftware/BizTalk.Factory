@@ -16,9 +16,7 @@
 
 #endregion
 
-using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -32,18 +30,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class LegacyAdapterBase : AdapterBase
 	{
-		#region PollingUnitOfMeasure Enum
-
-		public enum PollingUnitOfMeasure
-		{
-			Seconds,
-			Minutes,
-			Hours,
-			Days
-		}
-
-		#endregion
-
 		protected LegacyAdapterBase(ProtocolType protocolType) : base(protocolType) { }
 
 		#region Base Class Member Overrides
@@ -60,43 +46,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[XmlElement("uri")]
 		public string Uri { get; set; }
-
-		[SuppressMessage("ReSharper", "RedundantCaseLabel")]
-		protected TimeSpan BuildTimeSpan(int quantity, PollingUnitOfMeasure unit)
-		{
-			switch (unit)
-			{
-				case PollingUnitOfMeasure.Seconds:
-					return TimeSpan.FromSeconds(quantity);
-				case PollingUnitOfMeasure.Minutes:
-					return TimeSpan.FromMinutes(quantity);
-				case PollingUnitOfMeasure.Hours:
-					return TimeSpan.FromHours(quantity);
-				case PollingUnitOfMeasure.Days:
-				default:
-					return TimeSpan.FromDays(quantity);
-			}
-		}
-
-		protected void UnbuildTimeSpan(TimeSpan interval, Action<int, PollingUnitOfMeasure> quantityAndUnitSetter)
-		{
-			if (interval.Seconds != 0)
-			{
-				quantityAndUnitSetter((int) interval.TotalSeconds, PollingUnitOfMeasure.Seconds);
-			}
-			else if (interval.Minutes != 0)
-			{
-				quantityAndUnitSetter((int) interval.TotalMinutes, PollingUnitOfMeasure.Minutes);
-			}
-			else if (interval.Hours != 0)
-			{
-				quantityAndUnitSetter((int) interval.TotalHours, PollingUnitOfMeasure.Hours);
-			}
-			else // if (interval.Days != 0)
-			{
-				quantityAndUnitSetter((int) interval.TotalDays, PollingUnitOfMeasure.Days);
-			}
-		}
 
 		protected string Serialize()
 		{

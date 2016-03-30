@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.Sftp, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Sftp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Adapter.Wcf.Common, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Wcf.Common.dll</HintPath>
@@ -147,6 +151,8 @@
     <Compile Include="Dsl\Binding\Adapter\HttpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3AdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SftpAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SftpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapterFixture.cs" />
@@ -180,6 +186,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SftpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorFixture.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensionsFixture.cs" />

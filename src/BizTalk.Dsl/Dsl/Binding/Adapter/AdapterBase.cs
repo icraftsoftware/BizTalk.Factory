@@ -17,7 +17,9 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.Extensions;
+using Microsoft.BizTalk.Adapter.Sftp;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.Win32;
@@ -108,6 +110,43 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected abstract void Save(IPropertyBag propertyBag);
 
 		protected abstract void Validate();
+
+		[SuppressMessage("ReSharper", "RedundantCaseLabel")]
+		protected TimeSpan BuildTimeSpan(int quantity, PollingIntervalUnit unit)
+		{
+			switch (unit)
+			{
+				case PollingIntervalUnit.Seconds:
+					return TimeSpan.FromSeconds(quantity);
+				case PollingIntervalUnit.Minutes:
+					return TimeSpan.FromMinutes(quantity);
+				case PollingIntervalUnit.Hours:
+					return TimeSpan.FromHours(quantity);
+				case PollingIntervalUnit.Days:
+				default:
+					return TimeSpan.FromDays(quantity);
+			}
+		}
+
+		protected void UnbuildTimeSpan(TimeSpan interval, Action<int, PollingIntervalUnit> quantityAndUnitSetter)
+		{
+			if (interval.Seconds != 0 || interval == TimeSpan.Zero)
+			{
+				quantityAndUnitSetter((int) interval.TotalSeconds, PollingIntervalUnit.Seconds);
+			}
+			else if (interval.Minutes != 0)
+			{
+				quantityAndUnitSetter((int) interval.TotalMinutes, PollingIntervalUnit.Minutes);
+			}
+			else if (interval.Hours != 0)
+			{
+				quantityAndUnitSetter((int) interval.TotalHours, PollingIntervalUnit.Hours);
+			}
+			else // if (interval.Days != 0)
+			{
+				quantityAndUnitSetter((int) interval.TotalDays, PollingIntervalUnit.Days);
+			}
+		}
 
 		private readonly ProtocolType _protocolType;
 	}
