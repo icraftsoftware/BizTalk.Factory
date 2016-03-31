@@ -128,7 +128,7 @@ namespace Be.Stateless.BizTalk.Streaming
 				try
 				{
 					ThrowIfDisposed();
-					if (!CanSeek) throw new NotSupportedException();
+					if (!ReadCompleted && !CanSeek) throw new NotSupportedException();
 					return _length;
 				}
 				catch (NotSupportedException)
