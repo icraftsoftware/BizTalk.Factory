@@ -596,16 +596,20 @@
     <Message Text="Setting up BizTalk backup for custom database '%(CustomDatabases.Identity)'..." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
 
     <!-- prepping script parameters and ensure there is always one and only one ${CustomDatabaseName} param -->
-    <ItemGroup>
-      <DatabaseScriptParameters Include="true" Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " >
+    <ItemGroup Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' ">
+      <DatabaseScriptParameters Include="true">
         <name>${CustomDatabaseName}</name>
         <value>%(CustomDatabases.Identity)</value>
+      </DatabaseScriptParameters>
+      <DatabaseScriptParameters Include="true">
+        <name>${ServerName}</name>
+        <value>%(CustomDatabases.Server)</value>
       </DatabaseScriptParameters>
     </ItemGroup>
 
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="Execute"
-      ConnectionString="Server=$(ManagementDatabaseServer);Initial Catalog=%(CustomDatabases.Identity);Integrated Security=True"
+      ConnectionString="Server=$(ManagementDatabaseServer);Initial Catalog=BizTalkMgmtDb;Integrated Security=True"
       Files="$(DeployTools)\BizTalk.Factory.IncludeCustomDatabaseInOtherBackupDatabases.sql"
       Parameters="@(DatabaseScriptParameters)"
       Retry="false"
@@ -617,6 +621,7 @@
     <!-- prepping script parameters and ensure there is always one and only one ${CustomDatabaseName} param -->
     <ItemGroup>
       <DatabaseScriptParameters Remove="%(DatabaseScriptParameters.Identity)" Condition=" '%(name)' == '${CustomDatabaseName}' " />
+      <DatabaseScriptParameters Remove="%(DatabaseScriptParameters.Identity)" Condition=" '%(name)' == '${ServerName}' " />
     </ItemGroup>
 
     <Message Text="Set up BizTalk backup for custom database '%(CustomDatabases.Identity)'." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
@@ -660,7 +665,7 @@
 
     <MSBuild.ExtensionPack.SqlServer.SqlExecute
       TaskAction="Execute"
-      ConnectionString="Server=$(ManagementDatabaseServer);Initial Catalog=%(CustomDatabases.Identity);Integrated Security=True"
+      ConnectionString="Server=$(ManagementDatabaseServer);Initial Catalog=BizTalkMgmtDb;Integrated Security=True"
       Files="$(DeployTools)\BizTalk.Factory.RemoveCustomDatabaseFromOtherBackupDatabases.sql"
       Parameters="@(DatabaseScriptParameters)"
       Retry="false"

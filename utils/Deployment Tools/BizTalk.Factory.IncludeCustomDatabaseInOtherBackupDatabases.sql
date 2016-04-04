@@ -20,7 +20,7 @@ GO
 -- see http://msdn.microsoft.com/en-us/library/aa561198.aspx
 
 MERGE INTO [adm_OtherBackupDatabases] WITH (HOLDLOCK) AS [TARGET]
-   USING (SELECT '${CustomDatabaseName}' AS [DatabaseName], '${ManagementDatabaseServer}' AS [ServerName], '${BTSServer}' AS [BTSServerName]) AS [SOURCE]
+   USING (SELECT '${CustomDatabaseName}' AS [DatabaseName], '${ServerName}' AS [ServerName], '${BTSServer}' AS [BTSServerName]) AS [SOURCE]
    ON [TARGET].[DatabaseName] = [SOURCE].[DatabaseName]
 WHEN MATCHED THEN
    UPDATE SET [DefaultDatabaseName] = [SOURCE].[DatabaseName],
