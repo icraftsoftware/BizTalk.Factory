@@ -85,6 +85,7 @@
     <Compile Include="QuartzServiceInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SqlServerDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\be.stateless.public.snk">
