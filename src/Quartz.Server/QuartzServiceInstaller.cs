@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Linq;
 using System.ServiceProcess;
 
 namespace Quartz.Server
@@ -33,16 +34,44 @@ namespace Quartz.Server
 		{
 			InitializeComponent();
 
-			BeforeInstall += QuartzServiceInstallerBeforeInstall;
-			BeforeUninstall += QuartzServiceInstallerBeforeUninstall;
-			AfterInstall += QuartzServiceInstallerAfterInstall;
+			_isServiceInstalled = ServiceController
+				.GetServices()
+				.Any(sc => sc.ServiceName == _serviceInstaller.ServiceName);
 
-			_serviceInstaller.ServiceName = Configuration.ServiceName;
-			_serviceInstaller.DisplayName = Configuration.ServiceDisplayName;
-			_serviceInstaller.Description = Configuration.ServiceDescription;
+			BeforeInstall += SetupInstaller;
+			AfterInstall += StartService;
+			BeforeUninstall += StopService;
 		}
 
-		private void QuartzServiceInstallerBeforeInstall(object sender, InstallEventArgs e)
+		#region Base Class Member Overrides
+
+		public override void Install(System.Collections.IDictionary stateSaver)
+		{
+			if (_isServiceInstalled)
+			{
+				// clearing Installers collection similarly to what is being done in Uninstall() does not work as base class
+				// will commit the state anyway, which will be corrupted if the installers are skipped/have been cleared...
+				Console.WriteLine("\r\nPerforming reinstallation of '{0}' service.", _serviceInstaller.ServiceName);
+				// ReSharper disable AssignNullToNotNullAttribute
+				base.Uninstall(null);
+				// ReSharper restore AssignNullToNotNullAttribute
+			}
+			base.Install(stateSaver);
+		}
+
+		public override void Uninstall(System.Collections.IDictionary savedState)
+		{
+			if (!_isServiceInstalled)
+			{
+				Console.WriteLine("\r\nSkipping uninstall: '{0}' service is not installed.", _serviceInstaller.ServiceName);
+				Installers.Clear();
+			}
+			base.Uninstall(savedState);
+		}
+
+		#endregion
+
+		private void SetupInstaller(object sender, InstallEventArgs installEventArgs)
 		{
 			_serviceProcessInstaller.Account = ServiceAccount.User;
 			_serviceProcessInstaller.Username = Context.Parameters["ServiceAccountName"];
@@ -63,43 +92,43 @@ namespace Quartz.Server
 			}
 		}
 
-		private void QuartzServiceInstallerBeforeUninstall(object sender, InstallEventArgs e)
+		private void StartService(object sender, InstallEventArgs installEventArgs)
 		{
-			_serviceProcessInstaller.Account = ServiceAccount.User;
-			_serviceProcessInstaller.Username = Context.Parameters["ServiceAccountName"];
-			_serviceProcessInstaller.Password = Context.Parameters["ServiceAccountPassword"];
-			// stop a running service before uninstalling it
 			try
 			{
-				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
+				if (_serviceInstaller.StartType != ServiceStartMode.Automatic)
+					return;
+				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
 					if (serviceController.Status == ServiceControllerStatus.Running)
-					{
-						serviceController.Stop();
-					}
+						return;
+					if (serviceController.Status == ServiceControllerStatus.StartPending)
+						return;
+					serviceController.Start();
 				}
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine("Warning: could not stop running service before uninstalling it: " + exception);
+				Console.WriteLine("Warning! Could not start service with automatic starting mode after install:");
+				Console.WriteLine(exception);
 			}
 		}
 
-		private void QuartzServiceInstallerAfterInstall(object sender, InstallEventArgs e)
+		private void StopService(object sender, InstallEventArgs installEventArgs)
 		{
-			if (_serviceInstaller.StartType == ServiceStartMode.Automatic)
+			try
 			{
-				try
+				if (!_isServiceInstalled)
+					return;
+				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
 				{
-					using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
-					{
-						serviceController.Start();
-					}
+					serviceController.Stop();
 				}
-				catch (Exception exception)
-				{
-					Console.WriteLine("Warning: could not start service set in automatic start mode after install: " + exception);
-				}
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine("Warning! Could not stop running service before uninstalling it:");
+				Console.WriteLine(exception);
 			}
 		}
 
@@ -115,7 +144,14 @@ namespace Quartz.Server
 			this._serviceProcessInstaller.Password = null;
 			this._serviceProcessInstaller.Username = null;
 			// 
-			// ProjectInstaller
+			// serviceInstaller
+			// 
+			this._serviceInstaller.Description = "Quartz Job Scheduling Server";
+			this._serviceInstaller.DisplayName = "Quartz Server";
+			this._serviceInstaller.ServiceName = "QuartzServer";
+			this._serviceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+			// 
+			// Installer
 			// 
 			this.Installers.AddRange(
 				new System.Configuration.Install.Installer[] {
@@ -125,6 +161,8 @@ namespace Quartz.Server
 		}
 
 		#endregion
+
+		private readonly bool _isServiceInstalled;
 
 		private ServiceInstaller _serviceInstaller;
 		private ServiceProcessInstaller _serviceProcessInstaller;

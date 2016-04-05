@@ -44,33 +44,6 @@ namespace Quartz.Server
 		}
 
 		/// <summary>
-		/// Gets the service description.
-		/// </summary>
-		/// <value>The service description.</value>
-		public static string ServiceDescription
-		{
-			get { return GetConfigurationOrDefault(KEY_SERVICE_DESCRIPTION, DEFAULT_SERVICE_DESCRIPTION); }
-		}
-
-		/// <summary>
-		/// Gets the display name of the service.
-		/// </summary>
-		/// <value>The display name of the service.</value>
-		public static string ServiceDisplayName
-		{
-			get { return GetConfigurationOrDefault(KEY_SERVICE_DISPLAY_NAME, DEFAULT_SERVICE_DISPLAY_NAME); }
-		}
-
-		/// <summary>
-		/// Gets the name of the service.
-		/// </summary>
-		/// <value>The name of the service.</value>
-		public static string ServiceName
-		{
-			get { return GetConfigurationOrDefault(KEY_SERVICE_NAME, DEFAULT_SERVICE_NAME); }
-		}
-
-		/// <summary>
 		/// Returns configuration value with given key. If configuration
 		/// for the does not exists, return the default value.
 		/// </summary>
@@ -92,14 +65,7 @@ namespace Quartz.Server
 			return retValue;
 		}
 
-		private const string DEFAULT_SERVICE_DESCRIPTION = "Quartz Job Scheduling Server";
-		private const string DEFAULT_SERVICE_DISPLAY_NAME = "Quartz Server";
-
-		private const string DEFAULT_SERVICE_NAME = "QuartzServer";
 		private const string KEY_SERVER_IMPLEMENTATION_TYPE = PREFIX_SERVER_CONFIGURATION + ".type";
-		private const string KEY_SERVICE_DESCRIPTION = PREFIX_SERVER_CONFIGURATION + ".serviceDescription";
-		private const string KEY_SERVICE_DISPLAY_NAME = PREFIX_SERVER_CONFIGURATION + ".serviceDisplayName";
-		private const string KEY_SERVICE_NAME = PREFIX_SERVER_CONFIGURATION + ".serviceName";
 		private const string PREFIX_SERVER_CONFIGURATION = "quartz.server";
 
 		private static readonly NameValueCollection _configuration;

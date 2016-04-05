@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 
 			_isServiceInstalled = System.ServiceProcess.ServiceController
 				.GetServices()
-				.Any(sc => sc.ServiceName == serviceInstaller.ServiceName);
+				.Any(sc => sc.ServiceName == _serviceInstaller.ServiceName);
 
 			BeforeInstall += SetupInstaller;
 			AfterInstall += StartService;
@@ -49,7 +49,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 			{
 				// clearing Installers collection similarly to what is being done in Uninstall() does not work as base class
 				// will commit the state anyway, which will be corrupted if the installers are skipped/have been cleared...
-				Console.WriteLine("\r\nPerforming reinstallation of '{0}' service.", serviceInstaller.ServiceName);
+				Console.WriteLine("\r\nPerforming reinstallation of '{0}' service.", _serviceInstaller.ServiceName);
 				// ReSharper disable AssignNullToNotNullAttribute
 				base.Uninstall(null);
 				// ReSharper restore AssignNullToNotNullAttribute
@@ -61,7 +61,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 		{
 			if (!_isServiceInstalled)
 			{
-				Console.WriteLine("\r\nSkipping uninstall: '{0}' service is not installed.", serviceInstaller.ServiceName);
+				Console.WriteLine("\r\nSkipping uninstall: '{0}' service is not installed.", _serviceInstaller.ServiceName);
 				Installers.Clear();
 			}
 			base.Uninstall(savedState);
@@ -71,18 +71,21 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 
 		private void SetupInstaller(object sender, InstallEventArgs installEventArgs)
 		{
-			serviceProcessInstaller.Account = ServiceAccount.User;
-			serviceProcessInstaller.Username = Context.Parameters["ServiceAccountName"];
-			serviceProcessInstaller.Password = Context.Parameters["ServiceAccountPassword"];
+			_serviceProcessInstaller.Account = ServiceAccount.User;
+			_serviceProcessInstaller.Username = Context.Parameters["ServiceAccountName"];
+			_serviceProcessInstaller.Password = Context.Parameters["ServiceAccountPassword"];
 			switch (Context.Parameters["ServiceStartMode"].ToLowerInvariant())
 			{
 				case "a":
 				case "auto":
 				case "automatic":
-					serviceInstaller.StartType = ServiceStartMode.Automatic;
+					_serviceInstaller.StartType = ServiceStartMode.Automatic;
+					break;
+				case "disabled":
+					_serviceInstaller.StartType = ServiceStartMode.Disabled;
 					break;
 				default:
-					serviceInstaller.StartType = ServiceStartMode.Manual;
+					_serviceInstaller.StartType = ServiceStartMode.Manual;
 					break;
 			}
 		}
@@ -91,8 +94,8 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 		{
 			try
 			{
-				if (serviceInstaller.StartType != ServiceStartMode.Automatic) return;
-				using (var serviceController = new System.ServiceProcess.ServiceController(serviceInstaller.ServiceName))
+				if (_serviceInstaller.StartType != ServiceStartMode.Automatic) return;
+				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
 					if (serviceController.Status == ServiceControllerStatus.Running) return;
 					if (serviceController.Status == ServiceControllerStatus.StartPending) return;
@@ -111,7 +114,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 			try
 			{
 				if (!_isServiceInstalled) return;
-				using (var serviceController = new System.ServiceProcess.ServiceController(serviceInstaller.ServiceName))
+				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
 					serviceController.Stop();
 				}
