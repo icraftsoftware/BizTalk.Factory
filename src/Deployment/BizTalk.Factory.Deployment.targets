@@ -596,12 +596,12 @@
     <Message Text="Setting up BizTalk backup for custom database '%(CustomDatabases.Identity)'..." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
 
     <!-- prepping script parameters and ensure there is always one and only one ${CustomDatabaseName} param -->
-    <ItemGroup Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' ">
-      <DatabaseScriptParameters Include="true">
+    <ItemGroup>
+      <DatabaseScriptParameters Include="true" Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' ">
         <name>${CustomDatabaseName}</name>
         <value>%(CustomDatabases.Identity)</value>
       </DatabaseScriptParameters>
-      <DatabaseScriptParameters Include="true">
+      <DatabaseScriptParameters Include="true" Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' ">
         <name>${ServerName}</name>
         <value>%(CustomDatabases.Server)</value>
       </DatabaseScriptParameters>
