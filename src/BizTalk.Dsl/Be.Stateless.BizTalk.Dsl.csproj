@@ -139,6 +139,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -172,6 +173,10 @@
     <Compile Include="Dsl\Binding\Adapter\LegacyAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMapping.cs" />
     <Compile Include="Dsl\Binding\Adapter\Metadata\ActionMappingOperation.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\HttpUrlMapping.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\HttpUrlMappingOperation.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\VariableMapping.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Metadata\VariablePropertyMapping.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.cs" />
@@ -206,6 +211,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfTwoWayAdapterBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.Outbound.cs" />

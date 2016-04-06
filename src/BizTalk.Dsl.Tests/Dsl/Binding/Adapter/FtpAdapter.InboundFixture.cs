@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.EnableTimestampComparison = true;
 					a.PollingInterval = TimeSpan.FromSeconds(120);
 
-					a.ClientCertificateHash = "hash";
+					a.ClientCertificate = "hash";
 					a.FtpsConnectionMode = FtpAdapter.FtpsConnectionMode.Implicit;
 					a.UseSSL = true;
 

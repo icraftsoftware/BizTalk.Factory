@@ -130,6 +130,7 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -178,6 +179,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfSqlAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfWebHttpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.OutboundFixture.cs" />

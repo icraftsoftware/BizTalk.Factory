@@ -116,7 +116,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to an <see cref="string.Empty"/> string.
 			/// </para>
 			/// </remarks>
-			public string ClientCertificateThumbprint
+			public string ClientCertificate
 			{
 				get { return _adapterConfig.ClientCertificate; }
 				set { _adapterConfig.ClientCertificate = value; }

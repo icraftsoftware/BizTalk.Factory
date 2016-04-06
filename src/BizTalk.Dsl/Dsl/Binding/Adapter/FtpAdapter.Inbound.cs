@@ -437,7 +437,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// which the BizTalk host instance is running.
 			/// </remarks>
 			[XmlElement("clientCertificateHash")]
-			public string ClientCertificateHash { get; set; }
+			public string ClientCertificate { get; set; }
 
 			/// <summary>
 			/// Specify the mode of SSL connection made to the FTPS server.
