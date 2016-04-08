@@ -96,14 +96,11 @@ namespace Quartz.Server
 		{
 			try
 			{
-				if (_serviceInstaller.StartType != ServiceStartMode.Automatic)
-					return;
-				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
+				if (_serviceInstaller.StartType != ServiceStartMode.Automatic) return;
+				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
 				{
-					if (serviceController.Status == ServiceControllerStatus.Running)
-						return;
-					if (serviceController.Status == ServiceControllerStatus.StartPending)
-						return;
+					if (serviceController.Status == ServiceControllerStatus.Running) return;
+					if (serviceController.Status == ServiceControllerStatus.StartPending) return;
 					serviceController.Start();
 				}
 			}
@@ -118,8 +115,7 @@ namespace Quartz.Server
 		{
 			try
 			{
-				if (!_isServiceInstalled)
-					return;
+				if (!_isServiceInstalled) return;
 				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
 				{
 					serviceController.Stop();
