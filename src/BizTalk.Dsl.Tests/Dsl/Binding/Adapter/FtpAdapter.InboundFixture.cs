@@ -108,7 +108,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void Validate()
 		{
-			var ifa = new FtpAdapter.Inbound(/*a => { }*/);
+			var ifa = new FtpAdapter.Inbound();
 			Assert.That(
 				() => ((ISupportValidation) ifa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo(@"The Server Address is not defined"));

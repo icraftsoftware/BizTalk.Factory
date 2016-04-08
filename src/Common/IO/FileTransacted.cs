@@ -32,7 +32,7 @@ namespace Be.Stateless.IO
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Microsoft strongly recommends developers utilize alternative means to achieve your application’s needs. Many
+	/// Microsoft strongly recommends developers utilize alternative means to achieve your application's needs. Many
 	/// scenarios that TxF was developed for can be achieved through simpler and more readily available techniques.
 	/// Furthermore, TxF may not be available in future versions of Microsoft Windows. For more information, and
 	/// alternatives to TxF, please see <a

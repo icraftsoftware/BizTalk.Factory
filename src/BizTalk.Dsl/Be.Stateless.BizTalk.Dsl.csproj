@@ -65,6 +65,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.BizTalk.Adapter.ServiceBus">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.ServiceBus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Adapter.Sftp, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Adapter.Sftp.dll</HintPath>
@@ -113,6 +116,10 @@
     <Reference Include="Microsoft.RuleEngine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceBus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ServiceModel.Channels, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceModel.Channels.dll</HintPath>
@@ -138,6 +145,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Transactions" />
@@ -179,6 +187,9 @@
     <Compile Include="Dsl\Binding\Adapter\Metadata\VariablePropertyMapping.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\Pop3Adapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SBMessagingAdapter.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SBMessagingAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\SBMessagingAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.Outbound.cs" />

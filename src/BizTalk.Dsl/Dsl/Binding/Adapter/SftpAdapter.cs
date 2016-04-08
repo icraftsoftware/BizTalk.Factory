@@ -25,7 +25,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class SftpAdapter<TConfig> : AdapterBase
-		where TConfig : AdapterConfig, IAdapterConfigAddress, IAdapterConfigIdentity, new()
+		where TConfig : AdapterConfig, IAdapterConfigAddress, new()
 	{
 		static SftpAdapter()
 		{
