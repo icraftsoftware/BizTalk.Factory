@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Inbound : WcfNetNamedPipeAdapter<NetNamedPipeRLConfig>,
 			IInboundAdapter,
+			IAdapterConfigMaxConcurrentCalls,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,
 			IAdapterConfigInboundSuspendRequestMessageOnFailure
 		{
@@ -77,20 +78,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Service Throttling Behaviour Settings
+			#region IAdapterConfigMaxConcurrentCalls Members
 
-			/// <summary>
-			/// Specify the number of concurrent calls to a single service instance. Calls in excess of the limit are
-			/// queued.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The range of this property is from 1 to <see cref="int.MaxValue"/>.
-			/// </para>
-			/// <para>
-			/// It defaults to 200.
-			/// </para>
-			/// </remarks>
 			public int MaxConcurrentCalls
 			{
 				get { return _adapterConfig.MaxConcurrentCalls; }

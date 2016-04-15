@@ -102,6 +102,48 @@
         </Favorite>
       </favorites>
     </Folder>
+    <Folder>
+      <name>machine.config</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>v2.0_x86_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\CONFIG\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v2.0_x64_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v2.0.50727\CONFIG\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v4.0_x86_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Config\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v4.0_x64_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
   </folders>
   <favorites />
 </Favorites>

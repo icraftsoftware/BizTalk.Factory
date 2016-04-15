@@ -40,7 +40,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IInboundAdapter,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigInboundDisableLocationOnFailure,
-			IAdapterConfigInboundSuspendRequestMessageOnFailure
+			IAdapterConfigInboundSuspendRequestMessageOnFailure,
+			IAdapterConfigMaxConcurrentCalls,
+			IAdapterConfigMaxReceivedMessageSize
 		{
 			public Inbound()
 			{
@@ -188,20 +190,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Service Throttling Behaviour Settings
+			#region IAdapterConfigMaxConcurrentCalls Members
 
-			/// <summary>
-			/// Specify the number of concurrent calls to a single service instance. Calls in excess of the limit are
-			/// queued.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The range of this property is from 1 to <see cref="int.MaxValue"/>.
-			/// </para>
-			/// <para>
-			/// It defaults to 200.
-			/// </para>
-			/// </remarks>
 			public int MaxConcurrentCalls
 			{
 				get { return _adapterConfig.MaxConcurrentCalls; }
@@ -210,16 +200,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - General Settings
+			#region IAdapterConfigMaxReceivedMessageSize Members
 
-			/// <summary>
-			/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-			/// size of the messages is bounded by the amount of memory allocated for each message. You can use this property
-			/// to limit exposure to denial of service (DoS) attacks.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
-			/// </remarks>
 			public int MaxReceivedMessageSize
 			{
 				get { return _adapterConfig.MaxReceivedMessageSize; }

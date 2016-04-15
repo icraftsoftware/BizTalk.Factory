@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetTcpAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>
+	public abstract class WcfNetTcpAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetTcpBindingElement, TConfig>, IAdapterConfigMaxReceivedMessageSize
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 		}
 
-		#region Binding Tab - General Settings
+		#region IAdapterConfigMaxReceivedMessageSize Members
 
 		/// <summary>
 		/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
@@ -88,6 +88,32 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		#region Security Tab - Security Mode Settings
+
+		/// <summary>
+		/// Specify the type of security that is used.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For more information about the member names for the <see cref="SecurityMode"/> property, see the Security
+		/// mode property in <see href="https://msdn.microsoft.com/en-us/library/bb226379.aspx">WCF-NetTcp Transport
+		/// Properties Dialog Box, Send, Security Tab</see>.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="System.ServiceModel.SecurityMode.Transport"/>.
+		/// </para>
+		/// </remarks>
+		public SecurityMode SecurityMode
+		{
+			get { return _adapterConfig.SecurityMode; }
+			set { _adapterConfig.SecurityMode = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 
 		#region Binding Tab - Transactions Settings
 
@@ -132,29 +158,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _adapterConfig.TransactionProtocol; }
 			set { _adapterConfig.TransactionProtocol = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Security Mode Settings
-
-		/// <summary>
-		/// Specify the type of security that is used.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="SecurityMode"/> property, see the Security
-		/// mode property in <see href="https://msdn.microsoft.com/en-us/library/bb226379.aspx">WCF-NetTcp Transport
-		/// Properties Dialog Box, Send, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="System.ServiceModel.SecurityMode.Transport"/>.
-		/// </para>
-		/// </remarks>
-		public SecurityMode SecurityMode
-		{
-			get { return _adapterConfig.SecurityMode; }
-			set { _adapterConfig.SecurityMode = value; }
 		}
 
 		#endregion
@@ -241,8 +244,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

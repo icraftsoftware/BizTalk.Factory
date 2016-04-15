@@ -182,12 +182,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				set { _adapterConfig.StsUri = value; }
 			}
 
+			/// <summary>
+			/// Specify the issuer name.
+			/// </summary>
+			/// <remarks>
+			/// Typically this is set to owner.
+			/// </remarks>
 			public string IssuerName
 			{
 				get { return _adapterConfig.IssuerName; }
 				set { _adapterConfig.IssuerName = value; }
 			}
 
+			/// <summary>
+			/// Specify the issuer key.
+			/// </summary>
 			public string IssuerSecret
 			{
 				get { return _adapterConfig.IssuerSecret; }

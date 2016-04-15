@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetMsmqAdapter<TConfig> : WcfAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>
+	public abstract class WcfNetMsmqAdapter<TConfig> : WcfAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>, IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
-			IAdapterConfigServiceCertificate,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigTransactions,
 			IAdapterConfigNetMsmqSecurity,
 			new()
@@ -59,6 +59,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			MessageClientCredentialType = MessageCredentialType.Windows;
 			AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 		}
+
+		#region IAdapterConfigServiceCertificate Members
+
+		public string ServiceCertificate
+		{
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
 
 		#region Binding Tab - Transactions Settings
 
@@ -109,6 +119,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 
 		#region Security Tab - Transport Security Settings
 
@@ -235,36 +248,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		#region Security Tab - Service Certificate Settings
-
-		/// <summary>
-		/// Specify the thumbprint of the X.509 certificate for a receive location or a send port.
-		/// </summary>
-		/// <remarks>
-		/// <list type="bullet">
-		/// <item>
-		/// Inbound &#8212; Specify the thumbprint of the X.509 certificate for this receive location that the clients use
-		/// to authenticate the service. The certificate to be used for this property must be installed into the My store
-		/// in the Current User location.
-		/// </item>
-		/// <item>
-		/// Outbound &#8212; Specify the thumbprint of the X.509 certificate for authenticating the service to which this
-		/// send port sends messages. The certificate to be used for this property must be installed into the Other People
-		/// store in the Local Machine location.
-		/// </item>
-		/// </list>
-		/// It defaults to an <see cref="string.Empty"/> string.
-		/// </remarks>
-		public string ServiceCertificate
-		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
-		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

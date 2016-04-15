@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,18 +17,13 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>
+	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig>
 		where TBinding : StandardBindingElement,
 			new()
 		where TConfig : AdapterConfig,
@@ -40,24 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		protected WcfLobAdapterBase(ProtocolType protocolType) : base(protocolType)
-		{
-			_adapterConfig.BindingType = _bindingConfigurationElement.Name;
-			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
-		}
-
-		#region Base Class Member Overrides
-
-		protected override void Save(IPropertyBag propertyBag)
-		{
-			_adapterConfig.BindingConfiguration = _bindingConfigurationElement.GetBindingElementXml(_bindingConfigurationElement.Name);
-			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
-			base.Save(propertyBag);
-		}
-
-		#endregion
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+		protected WcfLobAdapterBase(ProtocolType protocolType) : base(protocolType) { }
 
 		#region Binding Tab - General Settings
 

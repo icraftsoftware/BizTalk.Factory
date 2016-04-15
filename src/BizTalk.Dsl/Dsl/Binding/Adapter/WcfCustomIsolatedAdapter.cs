@@ -17,21 +17,15 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.ServiceModel;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomIsolatedAdapter<TBinding, TConfig> : WcfTwoWayAdapterBase<EndpointAddress, TBinding, TConfig>
+	public abstract class WcfCustomIsolatedAdapter<TBinding, TConfig> : WcfCustomAdapterBase<TBinding, TConfig>
 		where TBinding : StandardBindingElement, new()
 		where TConfig : RLConfig,
 			IAdapterConfigAddress,
@@ -47,30 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("16824334-968f-42db-b33b-6f8d62ed1ebc"));
 		}
 
-		public WcfCustomIsolatedAdapter() : base(_protocolType)
-		{
-			_adapterConfig.BindingType = _bindingConfigurationElement.Name;
-
-			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
-		}
-
-		#region Base Class Member Overrides
-
-		protected override void Save(IPropertyBag propertyBag)
-		{
-			_adapterConfig.BindingConfiguration = _bindingConfigurationElement.GetBindingElementXml(_bindingConfigurationElement.Name);
-			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
-			base.Save(propertyBag);
-		}
-
-		#endregion
-
-		public TBinding Binding
-		{
-			get { return _bindingConfigurationElement; }
-		}
-
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+		protected WcfCustomIsolatedAdapter() : base(_protocolType) { }
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;

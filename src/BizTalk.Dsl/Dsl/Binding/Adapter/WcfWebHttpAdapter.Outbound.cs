@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572853.aspx">How to Configure a WCF-WebHttp Send Port</seealso>
-		public class Outbound : WcfWebHttpAdapter<WebHttpTLConfig>
+		public class Outbound : WcfWebHttpAdapter<WebHttpTLConfig>, IAdapterConfigAccessControlService
 		{
 			public Outbound()
 			{
@@ -47,6 +47,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				adapterConfigurator(this);
 			}
+
+			#region IAdapterConfigAccessControlService Members
+
+			public Uri StsUri
+			{
+				get { return new Uri(_adapterConfig.StsUri); }
+				set { _adapterConfig.StsUri = value.ToString(); }
+			}
+
+			public string IssuerName
+			{
+				get { return _adapterConfig.IssuerName; }
+				set { _adapterConfig.IssuerName = value; }
+			}
+
+			public string IssuerSecret
+			{
+				get { return _adapterConfig.IssuerSecret; }
+				set { _adapterConfig.IssuerSecret = value; }
+			}
+
+			#endregion
 
 			#region Security Tab - Client Certificate Settings
 
@@ -133,40 +155,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.UseAcsAuthentication; }
 				set { _adapterConfig.UseAcsAuthentication = value; }
-			}
-
-			/// <summary>
-			/// Access Control Service STS Uri.
-			/// </summary>
-			/// <remarks>
-			/// Set this to <c><![CDATA[https://<namespace>-sb.accesscontrol.windows.net/]]></c>, where
-			/// <![CDATA[<namespace>]]> is your Service Bus namespace.
-			/// </remarks>
-			public Uri StsUri
-			{
-				get { return new Uri(_adapterConfig.StsUri); }
-				set { _adapterConfig.StsUri = value.ToString(); }
-			}
-
-			/// <summary>
-			/// Specify the issuer name.
-			/// </summary>
-			/// <remarks>
-			/// Typically this is set to owner.
-			/// </remarks>
-			public string IssuerName
-			{
-				get { return _adapterConfig.IssuerName; }
-				set { _adapterConfig.IssuerName = value; }
-			}
-
-			/// <summary>
-			/// Specify the issuer key.
-			/// </summary>
-			public string IssuerSecret
-			{
-				get { return _adapterConfig.IssuerSecret; }
-				set { _adapterConfig.IssuerSecret = value; }
 			}
 
 			#endregion

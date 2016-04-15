@@ -101,6 +101,10 @@
     <Reference Include="Microsoft.RuleEngine">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.RuleEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceBus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ServiceModel.Channels, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceModel.Channels.dll</HintPath>
@@ -163,6 +167,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterFixture.cs" />

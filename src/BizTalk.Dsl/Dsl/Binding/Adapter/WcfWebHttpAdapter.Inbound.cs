@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572859.aspx">How to Configure a WCF-WebHttp Receive Location</seealso>
-		public class Inbound : WcfWebHttpAdapter<WebHttpRLConfig>
+		public class Inbound : WcfWebHttpAdapter<WebHttpRLConfig>, IAdapterConfigMaxConcurrentCalls
 		{
 			public Inbound()
 			{
@@ -60,6 +60,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				adapterConfigurator(this);
 			}
+
+			#region IAdapterConfigMaxConcurrentCalls Members
+
+			public int MaxConcurrentCalls
+			{
+				get { return _adapterConfig.MaxConcurrentCalls; }
+				set { _adapterConfig.MaxConcurrentCalls = value; }
+			}
+
+			#endregion
 
 			#region Base Class Member Overrides
 
@@ -90,28 +100,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.AddMessageBodyForHttpVerbs; }
 				set { _adapterConfig.AddMessageBodyForHttpVerbs = value; }
-			}
-
-			#endregion
-
-			#region Binding Tab - Service Throttling Behaviour Settings
-
-			/// <summary>
-			/// Specify the number of concurrent calls to a single service instance.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// Calls in excess of the limit are queued. Setting this value to <c>0</c> is equivalent to setting it to <see
-			/// cref="Int32.MaxValue"/>.
-			/// </para>
-			/// <para>
-			/// It defaults to <c>200</c>.
-			/// </para>
-			/// </remarks>
-			public int MaxConcurrentCalls
-			{
-				get { return _adapterConfig.MaxConcurrentCalls; }
-				set { _adapterConfig.MaxConcurrentCalls = value; }
 			}
 
 			#endregion

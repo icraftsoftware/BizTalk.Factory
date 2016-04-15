@@ -1,6 +1,6 @@
-ï»¿#region Copyright & License
+#region Copyright & License
 
-// Copyright Â© 2012 - 2016 FranÃ§ois Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.ServiceModel.Configuration;
+using System.ServiceModel.Description;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
+using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomAdapter<TBinding, TConfig> : WcfCustomAdapterBase<TBinding, TConfig>
+	public abstract class WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
@@ -36,14 +40,31 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		static WcfCustomAdapter()
+		static WcfTwoWayExtensibleAdapterBase()
 		{
-			_protocolType = GetProtocolTypeFromConfigurationClassId(new Guid("af081f69-38ca-4d5b-87df-f0344b12557a"));
+			_bindingName = WcfBindingRegistry.GetBindingName<TBinding>();
 		}
 
-		protected WcfCustomAdapter() : base(_protocolType) { }
+		protected WcfTwoWayExtensibleAdapterBase(ProtocolType protocolType) : base(protocolType)
+		{
+			_adapterConfig.BindingType = _bindingConfigurationElement.Name = _bindingName;
+			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
+		}
+
+		#region Base Class Member Overrides
+
+		protected override void Save(IPropertyBag propertyBag)
+		{
+			_adapterConfig.BindingConfiguration = _bindingConfigurationElement.GetBindingElementXml(_bindingConfigurationElement.Name);
+			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
+			base.Save(propertyBag);
+		}
+
+		#endregion
+
+		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
+		private static readonly string _bindingName;
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetNamedPipeAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetNamedPipeBindingElement, TConfig>
+	public abstract class WcfNetNamedPipeAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetNamedPipeBindingElement, TConfig>, IAdapterConfigMaxReceivedMessageSize
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigIdentity,
@@ -59,67 +59,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			TransportProtectionLevel = ProtectionLevel.EncryptAndSign;
 		}
 
-		#region Binding Tab - General Settings
+		#region IAdapterConfigMaxReceivedMessageSize Members
 
-		/// <summary>
-		/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this property
-		/// to limit exposure to denial of service (DoS) attacks.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
-		/// </remarks>
 		public int MaxReceivedMessageSize
 		{
 			get { return _adapterConfig.MaxReceivedMessageSize; }
 			set { _adapterConfig.MaxReceivedMessageSize = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Transactions Settings
-
-		/// <summary>
-		/// Specify whether a message is send under transaction scope.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For outbound NetNamedPipe adapters, it specifies whether a message is transmitted to the destination service
-		/// and deleted from the MessageBox database in a transactional context using the transaction protocol specified
-		/// in the <see cref="TransactionProtocol"/> property.
-		/// </para>
-		/// <para>
-		/// For inbound NetNamedPipe adapters, it specifies whether a message is submitted to the MessageBox database
-		/// using the transaction flowed from clients. If this property is set to <c>True</c>, the clients are required to
-		/// submit messages using the transaction protocol specified in the <see cref="TransactionProtocol"/> property. If
-		/// the clients submit messages outside the transactional scope then the receive location returns an exception
-		/// back to the clients, and no messages are suspended.
-		/// </para>
-		/// <para>
-		/// The option is available only for one-way receive locations. If the clients submit messages in a transactional
-		/// context for request-response receive locations, then an exception is returned back to the clients and no
-		/// messages are suspended.
-		/// </para>
-		/// <para>
-		/// It defaults to <c>False</c>.
-		/// </para>
-		/// </remarks>
-		public bool EnableTransaction
-		{
-			get { return _adapterConfig.EnableTransaction; }
-			set { _adapterConfig.EnableTransaction = value; }
-		}
-
-		/// <summary>
-		/// Specify the transaction protocol to be used with this binding.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <see cref="TransactionProtocolValue.OleTransactions"/>.
-		/// </remarks>
-		public TransactionProtocolValue TransactionProtocol
-		{
-			get { return _adapterConfig.TransactionProtocol; }
-			set { _adapterConfig.TransactionProtocol = value; }
 		}
 
 		#endregion
@@ -168,5 +113,52 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;
+
+		#region Binding Tab - Transactions Settings
+
+		/// <summary>
+		/// Specify whether a message is send under transaction scope.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For outbound NetNamedPipe adapters, it specifies whether a message is transmitted to the destination service
+		/// and deleted from the MessageBox database in a transactional context using the transaction protocol specified
+		/// in the <see cref="TransactionProtocol"/> property.
+		/// </para>
+		/// <para>
+		/// For inbound NetNamedPipe adapters, it specifies whether a message is submitted to the MessageBox database
+		/// using the transaction flowed from clients. If this property is set to <c>True</c>, the clients are required to
+		/// submit messages using the transaction protocol specified in the <see cref="TransactionProtocol"/> property. If
+		/// the clients submit messages outside the transactional scope then the receive location returns an exception
+		/// back to the clients, and no messages are suspended.
+		/// </para>
+		/// <para>
+		/// The option is available only for one-way receive locations. If the clients submit messages in a transactional
+		/// context for request-response receive locations, then an exception is returned back to the clients and no
+		/// messages are suspended.
+		/// </para>
+		/// <para>
+		/// It defaults to <c>False</c>.
+		/// </para>
+		/// </remarks>
+		public bool EnableTransaction
+		{
+			get { return _adapterConfig.EnableTransaction; }
+			set { _adapterConfig.EnableTransaction = value; }
+		}
+
+		/// <summary>
+		/// Specify the transaction protocol to be used with this binding.
+		/// </summary>
+		/// <remarks>
+		/// It defaults to <see cref="TransactionProtocolValue.OleTransactions"/>.
+		/// </remarks>
+		public TransactionProtocolValue TransactionProtocol
+		{
+			get { return _adapterConfig.TransactionProtocol; }
+			set { _adapterConfig.TransactionProtocol = value; }
+		}
+
+		#endregion
 	}
 }

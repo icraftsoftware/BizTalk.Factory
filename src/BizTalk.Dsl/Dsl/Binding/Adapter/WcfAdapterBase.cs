@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,15 +52,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigIdentity,
 			new()
 	{
-		static WcfAdapterBase()
-		{
-			_bindingName = WcfBindingRegistry.GetBindingName<TBinding>();
-		}
-
 		protected WcfAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
 			_adapterConfig = new TConfig();
-			_bindingConfigurationElement = new TBinding { Name = _bindingName };
+			_bindingConfigurationElement = new TBinding();
 		}
 
 		#region IAdapterConfigTimeouts Members
@@ -153,6 +148,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		protected readonly TConfig _adapterConfig;
+		protected readonly TBinding _bindingConfigurationElement;
+		private EndpointIdentity _identity;
+
 		#region General Tab - Endpoint Address Settings
 
 		public TAddress Address { get; set; }
@@ -189,12 +188,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly string _bindingName;
-
-		protected readonly TConfig _adapterConfig;
-		protected readonly TBinding _bindingConfigurationElement;
-		private EndpointIdentity _identity;
 	}
 }

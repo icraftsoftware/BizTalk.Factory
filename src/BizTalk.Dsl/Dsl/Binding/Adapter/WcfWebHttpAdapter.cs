@@ -31,13 +31,15 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfWebHttpAdapter<TConfig> : WcfAdapterBase<EndpointAddress, WebHttpBindingElement, TConfig>
+	public abstract class WcfWebHttpAdapter<TConfig> : WcfAdapterBase<EndpointAddress, WebHttpBindingElement, TConfig>,
+		IAdapterConfigMaxReceivedMessageSize,
+		IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigEndpointBehavior,
 			IAdapterConfigIdentity,
 			IAdapterConfigOutboundHttpProperty,
-			IAdapterConfigServiceCertificate,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigRequestHttpProperty,
 			IAdapterConfigVariablePropertyMapping,
 			IAdapterConfigWebHttpBinding,
@@ -57,6 +59,41 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			// Behavior Tab
 			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
 		}
+
+		#region IAdapterConfigMaxReceivedMessageSize Members
+
+		/// <summary>
+		/// Specify the maximum size, in bytes, for a message including headers, which can be received on the wire. The
+		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
+		/// property to limit exposure to denial of service (DoS) attacks.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The WCF-WebHttp adapter leverages the <see cref="WebHttpBinding"/> class in the buffered transfer mode to
+		/// communicate with an endpoint. For the buffered transport mode, the <see
+		/// cref="WebHttpBinding.MaxBufferSize"/> property is always equal to the value of this property.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="ushort.MaxValue"/> and cannot exceed <see cref="int.MaxValue"/>.
+		/// </para>
+		/// </remarks>
+		public int MaxReceivedMessageSize
+		{
+			get { return _adapterConfig.MaxReceivedMessageSize; }
+			set { _adapterConfig.MaxReceivedMessageSize = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigServiceCertificate Members
+
+		public string ServiceCertificate
+		{
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
 
 		#region Base Class Member Overrides
 
@@ -133,31 +170,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab
-
-		/// <summary>
-		/// Specify the maximum size, in bytes, for a message including headers, which can be received on the wire. The
-		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
-		/// property to limit exposure to denial of service (DoS) attacks.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The WCF-WebHttp adapter leverages the <see cref="WebHttpBinding"/> class in the buffered transfer mode to
-		/// communicate with an endpoint. For the buffered transport mode, the <see
-		/// cref="WebHttpBinding.MaxBufferSize"/> property is always equal to the value of this property.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="ushort.MaxValue"/> and cannot exceed <see cref="int.MaxValue"/>.
-		/// </para>
-		/// </remarks>
-		public int MaxReceivedMessageSize
-		{
-			get { return _adapterConfig.MaxReceivedMessageSize; }
-			set { _adapterConfig.MaxReceivedMessageSize = value; }
-		}
-
-		#endregion
-
 		#region Security Tab - Security Mode Settings
 
 		/// <summary>
@@ -191,34 +203,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _adapterConfig.SecurityMode; }
 			set { _adapterConfig.SecurityMode = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Service Certificate Settings
-
-		/// <summary>
-		/// Specify the thumbprint of the X.509 certificate for a receive location or a send port.
-		/// </summary>
-		/// <remarks>
-		/// <list type="bullet">
-		/// <item>
-		/// Inbound &#8212; Specify the thumbprint of the X.509 certificate for this receive location that the clients use
-		/// to authenticate the service. The certificate to be used for this property must be installed into the My store
-		/// in the Current User location.
-		/// </item>
-		/// <item>
-		/// Outbound &#8212; Specify the thumbprint of the X.509 certificate for authenticating the service to which this
-		/// send port sends messages. The certificate to be used for this property must be installed into the Other People
-		/// store in the Local Machine location.
-		/// </item>
-		/// </list>
-		/// It defaults to an <see cref="string.Empty"/> string.
-		/// </remarks>
-		public string ServiceCertificate
-		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
 		}
 
 		#endregion

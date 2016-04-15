@@ -24,7 +24,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class SBMessagingAdapter<TConfig> : AdapterBase
+	public abstract class SBMessagingAdapter<TConfig> : AdapterBase, IAdapterConfigAccessControlService
 		where TConfig : AdapterConfig, IAdapterConfigAddress, IAdapterConfigTimeouts, IAdapterConfigAcsCredentials, IAdapterConfigSasCredentials, new()
 	{
 		static SBMessagingAdapter()
@@ -36,6 +36,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			_adapterConfig = new TConfig();
 		}
+
+		#region IAdapterConfigAccessControlService Members
+
+		public Uri StsUri
+		{
+			get { return new Uri(_adapterConfig.StsUri); }
+			set { _adapterConfig.StsUri = value.ToString(); }
+		}
+
+		public string IssuerName
+		{
+			get { return _adapterConfig.IssuerName; }
+			set { _adapterConfig.IssuerName = value; }
+		}
+
+		public string IssuerSecret
+		{
+			get { return _adapterConfig.IssuerSecret; }
+			set { _adapterConfig.IssuerSecret = value; }
+		}
+
+		#endregion
 
 		#region Base Class Member Overrides
 
@@ -57,6 +79,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
+
+		protected readonly TConfig _adapterConfig;
 
 		#region General Tab
 
@@ -111,37 +138,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		/// <summary>
-		/// Specify the Service Bus Access Control Service STS URI.
-		/// </summary>
-		/// <remarks>
-		/// Typically the URI is in the following format:
-		/// <c><![CDATA[https://<namespace>-sb.accesscontrol.windows.net/]]></c>.
-		/// </remarks>
-		public Uri StsUri
-		{
-			get { return new Uri(_adapterConfig.StsUri); }
-			set { _adapterConfig.StsUri = value.ToString(); }
-		}
-
-		/// <summary>
-		/// Specify the issuer name for the Service Bus namespace.
-		/// </summary>
-		public string IssuerName
-		{
-			get { return _adapterConfig.IssuerName; }
-			set { _adapterConfig.IssuerName = value; }
-		}
-
-		/// <summary>
-		/// Specifiy the issuer key for the Service Bus namespace.
-		/// </summary>
-		public string IssuerSecret
-		{
-			get { return _adapterConfig.IssuerSecret; }
-			set { _adapterConfig.IssuerSecret = value; }
-		}
-
-		/// <summary>
 		/// Whether to use Shared Access Signature for authentication.
 		/// </summary>
 		public bool UseSasAuthentication
@@ -169,10 +165,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		protected readonly TConfig _adapterConfig;
 	}
 }

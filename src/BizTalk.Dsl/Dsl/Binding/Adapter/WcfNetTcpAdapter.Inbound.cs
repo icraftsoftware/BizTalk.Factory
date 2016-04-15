@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>,
 			IInboundAdapter,
+			IAdapterConfigMaxConcurrentCalls,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,
 			IAdapterConfigInboundSuspendRequestMessageOnFailure
 		{
@@ -84,6 +85,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region IAdapterConfigMaxConcurrentCalls Members
+
+			public int MaxConcurrentCalls
+			{
+				get { return _adapterConfig.MaxConcurrentCalls; }
+				set { _adapterConfig.MaxConcurrentCalls = value; }
+			}
+
+			#endregion
+
 			#region Binding Tab - Connection Pool Settings
 
 			/// <summary>
@@ -104,28 +115,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.LeaseTimeout; }
 				set { _adapterConfig.LeaseTimeout = value; }
-			}
-
-			#endregion
-
-			#region Binding Tab - Service Throttling Behaviour Settings
-
-			/// <summary>
-			/// Specify the number of concurrent calls to a single service instance. Calls in excess of the limit are
-			/// queued.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The range of this property is from 1 to <see cref="int.MaxValue"/>.
-			/// </para>
-			/// <para>
-			/// It defaults to 200.
-			/// </para>
-			/// </remarks>
-			public int MaxConcurrentCalls
-			{
-				get { return _adapterConfig.MaxConcurrentCalls; }
-				set { _adapterConfig.MaxConcurrentCalls = value; }
 			}
 
 			#endregion
