@@ -210,6 +210,8 @@
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomIsolatedAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomIsolatedAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.Inbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfTwoWayExtensibleAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.Inbound.cs" />

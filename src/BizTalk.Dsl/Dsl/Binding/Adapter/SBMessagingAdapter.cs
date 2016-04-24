@@ -25,7 +25,12 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class SBMessagingAdapter<TConfig> : AdapterBase, IAdapterConfigAccessControlService
-		where TConfig : AdapterConfig, IAdapterConfigAddress, IAdapterConfigTimeouts, IAdapterConfigAcsCredentials, IAdapterConfigSasCredentials, new()
+		where TConfig : AdapterConfig,
+			IAdapterConfigAddress,
+			IAdapterConfigTimeouts,
+			IAdapterConfigAcsCredentials,
+			IAdapterConfigSasCredentials,
+			new()
 	{
 		static SBMessagingAdapter()
 		{

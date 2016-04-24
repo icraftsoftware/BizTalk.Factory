@@ -59,15 +59,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		/// <summary>
 		/// Specify the maximum size, in bytes, for a message including headers, which can be received on the wire. The
-		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this
-		/// property to limit exposure to denial of service (DoS) attacks.
+		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this property
+		/// to limit exposure to denial of service (DoS) attacks.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// The WCF-BasicHttpRelay adapter leverages the <see cref="BasicHttpRelayBinding"/> class in the buffered
 		/// transfer mode to communicate with an endpoint. For the buffered transport mode, the <see
-		/// cref="BasicHttpRelayBinding"/>.<see cref="BasicHttpRelayBinding.MaxBufferSize"/> property is always equal
-		/// to the value of this property.
+		/// cref="BasicHttpRelayBinding"/>.<see cref="BasicHttpRelayBinding.MaxBufferSize"/> property is always equal to
+		/// the value of this property.
 		/// </para>
 		/// <para>
 		/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.

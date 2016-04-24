@@ -40,7 +40,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundPropagateFaultMessage
 		{
-			public Outbound() { }
+			public Outbound()
+			{
+				// Messages Tab - Error Handling Settings
+				PropagateFaultMessage = true;
+			}
 
 			public Outbound(Action<Outbound> adapterConfigurator) : this()
 			{

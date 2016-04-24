@@ -183,6 +183,9 @@
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpAdapterFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.InboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfOracleAdapterFixture.cs" />
