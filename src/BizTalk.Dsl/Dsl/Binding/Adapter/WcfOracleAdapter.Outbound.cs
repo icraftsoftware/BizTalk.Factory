@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Outbound : WcfOracleAdapter<CustomTLConfig>,
-			IInboundAdapter,
+			IOutboundAdapter,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundCredentials,
 			IAdapterConfigOutboundPropagateFaultMessage,
