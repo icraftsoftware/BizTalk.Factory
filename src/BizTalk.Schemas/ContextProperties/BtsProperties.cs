@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<IsSolicitResponse, bool> IsSolicitResponse
 			= new MessageContextProperty<IsSolicitResponse, bool>();
 
+		public static readonly MessageContextProperty<MessageDestination, string> MessageDestination
+			= new MessageContextProperty<MessageDestination, string>();
+
 		public static readonly MessageContextProperty<MessageID, string> MessageID
 			= new MessageContextProperty<MessageID, string>();
 
@@ -68,11 +71,11 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<ReceiveLocationName, string> ReceiveLocationName
 			= new MessageContextProperty<ReceiveLocationName, string>();
 
-		public static readonly MessageContextProperty<ReceivePortName, string> ReceivePortName
-			= new MessageContextProperty<ReceivePortName, string>();
-
 		public static readonly MessageContextProperty<ReceivePipelineConfig, string> ReceivePipelineConfig
 			= new MessageContextProperty<ReceivePipelineConfig, string>();
+
+		public static readonly MessageContextProperty<ReceivePortName, string> ReceivePortName
+			= new MessageContextProperty<ReceivePortName, string>();
 
 		public static readonly MessageContextProperty<RetryCount, int> RetryCount
 			= new MessageContextProperty<RetryCount, int>();
@@ -91,6 +94,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<SuppressRoutingFailureDiagnosticInfo, bool> SuppressRoutingFailureDiagnosticInfo
 			= new MessageContextProperty<SuppressRoutingFailureDiagnosticInfo, bool>();
+
+		public static readonly MessageContextProperty<SuspendMessageOnRoutingFailure, bool> SuspendMessageOnRoutingFailure
+			= new MessageContextProperty<SuspendMessageOnRoutingFailure, bool>();
 
 		public static readonly MessageContextProperty<TransmitWorkID, string> TransmitWorkId
 			= new MessageContextProperty<TransmitWorkID, string>();
