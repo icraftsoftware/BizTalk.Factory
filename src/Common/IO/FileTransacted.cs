@@ -202,8 +202,16 @@ namespace Be.Stateless.IO
 				transactionHandle,
 				IntPtr.Zero,
 				IntPtr.Zero);
-			if (fileHandle.IsInvalid) throw new IOException(string.Format("Null transacted file handle for file '{0}'.", path));
-			if (_logger.IsFineEnabled) _logger.FineFormat("Transacted file handle created for writing at path '{0}'.", path);
+			// see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363859.aspx, Return Value: if the function
+			// fails, the return value is INVALID_HANDLE_VALUE. To get extended error information, call GetLastError.
+			if (fileHandle.IsInvalid)
+				throw new IOException(
+					string.Format("Null transacted file handle for file '{0}'.", path),
+					Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
+			if (_logger.IsFineEnabled)
+				_logger.FineFormat(
+					"Transacted file handle created for writing at path '{0}'.",
+					path);
 			return fileHandle;
 		}
 
