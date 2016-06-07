@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </summary>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/dn281088.aspx">SFTP Adapter Frequently Asked Questions</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj684548.aspx">How to Configure an SFTP Receive Location</seealso>
-		public class Inbound : SftpAdapter<SftpRLConfig>
+		public class Inbound : SftpAdapter<SftpRLConfig>, IInboundAdapter
 		{
 			public Inbound()
 			{

@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </summary>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/dn281088.aspx">SFTP Adapter Frequently Asked Questions</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj735584.aspx">How to Configure an SFTP Send Port</seealso>
-		public class Outbound : SftpAdapter<SftpTLConfig>
+		public class Outbound : SftpAdapter<SftpTLConfig>, IOutboundAdapter
 		{
 			public Outbound()
 			{
