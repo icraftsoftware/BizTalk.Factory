@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
+using Be.Stateless.BizTalk.Dsl.Binding.Extensions;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Be.Stateless.Extensions;
 
@@ -121,7 +122,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			if (Name == null) throw new BindingException("Receive Location's Name is not defined.", this);
 			if (ReceivePipeline == null) throw new BindingException("Receive Location's Receive Pipeline is not defined.", this);
-			((ISupportValidation) Transport).Validate();
+			Transport.Validate("Receive Location's Transport");
 		}
 
 		#endregion

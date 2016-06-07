@@ -248,6 +248,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingSerializer.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingOverrides.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettings.cs" />
+    <Compile Include="Dsl\Binding\Extensions\SupportValidationExtensions.cs" />
     <Compile Include="Dsl\Binding\ServiceState.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\ComponentBinding.cs" />

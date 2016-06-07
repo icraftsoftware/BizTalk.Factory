@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
+using Be.Stateless.BizTalk.Dsl.Binding.Extensions;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Be.Stateless.Extensions;
@@ -142,8 +143,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			if (Name == null) throw new BindingException("Send Port's Name is not defined.", this);
 			if (SendPipeline == null) throw new BindingException("Send Port's Send Pipeline is not defined.", this);
-			((ISupportValidation) Transport).Validate();
-			_backupTransport.IfNotNull(bt => ((ISupportValidation) bt).Validate());
+			Transport.Validate("Send Port's Primary Transport");
+			_backupTransport.IfNotNull(bt => bt.Validate("Send Port's Backup Transport"));
 		}
 
 		#endregion

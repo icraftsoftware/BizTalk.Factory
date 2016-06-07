@@ -164,6 +164,7 @@
     <Compile Include="Dsl\Binding\Adapter\SBMessagingAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfAdapterBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpAdapterFixture.cs" />

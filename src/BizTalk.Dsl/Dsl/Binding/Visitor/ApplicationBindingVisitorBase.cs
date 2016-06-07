@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
 		{
 			((ISupportEnvironmentOverride) applicationBinding).ApplyEnvironmentOverrides(Environment);
+			((ISupportValidation) applicationBinding).Validate();
 			VisitApplicationCore(applicationBinding);
 		}
 
@@ -43,6 +44,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			if (((ISupportEnvironmentDeploymentPredicate) orchestrationBinding).IsDeployableForEnvironment(Environment))
 			{
 				((ISupportEnvironmentOverride) orchestrationBinding).ApplyEnvironmentOverrides(Environment);
+				((ISupportValidation) orchestrationBinding).Validate();
 				VisitOrchestrationCore(orchestrationBinding);
 			}
 		}
@@ -53,6 +55,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			if (((ISupportEnvironmentDeploymentPredicate) receivePort).IsDeployableForEnvironment(Environment))
 			{
 				((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(Environment);
+				((ISupportValidation) receivePort).Validate();
 				VisitReceivePortCore(receivePort);
 			}
 		}
@@ -62,6 +65,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			if (((ISupportEnvironmentDeploymentPredicate) receiveLocation).IsDeployableForEnvironment(Environment))
 			{
 				((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(Environment);
+				((ISupportValidation) receiveLocation).Validate();
 				VisitReceiveLocationCore(receiveLocation);
 			}
 		}
@@ -71,6 +75,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			if (((ISupportEnvironmentDeploymentPredicate) sendPort).IsDeployableForEnvironment(Environment))
 			{
 				((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(Environment);
+				((ISupportValidation) sendPort).Validate();
 				VisitSendPortCore(sendPort);
 			}
 		}

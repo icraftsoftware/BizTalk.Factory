@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitApplicationBindingAppliesEnvironmentOverrides()
 		{
 			var applicationBindingMock = new Mock<IApplicationBinding<string>>();
+			applicationBindingMock.As<ISupportValidation>();
 			var environmentSensitiveApplicationBindingMock = applicationBindingMock.As<ISupportEnvironmentOverride>();
 
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
@@ -41,6 +42,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitOrchestrationAppliesEnvironmentOverrides()
 		{
 			var orchestrationBindingMock = new Mock<IOrchestrationBinding>();
+			orchestrationBindingMock.As<ISupportValidation>();
 			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentSensitivity>();
 			environmentSensitiveOrchestrationBindingMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
 
@@ -71,6 +73,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceiveLocationAppliesEnvironmentOverrides()
 		{
 			var receiveLocationMock = new Mock<IReceiveLocation<string>>();
+			receiveLocationMock.As<ISupportValidation>();
 			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentSensitivity>();
 			environmentSensitiveReceiveLocationMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
 
@@ -101,6 +104,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePortAppliesEnvironmentOverrides()
 		{
 			var receivePortMock = new Mock<IReceivePort<string>>();
+			receivePortMock.As<ISupportValidation>();
 			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentSensitivity>();
 			environmentSensitiveReceivePortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
 
@@ -131,6 +135,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitSendPortAppliesEnvironmentOverrides()
 		{
 			var sendPortMock = new Mock<ISendPort<string>>();
+			sendPortMock.As<ISupportValidation>();
 			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentSensitivity>();
 			environmentSensitiveSendPortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
 

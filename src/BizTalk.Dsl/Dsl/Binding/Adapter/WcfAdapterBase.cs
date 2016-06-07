@@ -141,6 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			// TODO Proxy Settings
 			// TODO see Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMapping and Microsoft.BizTalk.Adapter.Wcf.Metadata.BtsActionMappingHelper.CreateXml(BtsActionMapping btsActionMapping)
 			// TODO validate BtsActionMapping against orchestration ports' actions
+			if (Address == null) throw new BindingException(string.Format("'{0}' Adapter's Address is not defined.", GetType().FullName));
 			_adapterConfig.Address = GetAddress();
 			_adapterConfig.Validate();
 			_adapterConfig.Address = null;
