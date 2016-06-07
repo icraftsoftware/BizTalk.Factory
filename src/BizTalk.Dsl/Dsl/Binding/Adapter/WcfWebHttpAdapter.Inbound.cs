@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Description;
+using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
@@ -48,7 +48,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				MaxConcurrentCalls = 200;
 
 				// Behavior Tab
-				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
+				ServiceBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 
 				// Messages Tab - Error Handling Settings
 				DisableLocationOnFailure = false;
@@ -106,7 +106,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#region Behavior Tab
 
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 
 			#endregion
 

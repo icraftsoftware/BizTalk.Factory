@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.ServiceModel.Description;
+using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.Adapters.OracleDB;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -71,7 +71,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
 
-				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
+				ServiceBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 			}
 
 			public Inbound(Action<Inbound> adapterConfigurator) : this()
@@ -172,6 +172,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
+
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 
 			#region Binding Tab - Notification Settings
 
@@ -428,8 +430,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
-
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 		}
 
 		#endregion

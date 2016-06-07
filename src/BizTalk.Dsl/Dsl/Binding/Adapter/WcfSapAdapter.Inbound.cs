@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Description;
+using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.Adapters.SAP;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -55,7 +55,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
 
-				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
+				ServiceBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 			}
 
 			public Inbound(Action<Inbound> adapterConfigurator) : this()
@@ -131,36 +131,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Idoc Settings
-
-			/// <summary>
-			/// Determines whether the received IDoc, when in flat file format, has extra spaces at the end of each
-			/// segment. This is required if the flat file is converted to XML using the Flat File Parser pipeline
-			/// component in BizTalk.
-			/// </summary>
-			/// <remarks>
-			/// The default is false; lines are not padded.
-			/// </remarks>
-			public bool PadReceivedIdocWithSpaces
-			{
-				get { return _bindingConfigurationElement.PadReceivedIdocWithSpaces; }
-				set { _bindingConfigurationElement.PadReceivedIdocWithSpaces = value; }
-			}
-
-			/// <summary>
-			/// Syntax: DefaultRelease;DOCTYPE1=DOCREL1;DOCTYPE2=DOCREL2...  All fields are optional. If no matching release is found, DOCREL of the incoming IDOC will be used.
-			/// </summary>
-			/// <seealso href="https://support.microsoft.com/en-us/kb/2388784">Hotfix to add the "ReceivedIdocRelease"
-			/// binding property for the WCF-SAP adapter to BizTalk Adapter Pack 2.0 and Microsoft BizTalk Adapter Pack
-			/// 2010</seealso>.
-			public string ReceivedIdocRelease
-			{
-				get { return _bindingConfigurationElement.ReceivedIdocRelease; }
-				set { _bindingConfigurationElement.ReceivedIdocRelease = value; }
-			}
-
-			#endregion
-
 			#region Binding Tab - Metadata  Settings
 
 			/// <summary>
@@ -193,6 +163,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
+
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 
 			#region Binding Tab - TrfcServer  Settings
 
@@ -227,7 +199,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
+			#region Binding Tab - Idoc Settings
+
+			/// <summary>
+			/// Determines whether the received IDoc, when in flat file format, has extra spaces at the end of each
+			/// segment. This is required if the flat file is converted to XML using the Flat File Parser pipeline
+			/// component in BizTalk.
+			/// </summary>
+			/// <remarks>
+			/// The default is false; lines are not padded.
+			/// </remarks>
+			public bool PadReceivedIdocWithSpaces
+			{
+				get { return _bindingConfigurationElement.PadReceivedIdocWithSpaces; }
+				set { _bindingConfigurationElement.PadReceivedIdocWithSpaces = value; }
+			}
+
+			/// <summary>
+			/// Syntax: DefaultRelease;DOCTYPE1=DOCREL1;DOCTYPE2=DOCREL2...  All fields are optional. If no matching release is found, DOCREL of the incoming IDOC will be used.
+			/// </summary>
+			/// <seealso href="https://support.microsoft.com/en-us/kb/2388784">Hotfix to add the "ReceivedIdocRelease"
+			/// binding property for the WCF-SAP adapter to BizTalk Adapter Pack 2.0 and Microsoft BizTalk Adapter Pack
+			/// 2010</seealso>.
+			public string ReceivedIdocRelease
+			{
+				get { return _bindingConfigurationElement.ReceivedIdocRelease; }
+				set { _bindingConfigurationElement.ReceivedIdocRelease = value; }
+			}
+
+			#endregion
 		}
 
 		#endregion

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.ServiceModel.Description;
+using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -69,7 +69,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
 
-				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
+				ServiceBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 			}
 
 			public Inbound(Action<Inbound> adapterConfigurator) : this()
@@ -158,6 +158,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
+
 			#region Binding Tab - Notification Settings
 
 			/// <summary>
@@ -225,8 +227,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
-
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
 		}
 
 		#endregion

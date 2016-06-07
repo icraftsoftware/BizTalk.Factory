@@ -22,7 +22,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Metadata;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -57,7 +56,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			MaxReceivedMessageSize = ushort.MaxValue;
 
 			// Behavior Tab
-			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
+			EndpointBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 		}
 
 		#region IAdapterConfigMaxReceivedMessageSize Members
@@ -107,7 +106,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#region Behavior Tab
 
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
 
 		#endregion
 

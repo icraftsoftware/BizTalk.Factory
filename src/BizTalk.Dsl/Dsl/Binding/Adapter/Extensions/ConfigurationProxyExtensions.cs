@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@
 
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Converters;
 
@@ -35,20 +33,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions
 			return configurationProxy.GetBindingElementXml(bindingName);
 		}
 
-		public static string GetEndpointBehaviorElementXml(this IEnumerable<IEndpointBehavior> endpointBehaviors)
+		public static string GetEndpointBehaviorElementXml(this IEnumerable<BehaviorExtensionElement> endpointBehaviors)
 		{
 			var endpointBehaviorElement = new EndpointBehaviorElement("EndpointBehavior");
-			endpointBehaviors.Cast<BehaviorExtensionElement>().Each(b => endpointBehaviorElement.Add(b));
+			endpointBehaviors.Each(b => endpointBehaviorElement.Add(b));
 
 			var configurationProxy = new ConfigurationProxy();
 			configurationProxy.SetEndpointBehaviorElement(endpointBehaviorElement);
 			return configurationProxy.GetEndpointBehaviorElementXml();
 		}
 
-		public static string GetServiceBehaviorElementXml(this IEnumerable<IServiceBehavior> serviceBehaviors)
+		public static string GetServiceBehaviorElementXml(this IEnumerable<BehaviorExtensionElement> serviceBehaviors)
 		{
 			var serviceBehaviorElement = new ServiceBehaviorElement("ServiceBehavior");
-			serviceBehaviors.Cast<BehaviorExtensionElement>().Each(b => serviceBehaviorElement.Add(b));
+			serviceBehaviors.Each(b => serviceBehaviorElement.Add(b));
 
 			var configurationProxy = new ConfigurationProxy();
 			configurationProxy.SetServiceBehaviorElement(serviceBehaviorElement);

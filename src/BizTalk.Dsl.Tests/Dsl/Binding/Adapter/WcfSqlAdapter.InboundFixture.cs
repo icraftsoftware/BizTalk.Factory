@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.ServiceModel.Description;
 using System.Transactions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -42,7 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.InboundBodyPathExpression = "/BodyWrapper/*";
 					a.InboundNodeEncoding = MessageBodyFormat.Xml;
 					a.XmlStoredProcedureRootNodeName = "BodyWrapper";
-					a.ServiceBehaviors = new IServiceBehavior[] {
+					a.ServiceBehaviors = new[] {
 						new SqlAdapterInboundTransactionBehavior {
 							TransactionIsolationLevel = IsolationLevel.Serializable
 						}

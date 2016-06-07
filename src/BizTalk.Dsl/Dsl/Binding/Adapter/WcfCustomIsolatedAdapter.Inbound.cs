@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
@@ -69,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
 
-				ServiceBehaviors = Enumerable.Empty<IServiceBehavior>();
+				ServiceBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 			}
 
 			public Inbound(Action<Inbound<TBinding>> adapterConfigurator) : this()
@@ -161,7 +160,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			public IEnumerable<IServiceBehavior> ServiceBehaviors { get; set; }
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 		}
 
 		#endregion

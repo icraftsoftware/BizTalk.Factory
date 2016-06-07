@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
@@ -48,7 +47,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected WcfTwoWayExtensibleAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
 			_adapterConfig.BindingType = _bindingConfigurationElement.Name = _bindingName;
-			EndpointBehaviors = Enumerable.Empty<IEndpointBehavior>();
+			EndpointBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 		}
 
 		#region Base Class Member Overrides
@@ -62,7 +61,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		public IEnumerable<IEndpointBehavior> EndpointBehaviors { get; set; }
+		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly string _bindingName;
