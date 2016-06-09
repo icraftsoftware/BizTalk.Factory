@@ -164,7 +164,9 @@ namespace Be.Stateless.IO.Extensions
 
 		/// <summary>
 		/// Try to compress a stream and outputs its compressed content as a base64 encoded string, as long as its
-		/// compressed content does not exceed a given <paramref name="threshold"/>.
+		/// compressed content does not exceed a given <paramref name="threshold"/>. Note that
+		/// <paramref name="threshold"/> is an approximate limit, and can be slightly overrun. This is because a compressing
+		/// stream's length cannot be accurately determined while writing data to it.
 		/// </summary>
 		/// <param name="stream">
 		/// The stream to compress and encode.
@@ -184,22 +186,17 @@ namespace Be.Stateless.IO.Extensions
 			// 16KB compressed, should be OK for most streams having a threshold limit on compressed size
 			const int bufferSize = 16 * 1024;
 			var compressedStream = new MemoryStream(bufferSize);
+			int bytesRead = 0;
 			using (var compressionStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
 			{
 				var buffer = new byte[bufferSize];
-				var length = 0;
-				int read;
-				while (compressedStream.Length < threshold && 0 < (read = stream.Read(buffer, 0, bufferSize)))
+				while (compressedStream.Length < threshold && 0 < (bytesRead = stream.Read(buffer, 0, bufferSize)))
 				{
-					compressionStream.Write(buffer, 0, read);
-					length += read;
-					// force compression stream to flush once more than the threshold has been read to ensure an accurate
-					// reading of the compressed stream length; pointless if no more than the threshold of uncompressed
-					// data has been read.
-					if (length > threshold) compressionStream.Flush();
+					compressionStream.Write(buffer, 0, bytesRead);
 				}
 			}
-			if (compressedStream.Length < threshold)
+			var endOfInputStreamReached = bytesRead == 0;
+			if (endOfInputStreamReached)
 			{
 				encodedCompression = Convert.ToBase64String(compressedStream.GetBuffer(), 0, (int) compressedStream.Length);
 				return true;
