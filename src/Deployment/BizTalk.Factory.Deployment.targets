@@ -98,8 +98,8 @@
         _PreprocessBindings;
         StopWindowsServices;
         _UpdateOrchestration;
-        StartWindowsServices
-        GenerateApplicationBindings;
+        StartWindowsServices;
+        GenerateApplicationBindings
       </TargetsAfterLoadPropsFromEnvSettings>
     </PropertyGroup>
   </Target>
