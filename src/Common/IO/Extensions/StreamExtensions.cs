@@ -187,13 +187,22 @@ namespace Be.Stateless.IO.Extensions
 			const int bufferSize = 16 * 1024;
 			var compressedStream = new MemoryStream(bufferSize);
 			int bytesRead = 0;
+			var buffer = new byte[bufferSize];
 			using (var compressionStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
 			{
-				var buffer = new byte[bufferSize];
 				while (compressedStream.Length < threshold && 0 < (bytesRead = stream.Read(buffer, 0, bufferSize)))
 				{
 					compressionStream.Write(buffer, 0, bytesRead);
 				}
+			}
+			// HACK to avoid (most of the time) firing end of stream event on input stream when we do not actually allow compression
+			var endOfStreamPossiblyReached = bytesRead < bufferSize && bytesRead > 0;
+			// try to read one more byte to check for end of stream if the last read returned less than what we requested
+			// if we are unlucky, that last read will return the last byte and fire the end of stream event :-(
+			// but this should not be the case most of the time
+			if (endOfStreamPossiblyReached)
+			{
+				bytesRead = stream.Read(buffer, 0, 1);
 			}
 			var endOfInputStreamReached = bytesRead == 0;
 			if (endOfInputStreamReached)
