@@ -164,8 +164,8 @@ namespace Be.Stateless.IO.Extensions
 
 		/// <summary>
 		/// Try to compress a stream and outputs its compressed content as a base64 encoded string, as long as its
-		/// compressed content does not exceed a given <paramref name="threshold"/>. Note that
-		/// <paramref name="threshold"/> is an approximate limit, and can be slightly overrun. This is because a compressing
+		/// compressed content does not exceed a given <paramref name="threshold"/>. Note that <paramref
+		/// name="threshold"/> is an approximate limit, and can be slightly overrun. This is because a compressing
 		/// stream's length cannot be accurately determined while writing data to it.
 		/// </summary>
 		/// <param name="stream">
@@ -186,7 +186,7 @@ namespace Be.Stateless.IO.Extensions
 			// 16KB compressed, should be OK for most streams having a threshold limit on compressed size
 			const int bufferSize = 16 * 1024;
 			var compressedStream = new MemoryStream(bufferSize);
-			int bytesRead = 0;
+			var bytesRead = 0;
 			var buffer = new byte[bufferSize];
 			using (var compressionStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
 			{
