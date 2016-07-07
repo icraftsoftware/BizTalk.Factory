@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -86,6 +86,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var isa = new WcfSapAdapter.Inbound(
+				a => {
+					a.Address = new SAPConnectionUri {
+						ApplicationServerHost = "appHost",
+						ConnectionType = OutboundConnectionType.A,
+						Client = "100",
+						Language = "FR",
+						ListenerGwHost = "gwHost",
+						ListenerGwServ = "gwServer",
+						ProgramId = "listenerProgramId"
+					};
+					a.CredentialType = CredentialSelection.UserAccount;
+					a.Password = "p@ssw0rd";
+					a.UserName = "BTS_USER";
+					a.MaxConnectionsPerSystem = 30;
+					a.ReceiveTimeout = TimeSpan.MaxValue;
+					a.TidDatabaseConnectionString = new SqlConnectionStringBuilder {
+						DataSource = "localhost",
+						InitialCatalog = "BizTalkFactoryTransientStateDb",
+						IntegratedSecurity = true
+					}.ToString();
+				});
+
+			Assert.That(() => ((ISupportValidation) isa).Validate(), Throws.Nothing);
 		}
 	}
 }

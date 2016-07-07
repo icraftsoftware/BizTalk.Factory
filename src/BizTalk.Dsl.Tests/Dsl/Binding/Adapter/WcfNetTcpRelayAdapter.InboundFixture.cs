@@ -30,6 +30,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wnt = new WcfNetTcpRelayAdapter.Inbound(
 				a => {
+					a.Address = new EndpointAddress("sb://biztalk.factory.servicebus.windows.net/batch-queue");
 					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
 					a.MaxConcurrentCalls = 201;
 					a.MaxReceivedMessageSize = 64512;
@@ -92,6 +93,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				Throws.TypeOf<ArgumentException>()
 					.With.InnerException.TypeOf<ArgumentException>()
 					.With.InnerException.Message.StartsWith("Invalid address scheme; expecting \"sb\" scheme."));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wnt = new WcfNetTcpRelayAdapter.Inbound(
+				a => {
+					a.Address = new EndpointAddress("sb://biztalk.factory.servicebus.windows.net/batch-queue");
+					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.MaxConcurrentCalls = 201;
+					a.MaxReceivedMessageSize = 64512;
+
+					a.SuspendRequestMessageOnFailure = true;
+					a.IncludeExceptionDetailInFaults = true;
+
+					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
+					a.IssuerName = "issuer_name";
+					a.IssuerSecret = "issuer_secret";
+
+					a.EnableServiceDiscovery = true;
+					a.ServiceDisplayName = "display_name";
+				});
+
+			Assert.That(() => ((ISupportValidation) wnt).Validate(), Throws.Nothing);
 		}
 	}
 }

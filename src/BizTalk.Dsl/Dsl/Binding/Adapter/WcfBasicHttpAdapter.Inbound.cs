@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226322.aspx">WCF-BasicHttp Transport Properties Dialog Box, Receive, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfBasicHttpAdapter<BasicHttpRLConfig>,
+		public class Inbound : WcfBasicHttpAdapter<Uri, BasicHttpRLConfig>,
 			IInboundAdapter,
 			IAdapterConfigMaxConcurrentCalls,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,6 +62,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var osa = new WcfSqlAdapter.Outbound(
+				a => {
+					a.Address = new SqlAdapterConnectionUri { InboundId = "AvailableBatches", Server = "localhost", InitialCatalog = "BizTalkFactoryTransientStateDb" };
+					a.IsolationLevel = IsolationLevel.ReadCommitted;
+					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
+					a.PropagateFaultMessage = true;
+					a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
+				});
+
+			Assert.That(() => ((ISupportValidation) osa).Validate(), Throws.Nothing);
 		}
 	}
 }

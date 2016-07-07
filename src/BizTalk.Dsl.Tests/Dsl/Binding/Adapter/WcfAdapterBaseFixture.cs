@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -35,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var validatingMock = adapterMock.As<ISupportValidation>();
 			Assert.That(
 				() => validatingMock.Object.Validate(),
-				Throws.TypeOf<BindingException>().With.Message.EndsWith("Adapter's Address is not defined."));
+				Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Required property Address (URI) not specified."));
 		}
 	}
 }

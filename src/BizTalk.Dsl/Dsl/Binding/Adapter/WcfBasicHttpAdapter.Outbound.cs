@@ -37,7 +37,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226514.aspx">WCF-BasicHttp Transport Properties Dialog Box, Send, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfBasicHttpAdapter<BasicHttpTLConfig>,
+		public class Outbound : WcfBasicHttpAdapter<EndpointAddress, BasicHttpTLConfig>,
 			IOutboundAdapter,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundPropagateFaultMessage,
@@ -112,8 +112,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			/// <summary>
 			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the <see cref="WcfBasicHttpAdapter{TConfig}.MessageClientCredentialType"/> property
-			/// is set to <see cref="BasicHttpMessageCredentialType.Certificate"/>.
+			/// property is required if the <see cref="WcfBasicHttpAdapter{TAddress,TConfig}.MessageClientCredentialType"/>
+			/// property is set to <see cref="BasicHttpMessageCredentialType.Certificate"/>.
 			/// </summary>
 			/// <remarks>
 			/// <para>
@@ -232,13 +232,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// The WCF-BasicHttp adapter leverages the <see cref="BasicHttpBinding"/> in the buffered transfer mode to
 			/// communicate with an endpoint. Proxy credentials of <see cref="BasicHttpBinding"/> are applicable only when
-			/// the <see cref="WcfBasicHttpAdapter{TConfig}.SecurityMode"/> is <see
+			/// the <see cref="WcfBasicHttpAdapter{TAddress,TConfig}.SecurityMode"/> is <see
 			/// cref="BasicHttpSecurityMode.Transport"/>, <see cref="BasicHttpSecurityMode.None"/>, or <see
 			/// cref="BasicHttpSecurityMode.TransportCredentialOnly"/>. If you set the <see
-			/// cref="WcfBasicHttpAdapter{TConfig}.SecurityMode"/> property to <see cref="BasicHttpSecurityMode.Message"/>
-			/// or <see cref="BasicHttpSecurityMode.TransportWithMessageCredential"/>, the WCF-BasicHttp adapter does not
-			/// use the credential specified in the <see cref="ProxyUserName"/> and <see cref="ProxyPassword"/> properties
-			/// for authentication against the proxy.
+			/// cref="WcfBasicHttpAdapter{TAddress,TConfig}.SecurityMode"/> property to <see
+			/// cref="BasicHttpSecurityMode.Message"/> or <see
+			/// cref="BasicHttpSecurityMode.TransportWithMessageCredential"/>, the WCF-BasicHttp adapter does not use the
+			/// credential specified in the <see cref="ProxyUserName"/> and <see cref="ProxyPassword"/> properties for
+			/// authentication against the proxy.
 			/// </para>
 			/// <para>
 			/// The WCF-BasicHttp send adapter uses Basic authentication for the proxy.

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.Text;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wha = new WcfWSHttpAdapter.Inbound(
 				a => {
-					a.Address = new EndpointAddress("http://localhost/dummy.svc");
+					a.Address = new Uri("/dummy.svc", UriKind.Relative);
 					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;
@@ -70,6 +71,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wha = new WcfWSHttpAdapter.Inbound(
+				a => {
+					a.Address = new Uri("/dummy.svc", UriKind.Relative);
+					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.SecurityMode = SecurityMode.Message;
+					a.TextEncoding = Encoding.Unicode;
+				});
+
+			Assert.That(() => ((ISupportValidation) wha).Validate(), Throws.Nothing);
 		}
 	}
 }

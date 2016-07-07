@@ -52,5 +52,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			Assert.Fail("TODO");
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var iha = new HttpAdapter.Inbound(
+				a => {
+					a.LoopBack = false;
+					a.ResponseContentType = MediaTypeNames.Application.Pdf;
+					a.ReturnCorrelationHandle = true;
+				});
+			Assert.That(() => ((ISupportValidation) iha).Validate(), Throws.Nothing);
+		}
 	}
 }

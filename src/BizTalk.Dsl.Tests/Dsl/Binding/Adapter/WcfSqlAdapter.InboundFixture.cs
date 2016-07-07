@@ -86,5 +86,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			Assert.Fail("TODO");
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var isa = new WcfSqlAdapter.Inbound(
+				a => {
+					a.Address = new SqlAdapterConnectionUri { InboundId = "AvailableBatches", Server = "localhost", InitialCatalog = "BizTalkFactoryTransientStateDb" };
+					a.InboundOperationType = InboundOperation.XmlPolling;
+					a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM vw_claim_AvailableTokens";
+					a.PollingStatement = "EXEC usp_claim_CheckOut";
+					a.PollingInterval = TimeSpan.FromHours(2);
+					a.InboundBodyLocation = InboundMessageBodySelection.UseBodyPath;
+					a.InboundBodyPathExpression = "/BodyWrapper/*";
+					a.InboundNodeEncoding = MessageBodyFormat.Xml;
+					a.XmlStoredProcedureRootNodeName = "BodyWrapper";
+					a.ServiceBehaviors = new[] {
+						new SqlAdapterInboundTransactionBehavior {
+							TransactionIsolationLevel = IsolationLevel.Serializable
+						}
+					};
+				});
+
+			Assert.That(() => ((ISupportValidation) isa).Validate(), Throws.Nothing);
+		}
 	}
 }

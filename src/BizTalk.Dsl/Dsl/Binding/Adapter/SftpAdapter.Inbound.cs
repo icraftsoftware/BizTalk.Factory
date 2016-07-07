@@ -56,6 +56,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region Base Class Member Overrides
+
+			protected override string GetAddress()
+			{
+				var uriBuilder = new UriBuilder("sftp", ServerAddress, Port, FolderPath + "/" + FileMask);
+				return uriBuilder.Uri.AbsoluteUri;
+			}
+
+			#endregion
+
 			#region Other Settings
 
 			/// <summary>

@@ -85,5 +85,34 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			Assert.Fail("TODO");
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var isa = new SftpAdapter.Inbound(
+				a => {
+					a.ServerAddress = "sftp.server.com";
+					a.Port = 23;
+					a.FolderPath = "/out/to_bts/";
+					a.FileMask = "*.xml";
+					a.PollingInterval = TimeSpan.FromMinutes(10);
+					a.ConnectionLimit = 6;
+
+					a.ClientAuthenticationMode = ClientAuthenticationMode.MultiFactorAuthentication;
+					a.PrivateKeyFile = @"c:\files\key.ppk";
+					a.PrivateKeyPassword = "p@ssw0rd";
+					a.UserName = "user";
+					a.Password = "p@ssw0rd";
+					a.SshServerHostKeyFingerPrint = "fingerprint";
+					a.EncryptionCipher = EncryptionCipher.AES;
+
+					a.ProxyAddress = "proxy.server.com";
+					a.ProxyPort = 1082;
+					a.ProxyType = ProxyType.SOCKS4;
+					a.ProxyUserName = "proxyuser";
+					a.ProxyPassword = "p@ssw0rd";
+				});
+			Assert.That(() => ((ISupportValidation) isa).Validate(), Throws.Nothing);
+		}
 	}
 }

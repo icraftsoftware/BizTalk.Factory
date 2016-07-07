@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
@@ -68,7 +69,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected override string GetAddress()
 		{
-			return _adapterConfig.Address;
+			return Address.IfNotNull(a => a.ToString());
 		}
 
 		protected override void Save(IPropertyBag propertyBag)
@@ -99,11 +100,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// Typically the URL is in the following format:
 		/// <![CDATA[sb://<namespace>.servicebus.windows.net/<queue_name>/]]>
 		/// </remarks>
-		public Uri Address
-		{
-			get { return new Uri(_adapterConfig.Address); }
-			set { _adapterConfig.Address = value.ToString(); }
-		}
+		public Uri Address { get; set; }
 
 		/// <summary>
 		/// Specifies a time span value that indicates the time for a channel open operation to complete.

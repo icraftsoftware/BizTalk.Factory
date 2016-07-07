@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			var pfa = new FtpAdapter.Outbound(
+			var ofa = new FtpAdapter.Outbound(
 				a => {
 					a.Server = "ftp.server.com";
 					a.Folder = "/in/from_bts/";
@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 					a.ConnectionLimit = 10;
 				});
-			var xml = ((IAdapterBindingSerializerFactory) pfa).GetAdapterBindingSerializer().Serialize();
+			var xml = ((IAdapterBindingSerializerFactory) ofa).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
@@ -76,6 +76,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>()
 					.With.Message.EqualTo("The Server Address is not defined"));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var ofa = new FtpAdapter.Outbound(
+				a => {
+					a.Server = "ftp.server.com";
+					a.Folder = "/in/from_bts/";
+					a.UserName = "ftpuser";
+					a.Password = "p@ssw0rd";
+					a.AfterPut = "cd /";
+					a.BeforePut = "cd /";
+					a.AllocateStorage = true;
+
+					a.ConnectionLimit = 10;
+				});
+			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
 		}
 	}
 }

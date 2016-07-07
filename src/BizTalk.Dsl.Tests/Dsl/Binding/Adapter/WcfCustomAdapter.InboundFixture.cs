@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wca = new WcfCustomAdapter.Inbound<NetTcpBindingElement>(
 				a => {
 					const int tenMegaBytes = 1024 * 1024 * 10;
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
 					a.Binding.MaxReceivedMessageSize = tenMegaBytes;
 					a.Binding.ReaderQuotas.MaxArrayLength = tenMegaBytes;
 					a.Binding.ReaderQuotas.MaxStringContentLength = tenMegaBytes;
@@ -73,6 +74,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wca = new WcfCustomAdapter.Inbound<NetTcpBindingElement>(
+				a => {
+					const int tenMegaBytes = 1024 * 1024 * 10;
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
+					a.Binding.MaxReceivedMessageSize = tenMegaBytes;
+					a.Binding.ReaderQuotas.MaxArrayLength = tenMegaBytes;
+					a.Binding.ReaderQuotas.MaxStringContentLength = tenMegaBytes;
+					a.Binding.Security.Mode = SecurityMode.Transport;
+					a.Binding.Security.Transport.ProtectionLevel = ProtectionLevel.Sign;
+					a.Binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+					a.OpenTimeout = TimeSpan.FromMinutes(3);
+				});
+
+			Assert.That(() => ((ISupportValidation) wca).Validate(), Throws.Nothing);
 		}
 	}
 }

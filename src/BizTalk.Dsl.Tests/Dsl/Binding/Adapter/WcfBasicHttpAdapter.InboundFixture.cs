@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.Text;
 using NUnit.Framework;
@@ -30,7 +31,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var bha = new WcfBasicHttpAdapter.Inbound(
 				a => {
+					a.Address = new Uri("/biztalk.factory/service.svc", UriKind.Relative);
 					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.MessageClientCredentialType = BasicHttpMessageCredentialType.Certificate;
 					a.SecurityMode = BasicHttpSecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;
 				});
@@ -43,7 +46,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<MessageEncoding vt=\"8\">Text</MessageEncoding>" +
 						"<TextEncoding vt=\"8\">utf-16</TextEncoding>" +
 						"<SecurityMode vt=\"8\">Message</SecurityMode>" +
-						"<MessageClientCredentialType vt=\"8\">UserName</MessageClientCredentialType>" +
+						"<MessageClientCredentialType vt=\"8\">Certificate</MessageClientCredentialType>" +
 						"<AlgorithmSuite vt=\"8\">Basic256</AlgorithmSuite>" +
 						"<TransportClientCredentialType vt=\"8\">None</TransportClientCredentialType>" +
 						"<UseSSO vt=\"11\">0</UseSSO>" +
@@ -66,6 +69,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var bha = new WcfBasicHttpAdapter.Inbound(
+				a => {
+					a.Address = new Uri("/biztalk.factory/service.svc", UriKind.Relative);
+					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.MessageClientCredentialType = BasicHttpMessageCredentialType.Certificate;
+					a.SecurityMode = BasicHttpSecurityMode.Message;
+					a.TextEncoding = Encoding.Unicode;
+				});
+
+			Assert.That(() => ((ISupportValidation) bha).Validate(), Throws.Nothing);
 		}
 	}
 }

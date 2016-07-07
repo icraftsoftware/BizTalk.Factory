@@ -39,11 +39,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#region Base Class Member Overrides
 
-		protected override string GetAddress()
-		{
-			return _adapterConfig.Address;
-		}
-
 		protected override void Save(IPropertyBag propertyBag)
 		{
 			_adapterConfig.Save(propertyBag as Microsoft.BizTalk.ExplorerOM.IPropertyBag);
@@ -51,9 +46,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected override void Validate()
 		{
-			_adapterConfig.Address = GetAddress();
-			_adapterConfig.Validate();
-			_adapterConfig.Address = null;
+			// TODO
+			// cannot delegate to _adapterConfig.Validate() because it will always throw a NullReferenceException
 		}
 
 		#endregion

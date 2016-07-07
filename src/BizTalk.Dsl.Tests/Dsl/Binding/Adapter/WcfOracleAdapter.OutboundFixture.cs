@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,6 +79,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var ooa = new WcfOracleAdapter.Outbound(
+				a => {
+					a.Address = new OracleDBConnectionUri { DataSourceName = "TNS" };
+					a.IsolationLevel = IsolationLevel.ReadCommitted;
+					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
+					a.PropagateFaultMessage = true;
+					a.StaticAction = new ActionMapping {
+						new ActionMappingOperation("CreateTicket", "http://Microsoft.LobServices.OracleDB/2007/03/SCOTT/Procedure/CREATE_TICKET"),
+						new ActionMappingOperation("UpdateTicket", "http://Microsoft.LobServices.OracleDB/2007/03/SCOTT/Procedure/UPDATE_TICKET")
+					};
+					a.UserName = "Scott";
+					a.Password = "Tiger";
+				});
+
+			Assert.That(() => ((ISupportValidation) ooa).Validate(), Throws.Nothing);
 		}
 	}
 }

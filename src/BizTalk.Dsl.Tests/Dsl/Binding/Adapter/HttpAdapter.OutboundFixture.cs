@@ -56,5 +56,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			Assert.Fail("TODO");
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var oha = new HttpAdapter.Outbound(
+				a => {
+					a.RequestTimeout = TimeSpan.FromMinutes(2);
+					a.AuthenticationScheme = HttpAdapter.AuthenticationScheme.Anonymous;
+					a.UseSSO = true;
+					a.AffiliateApplicationName = "BizTalk.Factory";
+				});
+			Assert.That(() => ((ISupportValidation) oha).Validate(), Throws.Nothing);
+		}
 	}
 }

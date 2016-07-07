@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Moq;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			var mock = new Mock<WcfWebHttpAdapter<WebHttpRLConfig>> { CallBase = true };
+			var mock = new Mock<WcfWebHttpAdapter<Uri, WebHttpRLConfig>> { CallBase = true };
 			var fa = mock.Object as IAdapter;
 			Assert.That(fa.ProtocolType.Name, Is.EqualTo("WCF-WebHttp"));
 			Assert.That(fa.ProtocolType.Capabilities, Is.EqualTo(387));

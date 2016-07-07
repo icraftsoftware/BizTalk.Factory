@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wha = new WcfWebHttpAdapter.Outbound(
 				a => {
-					a.Address = new EndpointAddress("http://localhost/dummy.svc");
+					a.Address = new EndpointAddress("https://localhost/dummy.svc");
 
 					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
 					a.SecurityMode = WebHttpSecurityMode.Transport;
@@ -111,6 +111,41 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wha = new WcfWebHttpAdapter.Outbound(
+				a => {
+					a.Address = new EndpointAddress("https://localhost/dummy.svc");
+
+					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.SecurityMode = WebHttpSecurityMode.Transport;
+					a.ServiceCertificate = "thumbprint";
+					a.TransportClientCredentialType = HttpClientCredentialType.Basic;
+					a.UserName = "username";
+					a.Password = "p@ssw0rd";
+
+					a.UseAcsAuthentication = true;
+					a.StsUri = new Uri("https://localhost/swt_token_issuer");
+					a.IssuerName = "issuer_name";
+					a.IssuerSecret = "secret";
+
+					a.SuppressMessageBodyForHttpVerbs = "GET";
+					a.HttpHeaders = "Content-Type: application/json";
+					a.HttpUrlMapping = new HttpUrlMapping {
+						new HttpUrlMappingOperation("AddCustomer", "POST", "/Customer/{id}"),
+						new HttpUrlMappingOperation("DeleteCustomer", "DELETE", "/Customer/{id}")
+					};
+					a.VariableMapping = new VariableMapping {
+						new VariablePropertyMapping("id", BizTalkFactoryProperties.ReceiverName)
+					};
+
+					a.MaxReceivedMessageSize = 2048;
+				});
+
+			Assert.That(() => ((ISupportValidation) wha).Validate(), Throws.Nothing);
 		}
 	}
 }

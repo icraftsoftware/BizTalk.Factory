@@ -29,10 +29,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
 			var mock = new Mock<WcfNetMsmqAdapter<NetMsmqRLConfig>> { CallBase = true };
-			var wsa = mock.Object as IAdapter;
-			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-NetMsmq"));
-			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(523));
-			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("36f48beb-64aa-4c80-b396-1f2ba53bed84"));
+			var nma = mock.Object as IAdapter;
+			Assert.That(nma.ProtocolType.Name, Is.EqualTo("WCF-NetMsmq"));
+			Assert.That(nma.ProtocolType.Capabilities, Is.EqualTo(523));
+			Assert.That(nma.ProtocolType.ConfigurationClsid, Is.EqualTo("36f48beb-64aa-4c80-b396-1f2ba53bed84"));
 		}
 	}
 }

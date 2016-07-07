@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.ServiceModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Moq;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void ProtocolTypeSettingsAreReadFromRegistry()
 		{
-			var mock = new Mock<WcfBasicHttpAdapter<BasicHttpRLConfig>> { CallBase = true };
+			var mock = new Mock<WcfBasicHttpAdapter<EndpointAddress, BasicHttpRLConfig>> { CallBase = true };
 			var nta = mock.Object as IAdapter;
 			Assert.That(nta.ProtocolType.Name, Is.EqualTo("WCF-BasicHttp"));
 			Assert.That(nta.ProtocolType.Capabilities, Is.EqualTo(899));

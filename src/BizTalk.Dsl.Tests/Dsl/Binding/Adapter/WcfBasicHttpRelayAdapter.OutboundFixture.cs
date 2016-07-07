@@ -31,6 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wba = new WcfBasicHttpRelayAdapter.Outbound(
 				a => {
+					a.Address = new EndpointAddress("https://biztalk.factory.servicebus.windows.net/batch-queue");
 					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
 
 					a.MaxReceivedMessageSize = 64512;
@@ -87,6 +88,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				Throws.TypeOf<ArgumentException>()
 					.With.InnerException.TypeOf<ArgumentException>()
 					.With.InnerException.Message.StartsWith("The text encoding 'us-ascii' used in the text message format is not supported."));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wba = new WcfBasicHttpRelayAdapter.Outbound(
+				a => {
+					a.Address = new EndpointAddress("https://biztalk.factory.servicebus.windows.net/batch-queue");
+					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+
+					a.MaxReceivedMessageSize = 64512;
+					a.MessageEncoding = WSMessageEncoding.Mtom;
+
+					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
+					a.IssuerName = "issuer_name";
+					a.IssuerSecret = "issuer_secret";
+				});
+
+			Assert.That(() => ((ISupportValidation) wba).Validate(), Throws.Nothing);
 		}
 	}
 }

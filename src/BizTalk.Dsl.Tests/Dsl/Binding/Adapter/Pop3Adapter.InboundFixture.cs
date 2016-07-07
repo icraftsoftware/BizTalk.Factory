@@ -81,7 +81,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			Assert.That(
 				() => ((ISupportValidation) ipa).Validate(),
 				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(@"The format of the user name property is invalid for SPA authentication scheme. Make sure that the user name is specified as either <domain-name>\<user-name> or <machine-name>\<user-name>."));
+					.With.Message.EqualTo(
+						@"The format of the user name property is invalid for SPA authentication scheme. Make sure that the user name is specified as either <domain-name>\<user-name> or <machine-name>\<user-name>."));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var ipa = new Pop3Adapter.Inbound(
+				a => {
+					a.MailServer = "pop3.world.com";
+					a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
+					a.UserName = "domain\\reader/owner";
+					a.Password = "p@ssw0rd";
+					a.UseSSL = true;
+					a.BodyPartContentType = "text/";
+					a.ErrorThreshold = 50;
+					a.PollingInterval = TimeSpan.FromSeconds(15);
+				});
+			Assert.That(() => ((ISupportValidation) ipa).Validate(), Throws.Nothing);
 		}
 	}
 }

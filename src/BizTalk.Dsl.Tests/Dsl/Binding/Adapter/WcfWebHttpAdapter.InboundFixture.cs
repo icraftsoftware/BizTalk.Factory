@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Metadata;
@@ -32,7 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wha = new WcfWebHttpAdapter.Inbound(
 				a => {
-					a.Address = new EndpointAddress("http://localhost/dummy.svc");
+					a.Address = new Uri("/dummy.svc", UriKind.Relative);
 
 					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
 					a.SecurityMode = WebHttpSecurityMode.Transport;
@@ -107,6 +108,34 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wha = new WcfWebHttpAdapter.Inbound(
+				a => {
+					a.Address = new Uri("/dummy.svc", UriKind.Relative);
+
+					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.SecurityMode = WebHttpSecurityMode.Transport;
+					a.ServiceCertificate = "thumbprint";
+					a.TransportClientCredentialType = HttpClientCredentialType.Windows;
+
+					a.AddMessageBodyForHttpVerbs = "GET,HEAD";
+					a.HttpHeaders = "Content-Type: application/json\r\nReferer: http://www.my.org/";
+					a.HttpUrlMapping = new HttpUrlMapping {
+						new HttpUrlMappingOperation("AddCustomer", "POST", "/Customer/{id}"),
+						new HttpUrlMappingOperation("DeleteCustomer", "DELETE", "/Customer/{id}")
+					};
+					a.VariableMapping = new VariableMapping {
+						new VariablePropertyMapping("id", BizTalkFactoryProperties.ReceiverName)
+					};
+
+					a.MaxConcurrentCalls = 400;
+				});
+
+			Assert.That(() => ((ISupportValidation) wha).Validate(), Throws.Nothing);
 		}
 	}
 }

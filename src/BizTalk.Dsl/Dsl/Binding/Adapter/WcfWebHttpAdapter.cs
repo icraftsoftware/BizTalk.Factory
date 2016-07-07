@@ -30,7 +30,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfWebHttpAdapter<TConfig> : WcfAdapterBase<EndpointAddress, WebHttpBindingElement, TConfig>,
+	public abstract class WcfWebHttpAdapter<TAddress, TConfig> : WcfAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
 		IAdapterConfigMaxReceivedMessageSize,
 		IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,

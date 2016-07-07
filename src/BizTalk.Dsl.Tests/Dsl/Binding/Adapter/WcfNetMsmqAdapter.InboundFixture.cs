@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,13 +27,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			var npa = new WcfNetMsmqAdapter.Inbound(
+			var nma = new WcfNetMsmqAdapter.Inbound(
 				a => {
+					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
 					a.SecurityMode = NetMsmqSecurityMode.Message;
 					a.EnableTransaction = true;
 					a.OrderedProcessing = true;
 				});
-			var xml = ((IAdapterBindingSerializerFactory) npa).GetAdapterBindingSerializer().Serialize();
+			var xml = ((IAdapterBindingSerializerFactory) nma).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
@@ -64,6 +65,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var nma = new WcfNetMsmqAdapter.Inbound(
+				a => {
+					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
+					a.SecurityMode = NetMsmqSecurityMode.Message;
+					a.EnableTransaction = true;
+					a.OrderedProcessing = true;
+				});
+
+			Assert.That(() => ((ISupportValidation) nma).Validate(), Throws.Nothing);
 		}
 	}
 }

@@ -29,6 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var isma = new SBMessagingAdapter.Inbound(
 				a => {
+					a.Address = new Uri("sb://biztalkfactory.servicebus.windows.net/");
 					a.IsSessionful = true;
 
 					a.UseAcsAuthentication = true;
@@ -76,6 +77,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			Assert.That(
 				() => ((ISupportValidation) isma).Validate(),
 				Throws.TypeOf<ArgumentException>().With.Message.EqualTo(@"The specified address is invalid."));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var isma = new SBMessagingAdapter.Inbound(
+				a => {
+					a.Address = new Uri("sb://biztalkfactory.servicebus.windows.net/");
+					a.IsSessionful = true;
+
+					a.UseAcsAuthentication = true;
+					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
+					a.IssuerName = "issuer_name";
+					a.IssuerSecret = "issuer_secret";
+
+					a.CustomBrokeredPropertyNamespace = "urn:schemas.stateless.be:biztalk:service-bus:queue";
+					a.PromoteCustomProperties = true;
+				});
+			Assert.That(() => ((ISupportValidation) isma).Validate(), Throws.Nothing);
 		}
 	}
 }

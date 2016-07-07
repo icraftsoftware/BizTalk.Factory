@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var nta = new WcfNetTcpAdapter.Inbound(
 				a => {
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
 					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.MessageClientCredentialType = MessageCredentialType.Windows;
@@ -67,6 +68,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var nta = new WcfNetTcpAdapter.Inbound(
+				a => {
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
+					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.SecurityMode = SecurityMode.Message;
+					a.MessageClientCredentialType = MessageCredentialType.Windows;
+				});
+
+			Assert.That(() => ((ISupportValidation) nta).Validate(), Throws.Nothing);
 		}
 	}
 }

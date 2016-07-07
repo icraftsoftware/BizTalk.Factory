@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572853.aspx">How to Configure a WCF-WebHttp Send Port</seealso>
-		public class Outbound : WcfWebHttpAdapter<WebHttpTLConfig>, IAdapterConfigAccessControlService
+		public class Outbound : WcfWebHttpAdapter<EndpointAddress, WebHttpTLConfig>, IAdapterConfigAccessControlService
 		{
 			public Outbound()
 			{
@@ -168,8 +168,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// You must set the credentials if you selected the <see cref="HttpClientCredentialType.Basic"/> or <see
 			/// cref="HttpClientCredentialType.Digest"/> option for <see
-			/// cref="WcfWebHttpAdapter{TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set to
-			/// <c>True</c>.
+			/// cref="WcfWebHttpAdapter{TAddress,TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set
+			/// to <c>True</c>.
 			/// </para>
 			/// <para>
 			/// It defaults to <see cref="string.Empty"/>.
@@ -189,8 +189,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// You must set the credentials if you selected the <see cref="HttpClientCredentialType.Basic"/> or <see
 			/// cref="HttpClientCredentialType.Digest"/> option for <see
-			/// cref="WcfWebHttpAdapter{TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set to
-			/// <c>False</c>.
+			/// cref="WcfWebHttpAdapter{TAddress,TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set
+			/// to <c>False</c>.
 			/// </para>
 			/// <para>
 			/// It defaults to <see cref="string.Empty"/>.
@@ -210,8 +210,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// You must set the credentials if you selected the <see cref="HttpClientCredentialType.Basic"/> or <see
 			/// cref="HttpClientCredentialType.Digest"/> option for <see
-			/// cref="WcfWebHttpAdapter{TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set to
-			/// <c>False</c>.
+			/// cref="WcfWebHttpAdapter{TAddress,TConfig}.TransportClientCredentialType"/> and <see cref="UseSSO"/> is set
+			/// to <c>False</c>.
 			/// </para>
 			/// <para>
 			/// You do not have to use the domain\user format for this property.
@@ -234,7 +234,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// You must set the credentials if you selected the <see cref="HttpClientCredentialType.Basic"/> or <see
 			/// cref="HttpClientCredentialType.Digest"/> option for <see
-			/// cref="WcfWebHttpAdapter{TConfig}.TransportClientCredentialType"/>.
+			/// cref="WcfWebHttpAdapter{TAddress,TConfig}.TransportClientCredentialType"/>.
 			/// </para>
 			/// <para>
 			/// It defaults to <c>False</c>.
@@ -275,13 +275,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// The WCF-BasicHttp adapter leverages the <see cref="BasicHttpBinding"/> in the buffered transfer mode to
 			/// communicate with an endpoint. Proxy credentials of <see cref="BasicHttpBinding"/> are applicable only when
-			/// the <see cref="WcfBasicHttpAdapter{TConfig}.SecurityMode"/> is <see
+			/// the <see cref="WcfBasicHttpAdapter{TAddress,TConfig}.SecurityMode"/> is <see
 			/// cref="BasicHttpSecurityMode.Transport"/>, <see cref="BasicHttpSecurityMode.None"/>, or <see
 			/// cref="BasicHttpSecurityMode.TransportCredentialOnly"/>. If you set the <see
-			/// cref="WcfBasicHttpAdapter{TConfig}.SecurityMode"/> property to <see cref="BasicHttpSecurityMode.Message"/>
-			/// or <see cref="BasicHttpSecurityMode.TransportWithMessageCredential"/>, the WCF-BasicHttp adapter does not
-			/// use the credential specified in the <see cref="ProxyUserName"/> and <see cref="ProxyPassword"/> properties
-			/// for authentication against the proxy.
+			/// cref="WcfBasicHttpAdapter{TAddress,TConfig}.SecurityMode"/> property to <see
+			/// cref="BasicHttpSecurityMode.Message"/> or <see
+			/// cref="BasicHttpSecurityMode.TransportWithMessageCredential"/>, the WCF-BasicHttp adapter does not use the
+			/// credential specified in the <see cref="ProxyUserName"/> and <see cref="ProxyPassword"/> properties for
+			/// authentication against the proxy.
 			/// </para>
 			/// <para>
 			/// The WCF-BasicHttp send adapter uses Basic authentication for the proxy.

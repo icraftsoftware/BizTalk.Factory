@@ -113,5 +113,43 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				() => ((ISupportValidation) ifa).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo(@"The Server Address is not defined"));
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var ifa = new FtpAdapter.Inbound(
+				a => {
+					a.MaximumNumberOfFiles = 1;
+					a.MaximumBatchSize = 2;
+
+					a.FirewallAddress = "firewall.com";
+					a.FirewallType = FtpAdapter.FirewallType.Socks4;
+					a.FirewallUserName = "fireuser";
+					a.FirewallPassword = "p@ssw0rd";
+
+					a.Server = "ftp.server.com";
+					a.Folder = "/out/to_bts/";
+					a.FileMask = "*.*.csv";
+					a.UserName = "ftpuser";
+					a.Password = "p@ssw0rd";
+					a.AfterGet = a.BeforeGet = "cd /";
+					a.ErrorThreshold = 11;
+					a.Log = "c:\\windows\\temp\\ftp.log";
+					a.MaximumFileSize = 100;
+					a.UseNameList = false;
+
+					a.DeleteAfterDownload = true;
+					a.EnableTimestampComparison = true;
+					a.PollingInterval = TimeSpan.FromSeconds(120);
+
+					a.ClientCertificate = "hash";
+					a.FtpsConnectionMode = FtpAdapter.FtpsConnectionMode.Implicit;
+					a.UseSSL = true;
+
+					a.ReceiveTimeout = TimeSpan.FromMinutes(1);
+					a.TemporaryFolder = "c:\\windows\\temp";
+				});
+			Assert.That(() => ((ISupportValidation) ifa).Validate(), Throws.Nothing);
+		}
 	}
 }

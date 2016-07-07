@@ -27,7 +27,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfWSHttpAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, WSHttpBindingElement, TConfig>,
+	public abstract class WcfWSHttpAdapter<TAddress, TConfig> : WcfTwoWayAdapterBase<TAddress, WSHttpBindingElement, TConfig>,
 		IAdapterConfigMaxReceivedMessageSize,
 		IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,

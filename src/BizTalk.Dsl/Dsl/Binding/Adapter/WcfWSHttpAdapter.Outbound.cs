@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp Transport Properties Dialog Box, Send, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfWSHttpAdapter<WSHttpTLConfig>,
+		public class Outbound : WcfWSHttpAdapter<EndpointAddress, WSHttpTLConfig>,
 			IOutboundAdapter,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundPropagateFaultMessage,
@@ -110,8 +110,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			/// <summary>
 			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the <see cref="WcfWSHttpAdapter{TConfig}.MessageClientCredentialType"/> property
-			/// is set to <see cref="MessageCredentialType.Certificate"/>.
+			/// property is required if the <see cref="WcfWSHttpAdapter{TAddress,TConfig}.MessageClientCredentialType"/>
+			/// property is set to <see cref="MessageCredentialType.Certificate"/>.
 			/// </summary>
 			/// <remarks>
 			/// <para>
@@ -186,8 +186,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <para>
 			/// The WCF-WSHttp adapter leverages the <see cref="WSHttpBinding"/> in the buffered transfer mode to
 			/// communicate with an endpoint. Proxy credentials of <see cref="WSHttpBinding"/> are applicable only when the
-			/// <see cref="WcfWSHttpAdapter{TConfig}.SecurityMode"/> is <see cref="SecurityMode.Transport"/> or <see
-			/// cref="SecurityMode.None"/>. If you set the <see cref="WcfWSHttpAdapter{TConfig}.SecurityMode"/> property to
+			/// <see cref="WcfWSHttpAdapter{TAddress,TConfig}.SecurityMode"/> is <see cref="SecurityMode.Transport"/> or
+			/// <see cref="SecurityMode.None"/>. If you set the <see
+			/// cref="WcfWSHttpAdapter{TAddress,TConfig}.SecurityMode"/> property to
 			/// <see cref="SecurityMode.Message"/>
 			/// or <see cref="SecurityMode.TransportWithMessageCredential"/>, the WCF-WSHttp adapter does not use the
 			/// credential specified in the <see cref="ProxyUserName"/> and <see cref="ProxyPassword"/> properties for

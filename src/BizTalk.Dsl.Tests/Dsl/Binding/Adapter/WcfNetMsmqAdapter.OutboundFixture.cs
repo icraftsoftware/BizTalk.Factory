@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,15 +27,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[Test]
 		public void SerializeToXml()
 		{
-			var npa = new WcfNetMsmqAdapter.Outbound(
+			var nma = new WcfNetMsmqAdapter.Outbound(
 				a => {
+					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
 					a.SecurityMode = NetMsmqSecurityMode.Message;
 					a.UseSourceJournal = true;
 					a.DeadLetterQueue = DeadLetterQueue.Custom;
 					a.CustomDeadLetterQueue = "net.msmq://localhost/deadLetterQueueName";
 					a.StaticAction = "http://biztalk.stateless.be/action";
 				});
-			var xml = ((IAdapterBindingSerializerFactory) npa).GetAdapterBindingSerializer().Serialize();
+			var xml = ((IAdapterBindingSerializerFactory) nma).GetAdapterBindingSerializer().Serialize();
 			Assert.That(
 				xml,
 				Is.EqualTo(
@@ -67,6 +68,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var nma = new WcfNetMsmqAdapter.Outbound(
+				a => {
+					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
+					a.SecurityMode = NetMsmqSecurityMode.Message;
+					a.UseSourceJournal = true;
+					a.DeadLetterQueue = DeadLetterQueue.Custom;
+					a.CustomDeadLetterQueue = "net.msmq://localhost/deadLetterQueueName";
+					a.StaticAction = "http://biztalk.stateless.be/action";
+				});
+
+			Assert.That(() => ((ISupportValidation) nma).Validate(), Throws.Nothing);
 		}
 	}
 }

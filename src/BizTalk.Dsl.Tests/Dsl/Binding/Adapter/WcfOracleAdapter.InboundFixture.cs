@@ -86,5 +86,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			Assert.Fail("TODO");
 		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var ioa = new WcfOracleAdapter.Inbound(
+				a => {
+					a.Address = new OracleDBConnectionUri { DataSourceName = "TNS", PollingId = "ticket" };
+					a.InboundOperationType = InboundOperation.Polling;
+					a.PolledDataAvailableStatement = "SELECT COUNT(1) FROM EVENTS";
+					a.PollingInterval = TimeSpan.FromHours(2);
+					a.PollingStatement = "SELECT KEY FROM EVENTS FOR UPDATE";
+					a.PostPollStatement = "DELETE FROM EVENTS";
+					a.UserName = "Scott";
+					a.Password = "Tiger";
+					a.ServiceBehaviors = new[] {
+						new OracleDBInboundTransactionBehavior {
+							TransactionIsolationLevel = IsolationLevel.ReadCommitted
+						}
+					};
+				});
+
+			Assert.That(() => ((ISupportValidation) ioa).Validate(), Throws.Nothing);
+		}
 	}
 }

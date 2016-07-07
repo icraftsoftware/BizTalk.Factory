@@ -32,6 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wca = new WcfCustomAdapter.Outbound<NetTcpBindingElement>(
 				a => {
 					const int tenMegaBytes = 1024 * 1024 * 10;
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
 					a.Binding.MaxReceivedMessageSize = tenMegaBytes;
 					a.Binding.ReaderQuotas.MaxArrayLength = tenMegaBytes;
 					a.Binding.ReaderQuotas.MaxStringContentLength = tenMegaBytes;
@@ -70,6 +71,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var wca = new WcfCustomAdapter.Outbound<NetTcpBindingElement>(
+				a => {
+					const int tenMegaBytes = 1024 * 1024 * 10;
+					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
+					a.Binding.MaxReceivedMessageSize = tenMegaBytes;
+					a.Binding.ReaderQuotas.MaxArrayLength = tenMegaBytes;
+					a.Binding.ReaderQuotas.MaxStringContentLength = tenMegaBytes;
+					a.Binding.Security.Mode = SecurityMode.Transport;
+					a.Binding.Security.Transport.ProtectionLevel = ProtectionLevel.Sign;
+					a.Binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+					a.StaticAction = "http://services.biztalk.net/mail/2011/11/IMailService/SendMessage";
+				});
+
+			Assert.That(() => ((ISupportValidation) wca).Validate(), Throws.Nothing);
 		}
 	}
 }

@@ -31,6 +31,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var defaultScheduledEnqueueTimeUtc = DateTime.UtcNow.Date.AddMonths(1);
 			var osma = new SBMessagingAdapter.Outbound(
 				a => {
+					a.Address = new Uri("sb://biztalkfactory.servicebus.windows.net/");
+
 					a.UseAcsAuthentication = true;
 					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
 					a.IssuerName = "issuer_name";
@@ -78,6 +80,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			Assert.That(
 				() => ((ISupportValidation) osma).Validate(),
 				Throws.TypeOf<ArgumentException>().With.Message.EqualTo(@"The specified address is invalid."));
+		}
+
+		[Test]
+		public void ValidateDoesNotThrow()
+		{
+			var osma = new SBMessagingAdapter.Outbound(
+				a => {
+					a.Address = new Uri("sb://biztalkfactory.servicebus.windows.net/");
+
+					a.UseAcsAuthentication = true;
+					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
+					a.IssuerName = "issuer_name";
+					a.IssuerSecret = "issuer_secret";
+
+					a.DefaultScheduledEnqueueTimeUtc = DateTime.UtcNow.Date.AddMonths(1);
+					a.DefaultCorrelationId = "correlation_id";
+
+					a.CustomBrokeredPropertyNamespace = "urn:schemas.stateless.be:biztalk:service-bus:queue";
+				});
+			Assert.That(() => ((ISupportValidation) osma).Validate(), Throws.Nothing);
 		}
 	}
 }
