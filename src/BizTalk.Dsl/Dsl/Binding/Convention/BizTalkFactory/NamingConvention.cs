@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
@@ -97,7 +98,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 				receiveLocation.ReceivePort.IsTwoWay ? "2" : "1",
 				Party,
 				MessageName,
-				receiveLocation.Transport.Adapter.ProtocolType.Name,
+				ComputeAdapterName(receiveLocation.Transport.Adapter),
 				MessageFormat.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", MessageFormat));
 		}
 
@@ -115,7 +116,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 				sendPort.IsTwoWay ? "2" : "1",
 				Party,
 				MessageName,
-				sendPort.Transport.Adapter.ProtocolType.Name,
+				ComputeAdapterName(sendPort.Transport.Adapter),
 				MessageFormat.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", MessageFormat));
 		}
 
@@ -136,6 +137,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		private TMessageName MessageName { get; set; }
 
 		private TParty Party { get; set; }
+
+		protected virtual string ComputeAdapterName(IAdapter adapter)
+		{
+			var name = adapter.ProtocolType.Name;
+			if (adapter.GetType().IsSubclassOfOpenGeneric(typeof(WcfCustomAdapterBase<,>)))
+			{
+				const string bindingSuffix = "Binding";
+				// to be able able to access Binding property which is declared by WcfCustomAdapterBase<,>
+				dynamic dynamicAdapter = adapter;
+				var bindingName = dynamicAdapter.Binding.Name;
+				if (bindingName.EndsWith(bindingSuffix)) bindingName = bindingName.Substring(0, bindingName.Length - bindingSuffix.Length);
+				bindingName = char.ToUpper(bindingName[0]) + bindingName.Substring(1);
+				return name + bindingName;
+			}
+			return name;
+		}
 
 		protected virtual string ComputeArea(Type type)
 		{

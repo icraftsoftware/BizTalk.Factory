@@ -205,6 +205,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
+    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\NamingConventionFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapterFixture.cs" />

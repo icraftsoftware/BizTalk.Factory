@@ -56,6 +56,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Extensions\StringExtensionsFixture.cs" />
+    <Compile Include="Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
