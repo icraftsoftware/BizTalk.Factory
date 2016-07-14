@@ -172,7 +172,8 @@ namespace Be.Stateless.IO.Extensions
 		/// The stream to compress and encode.
 		/// </param>
 		/// <param name="threshold">
-		/// The threshold in bytes that the compressed stream cannot exceed.
+		/// The threshold in bytes that the compressed stream cannot exceed. Notice that this threshold is approximate,
+		/// and can in certain cases be exceeded.
 		/// </param>
 		/// <param name="encodedCompression">
 		/// The base64 encoding of the compressed stream if the latter's length does not exceed the compression threshold.

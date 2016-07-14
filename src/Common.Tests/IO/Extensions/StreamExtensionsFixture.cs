@@ -50,7 +50,7 @@ namespace Be.Stateless.IO.Extensions
 		[Test]
 		public void CompressAboveThreshold()
 		{
-			using (var stream = new MemoryStream(Encoding.Unicode.GetBytes(new string('A', 4096))))
+			using (var stream = FakeTextStream.Create(1024 * 100))
 			{
 				string encoded;
 				Assert.That(stream.TryCompressToBase64String(16, out encoded), Is.False);
