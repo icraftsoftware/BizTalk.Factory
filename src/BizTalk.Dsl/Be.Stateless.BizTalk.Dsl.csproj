@@ -31,6 +31,7 @@
     <DocumentationFile>bin\Debug\Be.Stateless.BizTalk.Dsl.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,6 +42,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Dsl.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -245,9 +247,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingBase.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensions.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BtxServiceTypeExtensions.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializer.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\NetMsmqRetryPolicy.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingOverrides.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettings.cs" />
     <Compile Include="Dsl\Binding\Extensions\SupportValidationExtensions.cs" />
@@ -256,26 +256,11 @@
     <Compile Include="Dsl\Binding\ServiceState.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\ComponentBinding.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ApplicationNamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IApplicationNameMemento.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ILocationMessageFormat.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ILocationMessageName.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IMessageFormatMemento.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IMessageNameMemento.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IPartyMemento.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\IReceivePortNamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ISendPortNamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\MessageFormat.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\NamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceiveLocationNamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceivePortNamingConvention.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\SendPortNamingConvention.cs" />
     <Compile Include="Dsl\Binding\Convention\INamingConvention.cs" />
     <Compile Include="Dsl\Binding\BindingException.cs" />
     <Compile Include="Dsl\Binding\Convention\ISupportNamingConvention.cs" />
     <Compile Include="Dsl\Binding\Convention\NamingConventionException.cs" />
     <Compile Include="Dsl\Binding\Convention\NamingConventionThunk.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\RetryPolicy.cs" />
     <Compile Include="Dsl\Binding\Diagnostics\IProvideSourceFileInformation.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensions.cs" />
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
@@ -314,13 +299,11 @@
     <Compile Include="Dsl\Binding\ReceiveLocation.cs" />
     <Compile Include="Dsl\Binding\ReceiveLocationBase.cs" />
     <Compile Include="Dsl\Binding\ReceiveLocationCollection.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceiveLocation.cs" />
     <Compile Include="Dsl\Binding\ReceiveLocationTransport.cs" />
     <Compile Include="Dsl\Binding\ReceivePipeline.cs" />
     <Compile Include="Dsl\Binding\ReceivePort.cs" />
     <Compile Include="Dsl\Binding\ReceivePortBase.cs" />
     <Compile Include="Dsl\Binding\ReceivePortCollection.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\ReceivePort.cs" />
     <Compile Include="Dsl\Binding\RetryPolicy.cs" />
     <Compile Include="Dsl\Binding\Schedule.cs" />
     <Compile Include="Dsl\Binding\SendPipeline.cs" />
@@ -328,7 +311,6 @@
     <Compile Include="Dsl\Binding\SendPort.cs" />
     <Compile Include="Dsl\Binding\SendPortBase.cs" />
     <Compile Include="Dsl\Binding\SendPortCollection.cs" />
-    <Compile Include="Dsl\Binding\Convention\BizTalkFactory\SendPort.cs" />
     <Compile Include="Dsl\Binding\SendPortTransport.cs" />
     <Compile Include="Dsl\Binding\ServiceWindow.cs" />
     <Compile Include="Dsl\Binding\Subscription\Filter.cs" />
@@ -429,6 +411,9 @@
       <Project>{8f890272-22e8-4668-9f0e-c12dd48474d2}</Project>
       <Name>Be.Stateless.Logging</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dsl\Binding\Convention\BizTalkFactory\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

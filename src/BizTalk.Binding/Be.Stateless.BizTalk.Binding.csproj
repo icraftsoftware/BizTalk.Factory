@@ -106,6 +106,10 @@
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl.BizTalk.Factory.Convention\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj">
+      <Project>{99348f15-85c7-4c31-befc-12d3ad0c38e1}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46e0347e-7978-4f76-86d7-7d31201d856d}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>

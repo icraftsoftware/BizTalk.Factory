@@ -141,9 +141,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Explor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention", "BizTalk.Dsl.BizTalk.Factory.Convention\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj", "{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests", "BizTalk.Dsl.BizTalk.Factory.Convention.Tests\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests.csproj", "{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 40
+		SccNumberOfProjects = 41
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -264,6 +266,9 @@ Global
 		SccProjectUniqueName39 = BizTalk.Dsl.BizTalk.Factory.Convention\\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj
 		SccProjectName39 = BizTalk.Dsl.BizTalk.Factory.Convention
 		SccLocalPath39 = BizTalk.Dsl.BizTalk.Factory.Convention
+		SccProjectUniqueName40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests\\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests.csproj
+		SccProjectName40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests
+		SccLocalPath40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -504,6 +509,12 @@ Global
 		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|x86.ActiveCfg = Release|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,10 +16,9 @@
 
 #endregion
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
-{
-	public interface ISupportNamingConvention
-	{
-		string Name { get; }
-	}
-}
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+[assembly: AssemblyTitle("Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests")]
+[assembly: AssemblyDescription("Unit tests for be.stateless BizTalk Factory's BizTalk DSL Naming Conventions.")]
+[assembly: ComVisible(false)]
