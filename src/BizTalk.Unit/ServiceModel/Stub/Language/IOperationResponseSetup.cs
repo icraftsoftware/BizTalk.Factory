@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub.Language
 	/// <typeparam name="TResult">
 	/// The type of the result the service contract's operation will produce.
 	/// </typeparam>
-	public interface IOperationResponseSetup<TContract, TResult> : IHideObjectMembers
+	public interface IOperationResponseSetup<TContract, TResult> : IFluentInterface
 		where TContract : class
 	{
 		/// <summary>

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 	/// To effectively work, invocation of static members of a class must be enabled for the rule engine. See
 	/// http://msdn.microsoft.com/en-us/library/aa950269.aspx.
 	/// </remarks>
-	public class RuleSet : IHideObjectMembers
+	public class RuleSet : IFluentInterface
 	{
 		#region Nested Type: Context
 
@@ -148,7 +148,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			VersionInfo.MinorRevision = minorRevision;
 		}
 
-		#region IHideObjectMembers Members
+		#region IFluentInterface Members
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[SuppressMessage("ReSharper", "BaseObjectEqualsIsObjectEquals")]

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ using Microsoft.BizTalk.Component.Interop;
 
 namespace Be.Stateless.BizTalk.Dsl.Pipeline
 {
-	public interface IConfigurableComponent<out T, out TScope> : IHideObjectMembers
+	public interface IConfigurableComponent<out T, out TScope> : IFluentInterface
 		where T : IBaseComponent, IPersistPropertyBag
-		where TScope : IHideObjectMembers
+		where TScope : IFluentInterface
 	{
 		TScope Configure(Action<T> componentConfigurator);
 	}

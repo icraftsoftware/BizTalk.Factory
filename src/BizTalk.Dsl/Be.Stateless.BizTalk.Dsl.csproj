@@ -347,7 +347,7 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterBindingSerializerFactory.cs" />
     <Compile Include="Dsl\Binding\Adapter\FileAdapter.Outbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\AdapterBindingSerializer.cs" />
-    <Compile Include="Dsl\IHideObjectMembers.cs" />
+    <Compile Include="Dsl\IFluentInterface.cs" />
     <Compile Include="Dsl\ITypeDescriptor.cs" />
     <Compile Include="Dsl\IVisitable.cs" />
     <Compile Include="Dsl\Pipeline\ComponentList.cs" />

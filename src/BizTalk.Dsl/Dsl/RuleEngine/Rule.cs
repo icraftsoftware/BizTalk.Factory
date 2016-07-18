@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 {
-	public interface IRule : IHideObjectMembers
+	public interface IRule : IFluentInterface
 	{
 		IRule If(Expression<Func<bool>> antecedent);
 
@@ -32,11 +32,15 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 	public class Rule : IRule
 	{
+		#region Operators
+
 		public static implicit operator Microsoft.RuleEngine.Rule(Rule fromRule)
 		{
 			var toRule = new Microsoft.RuleEngine.Rule(fromRule.Name, fromRule.Antecedent, fromRule.Consequent);
 			return toRule;
 		}
+
+		#endregion
 
 		private Rule()
 		{
@@ -44,8 +48,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			Consequent = new ConsequentCollection();
 		}
 
-		public Rule(string name)
-			: this()
+		public Rule(string name) : this()
 		{
 			if (name.IsNullOrEmpty()) throw new ArgumentNullException("name");
 			Name = name;

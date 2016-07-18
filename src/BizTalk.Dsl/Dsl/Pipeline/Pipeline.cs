@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ using Be.Stateless.BizTalk.Dsl.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Pipeline
 {
-	public abstract class Pipeline<T> : IHideObjectMembers, IVisitable<IPipelineVisitor>, IPipelineSerializerFactory where T : IPipelineStageList
+	public abstract class Pipeline<T> : IFluentInterface, IVisitable<IPipelineVisitor>, IPipelineSerializerFactory where T : IPipelineStageList
 	{
 		static Pipeline()
 		{
@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 			Version = new Version(1, 0);
 		}
 
-		#region IHideObjectMembers Members
+		#region IFluentInterface Members
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public override bool Equals(object obj)

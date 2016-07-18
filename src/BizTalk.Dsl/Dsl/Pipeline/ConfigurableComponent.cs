@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 {
 	internal class ConfigurableComponent<T, TScope> : PipelineComponentDescriptor<T>, IConfigurableComponent<T, TScope>
 		where T : IBaseComponent, IPersistPropertyBag
-		where TScope : IHideObjectMembers
+		where TScope : IFluentInterface
 	{
 		internal ConfigurableComponent(T pipelineComponent, TScope scope)
 			: base(pipelineComponent)
