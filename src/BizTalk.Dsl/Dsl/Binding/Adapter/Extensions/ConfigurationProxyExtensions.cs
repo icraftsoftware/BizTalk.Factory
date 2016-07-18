@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel.Configuration;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Converters;
 
@@ -28,6 +29,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions
 	{
 		public static string GetBindingElementXml(this ConfigurationElement configurationElement, string bindingName)
 		{
+			var bindingElementDecorator = configurationElement as IBindingElementDecorator;
+			if (bindingElementDecorator != null) configurationElement = bindingElementDecorator.DecoratedBindingElement;
+
 			var configurationProxy = new ConfigurationProxy();
 			configurationProxy.SetBindingElement(configurationElement);
 			return configurationProxy.GetBindingElementXml(bindingName);

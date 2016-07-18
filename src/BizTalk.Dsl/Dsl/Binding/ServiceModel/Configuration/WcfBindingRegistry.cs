@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel.Configuration;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
+namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
 	public class WcfBindingRegistry : Dictionary<Type, string>
 	{
@@ -42,9 +42,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 		}
 
-		public static string GetBindingName<TBinding>() where TBinding : StandardBindingElement
+		public static string GetBindingName(StandardBindingElement bindingElement)
 		{
-			return _instance[typeof(TBinding)];
+			var bindingElementDecorator = bindingElement as IBindingElementDecorator;
+			var bindingType = bindingElementDecorator == null
+				? bindingElement.GetType()
+				: bindingElementDecorator.DecoratedBindingElement.GetType();
+			return _instance[bindingType];
 		}
 
 		private static readonly WcfBindingRegistry _instance;

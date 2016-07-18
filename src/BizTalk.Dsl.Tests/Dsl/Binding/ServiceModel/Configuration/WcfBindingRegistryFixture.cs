@@ -16,28 +16,25 @@
 
 #endregion
 
-using System;
-using Microsoft.BizTalk.Deployment.Binding;
+using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
-	public class RetryPolicy
+	[TestFixture]
+	public class WcfBindingRegistryFixture
 	{
-		static RetryPolicy()
+		[Test]
+		public void GetBindingNameForDecoratedBindingElement()
 		{
-			var ti = new TransportInfo();
-			_default = new RetryPolicy { Count = ti.RetryCount, Interval = TimeSpan.FromMinutes(ti.RetryInterval) };
+			var bindingElement = new NetMsmqBindingElement();
+			Assert.That(WcfBindingRegistry.GetBindingName(bindingElement), Is.EqualTo("netMsmqBinding"));
 		}
 
-		public static RetryPolicy Default
+		[Test]
+		public void GetBindingNameForStandardBindingElement()
 		{
-			get { return _default; }
+			var bindingElement = new System.ServiceModel.Configuration.NetMsmqBindingElement();
+			Assert.That(WcfBindingRegistry.GetBindingName(bindingElement), Is.EqualTo("netMsmqBinding"));
 		}
-
-		public virtual int Count { get; set; }
-
-		public virtual TimeSpan Interval { get; set; }
-
-		private static readonly RetryPolicy _default;
 	}
 }

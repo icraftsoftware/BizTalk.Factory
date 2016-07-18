@@ -152,6 +152,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Dsl\Binding\Adapter\AdapterBaseFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\Extensions\ConfigurationProxyExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\FtpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\FtpAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\FtpAdapterFixture.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfCustomIsolatedAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.InboundFixture.cs" />
@@ -207,6 +209,8 @@
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\Convention\BizTalkFactory\NamingConventionFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
+    <Compile Include="Dsl\Binding\ServiceModel\Configuration\NetMsmqBindingElementFixture.cs" />
+    <Compile Include="Dsl\Binding\ServiceModel\Configuration\WcfBindingRegistryFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBaseFixture.cs" />
@@ -336,6 +340,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -16,28 +16,12 @@
 
 #endregion
 
-using System;
-using Microsoft.BizTalk.Deployment.Binding;
+using System.ServiceModel.Configuration;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
-	public class RetryPolicy
+	public interface IBindingElementDecorator : ISupportEnvironmentOverride
 	{
-		static RetryPolicy()
-		{
-			var ti = new TransportInfo();
-			_default = new RetryPolicy { Count = ti.RetryCount, Interval = TimeSpan.FromMinutes(ti.RetryInterval) };
-		}
-
-		public static RetryPolicy Default
-		{
-			get { return _default; }
-		}
-
-		public virtual int Count { get; set; }
-
-		public virtual TimeSpan Interval { get; set; }
-
-		private static readonly RetryPolicy _default;
+		StandardBindingElement DecoratedBindingElement { get; }
 	}
 }

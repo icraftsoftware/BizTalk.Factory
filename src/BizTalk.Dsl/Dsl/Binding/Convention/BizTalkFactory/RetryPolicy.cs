@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,19 +23,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 {
 	public static class RetryPolicy
 	{
-		#region Nested Type: LongRunningPolicy
+		#region Nested Type: EnvironmentSensitiveRetryPolicy
 
-		private class LongRunningPolicy : Binding.RetryPolicy, ISupportEnvironmentOverride
+		private class EnvironmentSensitiveRetryPolicy : Binding.RetryPolicy, ISupportEnvironmentOverride
 		{
+			public EnvironmentSensitiveRetryPolicy(Func<string, Binding.RetryPolicy> policySelector)
+			{
+				_policySelector = policySelector;
+			}
+
 			#region ISupportEnvironmentOverride Members
 
 			public void ApplyEnvironmentOverrides(string environment)
 			{
-				_policy = environment.IsOneOf("DEV", "BLD")
-					? _realTime
-					: environment == "ACC"
-						? _shortRunning
-						: _longRunning;
+				_policy = _policySelector(environment);
 			}
 
 			#endregion
@@ -54,37 +55,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 			#endregion
 
-			private Binding.RetryPolicy _policy;
-		}
-
-		#endregion
-
-		#region Nested Type: ShortRunningPolicy
-
-		private class ShortRunningPolicy : Binding.RetryPolicy, ISupportEnvironmentOverride
-		{
-			#region ISupportEnvironmentOverride Members
-
-			public void ApplyEnvironmentOverrides(string environment)
-			{
-				_policy = environment.IsOneOf("DEV", "BLD", "ACC") ? _realTime : _shortRunning;
-			}
-
-			#endregion
-
-			#region Base Class Member Overrides
-
-			public override int Count
-			{
-				get { return _policy.Count; }
-			}
-
-			public override TimeSpan Interval
-			{
-				get { return _policy.Interval; }
-			}
-
-			#endregion
+			private readonly Func<string, Binding.RetryPolicy> _policySelector;
 
 			private Binding.RetryPolicy _policy;
 		}
@@ -100,7 +71,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public static Binding.RetryPolicy LongRunning
 		{
-			get { return new LongRunningPolicy(); }
+			get
+			{
+				return new EnvironmentSensitiveRetryPolicy(
+					environment => environment.IsOneOf("DEV", "BLD")
+						? _realTime
+						: environment == "ACC"
+							? _shortRunning
+							: _longRunning);
+			}
 		}
 
 		public static Binding.RetryPolicy RealTime
@@ -110,7 +89,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 		public static Binding.RetryPolicy ShortRunning
 		{
-			get { return new ShortRunningPolicy(); }
+			get
+			{
+				return new EnvironmentSensitiveRetryPolicy(
+					environment => environment.IsOneOf("DEV", "BLD", "ACC")
+						? _realTime
+						: _shortRunning);
+			}
 		}
 
 		private static readonly Binding.RetryPolicy _longRunning;

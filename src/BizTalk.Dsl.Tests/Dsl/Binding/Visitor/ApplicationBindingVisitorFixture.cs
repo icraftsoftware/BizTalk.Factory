@@ -206,8 +206,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			Assert.That(binding.Name, Is.EqualTo("TwoWaySendPort"));
 			Assert.That(binding.PrimaryTransport.FromTime, Is.EqualTo((DateTime) ServiceWindow.None.StartTime));
 			Assert.That(binding.PrimaryTransport.Primary, Is.True);
-			Assert.That(binding.PrimaryTransport.RetryCount, Is.EqualTo(RetryPolicy.None.Count));
-			Assert.That(binding.PrimaryTransport.RetryInterval, Is.EqualTo(RetryPolicy.None.Interval.TotalMinutes));
+			Assert.That(binding.PrimaryTransport.RetryCount, Is.EqualTo(RetryPolicy.Default.Count));
+			Assert.That(binding.PrimaryTransport.RetryInterval, Is.EqualTo(RetryPolicy.Default.Interval.TotalMinutes));
 			Assert.That(binding.PrimaryTransport.SendHandler.Name, Is.EqualTo("Send Host Name"));
 			Assert.That(binding.PrimaryTransport.SendHandler.TransportType.Name, Is.EqualTo("Test Dummy"));
 			Assert.That(binding.PrimaryTransport.ServiceWindowEnabled, Is.False);

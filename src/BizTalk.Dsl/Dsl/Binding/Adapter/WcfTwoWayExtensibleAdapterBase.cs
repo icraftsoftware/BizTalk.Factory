@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
@@ -39,14 +40,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
-		static WcfTwoWayExtensibleAdapterBase()
-		{
-			_bindingName = WcfBindingRegistry.GetBindingName<TBinding>();
-		}
-
 		protected WcfTwoWayExtensibleAdapterBase(ProtocolType protocolType) : base(protocolType)
 		{
-			_adapterConfig.BindingType = _bindingConfigurationElement.Name = _bindingName;
+			_adapterConfig.BindingType = _bindingConfigurationElement.Name = WcfBindingRegistry.GetBindingName(_bindingConfigurationElement);
 			EndpointBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 		}
 
@@ -62,8 +58,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#endregion
 
 		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly string _bindingName;
 	}
 }
