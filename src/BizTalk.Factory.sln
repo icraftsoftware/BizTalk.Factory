@@ -139,9 +139,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestAr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Explorer.Tests", "BizTalk.Explorer.Tests\Be.Stateless.BizTalk.Explorer.Tests.csproj", "{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention", "BizTalk.Dsl.BizTalk.Factory.Convention\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj", "{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 39
+		SccNumberOfProjects = 40
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -259,6 +261,9 @@ Global
 		SccProjectUniqueName38 = BizTalk.Explorer.Tests\\Be.Stateless.BizTalk.Explorer.Tests.csproj
 		SccProjectName38 = BizTalk.Explorer.Tests
 		SccLocalPath38 = BizTalk.Explorer.Tests
+		SccProjectUniqueName39 = BizTalk.Dsl.BizTalk.Factory.Convention\\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj
+		SccProjectName39 = BizTalk.Dsl.BizTalk.Factory.Convention
+		SccLocalPath39 = BizTalk.Dsl.BizTalk.Factory.Convention
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -493,6 +498,12 @@ Global
 		{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}.Release|x86.ActiveCfg = Release|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
