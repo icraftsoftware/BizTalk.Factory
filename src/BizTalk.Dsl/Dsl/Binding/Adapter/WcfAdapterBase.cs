@@ -20,8 +20,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
+using Microsoft.BizTalk.Adapter.Wcf.ComponentModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using Microsoft.BizTalk.Adapter.Wcf.Converters;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.ServiceModel.Channels.Common;
@@ -150,7 +150,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected readonly TConfig _adapterConfig;
 		protected readonly TBinding _bindingConfigurationElement;
-		private EndpointIdentity _identity;
+		private IdentityElement _identity;
 
 		#region General Tab - Endpoint Address Settings
 
@@ -177,12 +177,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// &lt;/identity&gt;]]>
 		/// </code>
 		/// </example>
-		public EndpointIdentity Identity
+		public IdentityElement Identity
 		{
 			get { return _identity; }
 			set
 			{
-				_adapterConfig.Identity = IdentityFactory.CreateIdentity(value);
+				_adapterConfig.Identity = new IdentityElementSurrogate(value).ConfigXml;
 				_identity = value;
 			}
 		}

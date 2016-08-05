@@ -17,6 +17,7 @@
 #endregion
 
 using System.ServiceModel;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -71,7 +72,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var nta = new WcfNetTcpAdapter.Outbound(
 				a => {
 					a.Address = new EndpointAddress("net.tcp://localhost/biztalk.factory/service.svc");
-					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.MessageClientCredentialType = MessageCredentialType.Windows;
 				});

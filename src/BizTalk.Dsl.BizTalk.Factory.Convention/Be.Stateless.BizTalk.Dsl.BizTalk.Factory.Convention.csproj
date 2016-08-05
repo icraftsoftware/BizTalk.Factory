@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="BizTalkFactory\ApplicationBinding.cs" />
     <Compile Include="BizTalkFactory\ApplicationNamingConvention.cs" />
+    <Compile Include="BizTalkFactory\Constants\TargetEnvironments.cs" />
     <Compile Include="BizTalkFactory\IApplicationNameMemento.cs" />
     <Compile Include="BizTalkFactory\ILocationMessageFormat.cs" />
     <Compile Include="BizTalkFactory\ILocationMessageName.cs" />

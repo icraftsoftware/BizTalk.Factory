@@ -19,6 +19,7 @@
 using System;
 using System.ServiceModel;
 using System.Text;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -32,7 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wba = new WcfBasicHttpRelayAdapter.Outbound(
 				a => {
 					a.Address = new EndpointAddress("https://biztalk.factory.servicebus.windows.net/batch-queue");
-					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("spn_name");
 
 					a.MaxReceivedMessageSize = 64512;
 					a.MessageEncoding = WSMessageEncoding.Mtom;
@@ -96,7 +97,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wba = new WcfBasicHttpRelayAdapter.Outbound(
 				a => {
 					a.Address = new EndpointAddress("https://biztalk.factory.servicebus.windows.net/batch-queue");
-					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("spn_name");
 
 					a.MaxReceivedMessageSize = 64512;
 					a.MessageEncoding = WSMessageEncoding.Mtom;

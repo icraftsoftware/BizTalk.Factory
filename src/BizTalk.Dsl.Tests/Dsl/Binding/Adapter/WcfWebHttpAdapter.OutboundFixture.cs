@@ -20,6 +20,7 @@ using System;
 using System.ServiceModel;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Metadata;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 using WebHttpSecurityMode = Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode;
 
@@ -35,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				a => {
 					a.Address = new EndpointAddress("https://localhost/dummy.svc");
 
-					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("spn_name");
 					a.SecurityMode = WebHttpSecurityMode.Transport;
 					a.ServiceCertificate = "thumbprint";
 					a.TransportClientCredentialType = HttpClientCredentialType.Basic;
@@ -120,7 +121,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				a => {
 					a.Address = new EndpointAddress("https://localhost/dummy.svc");
 
-					a.Identity = EndpointIdentity.CreateSpnIdentity("spn_name");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("spn_name");
 					a.SecurityMode = WebHttpSecurityMode.Transport;
 					a.ServiceCertificate = "thumbprint";
 					a.TransportClientCredentialType = HttpClientCredentialType.Basic;

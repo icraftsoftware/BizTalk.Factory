@@ -19,6 +19,7 @@
 using System;
 using System.ServiceModel;
 using System.Text;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -32,7 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var bha = new WcfBasicHttpAdapter.Inbound(
 				a => {
 					a.Address = new Uri("/biztalk.factory/service.svc", UriKind.Relative);
-					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.MessageClientCredentialType = BasicHttpMessageCredentialType.Certificate;
 					a.SecurityMode = BasicHttpSecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;
@@ -77,7 +78,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var bha = new WcfBasicHttpAdapter.Inbound(
 				a => {
 					a.Address = new Uri("/biztalk.factory/service.svc", UriKind.Relative);
-					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.MessageClientCredentialType = BasicHttpMessageCredentialType.Certificate;
 					a.SecurityMode = BasicHttpSecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;

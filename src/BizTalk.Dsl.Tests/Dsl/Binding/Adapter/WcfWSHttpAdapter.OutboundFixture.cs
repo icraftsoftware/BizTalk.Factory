@@ -18,6 +18,7 @@
 
 using System.ServiceModel;
 using System.Text;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -30,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var wha = new WcfWSHttpAdapter.Outbound(
 				a => {
-					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;
 				});
@@ -76,7 +77,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wha = new WcfWSHttpAdapter.Outbound(
 				a => {
 					a.Address = new EndpointAddress("http://localhost/dummy.svc");
-					a.Identity = EndpointIdentity.CreateSpnIdentity("service_spn");
+					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
 					a.TextEncoding = Encoding.Unicode;
 				});

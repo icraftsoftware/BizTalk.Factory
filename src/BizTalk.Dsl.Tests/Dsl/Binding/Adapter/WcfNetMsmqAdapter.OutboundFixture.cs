@@ -16,7 +16,9 @@
 
 #endregion
 
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -30,6 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var nma = new WcfNetMsmqAdapter.Outbound(
 				a => {
 					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
+					a.Identity = EndpointIdentityFactory.CreateCertificateIdentity(StoreLocation.LocalMachine, StoreName.TrustedPeople, X509FindType.FindBySubjectName, "subject-name");
 					a.SecurityMode = NetMsmqSecurityMode.Message;
 					a.UseSourceJournal = true;
 					a.DeadLetterQueue = DeadLetterQueue.Custom;
@@ -60,6 +63,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
 						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
+						"<Identity vt=\"8\">" + (
+							"&lt;identity&gt;\r\n  " +
+								"&lt;certificateReference storeName=\"TrustedPeople\" " +
+								"storeLocation=\"LocalMachine\" " +
+								"x509FindType=\"FindBySubjectName\" " +
+								"findValue=\"subject-name\" " +
+								"isChainIncluded=\"False\" /&gt;\r\n" +
+								"&lt;/identity&gt;") +
+						"</Identity>" +
 						"</CustomProps>"));
 		}
 
