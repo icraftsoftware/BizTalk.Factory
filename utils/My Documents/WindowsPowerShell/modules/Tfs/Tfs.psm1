@@ -50,7 +50,7 @@ function Get-Workspaces
     Add-Type -AssemblyName "Microsoft.TeamFoundation.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     Add-Type -AssemblyName "Microsoft.TeamFoundation.VersionControl.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
-    $tfs = New-Object -TypeName Microsoft.TeamFoundation.Client.TfsTeamProjectCollection -ArgumentList $Uri
+    $tfs = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($Uri)
     $versionControl = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
 
     # the intuitive call can't be performed directly, $null cannot be passed, see

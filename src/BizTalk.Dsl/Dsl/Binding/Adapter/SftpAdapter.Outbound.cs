@@ -58,8 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override string GetAddress()
 			{
-				var uriBuilder = new UriBuilder("sftp", ServerAddress, Port, FolderPath + "/" + TargetFileName);
-				return uriBuilder.Uri.AbsoluteUri;
+				return "sftp://" + ServerAddress + ":" + Port + "/" + FolderPath + "/" + TargetFileName;
 			}
 
 			#endregion
