@@ -40,7 +40,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572859.aspx">How to Configure a WCF-WebHttp Receive Location</seealso>
-		public class Inbound : WcfWebHttpAdapter<Uri, WebHttpRLConfig>, IAdapterConfigMaxConcurrentCalls
+		public class Inbound : WcfWebHttpAdapter<Uri, WebHttpRLConfig>,
+			IInboundAdapter,
+			IAdapterConfigMaxConcurrentCalls
 		{
 			public Inbound()
 			{

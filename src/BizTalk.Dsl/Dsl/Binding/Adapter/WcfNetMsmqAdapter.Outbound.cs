@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -93,6 +93,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region Security Tab - Client Certificate Settings
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the <see cref="WcfNetMsmqAdapter{TConfig}.MessageClientCredentialType"/> property
+			/// is set to <see cref="MessageCredentialType.Certificate"/>.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificate
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
+			}
+
+			#endregion
+
 			#region Binding Tab - Queue Settings
 
 			/// <summary>
@@ -181,30 +205,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.CustomDeadLetterQueue; }
 				set { _adapterConfig.CustomDeadLetterQueue = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the <see cref="WcfNetMsmqAdapter{TConfig}.MessageClientCredentialType"/> property
-			/// is set to <see cref="MessageCredentialType.Certificate"/>.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ClientCertificate
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
 			}
 
 			#endregion

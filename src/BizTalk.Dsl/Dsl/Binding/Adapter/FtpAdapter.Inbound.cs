@@ -24,6 +24,8 @@ using Microsoft.BizTalk.Adapter.Sftp;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public abstract partial class FtpAdapter
 	{
 		#region Nested Type: Inbound

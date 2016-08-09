@@ -36,6 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572839.aspx">WCF-BasicHttpRelay Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572855.aspx">How to Configure a WCF-BasicHttpRelay Send Port</seealso>
 		public class Outbound : WcfBasicHttpRelayAdapter<BasicHttpRelayTLConfig>,
+			IOutboundAdapter,
 			IAdapterConfigAccessControlService,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundPropagateFaultMessage

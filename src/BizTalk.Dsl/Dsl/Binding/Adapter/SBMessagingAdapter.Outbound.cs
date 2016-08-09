@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </summary>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572852.aspx">SB-Messaging Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572838.aspx">How to Configure an SB-Messaging Send Port</seealso>
-		public class Outbound : SBMessagingAdapter<SBMessagingTLConfig>
+		public class Outbound : SBMessagingAdapter<SBMessagingTLConfig>, IOutboundAdapter
 		{
 			public Outbound() { }
 

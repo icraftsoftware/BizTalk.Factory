@@ -32,7 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </summary>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572852.aspx">SB-Messaging Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572840.aspx">How to Configure an SB-Messaging Receive Location</seealso>
-		public class Inbound : SBMessagingAdapter<SBMessagingRLConfig>
+		public class Inbound : SBMessagingAdapter<SBMessagingRLConfig>, IInboundAdapter
 		{
 			public Inbound() { }
 

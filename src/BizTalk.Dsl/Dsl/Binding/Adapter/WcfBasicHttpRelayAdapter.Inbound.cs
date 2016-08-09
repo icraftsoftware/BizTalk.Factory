@@ -35,6 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572839.aspx">WCF-BasicHttpRelay Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572837.aspx">How to Configure a WCF-BasicHttpRelay Receive Location</seealso>
 		public class Inbound : WcfBasicHttpRelayAdapter<BasicHttpRelayRLConfig>,
+			IInboundAdapter,
 			IAdapterConfigAccessControlService,
 			IAdapterConfigInboundSuspendRequestMessageOnFailure,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,

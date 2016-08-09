@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,103 +85,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _bindingConfigurationElement.EnablePerformanceCounters; }
 			set { _bindingConfigurationElement.EnablePerformanceCounters = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Connection Settings
-
-		/// <summary>
-		/// Determines whether connections are pooled.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <c>True</c>.
-		/// </remarks>
-		public bool EnableConnectionPooling
-		{
-			get { return _bindingConfigurationElement.EnableConnectionPooling; }
-			set { _bindingConfigurationElement.EnableConnectionPooling = value; }
-		}
-
-		/// <summary>
-		/// The amount of time a connection remains idle in the connection pool before getting closed.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The idle connection timeout only applies to connections in the pool that are not being used. It does not
-		/// affect active (open) connections which may be waiting for data.
-		/// </para>
-		/// <para>
-		/// It defaults to 15 minutes.
-		/// </para>
-		/// </remarks>
-		public TimeSpan IdleConnectionTimeout
-		{
-			get { return _bindingConfigurationElement.IdleConnectionTimeout; }
-			set { _bindingConfigurationElement.IdleConnectionTimeout = value; }
-		}
-
-		/// <summary>
-		/// Specifies the maximum number of connections in the SAP adapter connection pool that are allowed to connect
-		/// to a SAP system.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// <seealso cref="MaxConnectionsPerSystem"/> is a static property within an application domain. This means
-		/// that when you change <seealso cref="MaxConnectionsPerSystem"/> for one binding instance in an application
-		/// domain, the new value applies to all objects created from all binding instances within that application
-		/// domain. 
-		/// </para>
-		/// <para>
-		/// By default, the SAP client library (librfc32u.dll) supports a maximum of 100 connections to the SAP system.
-		/// If you exceed this number of connections, an exception will be thrown by the SAP adapter. For this reason,
-		/// you should not set MaxConnectionsPerSystem to a value greater than the number of connections supported by
-		/// the SAP client library. You can increase the number of connections that the SAP client library supports by
-		/// setting the environment variable, CPIC_MAX_CONV. You must reboot your computer after setting this variable
-		/// for the change to take effect.
-		/// </para>
-		/// <para>
-		/// It defaults to 50.
-		/// </para>
-		/// </remarks>
-		public int MaxConnectionsPerSystem
-		{
-			get { return _bindingConfigurationElement.MaxConnectionsPerSystem; }
-			set { _bindingConfigurationElement.MaxConnectionsPerSystem = value; }
-		}
-
-		/// <summary>
-		/// Specifies the external programs that the RFC client library can start, if required by an RFC partner. For
-		/// example, if you are invoking an RFC that internally invokes a program on the computer running the adapter
-		/// client, you must specify the name of that program for this binding property.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// If you are specifying multiple programs for this binding property, they must be separated by a semi-colon.
-		/// For example, if you want to specify the sapftp and saphttp programs, you must specify them as
-		/// sapftp;saphttp. Also, make sure the following conditions are met:
-		/// <list type="bullet">
-		/// <item>
-		/// The external program required by the RFC is available on the computer running the adapter client.
-		/// </item>
-		/// <item>
-		/// The location of the external program is present in the PATH variable on the computer running the adapter
-		/// client.
-		/// </item>
-		/// </list>
-		/// For example, BAPI_DOCUMENT_CHECKOUTVIEW2 internally executes a program, sapftp. So, while invoking this
-		/// RFC, you must set the RfcAllowStartProgram binding property to sapftp. You must also ensure that the sapftp
-		/// program is available locally, and the location of the sapftp program is added to the PATH variable on the
-		/// computer running the adapter client.
-		/// </para>
-		/// <para>
-		/// It defaults to <seealso cref="string.Empty"/>.
-		/// </para>
-		/// </remarks>
-		public string RfcAllowStartProgram
-		{
-			get { return _bindingConfigurationElement.RfcAllowStartProgram; }
-			set { _bindingConfigurationElement.RfcAllowStartProgram = value; }
 		}
 
 		#endregion
@@ -504,6 +407,128 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		#region Binding Tab - Metadata  Settings
+
+		/// <summary>
+		/// Determines whether DATS, TIMS and NUMC are exposed as <seealso cref="string"/>.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This feature controls how the adapter surfaces certain SAP data types. For more information about safe
+		/// typing, <see href="https://msdn.microsoft.com/en-us/library/dd787893.aspx">see Basic SAP Data Types</see>.
+		/// </para>
+		/// <para>
+		/// The default is false; safe typing is disabled.
+		/// </para>
+		/// </remarks>
+		public bool EnableSafeTyping
+		{
+			get { return _bindingConfigurationElement.EnableSafeTyping; }
+			set { _bindingConfigurationElement.EnableSafeTyping = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
+
+		#region Binding Tab - Connection Settings
+
+		/// <summary>
+		/// Determines whether connections are pooled.
+		/// </summary>
+		/// <remarks>
+		/// It defaults to <c>True</c>.
+		/// </remarks>
+		public bool EnableConnectionPooling
+		{
+			get { return _bindingConfigurationElement.EnableConnectionPooling; }
+			set { _bindingConfigurationElement.EnableConnectionPooling = value; }
+		}
+
+		/// <summary>
+		/// The amount of time a connection remains idle in the connection pool before getting closed.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The idle connection timeout only applies to connections in the pool that are not being used. It does not
+		/// affect active (open) connections which may be waiting for data.
+		/// </para>
+		/// <para>
+		/// It defaults to 15 minutes.
+		/// </para>
+		/// </remarks>
+		public TimeSpan IdleConnectionTimeout
+		{
+			get { return _bindingConfigurationElement.IdleConnectionTimeout; }
+			set { _bindingConfigurationElement.IdleConnectionTimeout = value; }
+		}
+
+		/// <summary>
+		/// Specifies the maximum number of connections in the SAP adapter connection pool that are allowed to connect
+		/// to a SAP system.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <seealso cref="MaxConnectionsPerSystem"/> is a static property within an application domain. This means
+		/// that when you change <seealso cref="MaxConnectionsPerSystem"/> for one binding instance in an application
+		/// domain, the new value applies to all objects created from all binding instances within that application
+		/// domain. 
+		/// </para>
+		/// <para>
+		/// By default, the SAP client library (librfc32u.dll) supports a maximum of 100 connections to the SAP system.
+		/// If you exceed this number of connections, an exception will be thrown by the SAP adapter. For this reason,
+		/// you should not set MaxConnectionsPerSystem to a value greater than the number of connections supported by
+		/// the SAP client library. You can increase the number of connections that the SAP client library supports by
+		/// setting the environment variable, CPIC_MAX_CONV. You must reboot your computer after setting this variable
+		/// for the change to take effect.
+		/// </para>
+		/// <para>
+		/// It defaults to 50.
+		/// </para>
+		/// </remarks>
+		public int MaxConnectionsPerSystem
+		{
+			get { return _bindingConfigurationElement.MaxConnectionsPerSystem; }
+			set { _bindingConfigurationElement.MaxConnectionsPerSystem = value; }
+		}
+
+		/// <summary>
+		/// Specifies the external programs that the RFC client library can start, if required by an RFC partner. For
+		/// example, if you are invoking an RFC that internally invokes a program on the computer running the adapter
+		/// client, you must specify the name of that program for this binding property.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If you are specifying multiple programs for this binding property, they must be separated by a semi-colon.
+		/// For example, if you want to specify the sapftp and saphttp programs, you must specify them as
+		/// sapftp;saphttp. Also, make sure the following conditions are met:
+		/// <list type="bullet">
+		/// <item>
+		/// The external program required by the RFC is available on the computer running the adapter client.
+		/// </item>
+		/// <item>
+		/// The location of the external program is present in the PATH variable on the computer running the adapter
+		/// client.
+		/// </item>
+		/// </list>
+		/// For example, BAPI_DOCUMENT_CHECKOUTVIEW2 internally executes a program, sapftp. So, while invoking this
+		/// RFC, you must set the RfcAllowStartProgram binding property to sapftp. You must also ensure that the sapftp
+		/// program is available locally, and the location of the sapftp program is added to the PATH variable on the
+		/// computer running the adapter client.
+		/// </para>
+		/// <para>
+		/// It defaults to <seealso cref="string.Empty"/>.
+		/// </para>
+		/// </remarks>
+		public string RfcAllowStartProgram
+		{
+			get { return _bindingConfigurationElement.RfcAllowStartProgram; }
+			set { _bindingConfigurationElement.RfcAllowStartProgram = value; }
+		}
+
+		#endregion
+
 		#region Binding Tab - LogOn Ticket  Settings
 
 		/// <summary>
@@ -523,28 +548,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _bindingConfigurationElement.LogOnTicketType; }
 			set { _bindingConfigurationElement.LogOnTicketType = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Metadata  Settings
-
-		/// <summary>
-		/// Determines whether DATS, TIMS and NUMC are exposed as <seealso cref="string"/>.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This feature controls how the adapter surfaces certain SAP data types. For more information about safe
-		/// typing, <see href="https://msdn.microsoft.com/en-us/library/dd787893.aspx">see Basic SAP Data Types</see>.
-		/// </para>
-		/// <para>
-		/// The default is false; safe typing is disabled.
-		/// </para>
-		/// </remarks>
-		public bool EnableSafeTyping
-		{
-			get { return _bindingConfigurationElement.EnableSafeTyping; }
-			set { _bindingConfigurationElement.EnableSafeTyping = value; }
 		}
 
 		#endregion
@@ -602,8 +605,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

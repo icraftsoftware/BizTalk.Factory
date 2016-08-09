@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -96,6 +96,133 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		#region Binding Tab - Run Time Behavior Settings
+
+		/// <summary>
+		/// Specifies whether the Oracle Database adapter will skip inserting or updating values for nodes that are
+		/// marked as 'nil' in the request XML.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property is applicable for inserting or updating records in a table and for RECORD type parameters in
+		/// stored procedures. Default is <c>True</c>, which means the adapter will skip passing values for nodes that
+		/// are marked as 'nil'. In this case, the default value in Oracle (if specified) is taken into account for
+		/// nodes that are marked as 'nil'. If set to <c>False</c>, the adapter explicitly passes a null value for
+		/// these nodes.
+		/// </para>
+		/// <para>
+		/// Notice that:
+		/// <list type="bullet">
+		/// <item>
+		/// For nodes that are not present in the request XML, the adapter always skips passing values, irrespective of
+		/// the value of the <see cref="SkipNilNodes"/> property.
+		/// </item>
+		/// <item>
+		/// For PL/SQL tables of RECORDS, the adapter always passes a null value for nodes that are either marked as
+		/// 'nil' or not present in the request XML, irrespective of the value of the <see cref="SkipNilNodes"/>
+		/// property.
+		/// </item>
+		/// </list>
+		/// The following example explains the difference in the adapter configuration based on the value you set for
+		/// this property. Assume an XML request as follows: <code><![CDATA[
+		/// <EMPNO>1000</EMPNO>
+		/// <ENAME>John</ENAME>
+		/// <SAL nil='true'></SAL>
+		/// ]]></code> If <see cref="SkipNilNodes"/> is set to <c>True</c>, the adapter executes the following command:
+		/// <code>INSERT INTO EMP (EMPNO, ENAME) VALUES (1000, 'John');</code>
+		/// </para>
+		/// <para>
+		/// If <see cref="SkipNilNodes"/> is set to <c>False</c>, the adapter executes the following command:
+		/// <code>INSERT INTO EMP (EMPNO, ENAME, SAL) VALUES (1000, 'John', null);</code>
+		/// Note that in the second statement, the adapter explicitly inserts a null value for the parameter 'SAL'.
+		/// </para>
+		/// </remarks>
+		public bool SkipNilNodes
+		{
+			get { return _bindingConfigurationElement.SkipNilNodes; }
+			set { _bindingConfigurationElement.SkipNilNodes = value; }
+		}
+
+		#endregion
+
+		#region Binding Tab - Transactions Settings
+
+		/// <summary>
+		/// Specifies whether the Oracle Database adapter performs the operations using the transaction context
+		/// provided by the caller.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The default value is <c>True</c>, which means that the adapter always performs the operations in a
+		/// transaction context, assuming that the client is providing the transactional context. If there are other
+		/// resources participating in the transaction, the connections created enlist in <see cref="Transaction"/> and
+		/// are elevated to an MSDTC transaction.
+		/// </para>
+		/// <para>
+		/// However, there can be scenarios where you do not want the adapter to perform operations in a transactional
+		/// context. For example:
+		/// <list type="bullet">
+		/// <item>
+		/// While performing a simple SELECT operation on the Oracle database (on a send port).
+		/// </item>
+		/// <item>
+		/// While specify a polling statement that performs a SELECT operation and does not involve any changes to the
+		/// table either through a DELETE statement or by invoking a stored procedure (on a receive port).
+		/// </item>
+		/// </list>
+		/// Both these operations do not make any updates to the database table and hence, elevating these operations
+		/// to use an MSDTC transaction can be a performance overhead. In such scenarios, you can set the binding
+		/// property to <c>False</c> so that the Oracle Database adapter does not perform the operations in a
+		/// transaction context.
+		/// </para>
+		/// <para>
+		/// Notice that not performing operations in a transactional context is advisable only for operations that do
+		/// not make changes to the database. For operations that update data in the database, we recommend setting the
+		/// property to <c>True</c> otherwise you might either experience message loss or duplicate messages depending on
+		/// whether you are performing inbound or outbound operations. 
+		/// </para>
+		/// </remarks>
+		public bool UseAmbientTransaction
+		{
+			get { return _bindingConfigurationElement.UseAmbientTransaction; }
+			set { _bindingConfigurationElement.UseAmbientTransaction = value; }
+		}
+
+		#endregion
+
+		#region Binding Tab - UDT .NET Type Generation - Run Time Settings
+
+		/// <summary>
+		/// Specifies the name of the DLLs, separated by a semi-colon, which the adapter creates while generating
+		/// metadata.
+		/// </summary>
+		/// <remarks>
+		/// These DLLs are saved at the location you specified for the <see
+		/// cref="OracleDBBindingConfigurationElement.GeneratedUserTypesAssemblyFilePath"/> property while generating
+		/// metadata. You must manually copy these DLLs to the following locations:
+		/// <list type="bullet">
+		/// <item>
+		/// For BizTalk projects, copy the DLLs at the same location as BTSNTSvc.exe. For BizTalk Server 2013 R2, this
+		/// is available typically under &lt;installation drive&gt;:\Program Files\Microsoft BizTalk Server 2013 R2.
+		/// </item>
+		/// <item>
+		/// For .NET Projects, copy the DLLs to the \bin\Development folder within your .NET project folder.
+		/// </item>
+		/// </list>
+		/// This property is required only while sending and receiving messages to perform operations on the Oracle
+		/// database.
+		/// </remarks>
+		public string UserAssembliesLoadPath
+		{
+			get { return _bindingConfigurationElement.UserAssembliesLoadPath; }
+			set { _bindingConfigurationElement.UserAssembliesLoadPath = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 
 		#region Binding Tab - Buffer Management Settings
 
@@ -410,132 +537,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		#region Binding Tab - Run Time Behavior Settings
-
-		/// <summary>
-		/// Specifies whether the Oracle Database adapter will skip inserting or updating values for nodes that are
-		/// marked as 'nil' in the request XML.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This property is applicable for inserting or updating records in a table and for RECORD type parameters in
-		/// stored procedures. Default is <c>True</c>, which means the adapter will skip passing values for nodes that
-		/// are marked as 'nil'. In this case, the default value in Oracle (if specified) is taken into account for
-		/// nodes that are marked as 'nil'. If set to <c>False</c>, the adapter explicitly passes a null value for
-		/// these nodes.
-		/// </para>
-		/// <para>
-		/// Notice that:
-		/// <list type="bullet">
-		/// <item>
-		/// For nodes that are not present in the request XML, the adapter always skips passing values, irrespective of
-		/// the value of the <see cref="SkipNilNodes"/> property.
-		/// </item>
-		/// <item>
-		/// For PL/SQL tables of RECORDS, the adapter always passes a null value for nodes that are either marked as
-		/// 'nil' or not present in the request XML, irrespective of the value of the <see cref="SkipNilNodes"/>
-		/// property.
-		/// </item>
-		/// </list>
-		/// The following example explains the difference in the adapter configuration based on the value you set for
-		/// this property. Assume an XML request as follows: <code><![CDATA[
-		/// <EMPNO>1000</EMPNO>
-		/// <ENAME>John</ENAME>
-		/// <SAL nil='true'></SAL>
-		/// ]]></code> If <see cref="SkipNilNodes"/> is set to <c>True</c>, the adapter executes the following command:
-		/// <code>INSERT INTO EMP (EMPNO, ENAME) VALUES (1000, 'John');</code>
-		/// </para>
-		/// <para>
-		/// If <see cref="SkipNilNodes"/> is set to <c>False</c>, the adapter executes the following command:
-		/// <code>INSERT INTO EMP (EMPNO, ENAME, SAL) VALUES (1000, 'John', null);</code>
-		/// Note that in the second statement, the adapter explicitly inserts a null value for the parameter 'SAL'.
-		/// </para>
-		/// </remarks>
-		public bool SkipNilNodes
-		{
-			get { return _bindingConfigurationElement.SkipNilNodes; }
-			set { _bindingConfigurationElement.SkipNilNodes = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Transactions Settings
-
-		/// <summary>
-		/// Specifies whether the Oracle Database adapter performs the operations using the transaction context
-		/// provided by the caller.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The default value is <c>True</c>, which means that the adapter always performs the operations in a
-		/// transaction context, assuming that the client is providing the transactional context. If there are other
-		/// resources participating in the transaction, the connections created enlist in <see cref="Transaction"/> and
-		/// are elevated to an MSDTC transaction.
-		/// </para>
-		/// <para>
-		/// However, there can be scenarios where you do not want the adapter to perform operations in a transactional
-		/// context. For example:
-		/// <list type="bullet">
-		/// <item>
-		/// While performing a simple SELECT operation on the Oracle database (on a send port).
-		/// </item>
-		/// <item>
-		/// While specify a polling statement that performs a SELECT operation and does not involve any changes to the
-		/// table either through a DELETE statement or by invoking a stored procedure (on a receive port).
-		/// </item>
-		/// </list>
-		/// Both these operations do not make any updates to the database table and hence, elevating these operations
-		/// to use an MSDTC transaction can be a performance overhead. In such scenarios, you can set the binding
-		/// property to <c>False</c> so that the Oracle Database adapter does not perform the operations in a
-		/// transaction context.
-		/// </para>
-		/// <para>
-		/// Notice that not performing operations in a transactional context is advisable only for operations that do
-		/// not make changes to the database. For operations that update data in the database, we recommend setting the
-		/// property to <c>True</c> otherwise you might either experience message loss or duplicate messages depending on
-		/// whether you are performing inbound or outbound operations. 
-		/// </para>
-		/// </remarks>
-		public bool UseAmbientTransaction
-		{
-			get { return _bindingConfigurationElement.UseAmbientTransaction; }
-			set { _bindingConfigurationElement.UseAmbientTransaction = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - UDT .NET Type Generation - Run Time Settings
-
-		/// <summary>
-		/// Specifies the name of the DLLs, separated by a semi-colon, which the adapter creates while generating
-		/// metadata.
-		/// </summary>
-		/// <remarks>
-		/// These DLLs are saved at the location you specified for the <see
-		/// cref="OracleDBBindingConfigurationElement.GeneratedUserTypesAssemblyFilePath"/> property while generating
-		/// metadata. You must manually copy these DLLs to the following locations:
-		/// <list type="bullet">
-		/// <item>
-		/// For BizTalk projects, copy the DLLs at the same location as BTSNTSvc.exe. For BizTalk Server 2013 R2, this
-		/// is available typically under &lt;installation drive&gt;:\Program Files\Microsoft BizTalk Server 2013 R2.
-		/// </item>
-		/// <item>
-		/// For .NET Projects, copy the DLLs to the \bin\Development folder within your .NET project folder.
-		/// </item>
-		/// </list>
-		/// This property is required only while sending and receiving messages to perform operations on the Oracle
-		/// database.
-		/// </remarks>
-		public string UserAssembliesLoadPath
-		{
-			get { return _bindingConfigurationElement.UserAssembliesLoadPath; }
-			set { _bindingConfigurationElement.UserAssembliesLoadPath = value; }
-		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

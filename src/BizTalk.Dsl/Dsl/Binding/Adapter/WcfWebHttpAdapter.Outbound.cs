@@ -36,7 +36,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572853.aspx">How to Configure a WCF-WebHttp Send Port</seealso>
-		public class Outbound : WcfWebHttpAdapter<EndpointAddress, WebHttpTLConfig>, IAdapterConfigAccessControlService
+		public class Outbound : WcfWebHttpAdapter<EndpointAddress, WebHttpTLConfig>,
+			IOutboundAdapter,
+			IAdapterConfigAccessControlService
 		{
 			public Outbound()
 			{
