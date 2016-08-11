@@ -40,9 +40,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 					_instance.Add(baseType.GenericTypeArguments[1], binding.BindingName);
 				}
 			}
+			_instance.Add(typeof(System.ServiceModel.Configuration.CustomBindingElement), "customBinding");
 		}
 
-		public static string GetBindingName(StandardBindingElement bindingElement)
+		public static string GetBindingName(IBindingConfigurationElement bindingElement)
 		{
 			var bindingElementDecorator = bindingElement as IBindingElementDecorator;
 			var bindingType = bindingElementDecorator == null

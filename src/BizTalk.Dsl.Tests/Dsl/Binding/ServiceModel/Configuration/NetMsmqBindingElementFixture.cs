@@ -18,6 +18,7 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
@@ -55,6 +56,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 			Assert.That(wca.ReceiveRetryCount, Is.EqualTo(1));
 			Assert.That(wca.RetryCycleDelay, Is.EqualTo(TimeSpan.FromHours(1)));
 			Assert.That(wca.TimeToLive, Is.EqualTo(TimeSpan.FromDays(3)));
+		}
+
+		[Test]
+		public void SerializeToXml()
+		{
+			var binding = new NetMsmqBindingElement { RetryPolicy = Convention.BizTalkFactory.NetMsmqRetryPolicy.LongRunning };
+			binding.ApplyEnvironmentOverrides("ACC");
+			Assert.That(
+				binding.GetBindingElementXml("netMsmqBinding"),
+				Is.EqualTo("<binding name=\"netMsmqBinding\" maxRetryCycles=\"3\" receiveRetryCount=\"3\" retryCycleDelay=\"00:09:00\" timeToLive=\"00:30:00\" />"));
 		}
 	}
 }

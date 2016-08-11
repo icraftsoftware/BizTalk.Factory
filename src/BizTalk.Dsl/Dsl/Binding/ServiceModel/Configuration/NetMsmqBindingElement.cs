@@ -23,17 +23,17 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
-	public class NetMsmqBindingElement : StandardBindingElement, IBindingElementDecorator
+	public class NetMsmqBindingElement : StandardBindingElement, IBindingElementDecorator, ISupportEnvironmentOverride
 	{
 		public NetMsmqBindingElement()
 		{
-			_decorated = new System.ServiceModel.Configuration.NetMsmqBindingElement();
+			_decorated = new System.ServiceModel.Configuration.NetMsmqBindingElement("netMsmqBinding");
 			RetryPolicy = NetMsmqRetryPolicy.Default;
 		}
 
 		#region IBindingElementDecorator Members
 
-		public StandardBindingElement DecoratedBindingElement
+		public IBindingConfigurationElement DecoratedBindingElement
 		{
 			get
 			{
@@ -51,6 +51,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 			}
 		}
 
+		#endregion
+
+		#region ISupportEnvironmentOverride Members
+
 		public void ApplyEnvironmentOverrides(string environment)
 		{
 			(RetryPolicy as ISupportEnvironmentOverride).IfNotNull(p => { p.ApplyEnvironmentOverrides(environment); });
@@ -62,12 +66,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 
 		protected override Type BindingElementType
 		{
-			get { throw new NotSupportedException("Only the decorated NetMsmqBindingElement binding element supports this operation but not its decorator."); }
+			get
+			{
+				throw new NotSupportedException(
+					string.Format(
+						"Only the actual {0} binding element supports this operation but not its decorator.",
+						_decorated.GetType().FullName));
+			}
 		}
 
 		protected override void OnApplyConfiguration(System.ServiceModel.Channels.Binding binding)
 		{
-			throw new NotSupportedException("Only the decorated NetMsmqBindingElement binding element supports this operation but not its decorator.");
+			throw new NotSupportedException(
+				string.Format(
+					"Only the actual {0} binding element supports this operation but not its decorator.",
+					_decorated.GetType().FullName));
 		}
 
 		#endregion

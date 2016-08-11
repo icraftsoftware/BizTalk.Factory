@@ -16,16 +16,63 @@
 
 #endregion
 
+using System;
 using System.Net.Security;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.ServiceModel.Configuration;
 using NUnit.Framework;
+using CustomBindingElement = Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.CustomBindingElement;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
 	public class WcfCustomAdapterOutboundFixture
 	{
+		[Test]
+		public void SerializeCustomBindingToXml()
+		{
+			var wca = new WcfCustomAdapter.Outbound<CustomBindingElement>(
+				a => {
+					a.OpenTimeout = TimeSpan.FromMinutes(33);
+					a.Binding.Add(
+						new MtomMessageEncodingElement {
+							MessageVersion = MessageVersion.Soap11,
+							ReaderQuotas = { MaxStringContentLength = 7340032 }
+						},
+						new HttpsTransportElement {
+							MaxReceivedMessageSize = 7340032,
+							MaxBufferSize = 7340032,
+							UseDefaultWebProxy = false,
+							RequireClientCertificate = true
+						});
+				});
+			var xml = ((IAdapterBindingSerializerFactory) wca).GetAdapterBindingSerializer().Serialize();
+			Assert.That(
+				xml,
+				Is.EqualTo(
+					"<CustomProps>" +
+						"<BindingType vt=\"8\">customBinding</BindingType>" +
+						"<BindingConfiguration vt=\"8\">" + (
+							"&lt;binding name=\"customDslBinding\" openTimeout=\"00:33:00\"&gt;" +
+								"&lt;mtomMessageEncoding messageVersion=\"Soap11\"&gt;" +
+								"&lt;readerQuotas maxStringContentLength=\"7340032\" /&gt;" +
+								"&lt;/mtomMessageEncoding&gt;" +
+								"&lt;httpsTransport maxReceivedMessageSize=\"7340032\" maxBufferSize=\"7340032\" useDefaultWebProxy=\"false\" requireClientCertificate=\"true\" /&gt;" +
+								"&lt;/binding&gt;") +
+						"</BindingConfiguration>" +
+						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
+						"<UseSSO vt=\"11\">0</UseSSO>" +
+						"<InboundBodyLocation vt=\"8\">UseBodyElement</InboundBodyLocation>" +
+						"<InboundNodeEncoding vt=\"8\">Xml</InboundNodeEncoding>" +
+						"<OutboundBodyLocation vt=\"8\">UseBodyElement</OutboundBodyLocation>" +
+						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
+						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
+						"<EnableTransaction vt=\"11\">0</EnableTransaction>" +
+						"<IsolationLevel vt=\"8\">Serializable</IsolationLevel>" +
+						"</CustomProps>"));
+		}
+
 		[Test]
 		public void SerializeToXml()
 		{
@@ -71,6 +118,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateCustomBinding()
+		{
+			var wca = new WcfCustomAdapter.Outbound<CustomBindingElement>(
+				a => {
+					a.Address = new EndpointAddress("https://localhost/biztalk.factory/service.svc");
+					a.Binding.Add(
+						new MtomMessageEncodingElement { MessageVersion = MessageVersion.Soap11 },
+						new HttpsTransportElement { RequireClientCertificate = true });
+				});
+			Assert.That(() => ((ISupportValidation) wca).Validate(), Throws.Nothing);
 		}
 
 		[Test]

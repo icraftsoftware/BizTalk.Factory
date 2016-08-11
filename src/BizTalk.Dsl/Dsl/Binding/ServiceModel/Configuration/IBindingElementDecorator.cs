@@ -20,8 +20,8 @@ using System.ServiceModel.Configuration;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
-	public interface IBindingElementDecorator : ISupportEnvironmentOverride
+	public interface IBindingElementDecorator
 	{
-		StandardBindingElement DecoratedBindingElement { get; }
+		IBindingConfigurationElement DecoratedBindingElement { get; }
 	}
 }

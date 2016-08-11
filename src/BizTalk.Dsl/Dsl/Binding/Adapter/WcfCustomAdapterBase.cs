@@ -19,6 +19,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
+using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Deployment.Binding;
@@ -38,6 +40,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			new()
 	{
 		protected WcfCustomAdapterBase(ProtocolType protocolType) : base(protocolType) { }
+
+		#region Base Class Member Overrides
+
+		protected override void Validate()
+		{
+			// ensure binding is configured before validation if using a binding decorator
+			if (_bindingConfigurationElement is IBindingElementDecorator)
+			{
+				_adapterConfig.BindingConfiguration = _bindingConfigurationElement.GetBindingElementXml(_bindingConfigurationElement.Name);
+			}
+			base.Validate();
+		}
+
+		#endregion
 
 		#region Base Class Member Overrides
 

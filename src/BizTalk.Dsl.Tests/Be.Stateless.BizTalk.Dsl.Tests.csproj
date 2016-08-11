@@ -208,6 +208,7 @@
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
+    <Compile Include="Dsl\Binding\ServiceModel\Configuration\CustomBindingElementFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\NetMsmqBindingElementFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\WcfBindingRegistryFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />

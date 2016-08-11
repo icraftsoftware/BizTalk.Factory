@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions
 		public static string GetBindingElementXml(this ConfigurationElement configurationElement, string bindingName)
 		{
 			var bindingElementDecorator = configurationElement as IBindingElementDecorator;
-			if (bindingElementDecorator != null) configurationElement = bindingElementDecorator.DecoratedBindingElement;
+			if (bindingElementDecorator != null) configurationElement = (ConfigurationElement) bindingElementDecorator.DecoratedBindingElement;
 
 			var configurationProxy = new ConfigurationProxy();
 			configurationProxy.SetBindingElement(configurationElement);
