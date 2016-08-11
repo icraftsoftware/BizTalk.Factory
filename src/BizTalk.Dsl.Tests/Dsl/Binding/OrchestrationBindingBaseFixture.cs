@@ -180,8 +180,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var orchestrationBinding = (IOrchestrationBinding) assembly.CreateInstance(typeof(Process).FullName + "OrchestrationBinding");
 			// ReSharper disable once PossibleNullReferenceException
 			orchestrationBinding.Host = "Host";
-			Reflector.SetProperty(orchestrationBinding, "ReceivePort", new ReceivePort(rp => { }));
-			Reflector.SetProperty(orchestrationBinding, "SendPort", new SendPort(sp => { }));
+			Reflector.SetProperty(orchestrationBinding, "ReceivePort", new Mock<ReceivePort>().Object);
+			Reflector.SetProperty(orchestrationBinding, "SendPort", new Mock<SendPort>().Object);
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
