@@ -22,7 +22,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public class ReceiveLocation : ReceiveLocationBase<string>
 	{
-		internal ReceiveLocation() { }
+		protected ReceiveLocation() { }
 
 		protected internal ReceiveLocation(Action<IReceiveLocation<string>> receiveLocationConfigurator) : base(receiveLocationConfigurator) { }
 	}

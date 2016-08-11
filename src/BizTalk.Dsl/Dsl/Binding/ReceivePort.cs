@@ -22,7 +22,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public class ReceivePort : ReceivePortBase<string>
 	{
-		internal ReceivePort() { }
+		protected ReceivePort() { }
 
 		protected internal ReceivePort(Action<IReceivePort<string>> receivePortConfigurator) : base(receivePortConfigurator) { }
 
