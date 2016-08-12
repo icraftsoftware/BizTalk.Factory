@@ -16,6 +16,8 @@
 
 #endregion
 
+using System;
+using System.Collections;
 using NUnit.Framework;
 
 namespace Be.Stateless.Extensions
@@ -24,17 +26,29 @@ namespace Be.Stateless.Extensions
 	public class TypeExtensionsFixture
 	{
 		[Test]
-		public void IsSubclassOfGeneric()
+		[TestCaseSource(typeof(TypeExtensionsFixture), "TypePairs")]
+		public void IsSubclassOfGeneric(Type actual, Type baseType)
 		{
-			var dummy = new Dummy();
-			Assert.That(dummy.GetType().IsSubclassOfOpenGeneric(typeof(CompleteDummy<,>)));
-			Assert.That(dummy.GetType().IsSubclassOfOpenGeneric(typeof(HalfDummy<>)));
-			Assert.That(dummy.GetType().IsSubclassOfOpenGeneric(typeof(NoDummy)));
+			Assert.That(actual.IsSubclassOfOpenGenericType(baseType));
 		}
+
+		private IEnumerable TypePairs
+		{
+			get
+			{
+				yield return new TestCaseData(typeof(Dummy), typeof(CompleteDummy<,>)).SetName("Dummy_vs_CompleteDummy");
+				yield return new TestCaseData(typeof(Dummy), typeof(HalfDummy<>)).SetName("Dummy_vs_HalfDummy");
+				yield return new TestCaseData(typeof(Dummy), typeof(NoDummy)).SetName("Dummy_vs_NoDummy");
+				yield return new TestCaseData(typeof(Dummy), typeof(IHalfDummy<>)).SetName("Dummy_vs_IHalfDummy");
+				yield return new TestCaseData(typeof(IHalfDummy<int>), typeof(IHalfDummy<>)).SetName("IHalfDummy_vs_IHalfDummy");
+			}
+		}
+
+		private interface IHalfDummy<T> { }
 
 		private class CompleteDummy<T1, T2> { }
 
-		private class HalfDummy<T> : CompleteDummy<T, int> { }
+		private class HalfDummy<T> : CompleteDummy<T, int>, IHalfDummy<T> { }
 
 		private class NoDummy : HalfDummy<string> { }
 

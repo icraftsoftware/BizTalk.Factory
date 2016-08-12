@@ -17,16 +17,27 @@
 #endregion
 
 using System;
+using System.Linq;
 
 namespace Be.Stateless.Extensions
 {
 	public static class TypeExtensions
 	{
-		public static bool IsSubclassOfOpenGeneric(this Type type, Type baseType)
+		public static bool IsSubclassOfOpenGenericType(this Type type, Type baseType)
 		{
 			// http://stackoverflow.com/questions/457676/check-if-a-class-is-derived-from-a-generic-class
 			if (!baseType.IsGenericType || baseType.IsConstructedGenericType) return type.IsSubclassOf(baseType);
+			return !type.IsInterface && baseType.IsInterface ? type.IsSubclassOfOpenGenericInterface(baseType) : type.IsSubclassOfOpenGenericClass(baseType);
+		}
 
+		private static bool IsSubclassOfOpenGenericInterface(this Type type, Type baseType)
+		{
+			var interfaces = type.GetInterfaces();
+			return interfaces.Any(i => i.IsSubclassOfOpenGenericClass(baseType));
+		}
+
+		private static bool IsSubclassOfOpenGenericClass(this Type type, Type baseType)
+		{
 			while (type != null && type != typeof(object))
 			{
 				if (type.IsGenericType) type = type.GetGenericTypeDefinition();

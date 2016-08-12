@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 using System;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
@@ -168,7 +170,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
 						BtsProperties.ReceivePortName.Type.FullName,
 						(int) FilterOperator.Equals,
-						receivePort.Name.ComputeReceivePortName(receivePort))));
+						((ISupportNamingConvention) receivePort).Name)));
 		}
 
 		[Test]
@@ -184,7 +186,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
 						BtsProperties.SendPortName.Type.FullName,
 						(int) FilterOperator.Equals,
-						sendPort.Name.ComputeSendPortName(sendPort))));
+						((ISupportNamingConvention) sendPort).Name)));
+		}
+
+		[Test]
+		public void EqualsToConventionalStandaloneReceivePortName()
+		{
+			var receivePort = new ConventionalApplicationBinding().StandaloneReceivePort;
+			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BtsProperties.ReceivePortName.Type.FullName,
+						(int) FilterOperator.Equals,
+						((ISupportNamingConvention) receivePort).Name)));
 		}
 
 		[Test]
@@ -200,7 +218,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
 						BtsProperties.ReceivePortName.Type.FullName,
 						(int) FilterOperator.Equals,
-						receivePort.Name)));
+						((ISupportNamingConvention) receivePort).Name)));
 		}
 
 		[Test]
@@ -216,7 +234,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
 						BtsProperties.SendPortName.Type.FullName,
 						(int) FilterOperator.Equals,
-						sendPort.Name)));
+						((ISupportNamingConvention) sendPort).Name)));
 		}
 
 		[Test]
@@ -312,6 +330,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		}
 
 		[Test]
+		public void NAryConjunction()
+		{
+			var filter = new Filter(
+				() => BtsProperties.ActualRetryCount > 3
+					&& BtsProperties.MessageType == Schema<Schemas.Xml.Batch.Content>.MessageType
+					&& BtsProperties.SendPortName == "Dummy port name"
+					&& BtsProperties.IsRequestResponse != true);
+			Assert.That(() => filter.ToString(), Throws.Nothing);
+		}
+
+		[Test]
+		public void NAryDisjunction()
+		{
+			var filter = new Filter(
+				() => BizTalkFactoryProperties.SenderName == "BizTalkFactory.Batcher"
+					|| BtsProperties.ActualRetryCount > 3
+					|| BtsProperties.AckRequired != true
+					|| BtsProperties.InboundTransportLocation == "inbound-transport-location");
+			Assert.That(() => filter.ToString(), Throws.Nothing);
+		}
+
+		[Test]
 		public void NonMessageContextPropertyBasedFilterIsNotSupported()
 		{
 			var filter = new Filter(() => GetType().Name == "any value");
@@ -400,13 +440,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			private ISendPort<string> _sendPort;
 		}
 
-		private class ConventionalApplicationBinding : Convention.BizTalkFactory.ApplicationBinding<NamingConvention>
+		private class ConventionalApplicationBinding : ApplicationBinding<NamingConvention>
 		{
 			public ConventionalApplicationBinding()
 			{
 				Name = ApplicationName.Is("BizTalk.Factory");
 				SendPorts.Add(TestSendPort);
 				ReceivePorts.Add(TestReceivePort);
+				ReceivePorts.Add(StandaloneReceivePort);
+			}
+
+			internal StandaloneReceivePort StandaloneReceivePort
+			{
+				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
 			}
 
 			internal IReceivePort<NamingConvention> TestReceivePort
@@ -445,6 +491,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			private IReceivePort<NamingConvention> _receivePort;
 
 			private ISendPort<NamingConvention> _sendPort;
+
+			private StandaloneReceivePort _standaloneReceivePort;
+		}
+
+		private class StandaloneReceivePort : ReceivePort<NamingConvention>
+		{
+			public StandaloneReceivePort()
+			{
+				Name = ReceivePortName.Offwards("StandaloneBatch");
+				ReceiveLocations.Add(
+					ReceiveLocation(
+						rl => {
+							rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
+							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
+							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
+							rl.Transport.Host = "Host";
+						}));
+			}
 		}
 	}
 }

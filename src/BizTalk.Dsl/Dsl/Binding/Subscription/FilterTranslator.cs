@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -89,9 +89,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				case ExpressionType.And:
 				case ExpressionType.AndAlso:
 					return new[] {
-						BuildFilterGroup(
-							TranslateFilterStatement(expression.Left),
-							TranslateFilterStatement(expression.Right))
+						BuildFilterGroup(TranslateFilterStatement(expression))
+						//,
+						//TranslateFilterStatement(expression.Right))
 					};
 				default:
 					return new[] {
@@ -100,14 +100,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			}
 		}
 
-		private static FilterGroup BuildFilterGroup(params FilterStatement[] statements)
+		private static FilterGroup BuildFilterGroup(IEnumerable<FilterStatement> statements)
 		{
 			var @group = new FilterGroup();
 			statements.Each(s => @group.Statements.Add(s));
 			return @group;
 		}
 
-		private static FilterStatement TranslateFilterStatement(Expression expression)
+		private static IEnumerable<FilterStatement> TranslateFilterStatement(Expression expression)
 		{
 			var binaryExpression = expression as BinaryExpression;
 			if (binaryExpression != null) return TranslateFilterStatement(binaryExpression);
@@ -119,42 +119,55 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 					expression.NodeType));
 		}
 
-		private static FilterStatement TranslateFilterStatement(BinaryExpression expression)
+		private static IEnumerable<FilterStatement> TranslateFilterStatement(BinaryExpression expression)
 		{
 			switch (expression.NodeType)
 			{
+				case ExpressionType.And:
+				case ExpressionType.AndAlso:
+					foreach (var filterStatement in TranslateFilterStatement(expression.Left).Concat(TranslateFilterStatement(expression.Right)))
+					{
+						yield return filterStatement;
+					}
+					yield break;
 				case ExpressionType.Equal:
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						FilterOperator.Equals,
 						TranslateFilterExpression(expression.Right));
+					yield break;
 				case ExpressionType.GreaterThan:
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						FilterOperator.GreaterThan,
 						TranslateFilterExpression(expression.Right));
+					yield break;
 				case ExpressionType.GreaterThanOrEqual:
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						FilterOperator.GreaterThanOrEquals,
 						TranslateFilterExpression(expression.Right));
+					yield break;
 				case ExpressionType.LessThan:
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						FilterOperator.LessThan,
 						TranslateFilterExpression(expression.Right));
+					yield break;
 				case ExpressionType.LessThanOrEqual:
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						FilterOperator.LessThanOrEquals,
 						TranslateFilterExpression(expression.Right));
+					yield break;
 				case ExpressionType.NotEqual:
 					// != null is rewritten as Exists operator
 					var value = TranslateFilterExpression(expression.Right);
-					return new FilterStatement(
+					yield return new FilterStatement(
 						TranslateFilterExpression(expression.Left),
 						value == null ? FilterOperator.Exists : FilterOperator.NotEqual,
 						value);
+					yield break;
 				default:
 					throw new NotSupportedException(
 						string.Format(
@@ -200,7 +213,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		{
 			// handle MessageContextProperty<T, TR>
 			var type = expression.Type;
-			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(MessageContextProperty<,>))
+			if (type.IsSubclassOfOpenGenericType(typeof(MessageContextProperty<,>)))
 			{
 				var property = Expression.Lambda(expression).Compile().DynamicInvoke() as IMessageContextProperty;
 				if (property == null)
@@ -213,7 +226,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 
 			// handle Schema<T>
 			type = expression.Member.ReflectedType;
-			if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Schema<>))
+			if (type != null && type.IsSubclassOfOpenGenericType(typeof(Schema<>)))
 			{
 				var value = Expression.Lambda(expression).Compile().DynamicInvoke();
 				return value.ToString();
@@ -221,7 +234,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 
 			// handle IReceivePort<TNamingConvention>.Name and ISendPort<TNamingConvention>.Name
 			var containingObjectType = expression.Expression.Type;
-			if (containingObjectType.IsGenericType && containingObjectType.GetGenericTypeDefinition().IsOneOf(typeof(IReceivePort<>), typeof(ISendPort<>)))
+			if (containingObjectType.IsSubclassOfOpenGenericType(typeof(IReceivePort<>)) || containingObjectType.IsSubclassOfOpenGenericType(typeof(ISendPort<>)))
 			{
 				var port = (ISupportNamingConvention) Expression.Lambda(expression.Expression).Compile().DynamicInvoke();
 				return port.Name;
@@ -240,7 +253,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			{
 				// handle cast operator to INamingConvention<TNamingConvention>
 				var declaringType = expression.Method.DeclaringType;
-				if (declaringType != null && declaringType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INamingConvention<>)))
+				if (declaringType != null && declaringType.IsSubclassOfOpenGenericType(typeof(INamingConvention<>)))
 				{
 					var memberExpression = expression.Operand as MemberExpression;
 					if (memberExpression != null) return TranslateFilterExpression(memberExpression);

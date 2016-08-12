@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel.Configuration;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 {
@@ -35,7 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 			foreach (var binding in modelSectionGroup.Bindings.BindingCollections)
 			{
 				var baseType = binding.GetType().BaseType;
-				if (baseType != null && baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(StandardBindingCollectionElement<,>))
+				if (baseType != null && baseType.IsSubclassOfOpenGenericType(typeof(StandardBindingCollectionElement<,>)))
 				{
 					_instance.Add(baseType.GenericTypeArguments[1], binding.BindingName);
 				}

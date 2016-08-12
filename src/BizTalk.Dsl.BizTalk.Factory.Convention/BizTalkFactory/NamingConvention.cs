@@ -141,7 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		protected virtual string ComputeAdapterName(IAdapter adapter)
 		{
 			var name = adapter.ProtocolType.Name;
-			if (adapter.GetType().IsSubclassOfOpenGeneric(typeof(WcfCustomAdapterBase<,>)))
+			if (adapter.GetType().IsSubclassOfOpenGenericType(typeof(WcfCustomAdapterBase<,>)))
 			{
 				const string bindingSuffix = "Binding";
 				// to be able able to access Binding property which is declared by WcfCustomAdapterBase<,>

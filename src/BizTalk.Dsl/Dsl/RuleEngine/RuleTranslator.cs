@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Tracking.Messaging;
+using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.RuleEngine;
 
@@ -200,14 +201,14 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			if (reflectedType != null)
 			{
 				// handle RuleSet.Schema<T>
-				if (reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Schema<>))
+				if (reflectedType.IsSubclassOfOpenGenericType(typeof(Schema<>)))
 				{
 					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
 					return new Constant(value);
 				}
 
 				// handle RuleSet.Transform<T>
-				if (reflectedType.IsGenericType && reflectedType.GetGenericTypeDefinition() == typeof(Transform<>))
+				if (reflectedType.IsSubclassOfOpenGenericType(typeof(Transform<>)))
 				{
 					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
 					return new Constant(value);
@@ -215,7 +216,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 				var reflectedBaseType = reflectedType.BaseType;
 				// handle ProcessName<T>-derived types' members
-				if (reflectedBaseType != null && reflectedBaseType.IsGenericType && reflectedBaseType.GetGenericTypeDefinition() == typeof(ProcessName<>))
+				if (reflectedBaseType != null && reflectedBaseType.IsSubclassOfOpenGenericType(typeof(ProcessName<>)))
 				{
 					var value = Expression.Lambda(expression).Compile().DynamicInvoke();
 					return new Constant(value);
@@ -223,7 +224,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			}
 
 			// handle MessageContextProperty<TP, TV>
-			if (expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(MessageContextProperty<,>))
+			if (expression.Type.IsSubclassOfOpenGenericType(typeof(MessageContextProperty<,>)))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -263,7 +264,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 
 		private static IEnumerable<Term> TranslateMessageContextPropertyTerm(MemberExpression expression)
 		{
-			if (!expression.Type.IsGenericType || expression.Type.GetGenericTypeDefinition() != typeof(MessageContextProperty<,>))
+			if (!expression.Type.IsSubclassOfOpenGenericType(typeof(MessageContextProperty<,>)))
 			{
 				throw new InvalidOperationException(
 					string.Format(

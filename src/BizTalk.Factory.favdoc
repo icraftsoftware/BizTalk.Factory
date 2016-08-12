@@ -2,6 +2,48 @@
 <Favorites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <folders>
     <Folder>
+      <name>machine.config</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>v2.0_x86_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\CONFIG\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v2.0_x64_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v2.0.50727\CONFIG\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v4.0_x86_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Config\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>v4.0_x64_machine.config</name>
+          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\machine.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
       <name>MSBuild Compilation</name>
       <folders />
       <favorites>
@@ -59,6 +101,30 @@
       </favorites>
     </Folder>
     <Folder>
+      <name>BTS Pipeline Policy Files</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>BTSTransmitPolicy.xml</name>
+          <absolutePath>C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\Developer Tools\Pipeline Policy Files\BTSTransmitPolicy.xml</absolutePath>
+          <position>
+            <line>9</line>
+            <column>1</column>
+            <lineHash>ECtRuXZaVqPomffPDuOOUlH5xQOzV7MwpJGD63sVVgQ=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>BTSReceivePolicy.xml</name>
+          <absolutePath>C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\Developer Tools\Pipeline Policy Files\BTSReceivePolicy.xml</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>o9hcETEPo+iT/W1j87Ei0NXRonP9Iv7ti1RbsGFZ6Rg=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
       <name>Failed Process Alerting Job</name>
       <folders />
       <favorites>
@@ -99,48 +165,6 @@
         <Favorite>
           <name>CreateQuartzObjects.sql</name>
           <absolutePath>C:\Files\Projects\net.ores\Babi2013\data\scripts\CreateQuartzObjects.sql</absolutePath>
-        </Favorite>
-      </favorites>
-    </Folder>
-    <Folder>
-      <name>machine.config</name>
-      <folders />
-      <favorites>
-        <Favorite>
-          <name>v2.0_x86_machine.config</name>
-          <absolutePath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\CONFIG\machine.config</absolutePath>
-          <position>
-            <line>1</line>
-            <column>1</column>
-            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
-          </position>
-        </Favorite>
-        <Favorite>
-          <name>v2.0_x64_machine.config</name>
-          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v2.0.50727\CONFIG\machine.config</absolutePath>
-          <position>
-            <line>1</line>
-            <column>1</column>
-            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
-          </position>
-        </Favorite>
-        <Favorite>
-          <name>v4.0_x86_machine.config</name>
-          <absolutePath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Config\machine.config</absolutePath>
-          <position>
-            <line>1</line>
-            <column>1</column>
-            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
-          </position>
-        </Favorite>
-        <Favorite>
-          <name>v4.0_x64_machine.config</name>
-          <absolutePath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\machine.config</absolutePath>
-          <position>
-            <line>1</line>
-            <column>1</column>
-            <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
-          </position>
         </Favorite>
       </favorites>
     </Folder>
