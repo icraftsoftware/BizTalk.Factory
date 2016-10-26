@@ -16,7 +16,6 @@
 
 #endregion
 
-using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using NUnit.Framework;
@@ -30,42 +29,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 		public void NetMsmqBindingElementDecoratorCanBeUsedAsWcfCustomAdapterTypeParameter()
 		{
 			Assert.That(
-				() => new WcfCustomAdapter.Inbound<NetMsmqBindingElement>(a => { a.Binding.RetryPolicy = Convention.BizTalkFactory.NetMsmqRetryPolicy.LongRunning; }),
+				() => new WcfCustomAdapter.Inbound<NetMsmqBindingElement>(a => { a.Binding.ExactlyOnce = true; }),
 				Throws.Nothing);
-		}
-
-		[Test]
-		public void NetMsmqRetryPolicyIsEnvironmentSensitive()
-		{
-			var wca = Convention.BizTalkFactory.NetMsmqRetryPolicy.LongRunning;
-
-			((ISupportEnvironmentOverride) wca).ApplyEnvironmentOverrides("BLD");
-			Assert.That(wca.MaxRetryCycles, Is.EqualTo(0));
-			Assert.That(wca.ReceiveRetryCount, Is.EqualTo(2));
-			Assert.That(wca.RetryCycleDelay, Is.EqualTo(TimeSpan.Zero));
-			Assert.That(wca.TimeToLive, Is.EqualTo(TimeSpan.FromMinutes(1)));
-
-			((ISupportEnvironmentOverride) wca).ApplyEnvironmentOverrides("ACC");
-			Assert.That(wca.MaxRetryCycles, Is.EqualTo(3));
-			Assert.That(wca.ReceiveRetryCount, Is.EqualTo(3));
-			Assert.That(wca.RetryCycleDelay, Is.EqualTo(TimeSpan.FromMinutes(9)));
-			Assert.That(wca.TimeToLive, Is.EqualTo(TimeSpan.FromMinutes(30)));
-
-			((ISupportEnvironmentOverride) wca).ApplyEnvironmentOverrides("PRD");
-			Assert.That(wca.MaxRetryCycles, Is.EqualTo(71));
-			Assert.That(wca.ReceiveRetryCount, Is.EqualTo(1));
-			Assert.That(wca.RetryCycleDelay, Is.EqualTo(TimeSpan.FromHours(1)));
-			Assert.That(wca.TimeToLive, Is.EqualTo(TimeSpan.FromDays(3)));
 		}
 
 		[Test]
 		public void SerializeToXml()
 		{
-			var binding = new NetMsmqBindingElement { RetryPolicy = Convention.BizTalkFactory.NetMsmqRetryPolicy.LongRunning };
-			binding.ApplyEnvironmentOverrides("ACC");
+			var binding = new NetMsmqBindingElement { ExactlyOnce = false };
 			Assert.That(
 				binding.GetBindingElementXml("netMsmqBinding"),
-				Is.EqualTo("<binding name=\"netMsmqBinding\" maxRetryCycles=\"3\" receiveRetryCount=\"3\" retryCycleDelay=\"00:09:00\" timeToLive=\"00:30:00\" />"));
+				Is.EqualTo("<binding name=\"netMsmqBinding\" exactlyOnce=\"false\" retryCycleDelay=\"00:10:00\" />"));
 		}
 	}
 }

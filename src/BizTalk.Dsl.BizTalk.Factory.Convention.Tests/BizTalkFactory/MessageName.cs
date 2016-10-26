@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 #endregion
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
+namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 {
-	public struct Host
+	public enum MessageName
 	{
-		public const string ISOLATED_HOST = "LxHost";
-		public const string PROCESSING_HOST = "PxHost";
-		public const string RECEIVING_HOST = "RxHost";
-		public const string SENDING_HOST = "TxHost";
+		Unknown,
+		CreditNote,
+		Invoice,
+		Statement
 	}
 }

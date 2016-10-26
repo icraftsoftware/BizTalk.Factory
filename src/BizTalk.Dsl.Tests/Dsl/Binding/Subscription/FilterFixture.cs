@@ -20,11 +20,9 @@ using System;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
-using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 {
@@ -95,8 +93,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				Is.EqualTo(
 					string.Format(
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group>" +
-							"<Group><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" />" +
-							"<Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /></Group></Filter>",
+						"<Group><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" />" +
+						"<Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /></Group></Filter>",
 						BizTalkFactoryProperties.SenderName.Type.FullName,
 						(int) FilterOperator.Equals,
 						token1,
@@ -155,54 +153,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 					.With.Message.EqualTo(
 						"Cannot translate FilterPredicate \"() => (BizTalkFactoryProperties.SenderName == null)\" because filter value can be null only if the operator is exists.")
 					.And.InnerException.TypeOf<TpmException>());
-		}
-
-		[Test]
-		public void EqualsToConventionalReceivePortName()
-		{
-			var receivePort = new ConventionalApplicationBinding().TestReceivePort;
-			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
-
-			Assert.That(
-				filter.ToString(),
-				Is.EqualTo(
-					string.Format(
-						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
-						BtsProperties.ReceivePortName.Type.FullName,
-						(int) FilterOperator.Equals,
-						((ISupportNamingConvention) receivePort).Name)));
-		}
-
-		[Test]
-		public void EqualsToConventionalSendPortName()
-		{
-			var sendPort = new ConventionalApplicationBinding().TestSendPort;
-			var filter = new Filter(() => BtsProperties.SendPortName == sendPort.Name);
-
-			Assert.That(
-				filter.ToString(),
-				Is.EqualTo(
-					string.Format(
-						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
-						BtsProperties.SendPortName.Type.FullName,
-						(int) FilterOperator.Equals,
-						((ISupportNamingConvention) sendPort).Name)));
-		}
-
-		[Test]
-		public void EqualsToConventionalStandaloneReceivePortName()
-		{
-			var receivePort = new ConventionalApplicationBinding().StandaloneReceivePort;
-			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
-
-			Assert.That(
-				filter.ToString(),
-				Is.EqualTo(
-					string.Format(
-						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
-						BtsProperties.ReceivePortName.Type.FullName,
-						(int) FilterOperator.Equals,
-						((ISupportNamingConvention) receivePort).Name)));
 		}
 
 		[Test]
@@ -438,77 +388,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			private IReceivePort<string> _receivePort;
 
 			private ISendPort<string> _sendPort;
-		}
-
-		private class ConventionalApplicationBinding : ApplicationBinding<NamingConvention>
-		{
-			public ConventionalApplicationBinding()
-			{
-				Name = ApplicationName.Is("BizTalk.Factory");
-				SendPorts.Add(TestSendPort);
-				ReceivePorts.Add(TestReceivePort);
-				ReceivePorts.Add(StandaloneReceivePort);
-			}
-
-			internal StandaloneReceivePort StandaloneReceivePort
-			{
-				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
-			}
-
-			internal IReceivePort<NamingConvention> TestReceivePort
-			{
-				get
-				{
-					return _receivePort ?? (_receivePort = ReceivePort(
-						rp => {
-							rp.Name = ReceivePortName.Offwards("Batch");
-							rp.ReceiveLocations.Add(
-								ReceiveLocation(
-									rl => {
-										rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-										rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-										rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-										rl.Transport.Host = "Host";
-									}));
-						}));
-				}
-			}
-
-			internal ISendPort<NamingConvention> TestSendPort
-			{
-				get
-				{
-					return _sendPort ?? (_sendPort = SendPort(
-						sp => {
-							sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-							sp.SendPipeline = new SendPipeline<PassThruTransmit>();
-							sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
-							sp.Transport.Host = "Host";
-						}));
-				}
-			}
-
-			private IReceivePort<NamingConvention> _receivePort;
-
-			private ISendPort<NamingConvention> _sendPort;
-
-			private StandaloneReceivePort _standaloneReceivePort;
-		}
-
-		private class StandaloneReceivePort : ReceivePort<NamingConvention>
-		{
-			public StandaloneReceivePort()
-			{
-				Name = ReceivePortName.Offwards("StandaloneBatch");
-				ReceiveLocations.Add(
-					ReceiveLocation(
-						rl => {
-							rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-							rl.Transport.Host = "Host";
-						}));
-			}
 		}
 	}
 }

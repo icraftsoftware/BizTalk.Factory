@@ -218,10 +218,7 @@
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BtxServiceTypeExtensionsFixture.cs" />
-    <Compile Include="Dsl\Binding\Convention\MessageName.cs" />
     <Compile Include="Dsl\Binding\Convention\NamingConventionThunkFixture.cs" />
-    <Compile Include="Dsl\Binding\Convention\Party.cs" />
-    <Compile Include="Dsl\Binding\Convention\Host.cs" />
     <Compile Include="Dsl\Binding\OrchestrationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\PipelineBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\ReceiveLocationBaseFixture.cs" />
@@ -266,15 +263,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\BizTalk.TestArtifacts.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
-      <Link>Dsl\Binding\CodeDom\Data\ProcessOrchestrationBinding.Designer.cs</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dsl\Binding\Data\bindings.with.conventions.xml" />
-    <EmbeddedResource Include="Dsl\Binding\Data\bindings.without.conventions.xml" />
-    <EmbeddedResource Include="Dsl\Binding\Data\bindings.with.area.conventions.xml" />
-    <EmbeddedResource Include="Dsl\Pipeline\Data\TrackingXmlReceivePipelineDocument.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\be.stateless.public.snk">
       <Link>be.stateless.public.snk</Link>
     </None>
@@ -287,10 +275,6 @@
     <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Dsl.BizTalk.Factory.Convention\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj">
-      <Project>{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}</Project>
-      <Name>Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
@@ -336,6 +320,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\BizTalk.TestArtifacts.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
+      <Link>Dsl\Binding\CodeDom\Data\ProcessOrchestrationBinding.Designer.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dsl\Pipeline\Data\TrackingXmlReceivePipelineDocument.xml" />
     <EmbeddedResource Include="Dsl\Pipeline\Data\XmlMicroPipelineDocument.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -343,8 +331,8 @@
       <Link>Dsl\Binding\Data\BizTalk.Factory.SettingsFileGenerator.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Dsl\Binding\Data\bindings.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
