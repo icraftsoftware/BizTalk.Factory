@@ -84,6 +84,7 @@
     <Compile Include="BizTalkFactory\ISendPortNamingConvention.cs" />
     <Compile Include="BizTalkFactory\MessageFormat.cs" />
     <Compile Include="BizTalkFactory\NamingConvention.cs" />
+    <Compile Include="BizTalkFactory\NamingConventionBase.cs" />
     <Compile Include="BizTalkFactory\NetMsmqRetryPolicy.cs" />
     <Compile Include="BizTalkFactory\ReceiveLocation.cs" />
     <Compile Include="BizTalkFactory\ReceiveLocationNamingConvention.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="BizTalkFactory\RetryPolicy.cs" />
     <Compile Include="BizTalkFactory\SendPort.cs" />
     <Compile Include="BizTalkFactory\SendPortNamingConvention.cs" />
+    <Compile Include="BizTalkFactory\SimpleNamingConvention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

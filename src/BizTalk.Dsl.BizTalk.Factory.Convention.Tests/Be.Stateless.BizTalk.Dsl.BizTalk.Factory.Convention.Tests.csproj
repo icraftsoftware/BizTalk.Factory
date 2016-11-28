@@ -125,9 +125,11 @@
     </Compile>
     <Compile Include="BizTalkFactory\Host.cs" />
     <Compile Include="BizTalkFactory\MessageName.cs" />
+    <Compile Include="BizTalkFactory\NamingConventionBaseFixture.cs" />
     <Compile Include="BizTalkFactory\NamingConventionFixture.cs" />
     <Compile Include="BizTalkFactory\NetMsmqRetryPolicyFixture.cs" />
     <Compile Include="BizTalkFactory\Party.cs" />
+    <Compile Include="BizTalkFactory\SimpleNamingConventionFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,10 +168,17 @@
       <Name>Be.Stateless.BizTalk.Unit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="BizTalkFactory\Data\bindings.with.area.xml" />
-    <EmbeddedResource Include="BizTalkFactory\Data\bindings.xml" />
+    <EmbeddedResource Include="BizTalkFactory\Data\bindings.with.simple.naming.convention.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BizTalkFactory\Data\bindings.with.strong.naming.convention.and.area.xml" />
+    <EmbeddedResource Include="BizTalkFactory\Data\bindings.with.strong.naming.convention.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BizTalkFactory\Data\bindings.with.simple.naming.convention.and.area.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

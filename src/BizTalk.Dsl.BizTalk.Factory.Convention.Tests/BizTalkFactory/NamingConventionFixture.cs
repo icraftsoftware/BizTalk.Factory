@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.ServiceModel.Configuration;
 using System.Xml;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -30,13 +29,10 @@ using Be.Stateless.BizTalk.Pipelines;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Unit.Resources;
-using Microsoft.Adapters.OracleDB;
 using Microsoft.Adapters.Sql;
-using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
-using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
-using SampleNamingConventions = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<
+using TypedNamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<
 	Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.Party,
 	Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.MessageName>;
 
@@ -45,35 +41,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 	[TestFixture]
 	public class NamingConventionFixture
 	{
-		[Test]
-		public void ComputeAdapterNameResolvesActualProtocolTypeNameForWcfCustomAdapter()
-		{
-			IAdapter adapter = new CustomAdapterFake<NetTcpBindingElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomNetTcp"));
-
-			adapter = new CustomAdapterFake<NetMsmqBindingElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomNetMsmq"));
-
-			adapter = new CustomAdapterFake<OracleDBBindingConfigurationElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomOracleDB"));
-
-			adapter = new CustomAdapterFake<SqlAdapterBindingConfigurationElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomSql"));
-		}
-
-		[Test]
-		public void ComputeAdapterNameResolvesActualProtocolTypeNameForWcfCustomIsolatedAdapter()
-		{
-			IAdapter adapter = new CustomIsolatedAdapterFake<NetTcpBindingElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomIsolatedNetTcp"));
-
-			adapter = new CustomIsolatedAdapterFake<WSHttpBindingElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomIsolatedWsHttp"));
-
-			adapter = new CustomIsolatedAdapterFake<BasicHttpBindingElement, CustomRLConfig>();
-			Assert.That(NamingConventionDouble.Instance.ComputeAdapterName(adapter), Is.EqualTo("WCF-CustomIsolatedBasicHttp"));
-		}
-
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
 		{
@@ -84,7 +51,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 			var binding = applicationBindingSerializer.Serialize();
 
-			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.xml")));
+			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.strong.naming.convention.xml")));
 		}
 
 		[Test]
@@ -97,13 +64,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 
 			var binding = applicationBindingSerializer.Serialize();
 
-			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.area.xml")));
+			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.strong.naming.convention.and.area.xml")));
 		}
 
 		[Test]
 		public void ConventionalReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = new ConventionalApplicationBinding().ReceivePort;
+			var receivePort = new SampleApplication().CustomerOneWayReceivePort;
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(
@@ -119,7 +86,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		[Test]
 		public void ConventionalSendPortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var sendPort = new ConventionalApplicationBinding().SendPort;
+			var sendPort = new SampleApplication().CustomerTwoWaySendPort;
 			var filter = new Filter(() => BtsProperties.SendPortName == sendPort.Name);
 
 			Assert.That(
@@ -135,7 +102,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		[Test]
 		public void ConventionalStandaloneReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = new ConventionalApplicationBinding().StandaloneReceivePort;
+			var receivePort = new SampleApplication().TaxAgencyOneWayReceivePort;
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(
@@ -148,114 +115,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 						((ISupportNamingConvention) receivePort).Name)));
 		}
 
-		private class ConventionalApplicationBinding : ApplicationBinding<NamingConvention>
-		{
-			public ConventionalApplicationBinding()
-			{
-				Name = ApplicationName.Is("BizTalk.Factory");
-				SendPorts.Add(SendPort);
-				ReceivePorts.Add(ReceivePort);
-				ReceivePorts.Add(StandaloneReceivePort);
-			}
-
-			internal IReceivePort<NamingConvention> ReceivePort
-			{
-				get
-				{
-					return _receivePort ?? (_receivePort = ReceivePort(
-						rp => {
-							rp.Name = ReceivePortName.Offwards("Batch");
-							rp.ReceiveLocations.Add(
-								ReceiveLocation(
-									rl => {
-										rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-										rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-										rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-										rl.Transport.Host = "Host";
-									}));
-						}));
-				}
-			}
-
-			internal ISendPort<NamingConvention> SendPort
-			{
-				get
-				{
-					return _sendPort ?? (_sendPort = SendPort(
-						sp => {
-							sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-							sp.SendPipeline = new SendPipeline<PassThruTransmit>();
-							sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
-							sp.Transport.Host = "Host";
-						}));
-				}
-			}
-
-			internal ConventionalStandaloneReceivePort StandaloneReceivePort
-			{
-				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new ConventionalStandaloneReceivePort()); }
-			}
-
-			private IReceivePort<NamingConvention> _receivePort;
-
-			private ISendPort<NamingConvention> _sendPort;
-
-			private ConventionalStandaloneReceivePort _standaloneReceivePort;
-		}
-
-		private class ConventionalStandaloneReceivePort : ReceivePort<NamingConvention>
-		{
-			public ConventionalStandaloneReceivePort()
-			{
-				Name = ReceivePortName.Offwards("StandaloneBatch");
-				ReceiveLocations.Add(
-					ReceiveLocation(
-						rl => {
-							rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-							rl.Transport.Host = "Host";
-						}));
-			}
-		}
-
-		private class CustomAdapterFake<TBinding, TConfig> : WcfCustomAdapter<TBinding, TConfig>
-			where TBinding : StandardBindingElement, new()
-			where TConfig : AdapterConfig,
-			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
-			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
-			IAdapterConfigInboundMessageMarshalling,
-			IAdapterConfigOutboundMessageMarshalling,
-			new() { }
-
-		private class CustomIsolatedAdapterFake<TBinding, TConfig> : WcfCustomIsolatedAdapter<TBinding, TConfig>
-			where TBinding : StandardBindingElement, new()
-			where TConfig : RLConfig,
-			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
-			IAdapterConfigInboundMessageMarshalling,
-			IAdapterConfigOutboundMessageMarshalling,
-			new() { }
-
-		private class NamingConventionDouble : NamingConvention<string, string>
-		{
-			public new string ComputeAdapterName(IAdapter adapter)
-			{
-				return base.ComputeAdapterName(adapter);
-			}
-
-			internal static readonly NamingConventionDouble Instance = new NamingConventionDouble();
-		}
-
-		private class SampleApplication : ApplicationBinding<SampleNamingConventions>
+		private class SampleApplication : ApplicationBinding<TypedNamingConvention>
 		{
 			public SampleApplication()
 			{
-				// do not assign application Name and rely on SampleNamingConventions default rule
+				// do not assign application Name and rely on NamingConvention default rule
 				ReceivePorts.Add(
-					_oneWayReceivePort = ReceivePort(
+					CustomerOneWayReceivePort = ReceivePort(
 						p => {
 							p.Name = ReceivePortName.Offwards(Party.Customer);
 							p.ReceiveLocations
@@ -278,7 +144,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 										})
 								);
 						}),
-					_twoWayReceivePort = ReceivePort(
+					CustomerTwoWayReceivePort = ReceivePort(
 						p => {
 							p.Name = ReceivePortName.Offwards(Party.Customer);
 							p.Description = "Receives ledgers from customers";
@@ -316,7 +182,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 										l.Transport.Adapter = new WcfSqlAdapter.Inbound(
 											a => {
 												a.Address = new SqlAdapterConnectionUri { InboundId = "FinancialMovements", InitialCatalog = "BankDb", Server = "localhost" };
-												a.InboundOperationType = Microsoft.Adapters.Sql.InboundOperation.XmlPolling;
+												a.InboundOperationType = InboundOperation.XmlPolling;
 												a.PolledDataAvailableStatement = "select count(1) from data";
 												a.PollingStatement = "select * from data for XML";
 												a.PollingInterval = TimeSpan.FromHours(2);
@@ -325,10 +191,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 										l.Transport.Host = Host.RECEIVING_HOST;
 									}));
 						}),
-					new TaxAgencyReceivePort());
+					TaxAgencyOneWayReceivePort = new TaxAgencyReceivePort());
 				SendPorts.Add(
-					_oneWaySendPort = new BankSendPort(),
-					_twoWaySendPort = SendPort(
+					BankOneWaySendPort = new BankSendPort(),
+					CustomerTwoWaySendPort = SendPort(
 						p => {
 							p.Name = SendPortName.Towards(Party.Customer).About(MessageName.Statement).FormattedAs.Csv;
 							p.SendPipeline = new SendPipeline<PassThruTransmit>(pl => { pl.PreAssembler<FailedMessageRoutingEnablerComponent>(c => { c.Enabled = false; }); });
@@ -340,22 +206,23 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 				Orchestrations.Add(
 					new ProcessOrchestrationBinding(
 						o => {
-							o.ReceivePort = _oneWayReceivePort;
-							o.RequestResponsePort = _twoWayReceivePort;
-							o.SendPort = _oneWaySendPort;
-							o.SolicitResponsePort = _twoWaySendPort;
-							//o.ReceivePort = new TestApplication.OneWayReceivePort();
-							//o.RequestResponsePort = new TestApplication.TwoWayReceivePort();
-							//o.SendPort = new TestApplication.OneWaySendPort();
-							//o.SolicitResponsePort = new TestApplication.TwoWaySendPort();
+							o.ReceivePort = CustomerOneWayReceivePort;
+							o.RequestResponsePort = CustomerTwoWayReceivePort;
+							o.SendPort = BankOneWaySendPort;
+							o.SolicitResponsePort = CustomerTwoWaySendPort;
 							o.Host = Host.PROCESSING_HOST;
 						}));
 			}
 
-			readonly IReceivePort<SampleNamingConventions> _oneWayReceivePort;
-			readonly BankSendPort _oneWaySendPort;
-			readonly IReceivePort<SampleNamingConventions> _twoWayReceivePort;
-			readonly ISendPort<SampleNamingConventions> _twoWaySendPort;
+			public IReceivePort<TypedNamingConvention> CustomerOneWayReceivePort { get; private set; }
+
+			public ISendPort<TypedNamingConvention> CustomerTwoWaySendPort { get; private set; }
+
+			public TaxAgencyReceivePort TaxAgencyOneWayReceivePort { get; private set; }
+
+			private BankSendPort BankOneWaySendPort { get; set; }
+
+			private IReceivePort<TypedNamingConvention> CustomerTwoWayReceivePort { get; set; }
 		}
 
 		internal class BankSendPort : SendPort<NamingConvention<Party, MessageName>>
