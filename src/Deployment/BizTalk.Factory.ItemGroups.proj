@@ -228,8 +228,8 @@
     <ExternalAssemblies Include="Be.Stateless.BizTalk.Dsl.dll">
       <LocationPath>..\BizTalk.Dsl\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
-    <ExternalAssemblies Include="Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.dll">
-      <LocationPath>..\BizTalk.Dsl.BizTalk.Factory.Convention\bin\$(Configuration)</LocationPath>
+    <ExternalAssemblies Include="Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll">
+      <LocationPath>..\BizTalk.Dsl.Binding.Conventions\bin\$(Configuration)</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.ServiceModel.dll">
       <LocationPath>..\ServiceModel\bin\$(Configuration)</LocationPath>

@@ -139,9 +139,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestAr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Explorer.Tests", "BizTalk.Explorer.Tests\Be.Stateless.BizTalk.Explorer.Tests.csproj", "{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention", "BizTalk.Dsl.BizTalk.Factory.Convention\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj", "{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Binding.Conventions", "BizTalk.Dsl.Binding.Conventions\Be.Stateless.BizTalk.Dsl.Binding.Conventions.csproj", "{99348F15-85C7-4C31-BEFC-12D3AD0C38E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests", "BizTalk.Dsl.BizTalk.Factory.Convention.Tests\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests.csproj", "{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Binding.Conventions.Tests", "BizTalk.Dsl.Binding.Conventions.Tests\Be.Stateless.BizTalk.Dsl.Binding.Conventions.Tests.csproj", "{0A7AE7B1-D0E6-48A3-9C16-15B5EAA85816}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -263,12 +263,12 @@ Global
 		SccProjectUniqueName38 = BizTalk.Explorer.Tests\\Be.Stateless.BizTalk.Explorer.Tests.csproj
 		SccProjectName38 = BizTalk.Explorer.Tests
 		SccLocalPath38 = BizTalk.Explorer.Tests
-		SccProjectUniqueName39 = BizTalk.Dsl.BizTalk.Factory.Convention\\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.csproj
-		SccProjectName39 = BizTalk.Dsl.BizTalk.Factory.Convention
-		SccLocalPath39 = BizTalk.Dsl.BizTalk.Factory.Convention
-		SccProjectUniqueName40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests\\Be.Stateless.BizTalk.Dsl.BizTalk.Factory.Convention.Tests.csproj
-		SccProjectName40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests
-		SccLocalPath40 = BizTalk.Dsl.BizTalk.Factory.Convention.Tests
+		SccProjectUniqueName39 = BizTalk.Dsl.Binding.Conventions\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.csproj
+		SccProjectName39 = BizTalk.Dsl.Binding.Conventions
+		SccLocalPath39 = BizTalk.Dsl.Binding.Conventions
+		SccProjectUniqueName40 = BizTalk.Dsl.Binding.Conventions.Tests\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.Tests.csproj
+		SccProjectName40 = BizTalk.Dsl.Binding.Conventions.Tests
+		SccLocalPath40 = BizTalk.Dsl.Binding.Conventions.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

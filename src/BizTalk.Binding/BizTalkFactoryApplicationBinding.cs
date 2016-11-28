@@ -25,6 +25,7 @@ using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.EnvironmentSettings;
 using Be.Stateless.BizTalk.Install;
@@ -38,13 +39,13 @@ using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
-using NamingConvention = Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory.NamingConvention<string, string>;
+using RetryPolicy = Be.Stateless.BizTalk.Dsl.Binding.Convention.RetryPolicy;
 
 namespace Be.Stateless.BizTalk
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Instantiated by BindingGenerator at deployment time.")]
 	[SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
-	public class BizTalkFactoryApplicationBinding : Dsl.Binding.Convention.BizTalkFactory.ApplicationBinding<NamingConvention>
+	public class BizTalkFactoryApplicationBinding : ApplicationBinding<NamingConvention<string, string>>
 	{
 		public BizTalkFactoryApplicationBinding()
 		{
@@ -76,7 +77,7 @@ namespace Be.Stateless.BizTalk
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.ShortRunning;
+						sp.Transport.RetryPolicy = RetryPolicy.ShortRunning;
 						sp.Filter = new Filter(() => BizTalkFactoryProperties.EnvelopeSpecName != null);
 					}),
 				SendPort(
@@ -104,7 +105,7 @@ namespace Be.Stateless.BizTalk
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_QueueControlledRelease";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.ShortRunning;
+						sp.Transport.RetryPolicy = RetryPolicy.ShortRunning;
 						sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Batch.Release>.MessageType);
 					}),
 				SendPort(
@@ -132,7 +133,7 @@ namespace Be.Stateless.BizTalk
 								a.StaticAction = "TypedProcedure/dbo/usp_claim_CheckIn";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.ShortRunning;
+						sp.Transport.RetryPolicy = RetryPolicy.ShortRunning;
 						sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckIn>.MessageType);
 					}),
 				SendPort(
@@ -155,10 +156,10 @@ namespace Be.Stateless.BizTalk
 								a.FileName = "Failed_%MessageID%.xml";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-						sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+						sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 						sp.Filter = new Filter(() => ErrorReportProperties.ErrorType == "FailedMessage");
 					})
-				);
+			);
 			ReceivePorts.Add(
 				_batchReceivePort = ReceivePort(
 					rp => {
@@ -250,7 +251,7 @@ namespace Be.Stateless.BizTalk
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}));
 					})
-				);
+			);
 		}
 
 		#region Base Class Member Overrides
@@ -279,7 +280,7 @@ namespace Be.Stateless.BizTalk
 									a.FileName = "Claim_%MessageID%.xml";
 								});
 							sp.Transport.Host = CommonSettings.TransmitHost;
-							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+							sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 							sp.Filter = new Filter(() => BtsProperties.MessageType == Schema<Claim.CheckOut>.MessageType);
 						}),
 					SendPort(
@@ -290,7 +291,7 @@ namespace Be.Stateless.BizTalk
 							sp.ReceivePipeline = new ReceivePipeline<XmlReceive>();
 							sp.Transport.Adapter = new WcfBasicHttpAdapter.Outbound(a => { a.Address = new EndpointAddress("http://localhost:8000/stubservice"); });
 							sp.Transport.Host = CommonSettings.TransmitHost;
-							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+							sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 						}),
 					_batchSendPort = SendPort(
 						sp => {
@@ -303,10 +304,10 @@ namespace Be.Stateless.BizTalk
 								});
 							sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
 							sp.Transport.Host = CommonSettings.TransmitHost;
-							sp.Transport.RetryPolicy = Dsl.Binding.Convention.BizTalkFactory.RetryPolicy.RealTime;
+							sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 							sp.Filter = new Filter(() => BtsProperties.ReceivePortName == _batchReceivePort.Name);
 						})
-					);
+				);
 
 				ReceivePorts.Add(
 					ReceivePort(
@@ -409,7 +410,7 @@ namespace Be.Stateless.BizTalk
 											});
 										rl.Transport.Host = CommonSettings.ReceiveHost;
 									})
-								);
+							);
 						}));
 			}
 		}
@@ -436,7 +437,7 @@ namespace Be.Stateless.BizTalk
 			}
 		}
 
-		protected readonly IReceivePort<NamingConvention> _batchReceivePort;
-		protected ISendPort<NamingConvention> _batchSendPort;
+		protected readonly IReceivePort<NamingConvention<string, string>> _batchReceivePort;
+		protected ISendPort<NamingConvention<string, string>> _batchSendPort;
 	}
 }
