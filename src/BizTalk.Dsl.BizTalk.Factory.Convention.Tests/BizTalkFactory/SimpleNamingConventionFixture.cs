@@ -60,7 +60,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		[Test]
 		public void ConventionalReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = new SampleApplication().ReceivePort;
+			var receivePort = new SampleApplication().BatchReceivePort;
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(
@@ -76,7 +76,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 		[Test]
 		public void ConventionalSendPortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var sendPort = new SampleApplication().SendPort;
+			var sendPort = new SampleApplication().UnitTestSendPort;
 			var filter = new Filter(() => BtsProperties.SendPortName == sendPort.Name);
 
 			Assert.That(
@@ -110,12 +110,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 			public SampleApplication()
 			{
 				Name = ApplicationName.Is("BizTalk.Factory");
-				SendPorts.Add(SendPort);
-				ReceivePorts.Add(ReceivePort);
+				SendPorts.Add(UnitTestSendPort);
+				ReceivePorts.Add(BatchReceivePort);
 				ReceivePorts.Add(StandaloneReceivePort);
 			}
 
-			internal IReceivePort<SimpleNamingConvention> ReceivePort
+			internal IReceivePort<SimpleNamingConvention> BatchReceivePort
 			{
 				get
 				{
@@ -134,7 +134,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 				}
 			}
 
-			internal ISendPort<SimpleNamingConvention> SendPort
+			internal StandaloneReceivePort StandaloneReceivePort
+			{
+				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
+			}
+
+			internal ISendPort<SimpleNamingConvention> UnitTestSendPort
 			{
 				get
 				{
@@ -146,11 +151,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.BizTalkFactory
 							sp.Transport.Host = "Host";
 						}));
 				}
-			}
-
-			internal StandaloneReceivePort StandaloneReceivePort
-			{
-				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
 			}
 
 			private IReceivePort<SimpleNamingConvention> _receivePort;
