@@ -93,7 +93,11 @@
     <Compile Include="Convention\RetryPolicy.cs" />
     <Compile Include="Convention\SendPort.cs" />
     <Compile Include="Convention\SendPortNamingConvention.cs" />
+    <Compile Include="Convention\Simple\ApplicationBindingSingleton.cs" />
     <Compile Include="Convention\Simple\NamingConvention.cs" />
+    <Compile Include="Convention\Simple\ReceiveLocationSingleton.cs" />
+    <Compile Include="Convention\Simple\ReceivePortSingleton.cs" />
+    <Compile Include="Convention\Simple\SendPortSingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
