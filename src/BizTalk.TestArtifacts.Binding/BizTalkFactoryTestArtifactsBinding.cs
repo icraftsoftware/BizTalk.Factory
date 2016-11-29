@@ -19,7 +19,7 @@
 using System.ServiceModel;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention.Detailed;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.EnvironmentSettings;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.Adapters.Sql;
@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk
 					}));
 		}
 
-		private readonly IReceivePort<NamingConvention<string, string>> _twoWayReceivePort;
-		private readonly ISendPort<NamingConvention<string, string>> _twoWaySendPort;
+		private readonly IReceivePort<NamingConvention> _twoWayReceivePort;
+		private readonly ISendPort<NamingConvention> _twoWaySendPort;
 	}
 }

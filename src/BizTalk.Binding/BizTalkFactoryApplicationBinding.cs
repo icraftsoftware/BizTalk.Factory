@@ -26,7 +26,7 @@ using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention.Detailed;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.EnvironmentSettings;
 using Be.Stateless.BizTalk.Install;
@@ -46,7 +46,7 @@ namespace Be.Stateless.BizTalk
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Instantiated by BindingGenerator at deployment time.")]
 	[SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
-	public class BizTalkFactoryApplicationBinding : ApplicationBinding<NamingConvention<string, string>>
+	public class BizTalkFactoryApplicationBinding : ApplicationBinding<NamingConvention>
 	{
 		public BizTalkFactoryApplicationBinding()
 		{
@@ -438,7 +438,7 @@ namespace Be.Stateless.BizTalk
 			}
 		}
 
-		protected readonly IReceivePort<NamingConvention<string, string>> _batchReceivePort;
-		protected ISendPort<NamingConvention<string, string>> _batchSendPort;
+		protected readonly IReceivePort<NamingConvention> _batchReceivePort;
+		protected ISendPort<NamingConvention> _batchSendPort;
 	}
 }
