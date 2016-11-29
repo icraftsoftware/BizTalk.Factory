@@ -25,7 +25,6 @@ using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Constants;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
@@ -45,9 +44,8 @@ using RetryPolicy = Be.Stateless.BizTalk.Dsl.Binding.Convention.RetryPolicy;
 
 namespace Be.Stateless.BizTalk
 {
-	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Instantiated by BindingGenerator at deployment time.")]
 	[SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
-	public class BizTalkFactoryApplicationBinding : ApplicationBinding<NamingConvention>
+	public class BizTalkFactoryApplicationBinding : ApplicationBindingSingleton<BizTalkFactoryApplicationBinding>
 	{
 		public BizTalkFactoryApplicationBinding()
 		{
