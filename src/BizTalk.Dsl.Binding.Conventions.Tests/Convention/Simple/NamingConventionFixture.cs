@@ -16,7 +16,7 @@
 
 #endregion
 
-using System.Xml;
+using Be.Stateless.Area;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.Unit.Resources;
@@ -31,10 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
 		{
-			var applicationBinding = new SampleApplication {
-				Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
-			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("PRD");
+			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplication.Instance).GetBindingSerializer("PRD");
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -44,10 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingWithAreaSupportsBindingGeneration()
 		{
-			var applicationBinding = new Area.SampleApplicationWithArea {
-				Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
-			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("PRD");
+			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplicationWithArea.Instance).GetBindingSerializer("PRD");
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -57,7 +51,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = new SampleApplication().BatchReceivePort;
+			var receivePort = SampleApplication.Instance.BatchReceivePort;
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(
@@ -73,7 +67,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalSendPortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var sendPort = new SampleApplication().UnitTestSendPort;
+			var sendPort = SampleApplication.Instance.UnitTestSendPort;
 			var filter = new Filter(() => BtsProperties.SendPortName == sendPort.Name);
 
 			Assert.That(
@@ -89,7 +83,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalStandaloneReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = new SampleApplication().StandaloneReceivePort;
+			var receivePort = SampleApplication.Instance.FindReceivePort<StandaloneReceivePort>();
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(

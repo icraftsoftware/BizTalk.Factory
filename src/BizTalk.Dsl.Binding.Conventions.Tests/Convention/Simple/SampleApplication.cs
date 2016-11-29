@@ -16,40 +16,67 @@
 
 #endregion
 
+using System.Xml;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.Pipelines;
 
 namespace Be.Stateless.Area
 {
-	internal class SampleApplicationWithArea : ApplicationBinding<NamingConvention>
+	internal class SampleApplicationWithArea : ApplicationBindingSingleton<SampleApplicationWithArea>
 	{
 		public SampleApplicationWithArea()
 		{
-			ReceivePorts.Add(new Invoice.TaxAgencyReceivePort());
-			SendPorts.Add(new Invoice.BankSendPort());
+			ReceivePorts.Add(Invoice.TaxAgencyReceivePort.Instance);
+			SendPorts.Add(Invoice.BankSendPort.Instance);
+			Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local);
 		}
 	}
 
 	namespace Invoice
 	{
-		internal class BankSendPort : StandaloneSendPort { }
+		internal class TaxAgencyReceivePort : ReceivePortSingleton<TaxAgencyReceivePort>
+		{
+			public TaxAgencyReceivePort()
+			{
+				Name = ReceivePortName.Offwards("Job");
+				ReceiveLocations.Add(
+					ReceiveLocation(
+						rl => {
+							rl.Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
+							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
+							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
+							rl.Transport.Host = "Host";
+						}));
+			}
+		}
 
-		internal class TaxAgencyReceivePort : StandaloneReceivePort { }
+		internal class BankSendPort : SendPortSingleton<BankSendPort>
+		{
+			public BankSendPort()
+			{
+				Name = SendPortName.Towards("Job").About("Notification").FormattedAs.Xml;
+				SendPipeline = new SendPipeline<PassThruTransmit>();
+				Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"c:\files\drops"; });
+				Transport.Host = "Host";
+			}
+		}
 	}
 }
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 {
-	internal class SampleApplication : ApplicationBinding<NamingConvention>
+	internal class SampleApplication : ApplicationBindingSingleton<SampleApplication>
 	{
 		public SampleApplication()
 		{
 			Name = ApplicationName.Is("Simple.SampleApplication");
 			SendPorts.Add(UnitTestSendPort);
+			SendPorts.Add(StandaloneSendPort.Instance);
 			ReceivePorts.Add(BatchReceivePort);
-			ReceivePorts.Add(StandaloneReceivePort);
+			ReceivePorts.Add(StandaloneReceivePort.Instance);
+			Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local);
 		}
 
 		internal IReceivePort<NamingConvention> BatchReceivePort
@@ -71,11 +98,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 			}
 		}
 
-		internal StandaloneReceivePort StandaloneReceivePort
-		{
-			get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
-		}
-
 		internal ISendPort<NamingConvention> UnitTestSendPort
 		{
 			get
@@ -90,31 +112,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 			}
 		}
 
-		private StandaloneSendPort StandaloneSendPort
-		{
-			get { return _standaloneSendPort ?? (_standaloneSendPort = new StandaloneSendPort()); }
-		}
-
 		private IReceivePort<NamingConvention> _receivePort;
 
 		private ISendPort<NamingConvention> _sendPort;
-
-		private StandaloneReceivePort _standaloneReceivePort;
-		private StandaloneSendPort _standaloneSendPort;
 	}
 
-	internal class StandaloneSendPort : SendPort<NamingConvention>
-	{
-		public StandaloneSendPort()
-		{
-			Name = SendPortName.Towards("Job").About("Notification").FormattedAs.Xml;
-			SendPipeline = new SendPipeline<PassThruTransmit>();
-			Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"c:\files\drops"; });
-			Transport.Host = "Host";
-		}
-	}
-
-	internal class StandaloneReceivePort : ReceivePort<NamingConvention>
+	internal class StandaloneReceivePort : ReceivePortSingleton<StandaloneReceivePort>
 	{
 		public StandaloneReceivePort()
 		{
@@ -127,6 +130,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 						rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
 						rl.Transport.Host = "Host";
 					}));
+		}
+	}
+
+	internal class StandaloneSendPort : SendPortSingleton<StandaloneSendPort>
+	{
+		public StandaloneSendPort()
+		{
+			Name = SendPortName.Towards("Job").About("Notification").FormattedAs.Xml;
+			SendPipeline = new SendPipeline<PassThruTransmit>();
+			Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"c:\files\drops"; });
+			Transport.Host = "Host";
 		}
 	}
 }

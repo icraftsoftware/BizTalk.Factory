@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
@@ -145,6 +146,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		#endregion
+
+		public IReceivePort<TNamingConvention> FindReceivePort<T>()
+		{
+			return _receivePorts.Single(rp => rp.GetType() == typeof(T));
+		}
+
+		public ISendPort<TNamingConvention> FindSendPort<T>()
+		{
+			return _sendPorts.Single(rp => rp.GetType() == typeof(T));
+		}
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 
