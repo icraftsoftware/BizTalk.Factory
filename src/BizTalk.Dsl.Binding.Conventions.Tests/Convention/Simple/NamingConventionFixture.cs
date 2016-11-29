@@ -18,18 +18,15 @@
 
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
-using Be.Stateless.BizTalk.Pipelines;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
+namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 {
 	[TestFixture]
-	public class SimpleNamingConventionFixture
+	public class NamingConventionFixture
 	{
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
@@ -41,20 +38,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 			var binding = applicationBindingSerializer.Serialize();
 
-			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.simple.naming.convention.xml")));
+			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.xml")));
 		}
 
 		[Test]
 		public void ConventionalApplicationBindingWithAreaSupportsBindingGeneration()
 		{
-			var applicationBinding = new Area.SampleApplication {
+			var applicationBinding = new Area.SampleApplicationWithArea {
 				Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
 			};
 			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("PRD");
 
 			var binding = applicationBindingSerializer.Serialize();
 
-			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.simple.naming.convention.and.area.xml")));
+			Assert.That(binding, Is.EqualTo(ResourceManager.LoadString("Data.bindings.with.area.xml")));
 		}
 
 		[Test]
@@ -104,95 +101,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 						(int) FilterOperator.Equals,
 						((ISupportNamingConvention) receivePort).Name)));
 		}
-
-		private class SampleApplication : ApplicationBinding<SimpleNamingConvention>
-		{
-			public SampleApplication()
-			{
-				Name = ApplicationName.Is("BizTalk.Factory");
-				SendPorts.Add(UnitTestSendPort);
-				ReceivePorts.Add(BatchReceivePort);
-				ReceivePorts.Add(StandaloneReceivePort);
-			}
-
-			internal IReceivePort<SimpleNamingConvention> BatchReceivePort
-			{
-				get
-				{
-					return _receivePort ?? (_receivePort = ReceivePort(
-						rp => {
-							rp.Name = ReceivePortName.Offwards("Batch");
-							rp.ReceiveLocations.Add(
-								ReceiveLocation(
-									rl => {
-										rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-										rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-										rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-										rl.Transport.Host = "Host";
-									}));
-						}));
-				}
-			}
-
-			internal StandaloneReceivePort StandaloneReceivePort
-			{
-				get { return _standaloneReceivePort ?? (_standaloneReceivePort = new StandaloneReceivePort()); }
-			}
-
-			internal ISendPort<SimpleNamingConvention> UnitTestSendPort
-			{
-				get
-				{
-					return _sendPort ?? (_sendPort = SendPort(
-						sp => {
-							sp.Name = SendPortName.Towards("UnitTest.Batch").About("Trace").FormattedAs.Xml;
-							sp.SendPipeline = new SendPipeline<PassThruTransmit>();
-							sp.Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"C:\Files\Drops\BizTalk.Factory\Trace"; });
-							sp.Transport.Host = "Host";
-						}));
-				}
-			}
-
-			private IReceivePort<SimpleNamingConvention> _receivePort;
-
-			private ISendPort<SimpleNamingConvention> _sendPort;
-
-			private StandaloneReceivePort _standaloneReceivePort;
-		}
-
-		private class StandaloneReceivePort : ReceivePort<SimpleNamingConvention>
-		{
-			public StandaloneReceivePort()
-			{
-				Name = ReceivePortName.Offwards("StandaloneBatch");
-				ReceiveLocations.Add(
-					ReceiveLocation(
-						rl => {
-							rl.Name = ReceiveLocationName.About("Release").FormattedAs.Xml;
-							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-							rl.Transport.Host = "Host";
-						}));
-			}
-		}
-	}
-}
-
-namespace Be.Stateless.Area
-{
-	internal class SampleApplication : ApplicationBinding<NamingConvention<Party, MessageName>>
-	{
-		public SampleApplication()
-		{
-			ReceivePorts.Add(new Invoice.TaxAgencyReceivePort());
-			SendPorts.Add(new Invoice.BankSendPort());
-		}
-	}
-
-	namespace Invoice
-	{
-		internal class BankSendPort : NamingConventionFixture.BankSendPort { }
-
-		internal class TaxAgencyReceivePort : NamingConventionFixture.TaxAgencyReceivePort { }
 	}
 }

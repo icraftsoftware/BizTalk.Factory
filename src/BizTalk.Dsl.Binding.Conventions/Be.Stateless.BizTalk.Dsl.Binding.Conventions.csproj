@@ -83,7 +83,7 @@
     <Compile Include="Convention\IReceivePortNamingConvention.cs" />
     <Compile Include="Convention\ISendPortNamingConvention.cs" />
     <Compile Include="Convention\MessageFormat.cs" />
-    <Compile Include="Convention\NamingConvention.cs" />
+    <Compile Include="Convention\Detailed\NamingConvention.cs" />
     <Compile Include="Convention\NamingConventionBase.cs" />
     <Compile Include="Convention\NetMsmqRetryPolicy.cs" />
     <Compile Include="Convention\ReceiveLocation.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Convention\RetryPolicy.cs" />
     <Compile Include="Convention\SendPort.cs" />
     <Compile Include="Convention\SendPortNamingConvention.cs" />
-    <Compile Include="Convention\SimpleNamingConvention.cs" />
+    <Compile Include="Convention\Simple\NamingConvention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

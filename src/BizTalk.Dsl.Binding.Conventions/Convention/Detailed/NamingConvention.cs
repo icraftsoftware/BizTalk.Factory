@@ -18,7 +18,7 @@
 
 using System;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
+namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Detailed
 {
 	public class NamingConvention<TParty, TMessageName> : NamingConventionBase<NamingConvention<TParty, TMessageName>, TParty, TMessageName>,
 		INamingConvention<NamingConvention<TParty, TMessageName>>

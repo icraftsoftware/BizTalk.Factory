@@ -115,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\BizTalk.TestArtifacts.Binding\Orchestrations.Dummy\ProcessOrchestrationBinding.Designer.cs">
-      <Link>Convention\ProcessOrchestrationBinding.Designer.cs</Link>
+      <Link>Convention\Detailed\ProcessOrchestrationBinding.Designer.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -123,13 +123,15 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Convention\Detailed\SampleApplication.cs" />
     <Compile Include="Convention\Host.cs" />
     <Compile Include="Convention\MessageName.cs" />
     <Compile Include="Convention\NamingConventionBaseFixture.cs" />
-    <Compile Include="Convention\NamingConventionFixture.cs" />
+    <Compile Include="Convention\Detailed\NamingConventionFixture.cs" />
     <Compile Include="Convention\NetMsmqRetryPolicyFixture.cs" />
     <Compile Include="Convention\Party.cs" />
-    <Compile Include="Convention\SimpleNamingConventionFixture.cs" />
+    <Compile Include="Convention\Simple\SampleApplication.cs" />
+    <Compile Include="Convention\Simple\NamingConventionFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -169,16 +171,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Convention\Data\bindings.with.simple.naming.convention.xml" />
+    <EmbeddedResource Include="Convention\Detailed\Data\bindings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Convention\Data\bindings.with.strong.naming.convention.and.area.xml" />
-    <EmbeddedResource Include="Convention\Data\bindings.with.strong.naming.convention.xml" />
+    <EmbeddedResource Include="Convention\Simple\Data\bindings.with.area.xml" />
+    <EmbeddedResource Include="Convention\Simple\Data\bindings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Convention\Data\bindings.with.simple.naming.convention.and.area.xml">
+    <EmbeddedResource Include="Convention\Detailed\Data\bindings.with.area.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Convention\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

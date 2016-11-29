@@ -18,37 +18,37 @@
 
 using System;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
+namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 {
-	public class SimpleNamingConvention : NamingConventionBase<SimpleNamingConvention, string, string>, INamingConvention<SimpleNamingConvention>
+	public class NamingConvention : NamingConventionBase<NamingConvention, string, string>, INamingConvention<NamingConvention>
 	{
 		#region Operators
 
-		public static implicit operator string(SimpleNamingConvention convention)
+		public static implicit operator string(NamingConvention convention)
 		{
 			throw new NotSupportedException("In order to support Be.Stateless.BizTalk.Dsl.Binding.Subscription.FilterTranslator.");
 		}
 
 		#endregion
 
-		#region INamingConvention<SimpleNamingConvention> Members
+		#region INamingConvention<NamingConvention> Members
 
-		string INamingConvention<SimpleNamingConvention>.ComputeApplicationName(IApplicationBinding<SimpleNamingConvention> application)
+		string INamingConvention<NamingConvention>.ComputeApplicationName(IApplicationBinding<NamingConvention> application)
 		{
 			return base.ComputeApplicationName(application);
 		}
 
-		string INamingConvention<SimpleNamingConvention>.ComputeReceivePortName(IReceivePort<SimpleNamingConvention> receivePort)
+		string INamingConvention<NamingConvention>.ComputeReceivePortName(IReceivePort<NamingConvention> receivePort)
 		{
 			return base.ComputeReceivePortName(receivePort);
 		}
 
-		string INamingConvention<SimpleNamingConvention>.ComputeReceiveLocationName(IReceiveLocation<SimpleNamingConvention> receiveLocation)
+		string INamingConvention<NamingConvention>.ComputeReceiveLocationName(IReceiveLocation<NamingConvention> receiveLocation)
 		{
 			return base.ComputeReceiveLocationName(receiveLocation);
 		}
 
-		string INamingConvention<SimpleNamingConvention>.ComputeSendPortName(ISendPort<SimpleNamingConvention> sendPort)
+		string INamingConvention<NamingConvention>.ComputeSendPortName(ISendPort<NamingConvention> sendPort)
 		{
 			return base.ComputeSendPortName(sendPort);
 		}
