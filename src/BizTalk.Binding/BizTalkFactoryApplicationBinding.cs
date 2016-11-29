@@ -26,6 +26,7 @@ using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Constants;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.EnvironmentSettings;
@@ -53,7 +54,7 @@ namespace Be.Stateless.BizTalk
 			Name = ApplicationName.Is("BizTalk.Factory");
 			Description = "Library to speed up the development of BizTalk Server applications.";
 			SendPorts.Add(
-				SendPort(
+				_batchAddPartSendPort = SendPort(
 					sp => {
 						sp.Name = SendPortName.Towards("Batch").About("AddPart").FormattedAs.Xml;
 						sp.State = ServiceState.Started;
@@ -259,7 +260,7 @@ namespace Be.Stateless.BizTalk
 
 		protected override void ApplyEnvironmentOverrides(string environment)
 		{
-			if (environment.IsOneOf("DEV", "BLD"))
+			if (environment.IsDevelopment() || environment.IsBuild())
 			{
 				SendPorts.Add(
 					SendPort(
@@ -418,11 +419,16 @@ namespace Be.Stateless.BizTalk
 
 		#endregion
 
+		public ISendPort<NamingConvention> BatchAddPartSendPort
+		{
+			get { return _batchAddPartSendPort; }
+		}
+
 		private TimeSpan BatchReleasePollingInterval
 		{
 			get
 			{
-				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf("DEV", "BLD")
+				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD)
 					? TimeSpan.FromSeconds(5)
 					: TimeSpan.FromMinutes(15);
 			}
@@ -432,13 +438,14 @@ namespace Be.Stateless.BizTalk
 		{
 			get
 			{
-				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf("DEV", "BLD")
+				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD)
 					? TimeSpan.FromSeconds(5)
 					: TimeSpan.FromMinutes(5);
 			}
 		}
 
 		protected readonly IReceivePort<NamingConvention> _batchReceivePort;
+		private readonly ISendPort<NamingConvention> _batchAddPartSendPort;
 		protected ISendPort<NamingConvention> _batchSendPort;
 	}
 }

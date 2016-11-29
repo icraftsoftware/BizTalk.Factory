@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Constants;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
@@ -99,9 +100,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			get
 			{
 				return new EnvironmentSensitiveNetMsmqRetryPolicy(
-					environment => environment.IsOneOf("DEV", "BLD")
+					environment => environment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD)
 						? _realTime
-						: environment == "ACC"
+						: environment.IsAcceptance()
 							? _shortRunning
 							: _longRunning);
 			}
@@ -117,7 +118,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			get
 			{
 				return new EnvironmentSensitiveNetMsmqRetryPolicy(
-					environment => environment.IsOneOf("DEV", "BLD", "ACC")
+					environment => environment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD, TargetEnvironment.ACCEPTANCE)
 						? _realTime
 						: _shortRunning);
 			}
