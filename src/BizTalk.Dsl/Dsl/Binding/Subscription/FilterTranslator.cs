@@ -90,8 +90,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				case ExpressionType.AndAlso:
 					return new[] {
 						BuildFilterGroup(TranslateFilterStatement(expression))
-						//,
-						//TranslateFilterStatement(expression.Right))
 					};
 				default:
 					return new[] {
