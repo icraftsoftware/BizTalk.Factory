@@ -1,0 +1,1 @@
+..\..\src\.nuget\NuGet.exe pack '.\BizTalk Server 2013R2 Lib.nuspec' -version 1.0.0 -NonInteractive -NoPackageAnalysis -NoDefaultExcludes

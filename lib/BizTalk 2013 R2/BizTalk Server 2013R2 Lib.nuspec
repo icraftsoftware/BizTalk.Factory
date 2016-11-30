@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>BizTalk.Server.2013R2.Libraries</id>
+    <version>1.0.0</version>
+    <title>BizTalk Server 2013R2 Libraries</title>
+    <authors>ydie</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>BizTalk Server 2013R2 Library Assemblies.</description>
+  </metadata>
+  <files>
+    <file src="*.dll" target="assemblies\net45\" />
+  </files>
+</package>
