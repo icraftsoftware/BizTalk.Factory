@@ -17,6 +17,7 @@
 #endregion
 
 using System.Xml;
+using Be.Stateless.Area.Income;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
@@ -29,7 +30,7 @@ namespace Be.Stateless.Area
 		public SampleApplicationWithArea()
 		{
 			ReceivePorts.Add(Invoice.TaxAgencyReceivePort.Instance);
-			SendPorts.Add(Invoice.BankSendPort.Instance);
+			SendPorts.Add(BankSendPort.Instance);
 			Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local);
 		}
 	}
@@ -41,17 +42,24 @@ namespace Be.Stateless.Area
 			public TaxAgencyReceivePort()
 			{
 				Name = ReceivePortName.Offwards("Job");
-				ReceiveLocations.Add(
-					ReceiveLocation(
-						rl => {
-							rl.Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
-							rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-							rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-							rl.Transport.Host = "Host";
-						}));
+				ReceiveLocations.Add(TaxAgencyReceiveLocation.Instance);
 			}
 		}
 
+		internal class TaxAgencyReceiveLocation : ReceiveLocationSingleton<TaxAgencyReceiveLocation>
+		{
+			public TaxAgencyReceiveLocation()
+			{
+				Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
+				ReceivePipeline = new ReceivePipeline<BatchReceive>();
+				Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
+				Transport.Host = "Host";
+			}
+		}
+	}
+
+	namespace Income
+	{
 		internal class BankSendPort : SendPortSingleton<BankSendPort>
 		{
 			public BankSendPort()
@@ -59,6 +67,17 @@ namespace Be.Stateless.Area
 				Name = SendPortName.Towards("Job").About("Notification").FormattedAs.Xml;
 				SendPipeline = new SendPipeline<PassThruTransmit>();
 				Transport.Adapter = new FileAdapter.Outbound(a => { a.DestinationFolder = @"c:\files\drops"; });
+				Transport.Host = "Host";
+			}
+		}
+
+		internal class BankReceiveLocation : ReceiveLocationSingleton<BankReceiveLocation>
+		{
+			public BankReceiveLocation()
+			{
+				Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
+				ReceivePipeline = new ReceivePipeline<BatchReceive>();
+				Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
 				Transport.Host = "Host";
 			}
 		}
@@ -122,14 +141,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		public StandaloneReceivePort()
 		{
 			Name = ReceivePortName.Offwards("Job");
-			ReceiveLocations.Add(
-				ReceiveLocation(
-					rl => {
-						rl.Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
-						rl.ReceivePipeline = new ReceivePipeline<BatchReceive>();
-						rl.Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
-						rl.Transport.Host = "Host";
-					}));
+			ReceiveLocations.Add(StandaloneReceiveLocation.Instance);
+		}
+	}
+
+	internal class StandaloneReceiveLocation : ReceiveLocationSingleton<StandaloneReceiveLocation>
+	{
+		public StandaloneReceiveLocation()
+		{
+			Name = ReceiveLocationName.About("AddPart").FormattedAs.Xml;
+			ReceivePipeline = new ReceivePipeline<BatchReceive>();
+			Transport.Adapter = new FileAdapter.Inbound(a => { a.ReceiveFolder = @"c:\files\drops"; });
+			Transport.Host = "Host";
 		}
 	}
 

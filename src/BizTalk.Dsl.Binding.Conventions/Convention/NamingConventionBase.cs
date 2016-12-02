@@ -53,8 +53,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		#endregion
 
-		protected string Area { get; set; }
-
 		protected string ComputeApplicationName(IApplicationBinding<TNamingConvention> application)
 		{
 			return ApplicationName.IsNullOrEmpty() ? application.GetType().Name : ApplicationName;
@@ -62,32 +60,44 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		protected string ComputeReceivePortName(IReceivePort<TNamingConvention> receivePort)
 		{
-			if (Area == null) Area = ComputeArea(receivePort.GetType());
 			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
 
+			var area = ComputeArea(receivePort.GetType());
 			return string.Format(
 				"{0}{1}.RP{2}.{3}",
 				((ISupportNamingConvention) receivePort.ApplicationBinding).Name,
-				Area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", Area),
+				area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", area),
 				receivePort.IsTwoWay ? "2" : "1",
 				Party);
 		}
 
 		protected string ComputeReceiveLocationName(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
-			if (Area == null) Area = receiveLocation.ReceivePort.Name.Area;
-			if (Area == null) Area = ComputeArea(receiveLocation.GetType());
-			if (Area != receiveLocation.ReceivePort.Name.Area) throw new NamingConventionException("ReceiveLocation's Area does not match its ReceivePort's one.");
 			if (Equals(Party, default(TParty))) Party = receiveLocation.ReceivePort.Name.Party;
 			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
-			if (!Equals(Party, receiveLocation.ReceivePort.Name.Party)) throw new NamingConventionException("ReceiveLocation's Party does not match its ReceivePort's one.");
+			if (!Equals(Party, receiveLocation.ReceivePort.Name.Party))
+				throw new NamingConventionException(
+					string.Format(
+						"ReceiveLocation's Party '{0}' does not match its ReceivePort's one '{1}'.",
+						Party,
+						receiveLocation.ReceivePort.Name.Party));
 			if (Equals(MessageName, default(TMessageName))) throw new NamingConventionException("MessageName is required.");
-			if (MessageFormat == null) throw new NamingConventionException("MessageFormat is required.");
+			if (MessageFormat == null) throw new NamingConventionException("A non null MessageFormat is required.");
+
+			var area = ComputeArea(receiveLocation.GetType());
+			var receivePortArea = ComputeArea(receiveLocation.ReceivePort.GetType());
+			if (area.IsNullOrEmpty() && !receivePortArea.IsNullOrEmpty()) area = receivePortArea;
+			if (receivePortArea != area)
+				throw new NamingConventionException(
+					string.Format(
+						"ReceiveLocation's Area '{0}' does not match its ReceivePort's one '{1}'.",
+						area,
+						receivePortArea));
 
 			return string.Format(
 				"{0}{1}.RL{2}.{3}.{4}.{5}{6}",
 				((ISupportNamingConvention) receiveLocation.ReceivePort.ApplicationBinding).Name,
-				Area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", Area),
+				area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", area),
 				receiveLocation.ReceivePort.IsTwoWay ? "2" : "1",
 				Party,
 				MessageName,
@@ -97,15 +107,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		protected string ComputeSendPortName(ISendPort<TNamingConvention> sendPort)
 		{
-			if (Area == null) Area = ComputeArea(sendPort.GetType());
 			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
-			if (MessageName.Equals(default(TMessageName))) throw new NamingConventionException("MessageName is required.");
-			if (MessageFormat == null) throw new NamingConventionException("MessageFormat is required.");
+			if (Equals(MessageName, default(TMessageName))) throw new NamingConventionException("MessageName is required.");
+			if (MessageFormat == null) throw new NamingConventionException("A non null MessageFormat is required.");
 
+			var area = ComputeArea(sendPort.GetType());
 			return string.Format(
 				"{0}{1}.SP{2}.{3}.{4}.{5}{6}",
 				((ISupportNamingConvention) sendPort.ApplicationBinding).Name,
-				Area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", Area),
+				area.IsNullOrEmpty() ? string.Empty : string.Format(".{0}", area),
 				sendPort.IsTwoWay ? "2" : "1",
 				Party,
 				MessageName,
@@ -119,7 +129,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			if (adapter.GetType().IsSubclassOfOpenGenericType(typeof(WcfCustomAdapterBase<,>)))
 			{
 				const string bindingSuffix = "Binding";
-				// to be able able to access Binding property which is declared by WcfCustomAdapterBase<,>
+				// cast to dynamic in order to access Binding property which is declared by WcfCustomAdapterBase<,>
 				dynamic dynamicAdapter = adapter;
 				var bindingName = dynamicAdapter.Binding.Name;
 				if (bindingName.EndsWith(bindingSuffix)) bindingName = bindingName.Substring(0, bindingName.Length - bindingSuffix.Length);
@@ -133,7 +143,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		{
 			if (type.IsGenericType) type = type.GetGenericTypeDefinition();
 			var tokens = type.FullName.Split('.');
-			return tokens.Length == 5 ? tokens[3] : string.Empty;
+			return tokens.Length == 5 ? tokens[3] : null;
 		}
 	}
 }
