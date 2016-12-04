@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,11 +31,10 @@ using Microsoft.XLANGs.Core;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	// TODO ISupportEnvironmentSensitivity should be a ModuleRef level and not OrchestrationBindingBase one
 	public abstract class OrchestrationBindingBase<T>
 		: IOrchestrationBinding,
 			IProvideSourceFileInformation,
-			ISupportEnvironmentSensitivity,
+			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
 			IVisitable<IApplicationBindingVisitor>
@@ -127,16 +126,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		#region ISupportEnvironmentSensitivity Members
-
-		bool ISupportEnvironmentDeploymentPredicate.IsDeployableForEnvironment(string environment)
-		{
-			return environment.IsNullOrEmpty() || IsDeployableForEnvironment(environment);
-		}
+		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
-			if (!environment.IsNullOrEmpty() && ((ISupportEnvironmentDeploymentPredicate) this).IsDeployableForEnvironment(environment))
+			if (!environment.IsNullOrEmpty())
 			{
 				ApplyEnvironmentOverrides(environment);
 			}
@@ -224,11 +218,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					// TODO ensure we get private types as well
 					.Where(p => p.FindAttribute(typeof(DirectBindingAttribute)) == null);
 			}
-		}
-
-		protected virtual bool IsDeployableForEnvironment(string environment)
-		{
-			return true;
 		}
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }

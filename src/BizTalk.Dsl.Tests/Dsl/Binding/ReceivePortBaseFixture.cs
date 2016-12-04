@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,26 +79,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			((ISupportEnvironmentOverride) receivePortMock.Object).ApplyEnvironmentOverrides(string.Empty);
 
 			receivePortMock.Protected().Verify("ApplyEnvironmentOverrides", Times.Never(), ItExpr.IsAny<string>());
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsCheckedForGivenEnvironment()
-		{
-			var receivePortMock = new Mock<ReceivePortBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) receivePortMock.Object).IsDeployableForEnvironment("ACC");
-
-			receivePortMock.Protected().Verify("IsDeployableForEnvironment", Times.Once(), ItExpr.Is<string>(v => v == "ACC"));
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsNotCheckedWhenNoGivenEnvironment()
-		{
-			var receivePortMock = new Mock<ReceivePortBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) receivePortMock.Object).IsDeployableForEnvironment(string.Empty);
-
-			receivePortMock.Protected().Verify("IsDeployableForEnvironment", Times.Never(), ItExpr.IsAny<string>());
 		}
 
 		[Test]

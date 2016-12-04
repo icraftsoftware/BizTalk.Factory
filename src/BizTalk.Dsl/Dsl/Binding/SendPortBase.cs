@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	// see also SendPort, http://msdn.microsoft.com/en-us/library/aa560374.aspx
 	public abstract class SendPortBase<TNamingConvention>
 		: ISendPort<TNamingConvention>,
-			ISupportEnvironmentSensitivity,
+			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
 			IProvideSourceFileInformation,
@@ -105,11 +105,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		#region ISupportEnvironmentSensitivity Members
+		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
-			if (!environment.IsNullOrEmpty() && ((ISupportEnvironmentDeploymentPredicate) this).IsDeployableForEnvironment(environment))
+			if (!environment.IsNullOrEmpty())
 			{
 				ApplyEnvironmentOverrides(environment);
 				// ReSharper disable once SuspiciousTypeConversion.Global
@@ -119,11 +119,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				((ISupportEnvironmentOverride) Transport).ApplyEnvironmentOverrides(environment);
 				((ISupportEnvironmentOverride) _backupTransport).IfNotNull(bt => bt.ApplyEnvironmentOverrides(environment));
 			}
-		}
-
-		bool ISupportEnvironmentDeploymentPredicate.IsDeployableForEnvironment(string environment)
-		{
-			return environment.IsNullOrEmpty() || IsDeployableForEnvironment(environment);
 		}
 
 		#endregion
@@ -159,11 +154,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
-
-		protected virtual bool IsDeployableForEnvironment(string environment)
-		{
-			return true;
-		}
 
 		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 		private SendPortTransport _backupTransport;

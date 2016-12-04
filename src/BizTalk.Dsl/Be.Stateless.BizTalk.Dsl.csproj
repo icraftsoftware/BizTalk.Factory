@@ -279,9 +279,7 @@
     <Compile Include="Dsl\Binding\IOrchestrationBinding.cs" />
     <Compile Include="Dsl\Binding\IOrchestrationBindingCollection.cs" />
     <Compile Include="Dsl\Binding\IOrchestrationPortBinding.cs" />
-    <Compile Include="Dsl\Binding\ISupportEnvironmentDeploymentPredicate.cs" />
     <Compile Include="Dsl\Binding\ISupportEnvironmentOverride.cs" />
-    <Compile Include="Dsl\Binding\ISupportEnvironmentSensitivity.cs" />
     <Compile Include="Dsl\Binding\Interop\PropertyBag.cs" />
     <Compile Include="Dsl\Binding\Interop\TrackingPropertyBag.cs" />
     <Compile Include="Dsl\Binding\IObjectBinding.cs" />

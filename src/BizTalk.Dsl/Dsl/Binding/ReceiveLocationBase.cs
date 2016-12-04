@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public abstract class ReceiveLocationBase<TNamingConvention>
 		: IReceiveLocation<TNamingConvention>,
-			ISupportEnvironmentSensitivity,
+			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
 			IProvideSourceFileInformation,
@@ -87,22 +87,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		#region ISupportEnvironmentSensitivity Members
+		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
-			if (!environment.IsNullOrEmpty() && ((ISupportEnvironmentDeploymentPredicate) this).IsDeployableForEnvironment(environment))
+			if (!environment.IsNullOrEmpty())
 			{
 				ApplyEnvironmentOverrides(environment);
 				((ISupportEnvironmentOverride) ReceivePipeline).ApplyEnvironmentOverrides(environment);
 				((ISupportEnvironmentOverride) SendPipeline).IfNotNull(sp => sp.ApplyEnvironmentOverrides(environment));
 				((ISupportEnvironmentOverride) Transport).ApplyEnvironmentOverrides(environment);
 			}
-		}
-
-		bool ISupportEnvironmentDeploymentPredicate.IsDeployableForEnvironment(string environment)
-		{
-			return environment.IsNullOrEmpty() || IsDeployableForEnvironment(environment);
 		}
 
 		#endregion
@@ -137,11 +132,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
-
-		protected virtual bool IsDeployableForEnvironment(string environment)
-		{
-			return true;
-		}
 
 		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 		private readonly ReceiveLocationTransport _transport;

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -152,26 +152,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// indirectly verifies that SendPortBase forwards ApplyEnvironmentOverrides() call to Transport, which forwards it to its adapter
 			environmentSensitiveAdapterMock.Verify(m => m.ApplyEnvironmentOverrides("ACC"), Times.Once);
 			environmentSensitiveBackupAdapterMock.Verify(m => m.ApplyEnvironmentOverrides("ACC"), Times.Once);
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsCheckedForGivenEnvironment()
-		{
-			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) sendPortMock.Object).IsDeployableForEnvironment("ACC");
-
-			sendPortMock.Protected().Verify("IsDeployableForEnvironment", Times.Once(), ItExpr.Is<string>(v => v == "ACC"));
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsNotCheckedWhenNoGivenEnvironment()
-		{
-			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) sendPortMock.Object).IsDeployableForEnvironment(string.Empty);
-
-			sendPortMock.Protected().Verify("IsDeployableForEnvironment", Times.Never(), ItExpr.IsAny<string>());
 		}
 
 		[Test]

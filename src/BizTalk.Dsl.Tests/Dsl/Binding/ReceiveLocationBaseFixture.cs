@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -123,26 +123,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			// indirectly verifies that ReceiveLocationBase forwards ApplyEnvironmentOverrides() call to Transport, which forwards it to its adapter
 			environmentSensitiveAdapterMock.Verify(m => m.ApplyEnvironmentOverrides("ACC"), Times.Once);
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsCheckedForGivenEnvironment()
-		{
-			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) receiveLocationMock.Object).IsDeployableForEnvironment("ACC");
-
-			receiveLocationMock.Protected().Verify("IsDeployableForEnvironment", Times.Once(), ItExpr.Is<string>(v => v == "ACC"));
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsNotCheckedWhenNoGivenEnvironment()
-		{
-			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) receiveLocationMock.Object).IsDeployableForEnvironment(string.Empty);
-
-			receiveLocationMock.Protected().Verify("IsDeployableForEnvironment", Times.Never(), ItExpr.IsAny<string>());
 		}
 
 		[Test]

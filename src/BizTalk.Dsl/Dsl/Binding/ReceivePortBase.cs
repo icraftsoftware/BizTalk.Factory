@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public abstract class ReceivePortBase<TNamingConvention>
 		: IReceivePort<TNamingConvention>,
-			ISupportEnvironmentSensitivity,
+			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
 			IProvideSourceFileInformation,
@@ -85,19 +85,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		#region ISupportEnvironmentSensitivity Members
+		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
-			if (!environment.IsNullOrEmpty() && ((ISupportEnvironmentDeploymentPredicate) this).IsDeployableForEnvironment(environment))
+			if (!environment.IsNullOrEmpty())
 			{
 				ApplyEnvironmentOverrides(environment);
 			}
-		}
-
-		bool ISupportEnvironmentDeploymentPredicate.IsDeployableForEnvironment(string environment)
-		{
-			return environment.IsNullOrEmpty() || IsDeployableForEnvironment(environment);
 		}
 
 		#endregion
@@ -133,11 +128,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
-
-		protected virtual bool IsDeployableForEnvironment(string environment)
-		{
-			return true;
-		}
 
 		private bool ComputeIsTwoWay()
 		{

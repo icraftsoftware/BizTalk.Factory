@@ -40,44 +40,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
-			// TODO ?? should not support this at orchestration level but at ModuleRef level or ensure that if one orchestration is not deployable then none is or only support ApplyEnvironmentOverrides ??
-			if (((ISupportEnvironmentDeploymentPredicate) orchestrationBinding).IsDeployableForEnvironment(Environment))
-			{
-				((ISupportEnvironmentOverride) orchestrationBinding).ApplyEnvironmentOverrides(Environment);
-				((ISupportValidation) orchestrationBinding).Validate();
-				VisitOrchestrationCore(orchestrationBinding);
-			}
+			((ISupportEnvironmentOverride) orchestrationBinding).ApplyEnvironmentOverrides(Environment);
+			((ISupportValidation) orchestrationBinding).Validate();
+			VisitOrchestrationCore(orchestrationBinding);
 		}
 
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) where TNamingConvention : class
 		{
-			// TODO ?? remove this test and check if there are any Receive Location to deploy for the environment ??
-			if (((ISupportEnvironmentDeploymentPredicate) receivePort).IsDeployableForEnvironment(Environment))
-			{
-				((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(Environment);
-				((ISupportValidation) receivePort).Validate();
-				VisitReceivePortCore(receivePort);
-			}
+			((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(Environment);
+			((ISupportValidation) receivePort).Validate();
+			VisitReceivePortCore(receivePort);
 		}
 
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation) where TNamingConvention : class
 		{
-			if (((ISupportEnvironmentDeploymentPredicate) receiveLocation).IsDeployableForEnvironment(Environment))
-			{
-				((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(Environment);
-				((ISupportValidation) receiveLocation).Validate();
-				VisitReceiveLocationCore(receiveLocation);
-			}
+			((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(Environment);
+			((ISupportValidation) receiveLocation).Validate();
+			VisitReceiveLocationCore(receiveLocation);
 		}
 
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort) where TNamingConvention : class
 		{
-			if (((ISupportEnvironmentDeploymentPredicate) sendPort).IsDeployableForEnvironment(Environment))
-			{
-				((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(Environment);
-				((ISupportValidation) sendPort).Validate();
-				VisitSendPortCore(sendPort);
-			}
+			((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(Environment);
+			((ISupportValidation) sendPort).Validate();
+			VisitSendPortCore(sendPort);
 		}
 
 		#endregion

@@ -106,26 +106,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		[Test]
-		public void IsDeployableForEnvironmentIsCheckedForGivenEnvironment()
-		{
-			var orchestrationBindingMock = new Mock<OrchestrationBindingBase<Process>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) orchestrationBindingMock.Object).IsDeployableForEnvironment("ACC");
-
-			orchestrationBindingMock.Protected().Verify("IsDeployableForEnvironment", Times.Once(), ItExpr.Is<string>(v => v == "ACC"));
-		}
-
-		[Test]
-		public void IsDeployableForEnvironmentIsNotCheckedWhenNoGivenEnvironment()
-		{
-			var orchestrationBindingMock = new Mock<OrchestrationBindingBase<Process>> { CallBase = true };
-
-			((ISupportEnvironmentDeploymentPredicate) orchestrationBindingMock.Object).IsDeployableForEnvironment(string.Empty);
-
-			orchestrationBindingMock.Protected().Verify("IsDeployableForEnvironment", Times.Never(), ItExpr.IsAny<string>());
-		}
-
-		[Test]
 		public void LogicalOneWayReceivePortMustBeBoundToOneWayReceivePort()
 		{
 			var stackFrame = new StackFrame(0, true);

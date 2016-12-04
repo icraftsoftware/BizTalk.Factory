@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
 			visitorMock.Object.VisitApplicationBinding(applicationBindingMock.Object);
 
-			environmentSensitiveApplicationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+			environmentSensitiveApplicationBindingMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitApplicationCore(It.IsAny<IApplicationBinding<string>>()), Times.Once);
 		}
 
@@ -43,30 +43,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var orchestrationBindingMock = new Mock<IOrchestrationBinding>();
 			orchestrationBindingMock.As<ISupportValidation>();
-			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveOrchestrationBindingMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentOverride>();
 
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
 			visitorMock.Object.VisitOrchestration(orchestrationBindingMock.Object);
 
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitOrchestrationCore(It.IsAny<IOrchestrationBinding>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitOrchestrationDoesNotApplyEnvironmentOverrides()
-		{
-			var orchestrationBindingMock = new Mock<IOrchestrationBinding>();
-			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveOrchestrationBindingMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(false);
-
-			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
-			visitorMock.Object.VisitOrchestration(orchestrationBindingMock.Object);
-
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Never);
-			visitorMock.Verify(m => m.VisitOrchestrationCore(It.IsAny<IOrchestrationBinding>()), Times.Never);
 		}
 
 		[Test]
@@ -74,30 +57,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var receiveLocationMock = new Mock<IReceiveLocation<string>>();
 			receiveLocationMock.As<ISupportValidation>();
-			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveReceiveLocationMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentOverride>();
 
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
 			visitorMock.Object.VisitReceiveLocation(receiveLocationMock.Object);
 
-			environmentSensitiveReceiveLocationMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitReceiveLocationCore(It.IsAny<IReceiveLocation<string>>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitReceiveLocationDoesNotApplyEnvironmentOverrides()
-		{
-			var receiveLocationMock = new Mock<IReceiveLocation<string>>();
-			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveReceiveLocationMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(false);
-
-			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
-			visitorMock.Object.VisitReceiveLocation(receiveLocationMock.Object);
-
-			environmentSensitiveReceiveLocationMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Never);
-			visitorMock.Verify(m => m.VisitReceiveLocationCore(It.IsAny<IReceiveLocation<string>>()), Times.Never);
 		}
 
 		[Test]
@@ -105,30 +71,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var receivePortMock = new Mock<IReceivePort<string>>();
 			receivePortMock.As<ISupportValidation>();
-			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveReceivePortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentOverride>();
 
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
 			visitorMock.Object.VisitReceivePort(receivePortMock.Object);
 
-			environmentSensitiveReceivePortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitReceivePortCore(It.IsAny<IReceivePort<string>>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitReceivePortDoesNotApplyEnvironmentOverrides()
-		{
-			var receivePortMock = new Mock<IReceivePort<string>>();
-			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveReceivePortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(false);
-
-			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
-			visitorMock.Object.VisitReceivePort(receivePortMock.Object);
-
-			environmentSensitiveReceivePortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Never);
-			visitorMock.Verify(m => m.VisitReceivePortCore(It.IsAny<IReceivePort<string>>()), Times.Never);
 		}
 
 		[Test]
@@ -136,30 +85,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var sendPortMock = new Mock<ISendPort<string>>();
 			sendPortMock.As<ISupportValidation>();
-			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveSendPortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(true);
+			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentOverride>();
 
 			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
 			visitorMock.Object.VisitSendPort(sendPortMock.Object);
 
-			environmentSensitiveSendPortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Once);
+			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitSendPortCore(It.IsAny<ISendPort<string>>()), Times.Once);
-		}
-
-		[Test]
-		public void VisitSendPortDoesNotApplyEnvironmentOverrides()
-		{
-			var sendPortMock = new Mock<ISendPort<string>>();
-			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentSensitivity>();
-			environmentSensitiveSendPortMock.Setup(m => m.IsDeployableForEnvironment(It.IsAny<string>())).Returns(false);
-
-			var visitorMock = new Mock<ApplicationBindingVisitorBase>("DEV");
-			visitorMock.Object.VisitSendPort(sendPortMock.Object);
-
-			environmentSensitiveSendPortMock.Verify(m => m.IsDeployableForEnvironment(It.IsAny<string>()), Times.Once);
-			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides(It.IsAny<string>()), Times.Never);
-			visitorMock.Verify(m => m.VisitSendPortCore(It.IsAny<ISendPort<string>>()), Times.Never);
 		}
 	}
 }
