@@ -19,6 +19,7 @@
     <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.pdb" />
     <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.xml" />
     <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" />
+    <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" />
     <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" />
     <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.dll" />
     <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" />
