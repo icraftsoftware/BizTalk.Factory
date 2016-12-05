@@ -141,8 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			_name = name;
 		}
 
-		protected RuleSet(string name, int majorRevision, int minorRevision)
-			: this(name)
+		protected RuleSet(string name, int majorRevision, int minorRevision) : this(name)
 		{
 			VersionInfo.MajorRevision = majorRevision;
 			VersionInfo.MinorRevision = minorRevision;
