@@ -18,7 +18,6 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -29,7 +28,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
-			IProvideSourceFileInformation,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
 	{
@@ -39,8 +37,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			_receivePorts = new ReceivePortCollection<TNamingConvention>(this);
 			_sendPorts = new SendPortCollection<TNamingConvention>(this);
 			_orchestrations = new OrchestrationBindingCollection<TNamingConvention>(this);
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
 			Timestamp = DateTime.Now;
 		}
 
@@ -89,25 +85,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		#region IProvideSourceFileInformation Members
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
-
-		#endregion
-
 		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
@@ -130,7 +107,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Name == null) throw new BindingException("Application's Name is not defined.", this);
+			if (Name == null) throw new BindingException("Application's Name is not defined.");
 		}
 
 		#endregion
@@ -153,6 +130,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		private readonly ReceivePortCollection<TNamingConvention> _receivePorts;
 		private readonly ReferencedApplicationBindingCollection _referencedApplications;
 		private readonly SendPortCollection<TNamingConvention> _sendPorts;
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 	}
 }

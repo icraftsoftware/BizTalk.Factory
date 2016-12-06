@@ -18,7 +18,6 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Extensions;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
@@ -32,14 +31,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
-			IProvideSourceFileInformation,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
 	{
 		protected internal SendPortBase()
 		{
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
 			Priority = Priority.Normal;
 			Transport = new SendPortTransport();
 		}
@@ -50,32 +46,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			((ISupportValidation) this).Validate();
 		}
 
-		#region IProvideSourceFileInformation Members
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		#endregion
-
 		#region ISendPort<TNamingConvention> Members
 
 		public IApplicationBinding<TNamingConvention> ApplicationBinding { get; internal set; }
 
 		public SendPortTransport BackupTransport
 		{
-			get { return _backupTransport ?? (_backupTransport = new SendPortTransport(this)); }
+			get { return _backupTransport ?? (_backupTransport = new SendPortTransport()); }
 		}
 
 		public string Description { get; set; }
@@ -136,8 +113,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Name == null) throw new BindingException("Send Port's Name is not defined.", this);
-			if (SendPipeline == null) throw new BindingException("Send Port's Send Pipeline is not defined.", this);
+			if (Name == null) throw new BindingException("Send Port's Name is not defined.");
+			if (SendPipeline == null) throw new BindingException("Send Port's Send Pipeline is not defined.");
 			Transport.Validate("Send Port's Primary Transport");
 			_backupTransport.IfNotNull(bt => bt.Validate("Send Port's Backup Transport"));
 		}
@@ -155,7 +132,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 		private SendPortTransport _backupTransport;
 	}
 }

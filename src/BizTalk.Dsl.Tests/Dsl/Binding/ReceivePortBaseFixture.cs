@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Moq;
@@ -86,17 +85,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var receivePortMock = new Mock<ReceivePortBase<string>> { CallBase = true };
 
-			var stackFrame = new StackFrame(0, true);
 			receivePortMock.Object.Description = "Force Moq to call ctor.";
 
 			Assert.That(
 				() => ((ISupportValidation) receivePortMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Receive Port's Name is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Receive Port's Name is not defined."));
 		}
 
 		[Test]
@@ -104,17 +97,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var receivePortMock = new Mock<ReceivePortBase<string>> { CallBase = true };
 
-			var stackFrame = new StackFrame(0, true);
 			receivePortMock.Object.Name = "Receive Port Name";
 
 			Assert.That(
 				() => ((ISupportValidation) receivePortMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'Receive Port Name' Receive Port has no Receive Locations.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Receive Port has no Receive Locations."));
 		}
 
 		[Test]
@@ -128,18 +115,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			rl2.As<ISupportValidation>().Setup(l => l.Validate());
 
 			var receivePortMock = new Mock<ReceivePortBase<string>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			receivePortMock.Object.Name = "Receive Port Name";
 			receivePortMock.Object.ReceiveLocations.Add(rl1.Object, rl2.Object);
 
 			Assert.That(
 				() => ((ISupportValidation) receivePortMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'Receive Port Name' Receive Port has a mix of one-way and two-way Receive Locations.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Receive Port has a mix of one-way and two-way Receive Locations."));
 		}
 
 		[Test]

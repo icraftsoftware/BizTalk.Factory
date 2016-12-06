@@ -22,7 +22,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web.Services.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 using Be.Stateless.Reflection;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
@@ -33,7 +32,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public abstract class OrchestrationBindingBase<T>
 		: IOrchestrationBinding,
-			IProvideSourceFileInformation,
 			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
@@ -78,12 +76,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		protected internal OrchestrationBindingBase()
-		{
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
-		}
-
 		#region IOrchestrationBinding Members
 
 		// TODO ?? fetch <om:Property Name='AnalystComments' from <om:Element Type='ServiceDeclaration' ??
@@ -104,25 +96,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		public ServiceState State { get; set; }
-
-		#endregion
-
-		#region IProvideSourceFileInformation Members
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
 
 		#endregion
 
@@ -151,7 +124,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Host.IsNullOrEmpty()) throw new BindingException("Orchestration's Host is not defined.", this);
+			if (Host.IsNullOrEmpty()) throw new BindingException("Orchestration's Host is not defined.");
 
 			// validate that all logical ports are bound
 			var unboundPorts = LogicalPorts
@@ -185,15 +158,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 						string.Format(
 							"Orchestration's two-way logical port '{0}' is bound to one-way port '{1}'.",
 							logicalPort.Name,
-							((ISupportNamingConvention) actualPort).Name),
-						this);
+							((ISupportNamingConvention) actualPort).Name));
 				if (!isLogicalPortTwoWay && isActualPortTwoWay)
 					throw new BindingException(
 						string.Format(
 							"Orchestration's one-way logical port '{0}' is bound to two-way port '{1}'.",
 							logicalPort.Name,
-							((ISupportNamingConvention) actualPort).Name),
-						this);
+							((ISupportNamingConvention) actualPort).Name));
 			}
 		}
 
@@ -221,7 +192,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
-
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 	}
 }

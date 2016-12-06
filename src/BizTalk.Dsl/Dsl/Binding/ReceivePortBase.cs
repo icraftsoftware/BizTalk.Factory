@@ -19,7 +19,6 @@
 using System;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -29,15 +28,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
-			IProvideSourceFileInformation,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
 	{
 		protected internal ReceivePortBase()
 		{
 			_receiveLocations = new ReceiveLocationCollection<TNamingConvention>(this);
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
 		}
 
 		protected internal ReceivePortBase(Action<IReceivePort<TNamingConvention>> receivePortConfigurator) : this()
@@ -45,25 +41,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			receivePortConfigurator(this);
 			((ISupportValidation) this).Validate();
 		}
-
-		#region IProvideSourceFileInformation Members
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
-
-		#endregion
 
 		#region IReceivePort<TNamingConvention> Members
 
@@ -110,8 +87,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Name == null) throw new BindingException("Receive Port's Name is not defined.", this);
-			if (!_receiveLocations.Any()) throw new BindingException("Receive Port has no Receive Locations.", this);
+			if (Name == null) throw new BindingException("Receive Port's Name is not defined.");
+			if (!_receiveLocations.Any()) throw new BindingException("Receive Port has no Receive Locations.");
 			ComputeIsTwoWay();
 		}
 
@@ -131,14 +108,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private bool ComputeIsTwoWay()
 		{
-			if (!_receiveLocations.Any()) throw new BindingException("Receive Port has no Receive Location.", this);
+			if (!_receiveLocations.Any()) throw new BindingException("Receive Port has no Receive Location.");
 			var isOneWay = _receiveLocations.All(rl => rl.SendPipeline == null);
 			var isTwoWay = _receiveLocations.All(rl => rl.SendPipeline != null);
-			if (!isOneWay && !isTwoWay) throw new BindingException("Receive Port has a mix of one-way and two-way Receive Locations.", this);
+			if (!isOneWay && !isTwoWay) throw new BindingException("Receive Port has a mix of one-way and two-way Receive Locations.");
 			return isTwoWay;
 		}
 
 		private readonly ReceiveLocationCollection<TNamingConvention> _receiveLocations;
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 	}
 }

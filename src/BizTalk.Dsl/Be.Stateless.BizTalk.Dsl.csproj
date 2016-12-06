@@ -265,7 +265,6 @@
     <Compile Include="Dsl\Binding\Convention\ISupportNamingConvention.cs" />
     <Compile Include="Dsl\Binding\Convention\NamingConventionException.cs" />
     <Compile Include="Dsl\Binding\Convention\NamingConventionThunk.cs" />
-    <Compile Include="Dsl\Binding\Diagnostics\IProvideSourceFileInformation.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensions.cs" />
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
@@ -309,7 +308,6 @@
     <Compile Include="Dsl\Binding\RetryPolicy.cs" />
     <Compile Include="Dsl\Binding\Schedule.cs" />
     <Compile Include="Dsl\Binding\SendPipeline.cs" />
-    <Compile Include="Dsl\Binding\Diagnostics\SourceFileInformationProvider.cs" />
     <Compile Include="Dsl\Binding\SendPort.cs" />
     <Compile Include="Dsl\Binding\SendPortBase.cs" />
     <Compile Include="Dsl\Binding\SendPortCollection.cs" />

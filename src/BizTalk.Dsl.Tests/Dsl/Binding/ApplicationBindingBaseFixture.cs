@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Install;
 using Moq;
@@ -107,17 +106,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void NameIsMandatory()
 		{
 			var applicationBindingMock = new Mock<ApplicationBindingBase<string>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			applicationBindingMock.Object.Description = "Force Moq to call ctor.";
 
 			Assert.That(
 				() => ((ISupportValidation) applicationBindingMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Application's Name is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Application's Name is not defined."));
 		}
 
 		[Test]

@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,34 +18,13 @@
 
 using System;
 using System.Runtime.Serialization;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
-using Be.Stateless.BizTalk.Dsl.Binding.Extensions;
-using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	[Serializable]
 	public class BindingException : Exception
 	{
-		private static string FormatMessage(string message, IProvideSourceFileInformation sourceFileInformation)
-		{
-			var bindingArtifactDisplayName = sourceFileInformation.GetBindingArtifactDisplayName();
-			return string.Format(
-				"{0}{1}\r\n{2}, line {3}, column {4}.",
-				bindingArtifactDisplayName.IsNullOrEmpty() ? string.Empty : "'" + bindingArtifactDisplayName + "' ",
-				message,
-				sourceFileInformation.Name,
-				sourceFileInformation.Line,
-				sourceFileInformation.Column);
-		}
-
 		public BindingException(string message) : base(message) { }
-
-		public BindingException(string message, IProvideSourceFileInformation sourceFileInformation)
-			: base(FormatMessage(message, sourceFileInformation)) { }
-
-		public BindingException(string message, IProvideSourceFileInformation sourceFileInformation, Exception innerException)
-			: base(FormatMessage(message, sourceFileInformation), innerException) { }
 
 		public BindingException(string message, Exception innerException) : base(message, innerException) { }
 

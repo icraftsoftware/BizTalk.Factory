@@ -18,14 +18,13 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public abstract class TransportBase<T> : ISupportEnvironmentOverride, ISupportValidation, IProvideSourceFileInformation
+	public abstract class TransportBase<T> : ISupportEnvironmentOverride, ISupportValidation
 		where T : class, IAdapter, ISupportEnvironmentOverride, ISupportValidation
 	{
 		#region Nested Type: UnknownAdapter
@@ -74,37 +73,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		protected TransportBase()
-		{
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
-		}
-
-		protected TransportBase(IProvideSourceFileInformation sourceFileInformationProvider)
-		{
-			_sourceFileInformationProvider = new SourceFileInformationProvider(sourceFileInformationProvider);
-			_sourceFileInformationProvider.Capture();
-		}
-
-		#region IProvideSourceFileInformation Members
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
-
-		#endregion
-
 		#region ISupportEnvironmentOverride Members
 
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
@@ -120,8 +88,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Host.IsNullOrEmpty()) throw new BindingException("Transport's Host is not defined.", this);
-			if (Adapter == null || Adapter is UnknownAdapter) throw new BindingException("Transport's Adapter is not defined.", this);
+			if (Host.IsNullOrEmpty()) throw new BindingException("Transport's Host is not defined.");
+			if (Adapter == null || Adapter is UnknownAdapter) throw new BindingException("Transport's Adapter is not defined.");
 			Adapter.Validate();
 		}
 
@@ -132,7 +100,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public string Host { get; set; }
 
 		protected abstract void ApplyEnvironmentOverrides(string environment);
-
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 	}
 }

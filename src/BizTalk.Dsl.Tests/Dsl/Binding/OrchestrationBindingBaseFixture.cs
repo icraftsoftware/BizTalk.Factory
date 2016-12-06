@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.CodeDom;
 using Be.Stateless.BizTalk.Orchestrations.Dummy;
@@ -25,7 +24,6 @@ using Be.Stateless.Reflection;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Process = Be.Stateless.BizTalk.Orchestrations.Dummy.Process;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
@@ -91,24 +89,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void HostIsMandatory()
 		{
 			var orchestrationBindingMock = new Mock<OrchestrationBindingBase<Process>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			orchestrationBindingMock.Object.Description = "Force Moq to call ctor.";
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBindingMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'{0}' Orchestration's Host is not defined.\r\n{1}, line {2}, column {3}.",
-						typeof(Process).FullName,
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Orchestration's Host is not defined."));
 		}
 
 		[Test]
 		public void LogicalOneWayReceivePortMustBeBoundToOneWayReceivePort()
 		{
-			var stackFrame = new StackFrame(0, true);
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Host = "Host",
 				ReceivePort = new TestApplication.TwoWayReceivePort(),
@@ -119,20 +109,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
-				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(
-						string.Format(
-							"'{0}' Orchestration's one-way logical port 'ReceivePort' is bound to two-way port 'TwoWayReceivePort'.\r\n{1}, line {2}, column {3}.",
-							typeof(Process).FullName,
-							stackFrame.GetFileName(),
-							stackFrame.GetFileLineNumber() + 1,
-							stackFrame.GetFileColumnNumber())));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Orchestration's one-way logical port 'ReceivePort' is bound to two-way port 'TwoWayReceivePort'."));
 		}
 
 		[Test]
 		public void LogicalOneWaySendPortMustBeBoundToOneWaySendPort()
 		{
-			var stackFrame = new StackFrame(0, true);
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Host = "Host",
 				ReceivePort = new TestApplication.OneWayReceivePort(),
@@ -143,14 +125,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
-				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(
-						string.Format(
-							"'{0}' Orchestration's one-way logical port 'SendPort' is bound to two-way port 'TwoWaySendPort'.\r\n{1}, line {2}, column {3}.",
-							typeof(Process).FullName,
-							stackFrame.GetFileName(),
-							stackFrame.GetFileLineNumber() + 1,
-							stackFrame.GetFileColumnNumber())));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Orchestration's one-way logical port 'SendPort' is bound to two-way port 'TwoWaySendPort'."));
 		}
 
 		[Test]
@@ -175,7 +150,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalRequestResponsePortMustBeBoundToTwoWayReceivePort()
 		{
-			var stackFrame = new StackFrame(0, true);
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Host = "Host",
 				ReceivePort = new TestApplication.OneWayReceivePort(),
@@ -186,20 +160,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
-				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(
-						string.Format(
-							"'{0}' Orchestration's two-way logical port 'RequestResponsePort' is bound to one-way port 'OneWayReceivePort'.\r\n{1}, line {2}, column {3}.",
-							typeof(Process).FullName,
-							stackFrame.GetFileName(),
-							stackFrame.GetFileLineNumber() + 1,
-							stackFrame.GetFileColumnNumber())));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Orchestration's two-way logical port 'RequestResponsePort' is bound to one-way port 'OneWayReceivePort'."));
 		}
 
 		[Test]
 		public void LogicalSolicitResponsePortMustBeBoundToTwoWaySendPort()
 		{
-			var stackFrame = new StackFrame(0, true);
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Host = "Host",
 				ReceivePort = new TestApplication.OneWayReceivePort(),
@@ -210,14 +176,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
-				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo(
-						string.Format(
-							"'{0}' Orchestration's two-way logical port 'SolicitResponsePort' is bound to one-way port 'OneWaySendPort'.\r\n{1}, line {2}, column {3}.",
-							typeof(Process).FullName,
-							stackFrame.GetFileName(),
-							stackFrame.GetFileLineNumber() + 1,
-							stackFrame.GetFileColumnNumber())));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Orchestration's two-way logical port 'SolicitResponsePort' is bound to one-way port 'OneWaySendPort'."));
 		}
 	}
 }

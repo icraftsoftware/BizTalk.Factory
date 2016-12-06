@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 #endregion
 
-using System.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Moq;
 using Moq.Protected;
@@ -83,43 +82,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void TransportAdapterIsMandatory()
 		{
 			var transportMock = new Mock<TransportBase<IAdapter>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			transportMock.Object.Host = "Host";
 
 			Assert.That(
 				() => ((ISupportValidation) transportMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'{0}' Transport's Adapter is not defined.\r\n{1}, line {2}, column {3}.",
-						transportMock.Object.GetType().FullName,
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Transport's Adapter is not defined."));
 		}
 
 		[Test]
 		public void TransportHostIsMandatory()
 		{
 			var transportMock = new Mock<TransportBase<IAdapter>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			transportMock.Object.Adapter = new FileAdapter.Outbound(a => { });
 
 			Assert.That(
 				() => ((ISupportValidation) transportMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'{0}' Transport's Host is not defined.\r\n{1}, line {2}, column {3}.",
-						transportMock.Object.GetType().FullName,
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Transport's Host is not defined."));
 		}
 
 		[Test]
 		public void TransportUnknownAdapterIsInvalid()
 		{
 			var transportMock = new Mock<TransportBase<IAdapter>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			transportMock.Object.Host = "Host";
 
 			var adapterMock = new Mock<TransportBase<IAdapter>.UnknownAdapter>();
@@ -127,13 +111,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			Assert.That(
 				() => ((ISupportValidation) transportMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'{0}' Transport's Adapter is not defined.\r\n{1}, line {2}, column {3}.",
-						transportMock.Object.GetType().FullName,
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Transport's Adapter is not defined."));
 		}
 	}
 }

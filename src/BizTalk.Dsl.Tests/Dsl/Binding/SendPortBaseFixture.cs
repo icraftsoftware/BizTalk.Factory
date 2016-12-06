@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
@@ -159,17 +158,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
 
-			var stackFrame = new StackFrame(0, true);
 			sendPortMock.Object.Description = "Force Moq to call ctor.";
 
 			Assert.That(
 				() => ((ISupportValidation) sendPortMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Send Port's Name is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Send Port's Name is not defined."));
 		}
 
 		[Test]
@@ -177,17 +170,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
 
-			var stackFrame = new StackFrame(0, true);
 			sendPortMock.Object.Name = "Send Port Name";
 
 			Assert.That(
 				() => ((ISupportValidation) sendPortMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'Send Port Name' Send Port's Send Pipeline is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Send Port's Send Pipeline is not defined."));
 		}
 
 		[Test]

@@ -17,14 +17,13 @@
 #endregion
 
 using System;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Extensions
 {
 	internal static class SupportValidationExtensions
 	{
-		internal static void Validate(this ISupportValidation validating, string message)
+		internal static void Validate(this ISupportValidation validating, string subject)
 		{
 			try
 			{
@@ -33,10 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Extensions
 			catch (Exception exception)
 			{
 				if (exception.IsFatal()) throw;
-				throw new BindingException(
-					string.Format("{0} is not valid: {1}.", message, exception.Message),
-					(IProvideSourceFileInformation) validating,
-					exception);
+				throw new BindingException(string.Format("{0} is not valid: {1}.", subject, exception.Message), exception);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 #endregion
 
-using System.Diagnostics;
 using Moq;
 using NUnit.Framework;
 
@@ -28,16 +27,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void DefaultUnknownOutboundAdapterFailsValidate()
 		{
-			var stackFrame = new StackFrame(0, true);
 			var spt = new SendPortTransport { Host = "Host" };
 			Assert.That(
 				() => ((ISupportValidation) spt).Validate(),
-				Throws.TypeOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Transport's Adapter is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Transport's Adapter is not defined."));
 		}
 
 		[Test]

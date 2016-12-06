@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Microsoft.BizTalk.DefaultPipelines;
@@ -129,34 +128,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void NameIsMandatory()
 		{
 			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			receiveLocationMock.Object.Description = "Force Moq to call ctor.";
 
 			Assert.That(
 				() => ((ISupportValidation) receiveLocationMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Receive Location's Name is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Receive Location's Name is not defined."));
 		}
 
 		[Test]
 		public void ReceivePipelineIsMandatory()
 		{
 			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-			var stackFrame = new StackFrame(0, true);
 			receiveLocationMock.Object.Name = "Receive Location Name";
 
 			Assert.That(
 				() => ((ISupportValidation) receiveLocationMock.Object).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"'Receive Location Name' Receive Location's Receive Pipeline is not defined.\r\n{0}, line {1}, column {2}.",
-						stackFrame.GetFileName(),
-						stackFrame.GetFileLineNumber() + 1,
-						stackFrame.GetFileColumnNumber())));
+				Throws.InstanceOf<BindingException>().With.Message.EqualTo("Receive Location's Receive Pipeline is not defined."));
 		}
 
 		[Test]

@@ -18,7 +18,6 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Extensions;
 using Be.Stateless.BizTalk.Dsl.Pipeline;
 using Be.Stateless.Extensions;
@@ -30,14 +29,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			ISupportEnvironmentOverride,
 			ISupportNamingConvention,
 			ISupportValidation,
-			IProvideSourceFileInformation,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
 	{
 		protected internal ReceiveLocationBase()
 		{
-			_sourceFileInformationProvider = new SourceFileInformationProvider();
-			_sourceFileInformationProvider.Capture();
 			_transport = new ReceiveLocationTransport();
 		}
 
@@ -46,25 +42,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			receiveLocationConfigurator(this);
 			((ISupportValidation) this).Validate();
 		}
-
-		#region IProvideSourceFileInformation Members
-
-		int IProvideSourceFileInformation.Line
-		{
-			get { return _sourceFileInformationProvider.Line; }
-		}
-
-		int IProvideSourceFileInformation.Column
-		{
-			get { return _sourceFileInformationProvider.Column; }
-		}
-
-		string IProvideSourceFileInformation.Name
-		{
-			get { return _sourceFileInformationProvider.Name; }
-		}
-
-		#endregion
 
 		#region IReceiveLocation<TNamingConvention> Members
 
@@ -115,8 +92,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void ISupportValidation.Validate()
 		{
-			if (Name == null) throw new BindingException("Receive Location's Name is not defined.", this);
-			if (ReceivePipeline == null) throw new BindingException("Receive Location's Receive Pipeline is not defined.", this);
+			if (Name == null) throw new BindingException("Receive Location's Name is not defined.");
+			if (ReceivePipeline == null) throw new BindingException("Receive Location's Receive Pipeline is not defined.");
 			Transport.Validate("Receive Location's Transport");
 		}
 
@@ -133,7 +110,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 
-		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 		private readonly ReceiveLocationTransport _transport;
 	}
 }
