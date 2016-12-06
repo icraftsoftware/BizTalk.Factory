@@ -41,25 +41,31 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </item>
 	/// </list>
 	/// </remarks>
-	public class BizTalkServiceConfiguratorVisitor : ApplicationBindingSettlerVisitor
+	public class BizTalkServiceConfiguratorVisitor : IApplicationBindingVisitor
 	{
 		public static BizTalkServiceConfiguratorVisitor Create(string targetEnvironment)
 		{
 			return new BizTalkServiceConfiguratorVisitor(targetEnvironment);
 		}
 
-		private BizTalkServiceConfiguratorVisitor(string targetEnvironment) : base(targetEnvironment) { }
-
-		#region Base Class Member Overrides
-
-		protected internal override void VisitApplication<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+		private BizTalkServiceConfiguratorVisitor(string targetEnvironment)
 		{
+			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor(targetEnvironment);
+		}
+
+		#region IApplicationBindingVisitor Members
+
+		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+			where TNamingConvention : class
+		{
+			_applicationBindingSettlerVisitor.VisitApplicationBinding(applicationBinding);
 			var name = ((ISupportNamingConvention) applicationBinding).Name;
 			_application = BizTalkServerGroup.Applications[name];
 		}
 
-		protected internal override void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
+		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
+			_applicationBindingSettlerVisitor.VisitOrchestration(orchestrationBinding);
 			var name = orchestrationBinding.Type.FullName;
 			var orchestration = _application.Orchestrations[name];
 			if (_logger.IsDebugEnabled)
@@ -71,22 +77,28 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			orchestration.Status = (OrchestrationStatus) orchestrationBinding.State;
 		}
 
-		protected internal override void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+			where TNamingConvention : class
 		{
+			_applicationBindingSettlerVisitor.VisitReceivePort(receivePort);
+			var name = ((ISupportNamingConvention) receivePort).Name;
+			_receivePort = _application.ReceivePorts[name];
+		}
+
+		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+			where TNamingConvention : class
+		{
+			_applicationBindingSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var name = ((ISupportNamingConvention) receiveLocation).Name;
 			var rl = _receivePort.ReceiveLocations[name];
 			if (_logger.IsDebugEnabled) _logger.DebugFormat(receiveLocation.Enabled ? "Enabling receive location '{0}'" : "Disabling receive location '{0}'", name);
 			rl.Enabled = receiveLocation.Enabled;
 		}
 
-		protected internal override void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+			where TNamingConvention : class
 		{
-			var name = ((ISupportNamingConvention) receivePort).Name;
-			_receivePort = _application.ReceivePorts[name];
-		}
-
-		protected internal override void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
-		{
+			_applicationBindingSettlerVisitor.VisitSendPort(sendPort);
 			var name = ((ISupportNamingConvention) sendPort).Name;
 			var sp = _application.SendPorts[name];
 			if (_logger.IsDebugEnabled)
@@ -106,6 +118,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(BizTalkServiceConfiguratorVisitor));
+		private readonly ApplicationBindingSettlerVisitor _applicationBindingSettlerVisitor;
 		private Application _application;
 		private Explorer.ReceivePort _receivePort;
 	}

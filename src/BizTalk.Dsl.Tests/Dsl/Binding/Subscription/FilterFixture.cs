@@ -20,6 +20,7 @@ using System;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Install;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
@@ -29,6 +30,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 	[TestFixture]
 	public class FilterFixture
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = null;
+		}
+
+		#endregion
+
 		[Test]
 		public void ConjunctionOfDisjunctionsOfFiltersIsNotSupported()
 		{

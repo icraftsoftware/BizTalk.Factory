@@ -18,6 +18,7 @@
 
 using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Install;
 using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.Deployment.Binding;
@@ -29,11 +30,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	[TestFixture]
 	public class BindingInfoBuilderVisitorFixture
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = null;
+		}
+
+		#endregion
+
 		[Test]
 		public void CreateBindingInfo()
 		{
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.BindingInfo;
 
 			Assert.That(binding.BindingParameters.BindingActions, Is.EqualTo(BindingParameters.BindingActionTypes.Bind));
@@ -51,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
 			// initialize BindingInfo
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 
 			var binding = visitor.CreateOrFindModuleRef(new ProcessOrchestrationBinding());
 
@@ -124,7 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
 			// initialize BindingInfoBuilderVisitor.ApplicationName
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.OneWayReceivePort());
 
 			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
@@ -139,7 +156,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
 			// initialize BindingInfoBuilderVisitor.ApplicationName
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.TwoWayReceivePort());
 
 			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
@@ -156,7 +173,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
 			// initialize BindingInfoBuilderVisitor.ApplicationName
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(dsl);
 
 			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));
@@ -194,7 +211,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var visitor = BindingInfoBuilderVisitor.Create("DEV");
 			// initialize BindingInfoBuilderVisitor.ApplicationName
-			((IApplicationBindingVisitor) visitor).VisitApplicationBinding(new TestApplication());
+			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(new TestApplication.TwoWaySendPort());
 
 			Assert.That(binding.ApplicationName, Is.EqualTo("TestApplication"));

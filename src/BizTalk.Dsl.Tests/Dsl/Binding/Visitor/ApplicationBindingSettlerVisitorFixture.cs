@@ -31,11 +31,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			applicationBindingMock.As<ISupportValidation>();
 			var environmentSensitiveApplicationBindingMock = applicationBindingMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitApplicationBinding(applicationBindingMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitApplicationBinding(applicationBindingMock.Object);
 
 			environmentSensitiveApplicationBindingMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
-			visitorMock.Verify(m => m.VisitApplication(It.IsAny<IApplicationBinding<string>>()), Times.Once);
+			visitorMock.Verify(m => m.VisitApplicationBinding(It.IsAny<IApplicationBinding<string>>()), Times.Once);
 		}
 
 		[Test]
@@ -45,11 +46,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var validatingApplicationBindingMock = applicationBindingMock.As<ISupportValidation>();
 			applicationBindingMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitApplicationBinding(applicationBindingMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitApplicationBinding(applicationBindingMock.Object);
 
 			validatingApplicationBindingMock.Verify(m => m.Validate(), Times.Once);
-			visitorMock.Verify(m => m.VisitApplication(It.IsAny<IApplicationBinding<string>>()), Times.Once);
+			visitorMock.Verify(m => m.VisitApplicationBinding(It.IsAny<IApplicationBinding<string>>()), Times.Once);
 		}
 
 		[Test]
@@ -59,8 +61,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			orchestrationBindingMock.As<ISupportValidation>();
 			var environmentSensitiveOrchestrationBindingMock = orchestrationBindingMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitOrchestration(orchestrationBindingMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitOrchestration(orchestrationBindingMock.Object);
 
 			environmentSensitiveOrchestrationBindingMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitOrchestration(It.IsAny<IOrchestrationBinding>()), Times.Once);
@@ -73,8 +76,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var validatingOrchestrationBindingMock = orchestrationBindingMock.As<ISupportValidation>();
 			orchestrationBindingMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitOrchestration(orchestrationBindingMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitOrchestration(orchestrationBindingMock.Object);
 
 			validatingOrchestrationBindingMock.Verify(m => m.Validate(), Times.Once);
 			visitorMock.Verify(m => m.VisitOrchestration(It.IsAny<IOrchestrationBinding>()), Times.Once);
@@ -87,8 +91,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			receiveLocationMock.As<ISupportValidation>();
 			var environmentSensitiveReceiveLocationMock = receiveLocationMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitReceiveLocation(receiveLocationMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitReceiveLocation(receiveLocationMock.Object);
 
 			environmentSensitiveReceiveLocationMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitReceiveLocation(It.IsAny<IReceiveLocation<string>>()), Times.Once);
@@ -101,8 +106,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var validatingReceiveLocationMock = receiveLocationMock.As<ISupportValidation>();
 			receiveLocationMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitReceiveLocation(receiveLocationMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitReceiveLocation(receiveLocationMock.Object);
 
 			validatingReceiveLocationMock.Verify(m => m.Validate(), Times.Once);
 			visitorMock.Verify(m => m.VisitReceiveLocation(It.IsAny<IReceiveLocation<string>>()), Times.Once);
@@ -115,8 +121,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			receivePortMock.As<ISupportValidation>();
 			var environmentSensitiveReceivePortMock = receivePortMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitReceivePort(receivePortMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitReceivePort(receivePortMock.Object);
 
 			environmentSensitiveReceivePortMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitReceivePort(It.IsAny<IReceivePort<string>>()), Times.Once);
@@ -129,8 +136,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var validatingReceivePortMock = receivePortMock.As<ISupportValidation>();
 			receivePortMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitReceivePort(receivePortMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitReceivePort(receivePortMock.Object);
 
 			validatingReceivePortMock.Verify(m => m.Validate(), Times.Once);
 			visitorMock.Verify(m => m.VisitReceivePort(It.IsAny<IReceivePort<string>>()), Times.Once);
@@ -143,8 +151,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			sendPortMock.As<ISupportValidation>();
 			var environmentSensitiveSendPortMock = sendPortMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitSendPort(sendPortMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitSendPort(sendPortMock.Object);
 
 			environmentSensitiveSendPortMock.Verify(m => m.ApplyEnvironmentOverrides("DEV"), Times.Once);
 			visitorMock.Verify(m => m.VisitSendPort(It.IsAny<ISendPort<string>>()), Times.Once);
@@ -157,8 +166,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var validatingSendPortMock = sendPortMock.As<ISupportValidation>();
 			sendPortMock.As<ISupportEnvironmentOverride>();
 
-			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true };
-			((IApplicationBindingVisitor) visitorMock.Object).VisitSendPort(sendPortMock.Object);
+			var visitorMock = new Mock<ApplicationBindingSettlerVisitor>("DEV") { CallBase = true }
+				.As<IApplicationBindingVisitor>();
+			visitorMock.Object.VisitSendPort(sendPortMock.Object);
 
 			validatingSendPortMock.Verify(m => m.Validate(), Times.Once);
 			visitorMock.Verify(m => m.VisitSendPort(It.IsAny<ISendPort<string>>()), Times.Once);

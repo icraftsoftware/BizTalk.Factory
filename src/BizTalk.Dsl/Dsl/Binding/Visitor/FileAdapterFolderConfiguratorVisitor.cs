@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// <summary>
 	/// <see cref="IApplicationBindingVisitor"/> implementation that setup file adapters' physical paths.
 	/// </summary>
-	public class FileAdapterFolderConfiguratorVisitor : ApplicationBindingSettlerVisitor
+	public class FileAdapterFolderConfiguratorVisitor : IApplicationBindingVisitor
 	{
 		public static FileAdapterFolderConfiguratorVisitor CreateInstaller(string targetEnvironment, string[] users)
 		{
@@ -41,27 +41,50 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, recurse);
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, string[] users) : base(targetEnvironment)
+		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment)
+		{
+			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor(targetEnvironment);
+		}
+
+		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, string[] users) : this(targetEnvironment)
 		{
 			_directoryOperation = SetupDirectory;
 			_users = users;
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, bool recurse) : base(targetEnvironment)
+		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, bool recurse) : this(targetEnvironment)
 		{
 			_directoryOperation = path => TeardownDirectory(path, recurse);
 		}
 
-		#region Base Class Member Overrides
+		#region IApplicationBindingVisitor Members
 
-		protected internal override void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+			where TNamingConvention : class
 		{
+			_applicationBindingSettlerVisitor.VisitApplicationBinding(applicationBinding);
+		}
+
+		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding) { }
+
+		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+			where TNamingConvention : class
+		{
+			_applicationBindingSettlerVisitor.VisitReceivePort(receivePort);
+		}
+
+		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+			where TNamingConvention : class
+		{
+			_applicationBindingSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.ReceiveFolder);
 		}
 
-		protected internal override void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+			where TNamingConvention : class
 		{
+			_applicationBindingSettlerVisitor.VisitSendPort(sendPort);
 			var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.DestinationFolder);
 		}
@@ -153,6 +176,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		#endregion
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileAdapterFolderConfiguratorVisitor));
+		private readonly ApplicationBindingSettlerVisitor _applicationBindingSettlerVisitor;
 		private readonly Action<string> _directoryOperation;
 		private readonly string[] _users;
 	}

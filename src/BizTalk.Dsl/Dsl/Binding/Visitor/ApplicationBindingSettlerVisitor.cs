@@ -35,57 +35,38 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#region IApplicationBindingVisitor Members
 
-		void IApplicationBindingVisitor.VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
 		{
 			((ISupportEnvironmentOverride) applicationBinding).ApplyEnvironmentOverrides(Environment);
 			((ISupportValidation) applicationBinding).Validate();
-			VisitApplication(applicationBinding);
 		}
 
-		void IApplicationBindingVisitor.VisitOrchestration(IOrchestrationBinding orchestrationBinding)
+		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
 			((ISupportEnvironmentOverride) orchestrationBinding).ApplyEnvironmentOverrides(Environment);
 			((ISupportValidation) orchestrationBinding).Validate();
-			VisitOrchestration(orchestrationBinding);
 		}
 
-		void IApplicationBindingVisitor.VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) where TNamingConvention : class
 		{
 			((ISupportEnvironmentOverride) receivePort).ApplyEnvironmentOverrides(Environment);
 			((ISupportValidation) receivePort).Validate();
-			VisitReceivePort(receivePort);
 		}
 
-		void IApplicationBindingVisitor.VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation) where TNamingConvention : class
 		{
 			((ISupportEnvironmentOverride) receiveLocation).ApplyEnvironmentOverrides(Environment);
 			((ISupportValidation) receiveLocation).Validate();
-			VisitReceiveLocation(receiveLocation);
 		}
 
-		void IApplicationBindingVisitor.VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort) where TNamingConvention : class
 		{
 			((ISupportEnvironmentOverride) sendPort).ApplyEnvironmentOverrides(Environment);
 			((ISupportValidation) sendPort).Validate();
-			VisitSendPort(sendPort);
 		}
 
 		#endregion
 
-		protected string Environment { get; private set; }
-
-		protected internal virtual void VisitApplication<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
-			where TNamingConvention : class { }
-
-		protected internal virtual void VisitOrchestration(IOrchestrationBinding orchestrationBinding) { }
-
-		protected internal virtual void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
-			where TNamingConvention : class { }
-
-		protected internal virtual void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
-			where TNamingConvention : class { }
-
-		protected internal virtual void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
-			where TNamingConvention : class { }
+		public string Environment { get; private set; }
 	}
 }
