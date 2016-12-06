@@ -23,5 +23,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		ISendPortCollection<TNamingConvention> Add(ISendPort<TNamingConvention> sendPort);
 
 		ISendPortCollection<TNamingConvention> Add(params ISendPort<TNamingConvention>[] sendPorts);
+
+		ISendPort<TNamingConvention> Find<T>();
 	}
 }

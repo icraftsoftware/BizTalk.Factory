@@ -16,15 +16,14 @@
 
 #endregion
 
-using System.Diagnostics;
-using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.BizTalk.Install;
+using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	[TestFixture]
-	public class ApplicationBindingFixture
+	public class ReferencedApplicationBindingCollectionFixture
 	{
 		#region Setup/Teardown
 
@@ -43,21 +42,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		[Test]
-		public void NameOfNonUserDerivedTypeIsNotUsedInErrorMessage()
+		public void ApplicationHasItsEnvironmentOverridesSettledOnceReferenced()
 		{
-			var ab = new ApplicationBinding();
+			var applicationBindingMock = new Mock<IApplicationBinding<string>>();
+			var visitableApplicationBindingMock = applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>();
 
-			var sfi = (IProvideSourceFileInformation) ab;
-			Assert.That(sfi.Name, Is.EqualTo(new StackFrame(0, true).GetFileName()));
-			Assert.That(sfi.Line, Is.GreaterThan(0));
-			Assert.That(
-				() => ((ISupportValidation) ab).Validate(),
-				Throws.InstanceOf<BindingException>().With.Message.EqualTo(
-					string.Format(
-						"Application's Name is not defined.\r\n{0}, line {1}, column {2}.",
-						sfi.Name,
-						sfi.Line,
-						sfi.Column)));
+			IReferencedApplicationBindingCollection sut = new ReferencedApplicationBindingCollection();
+			sut.Add(applicationBindingMock.Object);
+
+			visitableApplicationBindingMock.Verify(ab => ab.Accept(It.IsAny<IApplicationBindingVisitor>()), Times.Once);
 		}
 	}
 }

@@ -29,14 +29,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public class ApplicationBindingSerializer : IDslSerializer
 	{
-		internal ApplicationBindingSerializer(IVisitable<IApplicationBindingVisitor> applicationBinding)
+		public ApplicationBindingSerializer(IVisitable<IApplicationBindingVisitor> applicationBinding, string environment)
 		{
-			_applicationBinding = applicationBinding;
-		}
-
-		public ApplicationBindingSerializer(IVisitable<IApplicationBindingVisitor> applicationBinding, string environment) : this(applicationBinding)
-		{
+			if (applicationBinding == null) throw new ArgumentNullException("applicationBinding");
 			if (environment.IsNullOrEmpty()) throw new ArgumentNullException("environment");
+			_applicationBinding = applicationBinding;
 			_environment = environment;
 		}
 
@@ -76,7 +73,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private BindingInfo GetBindingInfo()
 		{
-			var visitor = ApplicationBindingVisitor.Create(_environment);
+			var visitor = BindingInfoBuilderVisitor.Create(_environment);
 			_applicationBinding.Accept(visitor);
 			return visitor.BindingInfo;
 		}

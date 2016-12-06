@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Diagnostics;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Install;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -28,6 +29,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	[TestFixture]
 	public class ApplicationBindingBaseFixture
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = null;
+		}
+
+		#endregion
+
 		[Test]
 		public void AcceptsAndPropagatesVisitor()
 		{

@@ -19,6 +19,7 @@
 using System;
 using System.Xml;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Install;
 using Be.Stateless.BizTalk.Pipelines;
 using Be.Stateless.BizTalk.Unit.Resources;
 using NUnit.Framework;
@@ -28,6 +29,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	[TestFixture]
 	public class ApplicationBindingSerializerFixture
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = null;
+		}
+
+		#endregion
+
 		[Test]
 		public void GenerateBindingsWithoutConventions()
 		{
@@ -95,7 +112,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				}) {
 				Timestamp = XmlConvert.ToDateTime("2015-02-18T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
 			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer();
+			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("ANY");
 
 			var binding = applicationBindingSerializer.Serialize();
 

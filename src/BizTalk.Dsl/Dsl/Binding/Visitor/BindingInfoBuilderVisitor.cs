@@ -43,24 +43,24 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </remarks>
 	/// <seealso href="https://msdn.microsoft.com/en-us/library/microsoft.biztalk.deployment.binding.aspx"/>
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-	public class ApplicationBindingVisitor : ApplicationBindingVisitorBase
+	public class BindingInfoBuilderVisitor : ApplicationBindingSettlerVisitor
 	{
-		public static ApplicationBindingVisitor Create(string targetEnvironment)
+		public static BindingInfoBuilderVisitor Create(string targetEnvironment)
 		{
-			return new ApplicationBindingVisitor(targetEnvironment);
+			return new BindingInfoBuilderVisitor(targetEnvironment);
 		}
 
-		private ApplicationBindingVisitor(string targetEnvironment) : base(targetEnvironment) { }
+		private BindingInfoBuilderVisitor(string targetEnvironment) : base(targetEnvironment) { }
 
 		#region Base Class Member Overrides
 
-		protected internal override void VisitApplicationCore<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+		protected internal override void VisitApplication<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 		{
 			ApplicationName = ((ISupportNamingConvention) applicationBinding).Name;
 			BindingInfo = CreateBindingInfo(applicationBinding);
 		}
 
-		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
+		protected internal override void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
 			var moduleRef = CreateOrFindModuleRef(orchestrationBinding);
 			// a ModuleRef just created has no ServiceRef in its Services collection yet
@@ -69,19 +69,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			moduleRef.Services.Add(serviceRef);
 		}
 
-		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		protected internal override void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
 			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
 			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
 		}
 
-		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+		protected internal override void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 		{
 			_lastVisitedReceivePort = CreateReceivePort(receivePort);
 			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
 
-		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+		protected internal override void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
 			var visitedSendPort = CreateSendPort(sendPort);
 			BindingInfo.SendPortCollection.Add(visitedSendPort);
@@ -237,8 +237,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 				ToTime = receiveLocation.Transport.Schedule.ServiceWindow.StopTime,
 				TransportType = receiveLocation.Transport.Adapter.ProtocolType,
 				TransportTypeData = ((IAdapterBindingSerializerFactory) receiveLocation.Transport.Adapter).GetAdapterBindingSerializer().Serialize()
-			}
-				;
+			};
 			if (receiveLocation.SendPipeline != null)
 			{
 				location.SendPipeline = CreateSendPipelineRef(receiveLocation.SendPipeline);

@@ -19,6 +19,7 @@
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Subscription;
+using Be.Stateless.BizTalk.Install;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Microsoft.BizTalk.B2B.PartnerManagement;
 using NUnit.Framework;
@@ -28,6 +29,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Detailed
 	[TestFixture]
 	public class NamingConventionFixture
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			BindingGenerationContext.Instance.TargetEnvironment = null;
+		}
+
+		#endregion
+
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
 		{

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-# Copyright © 2012 - 2014 François Chabot, Yves Dierick
+# Copyright © 2012 - 2016 François Chabot, Yves Dierick
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ src\.nuget\NuGet.exe restore src\BizTalk.Factory.sln
 src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln
 
 Invoke-MSBuild -Project .\build.proj -Targets $Targets
-if ($?) { throw "Cannot compile BizTalk.Factory." }
 
 # Build the NuGet package containing the release version of all assemblies
 # Construct NuGet package version from assembly file version
@@ -44,9 +43,7 @@ src\.nuget\NuGet.exe pack src\BizTalk.Factory.nuspec -Version $packageVersion -N
 
 # Build the MSI installation packages for both configurations
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Debug
-if ($?) { throw "Cannot build BizTalk.Factory's debug deployment package." }
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Release
-if ($?) { throw "Cannot build BizTalk.Factory's release deployment package." }
 
 # Now we copy the interesting build outputs to our dedicated directory structure
 

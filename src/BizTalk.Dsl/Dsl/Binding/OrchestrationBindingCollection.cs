@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,11 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		IOrchestrationBindingCollection IOrchestrationBindingCollection.Add(params IOrchestrationBinding[] orchestrationBindings)
 		{
-			orchestrationBindings.Each(
-				orchestrationBinding => {
-					((ISupportValidation) orchestrationBinding).Validate();
-					Add(orchestrationBinding);
-				});
+			orchestrationBindings.Each(Add);
 			return this;
 		}
 
@@ -57,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void IVisitable<IApplicationBindingVisitor>.Accept(IApplicationBindingVisitor visitor)
 		{
-			this.Cast<IVisitable<IApplicationBindingVisitor>>().Each(ob => ob.Accept(visitor));
+			this.Cast<IVisitable<IApplicationBindingVisitor>>().Each(orchestrationBinding => orchestrationBinding.Accept(visitor));
 		}
 
 		#endregion

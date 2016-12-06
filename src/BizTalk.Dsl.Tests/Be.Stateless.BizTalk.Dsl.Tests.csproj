@@ -208,13 +208,14 @@
     <Compile Include="Dsl\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
+    <Compile Include="Dsl\Binding\ReferencedApplicationBindingCollectionFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\CustomBindingElementFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\NetMsmqBindingElementFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\WcfBindingRegistryFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapterFixture.cs" />
-    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorBaseFixture.cs" />
-    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingVisitorFixture.cs" />
+    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingSettlerVisitorFixture.cs" />
+    <Compile Include="Dsl\Binding\Visitor\BindingInfoBuilderVisitorFixture.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BtxServiceTypeExtensionsFixture.cs" />

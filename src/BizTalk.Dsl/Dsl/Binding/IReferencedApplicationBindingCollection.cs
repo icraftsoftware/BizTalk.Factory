@@ -16,20 +16,18 @@
 
 #endregion
 
-using System;
-
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IApplicationBinding<TNamingConvention> : IObjectBinding<TNamingConvention> where TNamingConvention : class
+	public interface IReferencedApplicationBindingCollection : IFluentInterface
 	{
-		IOrchestrationBindingCollection Orchestrations { get; }
+		IReferencedApplicationBindingCollection Add<TReferencedApplicationNamingConvention>(
+			IApplicationBinding<TReferencedApplicationNamingConvention> applicationBinding)
+			where TReferencedApplicationNamingConvention : class;
 
-		IReceivePortCollection<TNamingConvention> ReceivePorts { get; }
+		IReferencedApplicationBindingCollection Add<TReferencedApplicationNamingConvention>(
+			params IApplicationBinding<TReferencedApplicationNamingConvention>[] applicationBindings)
+			where TReferencedApplicationNamingConvention : class;
 
-		IReferencedApplicationBindingCollection ReferencedApplications { get; }
-
-		ISendPortCollection<TNamingConvention> SendPorts { get; }
-
-		DateTime Timestamp { get; }
+		T Find<T>();
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 
 #endregion
 
-using System;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Explorer;
-using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using OrchestrationStatus = Microsoft.BizTalk.ExplorerOM.OrchestrationStatus;
 using PortStatus = Microsoft.BizTalk.ExplorerOM.PortStatus;
@@ -43,11 +41,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </item>
 	/// </list>
 	/// </remarks>
-	public class BizTalkServiceConfiguratorVisitor : ApplicationBindingVisitorBase
+	public class BizTalkServiceConfiguratorVisitor : ApplicationBindingSettlerVisitor
 	{
 		public static BizTalkServiceConfiguratorVisitor Create(string targetEnvironment)
 		{
-			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			return new BizTalkServiceConfiguratorVisitor(targetEnvironment);
 		}
 
@@ -55,13 +52,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#region Base Class Member Overrides
 
-		protected internal override void VisitApplicationCore<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
+		protected internal override void VisitApplication<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 		{
 			var name = ((ISupportNamingConvention) applicationBinding).Name;
 			_application = BizTalkServerGroup.Applications[name];
 		}
 
-		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding)
+		protected internal override void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
 			var name = orchestrationBinding.Type.FullName;
 			var orchestration = _application.Orchestrations[name];
@@ -74,7 +71,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			orchestration.Status = (OrchestrationStatus) orchestrationBinding.State;
 		}
 
-		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		protected internal override void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
 			var name = ((ISupportNamingConvention) receiveLocation).Name;
 			var rl = _receivePort.ReceiveLocations[name];
@@ -82,13 +79,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			rl.Enabled = receiveLocation.Enabled;
 		}
 
-		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
+		protected internal override void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 		{
 			var name = ((ISupportNamingConvention) receivePort).Name;
 			_receivePort = _application.ReceivePorts[name];
 		}
 
-		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+		protected internal override void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
 			var name = ((ISupportNamingConvention) sendPort).Name;
 			var sp = _application.SendPorts[name];

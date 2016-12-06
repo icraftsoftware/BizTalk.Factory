@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ using System;
 using System.IO;
 using System.Security.AccessControl;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
-using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Path = Be.Stateless.IO.Path;
 
@@ -29,18 +28,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// <summary>
 	/// <see cref="IApplicationBindingVisitor"/> implementation that setup file adapters' physical paths.
 	/// </summary>
-	public class FileAdapterFolderConfiguratorVisitor : ApplicationBindingVisitorBase
+	public class FileAdapterFolderConfiguratorVisitor : ApplicationBindingSettlerVisitor
 	{
 		public static FileAdapterFolderConfiguratorVisitor CreateInstaller(string targetEnvironment, string[] users)
 		{
-			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			if (users == null) throw new ArgumentNullException("users");
 			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, users);
 		}
 
 		public static IApplicationBindingVisitor CreateUninstaller(string targetEnvironment, bool recurse)
 		{
-			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, recurse);
 		}
 
@@ -57,19 +54,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#region Base Class Member Overrides
 
-		protected internal override void VisitApplicationCore<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) { }
-
-		protected internal override void VisitOrchestrationCore(IOrchestrationBinding orchestrationBinding) { }
-
-		protected internal override void VisitReceiveLocationCore<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
+		protected internal override void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
 			var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.ReceiveFolder);
 		}
 
-		protected internal override void VisitReceivePortCore<TNamingConvention>(IReceivePort<TNamingConvention> receivePort) { }
-
-		protected internal override void VisitSendPortCore<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
+		protected internal override void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 		{
 			var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.DestinationFolder);
@@ -77,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#endregion
 
-		#region Directory setup
+		#region Directory Set Up
 
 		private void SetupDirectory(string path)
 		{
@@ -143,7 +134,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#endregion
 
-		#region Directory teardown
+		#region Directory Tear Down
 
 		private void TeardownDirectory(string path, bool recurse)
 		{

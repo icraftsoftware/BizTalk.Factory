@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Diagnostics;
 using Be.Stateless.Extensions;
@@ -36,9 +35,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	{
 		protected internal ApplicationBindingBase()
 		{
-			_orchestrations = new OrchestrationBindingCollection<TNamingConvention>(this);
+			_referencedApplications = new ReferencedApplicationBindingCollection();
 			_receivePorts = new ReceivePortCollection<TNamingConvention>(this);
 			_sendPorts = new SendPortCollection<TNamingConvention>(this);
+			_orchestrations = new OrchestrationBindingCollection<TNamingConvention>(this);
 			_sourceFileInformationProvider = new SourceFileInformationProvider();
 			_sourceFileInformationProvider.Capture();
 			Timestamp = DateTime.Now;
@@ -61,6 +61,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			get { return _orchestrations; }
 		}
 
+		public IReferencedApplicationBindingCollection ReferencedApplications
+		{
+			get { return _referencedApplications; }
+		}
+
 		public IReceivePortCollection<TNamingConvention> ReceivePorts
 		{
 			get { return _receivePorts; }
@@ -76,11 +81,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		#region IBindingSerializerFactory Members
-
-		IDslSerializer IBindingSerializerFactory.GetBindingSerializer()
-		{
-			return new ApplicationBindingSerializer(this);
-		}
 
 		IDslSerializer IBindingSerializerFactory.GetBindingSerializer(string environment)
 		{
@@ -147,20 +147,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
-		public IReceivePort<TNamingConvention> FindReceivePort<T>()
-		{
-			return _receivePorts.Single(rp => rp.GetType() == typeof(T));
-		}
-
-		public ISendPort<TNamingConvention> FindSendPort<T>()
-		{
-			return _sendPorts.Single(rp => rp.GetType() == typeof(T));
-		}
-
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }
 
 		private readonly OrchestrationBindingCollection<TNamingConvention> _orchestrations;
 		private readonly ReceivePortCollection<TNamingConvention> _receivePorts;
+		private readonly ReferencedApplicationBindingCollection _referencedApplications;
 		private readonly SendPortCollection<TNamingConvention> _sendPorts;
 		private readonly SourceFileInformationProvider _sourceFileInformationProvider;
 	}

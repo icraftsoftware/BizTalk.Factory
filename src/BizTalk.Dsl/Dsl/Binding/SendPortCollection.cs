@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,10 +45,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			sendPorts.Each(
 				sp => {
 					((SendPortBase<TNamingConvention>) sp).ApplicationBinding = _applicationBinding;
-					((ISupportValidation) sp).Validate();
 					Add(sp);
 				});
 			return this;
+		}
+
+		public ISendPort<TNamingConvention> Find<T>()
+		{
+			return this.Single(sp => sp.GetType() == typeof(T));
 		}
 
 		#endregion
