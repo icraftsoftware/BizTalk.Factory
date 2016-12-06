@@ -16,8 +16,7 @@
 
 #endregion
 
-using System;
-using Be.Stateless.Extensions;
+using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
@@ -27,12 +26,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </summary>
 	public class ApplicationBindingSettlerVisitor : IApplicationBindingVisitor
 	{
-		public ApplicationBindingSettlerVisitor(string targetEnvironment)
-		{
-			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
-			Environment = targetEnvironment;
-		}
-
 		#region IApplicationBindingVisitor Members
 
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
@@ -67,6 +60,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#endregion
 
-		public string Environment { get; private set; }
+		private string Environment
+		{
+			get { return BindingGenerationContext.Instance.TargetEnvironment; }
+		}
 	}
 }

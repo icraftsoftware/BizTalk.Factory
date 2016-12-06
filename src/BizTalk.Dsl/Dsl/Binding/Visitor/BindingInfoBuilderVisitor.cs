@@ -45,14 +45,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 	public class BindingInfoBuilderVisitor : IApplicationBindingVisitor
 	{
-		public static BindingInfoBuilderVisitor Create(string targetEnvironment)
+		public static BindingInfoBuilderVisitor Create()
 		{
-			return new BindingInfoBuilderVisitor(targetEnvironment);
+			return new BindingInfoBuilderVisitor();
 		}
 
-		private BindingInfoBuilderVisitor(string targetEnvironment)
+		private BindingInfoBuilderVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor(targetEnvironment);
+			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
 		}
 
 		#region IApplicationBindingVisitor Members

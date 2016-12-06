@@ -82,9 +82,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#region IBindingSerializerFactory Members
 
-		IDslSerializer IBindingSerializerFactory.GetBindingSerializer(string environment)
+		IDslSerializer IBindingSerializerFactory.GetBindingSerializer()
 		{
-			return new ApplicationBindingSerializer(this, environment);
+			return new ApplicationBindingSerializer(this);
 		}
 
 		#endregion

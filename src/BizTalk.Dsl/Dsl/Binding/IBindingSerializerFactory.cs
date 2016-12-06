@@ -20,6 +20,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public interface IBindingSerializerFactory
 	{
-		IDslSerializer GetBindingSerializer(string environment);
+		IDslSerializer GetBindingSerializer();
 	}
 }

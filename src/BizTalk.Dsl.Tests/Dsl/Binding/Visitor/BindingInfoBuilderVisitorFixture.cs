@@ -49,7 +49,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateBindingInfo()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.BindingInfo;
 
@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateModuleRef()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			// initialize BindingInfo
 			visitor.VisitApplicationBinding(new TestApplication());
 
@@ -80,7 +80,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var dsl = new TestApplication.OneWayReceiveLocation();
 
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			var binding = visitor.CreateReceiveLocation(dsl);
 
 			Assert.That(binding.Name, Is.EqualTo("OneWayReceiveLocation"));
@@ -108,7 +108,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceiveLocationTwoWay()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			var binding = visitor.CreateReceiveLocation(new TestApplication.TwoWayReceiveLocation());
 
 			Assert.That(binding.Name, Is.EqualTo("TwoWayReceiveLocation"));
@@ -139,7 +139,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceivePortOneWay()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			// initialize BindingInfoBuilderVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.OneWayReceivePort());
@@ -154,7 +154,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateReceivePortTwoWay()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			// initialize BindingInfoBuilderVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateReceivePort(new TestApplication.TwoWayReceivePort());
@@ -171,7 +171,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var dsl = new TestApplication.OneWaySendPort();
 
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			// initialize BindingInfoBuilderVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(dsl);
@@ -209,7 +209,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateSendPortTwoWay()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 			// initialize BindingInfoBuilderVisitor.ApplicationName
 			visitor.VisitApplicationBinding(new TestApplication());
 			var binding = visitor.CreateSendPort(new TestApplication.TwoWaySendPort());
@@ -245,7 +245,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		[Test]
 		public void CreateServiceRef()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create("DEV");
+			var visitor = BindingInfoBuilderVisitor.Create();
 
 			var orchestrationBinding = new ProcessOrchestrationBinding {
 				Description = "Some Useless Orchestration.",

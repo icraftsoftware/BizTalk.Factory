@@ -22,19 +22,16 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
-using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public class ApplicationBindingSerializer : IDslSerializer
 	{
-		public ApplicationBindingSerializer(IVisitable<IApplicationBindingVisitor> applicationBinding, string environment)
+		public ApplicationBindingSerializer(IVisitable<IApplicationBindingVisitor> applicationBinding)
 		{
 			if (applicationBinding == null) throw new ArgumentNullException("applicationBinding");
-			if (environment.IsNullOrEmpty()) throw new ArgumentNullException("environment");
 			_applicationBinding = applicationBinding;
-			_environment = environment;
 		}
 
 		#region IDslSerializer Members
@@ -73,12 +70,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		private BindingInfo GetBindingInfo()
 		{
-			var visitor = BindingInfoBuilderVisitor.Create(_environment);
+			var visitor = BindingInfoBuilderVisitor.Create();
 			_applicationBinding.Accept(visitor);
 			return visitor.BindingInfo;
 		}
 
 		private readonly IVisitable<IApplicationBindingVisitor> _applicationBinding;
-		private readonly string _environment;
 	}
 }

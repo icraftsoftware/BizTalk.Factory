@@ -49,16 +49,16 @@ namespace Be.Stateless.BizTalk.Install
 				if (Context.Parameters.ContainsKey("BindingFilePath"))
 				{
 					var bindingFilePath = Context.Parameters["BindingFilePath"];
-					GenerateBindingFile(targetEnvironment, bindingFilePath);
+					GenerateBindingFile(bindingFilePath);
 				}
 				if (Context.Parameters.ContainsKey("SetupFileAdapterPaths"))
 				{
 					var users = Context.Parameters["Users"].IfNotNullOrEmpty(u => u.Split(';', ','));
-					SetupFileAdapterPaths(targetEnvironment, users);
+					SetupFileAdapterPaths(users);
 				}
 				if (Context.Parameters.ContainsKey("InitializeServices"))
 				{
-					InitializeServices(targetEnvironment);
+					InitializeServices();
 				}
 			}
 			finally
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Install
 				if (Context.Parameters.ContainsKey("TeardownFileAdapterPaths"))
 				{
 					var recurse = Context.Parameters.ContainsKey("Recurse");
-					TeardownFileAdapterPaths(targetEnvironment, recurse);
+					TeardownFileAdapterPaths(recurse);
 				}
 			}
 			finally
@@ -98,31 +98,31 @@ namespace Be.Stateless.BizTalk.Install
 			get { return _applicationBinding ?? (_applicationBinding = new T()); }
 		}
 
-		private void GenerateBindingFile(string targetEnvironment, string bindingFilePath)
+		private void GenerateBindingFile(string bindingFilePath)
 		{
 			if (bindingFilePath.IsNullOrEmpty()) throw new ArgumentNullException("bindingFilePath");
 
-			var applicationBindingSerializer = ApplicationBinding.GetBindingSerializer(targetEnvironment);
+			var applicationBindingSerializer = ApplicationBinding.GetBindingSerializer();
 			applicationBindingSerializer.Save(bindingFilePath);
 		}
 
-		private void SetupFileAdapterPaths(string targetEnvironment, string[] users)
+		private void SetupFileAdapterPaths(string[] users)
 		{
 			if (users == null) throw new ArgumentNullException("users");
 
-			var visitor = FileAdapterFolderConfiguratorVisitor.CreateInstaller(targetEnvironment, users);
+			var visitor = FileAdapterFolderConfiguratorVisitor.CreateInstaller(users);
 			ApplicationBinding.Accept(visitor);
 		}
 
-		private void TeardownFileAdapterPaths(string targetEnvironment, bool recurse)
+		private void TeardownFileAdapterPaths(bool recurse)
 		{
-			var visitor = FileAdapterFolderConfiguratorVisitor.CreateUninstaller(targetEnvironment, recurse);
+			var visitor = FileAdapterFolderConfiguratorVisitor.CreateUninstaller(recurse);
 			ApplicationBinding.Accept(visitor);
 		}
 
-		private void InitializeServices(string targetEnvironment)
+		private void InitializeServices()
 		{
-			var visitor = BizTalkServiceConfiguratorVisitor.Create(targetEnvironment);
+			var visitor = BizTalkServiceConfiguratorVisitor.Create();
 			ApplicationBinding.Accept(visitor);
 			visitor.Commit();
 		}

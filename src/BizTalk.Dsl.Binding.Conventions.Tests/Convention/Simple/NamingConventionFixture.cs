@@ -48,7 +48,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
 		{
-			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplication.Instance).GetBindingSerializer("PRD");
+			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplication.Instance).GetBindingSerializer();
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingWithAreaSupportsBindingGeneration()
 		{
-			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplicationWithArea.Instance).GetBindingSerializer("PRD");
+			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplicationWithArea.Instance).GetBindingSerializer();
 
 			var binding = applicationBindingSerializer.Serialize();
 

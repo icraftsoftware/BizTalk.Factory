@@ -30,29 +30,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </summary>
 	public class FileAdapterFolderConfiguratorVisitor : IApplicationBindingVisitor
 	{
-		public static FileAdapterFolderConfiguratorVisitor CreateInstaller(string targetEnvironment, string[] users)
+		public static FileAdapterFolderConfiguratorVisitor CreateInstaller(string[] users)
 		{
 			if (users == null) throw new ArgumentNullException("users");
-			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, users);
+			return new FileAdapterFolderConfiguratorVisitor(users);
 		}
 
-		public static IApplicationBindingVisitor CreateUninstaller(string targetEnvironment, bool recurse)
+		public static IApplicationBindingVisitor CreateUninstaller(bool recurse)
 		{
-			return new FileAdapterFolderConfiguratorVisitor(targetEnvironment, recurse);
+			return new FileAdapterFolderConfiguratorVisitor(recurse);
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment)
+		private FileAdapterFolderConfiguratorVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor(targetEnvironment);
+			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, string[] users) : this(targetEnvironment)
+		private FileAdapterFolderConfiguratorVisitor(string[] users) : this()
 		{
 			_directoryOperation = SetupDirectory;
 			_users = users;
 		}
 
-		private FileAdapterFolderConfiguratorVisitor(string targetEnvironment, bool recurse) : this(targetEnvironment)
+		private FileAdapterFolderConfiguratorVisitor(bool recurse) : this()
 		{
 			_directoryOperation = path => TeardownDirectory(path, recurse);
 		}

@@ -112,7 +112,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				}) {
 				Timestamp = XmlConvert.ToDateTime("2015-02-18T22:51:04+01:00", XmlDateTimeSerializationMode.Local)
 			};
-			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer("ANY");
+			var applicationBindingSerializer = ((IBindingSerializerFactory) applicationBinding).GetBindingSerializer();
 
 			var binding = applicationBindingSerializer.Serialize();
 

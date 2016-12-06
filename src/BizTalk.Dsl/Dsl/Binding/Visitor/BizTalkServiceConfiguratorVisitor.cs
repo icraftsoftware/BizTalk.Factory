@@ -43,14 +43,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </remarks>
 	public class BizTalkServiceConfiguratorVisitor : IApplicationBindingVisitor
 	{
-		public static BizTalkServiceConfiguratorVisitor Create(string targetEnvironment)
+		public static BizTalkServiceConfiguratorVisitor Create()
 		{
-			return new BizTalkServiceConfiguratorVisitor(targetEnvironment);
+			return new BizTalkServiceConfiguratorVisitor();
 		}
 
-		private BizTalkServiceConfiguratorVisitor(string targetEnvironment)
+		private BizTalkServiceConfiguratorVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor(targetEnvironment);
+			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
 		}
 
 		#region IApplicationBindingVisitor Members

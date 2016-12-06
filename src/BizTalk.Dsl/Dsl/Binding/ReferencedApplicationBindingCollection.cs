@@ -19,7 +19,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
-using Be.Stateless.BizTalk.Install;
 using Be.Stateless.Linq.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -30,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	{
 		public ReferencedApplicationBindingCollection()
 		{
-			_visitor = new ApplicationBindingSettlerVisitor(BindingGenerationContext.Instance.TargetEnvironment);
+			_visitor = new ApplicationBindingSettlerVisitor();
 		}
 
 		#region IReferencedApplicationBindingCollection Members
