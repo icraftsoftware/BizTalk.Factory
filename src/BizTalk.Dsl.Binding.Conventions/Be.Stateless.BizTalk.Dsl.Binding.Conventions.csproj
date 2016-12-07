@@ -59,6 +59,10 @@
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ServiceModel.Channels, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.ServiceModel.Channels.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -74,6 +78,7 @@
     <Compile Include="Convention\ApplicationBinding.cs" />
     <Compile Include="Convention\ApplicationNamingConvention.cs" />
     <Compile Include="Convention\Constants\TargetEnvironments.cs" />
+    <Compile Include="Convention\Extensions\StringExtensions.cs" />
     <Compile Include="Convention\IApplicationNameMemento.cs" />
     <Compile Include="Convention\ILocationMessageFormat.cs" />
     <Compile Include="Convention\ILocationMessageName.cs" />

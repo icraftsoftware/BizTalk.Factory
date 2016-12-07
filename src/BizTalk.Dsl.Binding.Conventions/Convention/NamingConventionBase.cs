@@ -17,7 +17,11 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.ServiceModel.Channels;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Extensions;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
@@ -128,12 +132,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			var name = adapter.ProtocolType.Name;
 			if (adapter.GetType().IsSubclassOfOpenGenericType(typeof(WcfCustomAdapterBase<,>)))
 			{
-				const string bindingSuffix = "Binding";
 				// cast to dynamic in order to access Binding property which is declared by WcfCustomAdapterBase<,>
 				dynamic dynamicAdapter = adapter;
-				var bindingName = dynamicAdapter.Binding.Name;
-				if (bindingName.EndsWith(bindingSuffix)) bindingName = bindingName.Substring(0, bindingName.Length - bindingSuffix.Length);
-				bindingName = char.ToUpper(bindingName[0]) + bindingName.Substring(1);
+				var binding = dynamicAdapter.Binding;
+
+				var customBindingElement = binding as IBindingElementDecorator;
+				if (customBindingElement != null)
+				{
+					var actualBindingElement = (System.ServiceModel.Configuration.CustomBindingElement) customBindingElement.DecoratedBindingElement;
+					var transportElementType = actualBindingElement
+						.Select(be => be.BindingElementType)
+						.Single(bet => typeof(TransportBindingElement).IsAssignableFrom(bet));
+					return typeof(Microsoft.ServiceModel.Channels.Common.Adapter).IsAssignableFrom(transportElementType)
+						? name + transportElementType.Name
+							.TrimSuffix(typeof(Microsoft.ServiceModel.Channels.Common.Adapter).Name)
+							.Capitalize()
+						: name + transportElementType.Name
+							.TrimSuffix(typeof(TransportBindingElement).Name)
+							.Capitalize();
+				}
+
+				var bindingName = ((string) binding.Name)
+					.TrimSuffix("Binding")
+					.Capitalize();
 				return name + bindingName;
 			}
 			return name;

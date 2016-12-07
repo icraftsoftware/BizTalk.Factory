@@ -25,11 +25,13 @@ using Be.Stateless.Area.Invoice;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Microsoft.Adapters.OracleDB;
+using Microsoft.Adapters.SAP;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using CustomBindingElement = Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.CustomBindingElement;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 {
@@ -53,6 +55,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 			adapter = new CustomAdapterFake<SqlAdapterBindingConfigurationElement, CustomRLConfig>();
 			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomSql"));
+
+			adapter = new WcfCustomAdapter.Outbound<CustomBindingElement>(a => a.Binding.Add(new MtomMessageEncodingElement(), new HttpsTransportElement()));
+			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomHttps"));
+
+			adapter = new WcfCustomAdapter.Outbound<CustomBindingElement>(a => a.Binding.Add(new TcpTransportElement()));
+			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomTcp"));
+
+			adapter = new WcfCustomAdapter.Outbound<CustomBindingElement>(a => a.Binding.Add(new SAPAdapterExtensionElement()));
+			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomSap"));
+
+			adapter = new WcfCustomAdapter.Outbound<CustomBindingElement>(a => a.Binding.Add(new SqlAdapterBindingElementExtensionElement()));
+			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomSql"));
+
+			// notice that OracleDBAdapterExtensionElement cannot be used because it is internal :(
+			//adapter = new WcfCustomAdapter.Outbound<CustomBindingElement>(a => a.Binding.Add(new OracleDBAdapterExtensionElement()));
 		}
 
 		[Test]
