@@ -136,7 +136,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 				dynamic dynamicAdapter = adapter;
 				var binding = dynamicAdapter.Binding;
 
-				var customBindingElement = binding as IBindingElementDecorator;
+				var customBindingElement = binding as CustomBindingElement;
 				if (customBindingElement != null)
 				{
 					var actualBindingElement = (System.ServiceModel.Configuration.CustomBindingElement) customBindingElement.DecoratedBindingElement;

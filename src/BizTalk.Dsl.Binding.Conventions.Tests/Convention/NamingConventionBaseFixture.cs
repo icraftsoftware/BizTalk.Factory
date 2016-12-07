@@ -40,6 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 	public class NamingConventionBaseFixture
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "RedundantNameQualifier")]
 		public void ComputeAdapterNameResolvesActualProtocolTypeNameForWcfCustomAdapter()
 		{
 			var sut = new NamingConventionDouble();
@@ -47,7 +48,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			IAdapter adapter = new CustomAdapterFake<NetTcpBindingElement, CustomRLConfig>();
 			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomNetTcp"));
 
-			adapter = new CustomAdapterFake<NetMsmqBindingElement, CustomRLConfig>();
+			adapter = new CustomAdapterFake<System.ServiceModel.Configuration.NetMsmqBindingElement, CustomRLConfig>();
+			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomNetMsmq"));
+
+			adapter = new CustomAdapterFake<Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.NetMsmqBindingElement, CustomRLConfig>();
 			Assert.That(sut.ComputeAdapterNameSpy(adapter), Is.EqualTo("WCF-CustomNetMsmq"));
 
 			adapter = new CustomAdapterFake<OracleDBBindingConfigurationElement, CustomRLConfig>();
