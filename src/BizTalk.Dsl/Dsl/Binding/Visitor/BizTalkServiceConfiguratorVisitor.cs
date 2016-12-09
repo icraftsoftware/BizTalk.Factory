@@ -103,11 +103,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var sp = _application.SendPorts[name];
 			if (_logger.IsDebugEnabled)
 			{
-				if (sendPort.State == ServiceState.Unenlisted) _logger.DebugFormat("Unenlisting send port '{0}'", name);
-				else if (sendPort.State == ServiceState.Enlisted) _logger.DebugFormat("Enlisting or stopping send port '{0}'", name);
-				else _logger.DebugFormat("Starting send port '{0}'", name);
+				if (sendPort.State == ServiceState.Indefinite) _logger.DebugFormat("Leaving send port '{0}''s state as it is.", name);
+				else if (sendPort.State == ServiceState.Unenlisted) _logger.DebugFormat("Unenlisting send port '{0}'.", name);
+				else if (sendPort.State == ServiceState.Enlisted) _logger.DebugFormat("Enlisting or stopping send port '{0}'.", name);
+				else _logger.DebugFormat("Starting send port '{0}'.", name);
 			}
-			sp.Status = (PortStatus) sendPort.State;
+			if (sendPort.State != ServiceState.Indefinite) sp.Status = (PortStatus) sendPort.State;
 		}
 
 		#endregion
