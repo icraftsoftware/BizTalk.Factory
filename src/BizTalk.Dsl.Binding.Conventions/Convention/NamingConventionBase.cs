@@ -91,7 +91,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			var area = ComputeArea(receiveLocation.GetType());
 			var receivePortArea = ComputeArea(receiveLocation.ReceivePort.GetType());
 			if (area.IsNullOrEmpty() && !receivePortArea.IsNullOrEmpty()) area = receivePortArea;
-			if (receivePortArea != area)
+			if (!receivePortArea.IsNullOrEmpty() && receivePortArea != area)
 				throw new NamingConventionException(
 					string.Format(
 						"ReceiveLocation's Area '{0}' does not match its ReceivePort's one '{1}'.",

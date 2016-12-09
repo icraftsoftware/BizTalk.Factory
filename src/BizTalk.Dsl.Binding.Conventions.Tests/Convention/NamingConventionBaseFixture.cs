@@ -206,6 +206,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		}
 
 		[Test]
+		public void ComputeReceiveLocationNameDoesNotRequireAreaToMatchItsReceivePortOneIfItHasNone()
+		{
+			var applicationBindingMock = new Mock<IApplicationBinding<NamingConventionDouble>>();
+			applicationBindingMock.As<ISupportNamingConvention>().Setup(snc => snc.Name).Returns("SomeApplication");
+
+			var receivePortMock = new Mock<IReceivePort<NamingConventionDouble>>();
+			receivePortMock.Setup(rp => rp.ApplicationBinding).Returns(applicationBindingMock.Object);
+			receivePortMock.Setup(rp => rp.Name).Returns(new NamingConventionDouble { Party = "ReceivePortParty" });
+			receivePortMock.Setup(rp => rp.GetType()).Returns(typeof(StandaloneReceivePort));
+
+			var receiveLocationMock = new Mock<IReceiveLocation<NamingConventionDouble>>();
+			receiveLocationMock.Setup(rl => rl.ReceivePort).Returns(receivePortMock.Object);
+			receiveLocationMock.Setup(rl => rl.GetType()).Returns(typeof(BankReceiveLocation));
+			receiveLocationMock.Setup(rl => rl.Transport).Returns(new ReceiveLocationTransport { Adapter = new FileAdapter.Inbound(t => { }) });
+
+			var sut = new NamingConventionDouble { MessageName = "SomeMessage", MessageFormat = "SomeFormat" };
+
+			Assert.That(() => sut.ComputeReceiveLocationNameSpy(receiveLocationMock.Object), Throws.Nothing);
+		}
+
+		[Test]
 		public void ComputeReceiveLocationNameEmbedsApplicationNameAndPartyAndMessageNameAndTransportAndMessageFormat()
 		{
 			var applicationBindingMock = new Mock<IApplicationBinding<NamingConventionDouble>>();
@@ -292,7 +313,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		}
 
 		[Test]
-		public void ComputeReceiveLocationNameRequiresAreaToMatchItsReceivePortOne()
+		public void ComputeReceiveLocationNameRequiresAreaToMatchItsReceivePortOneIfItHasOne()
 		{
 			var applicationBindingMock = new Mock<IApplicationBinding<NamingConventionDouble>>();
 			applicationBindingMock.As<ISupportNamingConvention>().Setup(snc => snc.Name).Returns("SomeApplication");
