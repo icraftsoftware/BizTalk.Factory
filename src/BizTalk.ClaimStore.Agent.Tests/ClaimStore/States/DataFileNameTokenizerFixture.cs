@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 				Is.EqualTo("201306158F341A2D6FD7416B87073A0132DD51AE.chk"));
 		}
 
-		private IEnumerable<string> ValidDataFilePaths
+		private static IEnumerable<string> ValidDataFilePaths
 		{
 			get
 			{
@@ -117,7 +117,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			}
 		}
 
-		private IEnumerable<string> InvalidDataFilePaths
+		private static IEnumerable<string> InvalidDataFilePaths
 		{
 			get
 			{

@@ -31,7 +31,7 @@ namespace Be.Stateless.Logging.Appender
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			if (!EventLog.SourceExists(TEST_SOURCE))

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Be.Stateless.BizTalk.Operations.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Operations;
@@ -77,9 +77,15 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			get { return Enumerable.Empty<string>(); }
 		}
 
-		protected MessageBoxServiceInstance[] BizTalkServiceInstances
+		protected IEnumerable<MessageBoxServiceInstance> BizTalkServiceInstances
 		{
-			get { return GetRunningOrSuspendedServiceInstances(new BizTalkOperations()).ToArray(); }
+			get
+			{
+				using (var bizTalkOperations = new BizTalkOperations())
+				{
+					return bizTalkOperations.GetRunningOrSuspendedServiceInstances();
+				}
+			}
 		}
 
 		/// <summary>
@@ -148,23 +154,10 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		/// </summary>
 		protected void TerminateUncompletedBizTalkServiceInstances()
 		{
-			var bizTalkOperations = new BizTalkOperations();
-			GetRunningOrSuspendedServiceInstances(bizTalkOperations)
-				.Select(i => new { ServiceInstance = i, CompletionStatus = bizTalkOperations.TerminateInstance(i.ID) })
-				.Where(sd => sd.CompletionStatus != CompletionStatus.Succeeded)
-				.Each(
-					(idx, sd) => {
-						Trace.TraceWarning("Could not terminate the BizTalk service instance with ID {0}", sd.ServiceInstance.ID);
-						_logger.WarnFormat(
-							"[{0,2}] Could not terminate the BizTalk service instance class: {1}\r\n     ServiceType: {2}\r\n     Creation Time: {3}\r\n     Status: {4}\r\n     Error: {5}\r\n",
-							idx,
-							sd.ServiceInstance.Class,
-							sd.ServiceInstance.ServiceType,
-							sd.ServiceInstance.CreationTime,
-							sd.ServiceInstance.InstanceStatus,
-							sd.ServiceInstance.ErrorDescription);
-					}
-				);
+			using (var bizTalkOperations = new BizTalkOperations())
+			{
+				bizTalkOperations.TerminateUncompletedBizTalkServiceInstances();
+			}
 		}
 
 		private void CleanFolders(IEnumerable<string> folders)
@@ -195,14 +188,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 				});
 		}
 
-		private IEnumerable<MessageBoxServiceInstance> GetRunningOrSuspendedServiceInstances(BizTalkOperations bizTalkOperations)
-		{
-			return bizTalkOperations
-				.GetServiceInstances().OfType<MessageBoxServiceInstance>()
-				.Where(i => (i.InstanceStatus & (InstanceStatus.RunningAll | InstanceStatus.SuspendedAll)) != InstanceStatus.None);
-		}
-
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		protected void BizTalkFactoryProcessFixtureTestFixtureSetUp()
 		{
 			AllFolders.Each(

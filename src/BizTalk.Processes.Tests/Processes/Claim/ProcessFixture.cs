@@ -102,7 +102,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					&& s.Value2 == receiverName
 					&& s.Value3 == senderName
 					&& s.Status == TrackingStatus.Sent);
-			Assert.That(tokenMessagingStep.Message.Body, Is.StringEnding("</clm:Url>" + extraContent + "</clm:CheckOut>"));
+			Assert.That(tokenMessagingStep.Message.Body, Does.EndWith("</clm:Url>" + extraContent + "</clm:CheckOut>"));
 
 			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}

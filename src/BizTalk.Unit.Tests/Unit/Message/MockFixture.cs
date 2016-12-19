@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -220,7 +220,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 				() => message.Verify(),
 				Throws.InstanceOf<MockException>().With.Message.EqualTo(
 					string.Format(
-						"The following setups were not matched:\r\n" + "IBaseMessage m => m.Context.Read(\"{0}\", \"{1}\")\r\n",
+						"The following setups were not matched:\n" + "IBaseMessage m => m.Context.Read(\"{0}\", \"{1}\")\r\n",
 						TrackingProperties.ProcessingStepActivityId.Name,
 						TrackingProperties.ProcessingStepActivityId.Namespace)));
 		}

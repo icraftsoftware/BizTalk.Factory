@@ -111,7 +111,7 @@
 
   <!--Override extension task path to find assembly with tasks where nuget puts it -->
   <PropertyGroup>
-    <ExtensionTasksPath Condition=" '$(Configuration)' != 'Server' ">$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.6.0\tools\net40\</ExtensionTasksPath>
+    <ExtensionTasksPath Condition=" '$(Configuration)' != 'Server' ">$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.8.0\tools\net40\</ExtensionTasksPath>
   </PropertyGroup>
 
   <Import Project="BizTalk.Factory.ItemGroups.proj" />

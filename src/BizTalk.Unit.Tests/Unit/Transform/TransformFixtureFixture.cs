@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			AddNamespace("tns", new SchemaMetadata(typeof(btf2_services_header)).TargetNamespace);

@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			// ReSharper disable once AssignNullToNotNullAttribute

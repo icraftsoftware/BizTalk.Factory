@@ -34,7 +34,7 @@ namespace Be.Stateless.Xml
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			IdentityTransform = new XslCompiledTransform(true);

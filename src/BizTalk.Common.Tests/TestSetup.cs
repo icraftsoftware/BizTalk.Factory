@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,23 +16,21 @@
 
 #endregion
 
-using NUnit.Framework;
 using log4net.Config;
+using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk
 {
 	[SetUpFixture]
 	public class TestSetup
 	{
-		[SetUp]
+		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			XmlConfigurator.Configure();
 		}
 
-		[TearDown]
-		public void RunAfterAnyTests()
-		{
-		}
+		[OneTimeTearDown]
+		public void RunAfterAnyTests() { }
 	}
 }

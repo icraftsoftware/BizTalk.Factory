@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ using System;
 using System.ServiceModel;
 using Be.Stateless.BizTalk.Unit.ServiceModel.Stub;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Be.Stateless.BizTalk.Unit.ServiceModel
 {
@@ -49,12 +50,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 	{
 		#region Base Class Member Overrides
 
-		public override ActionTargets Targets
-		{
-			get { return ActionTargets.Suite | ActionTargets.Test; }
-		}
-
-		public override void AfterTest(TestDetails testDetails)
+		public override void AfterTest(ITest testDetails)
 		{
 			if (testDetails.IsSuite)
 			{
@@ -62,7 +58,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			}
 		}
 
-		public override void BeforeTest(TestDetails testDetails)
+		public override void BeforeTest(ITest testDetails)
 		{
 			if (testDetails.IsSuite)
 			{
@@ -72,6 +68,11 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			{
 				StubServiceHost.DefaultService.ClearSetups();
 			}
+		}
+
+		public override ActionTargets Targets
+		{
+			get { return ActionTargets.Suite | ActionTargets.Test; }
 		}
 
 		#endregion

@@ -106,11 +106,10 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void ContainsThrowsWhenKeyIsNull()
 		{
 			// ReSharper disable once AssignNullToNotNullAttribute
-			_memoryCache.Contains(null);
+			Assert.That(() => _memoryCache.Contains(null), Throws.ArgumentNullException);
 		}
 
 		[Test]

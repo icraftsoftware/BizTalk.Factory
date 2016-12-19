@@ -50,7 +50,7 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 		{
 			Assert.That(
 				ResourceManager.LoadString("Be.Stateless.BizTalk.Unit.Transform.Data.Message.xml"),
-				Is.StringStarting(
+				Does.StartWith(
 					"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n" +
 						"<ns0:services ns1:mustUnderstand='1' xmlns:ns1='http://schemas.xmlsoap.org/soap/envelope/' xmlns:ns0='http://schemas.biztalk.org/btf-2-0/services'>"));
 		}

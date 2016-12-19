@@ -32,7 +32,7 @@ namespace Be.Stateless.Extensions
 			Assert.That(actual.IsSubclassOfOpenGenericType(baseType));
 		}
 
-		private IEnumerable TypePairs
+		private static IEnumerable TypePairs
 		{
 			get
 			{

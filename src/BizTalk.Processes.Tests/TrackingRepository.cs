@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,34 +30,31 @@ namespace Be.Stateless.BizTalk
 	{
 		static TrackingRepository()
 		{
-			// ReSharper disable once UnusedVariable, see http://pinter.org/?p=2374; https://entityframework.codeplex.com/workitem/1590
-			var ensureReferenceToEntityFrameworkSqlServer = typeof(System.Data.Entity.SqlServer.SqlProviderServices);
-
 			_context = new ActivityContext();
 			Timeout = TimeSpan.FromSeconds(30);
 			PollingInterval = TimeSpan.FromSeconds(1);
 		}
 
-		public static IEnumerable<MessagingStep> MessagingSteps
+		public static IQueryable<MessagingStep> MessagingSteps
 		{
 			get { return _context.MessagingSteps; }
 		}
 
-		public static IEnumerable<Process> Processes
+		public static TimeSpan PollingInterval { get; set; }
+
+		public static IQueryable<Process> Processes
 		{
 			get { return _context.Processes; }
 		}
 
-		public static TimeSpan PollingInterval { get; set; }
-
 		public static TimeSpan Timeout { get; set; }
 
-		public static Process SingleProcess(Func<Process, bool> predicate)
+		public static Process SingleProcess(Expression<Func<Process, bool>> predicate)
 		{
 			return SingleProcess(predicate, Timeout);
 		}
 
-		public static Process SingleProcess(Func<Process, bool> predicate, TimeSpan timeout)
+		public static Process SingleProcess(Expression<Func<Process, bool>> predicate, TimeSpan timeout)
 		{
 			Assert.That(
 				() => {

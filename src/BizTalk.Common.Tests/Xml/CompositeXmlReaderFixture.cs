@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Xml
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			// reason to do this at fixture setup time is to avoid the 1st XSLT test to pay the initialization cost of

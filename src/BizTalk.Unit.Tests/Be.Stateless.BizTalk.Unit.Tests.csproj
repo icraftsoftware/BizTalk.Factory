@@ -7,7 +7,7 @@
     <ProjectGuid>{70C6FFB9-B567-4C44-BD58-236D0593B743}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Be.Stateless.BizTalk.Unit</RootNamespace>
+    <RootNamespace>Be.Stateless.BizTalk</RootNamespace>
     <AssemblyName>Be.Stateless.BizTalk.Unit.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,11 +37,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.GlobalPropertySchemas.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Operations, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Operations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.BizTalk.Pipeline">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
@@ -49,12 +58,12 @@
     <Reference Include="Microsoft.XLANGs.BaseTypes">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.29.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.29\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -69,18 +78,19 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Message\MockFixture.cs" />
+    <Compile Include="Unit\Constraints\UncompletedInstanceConstraintFixture.cs" />
+    <Compile Include="Unit\Message\MockFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ResourceManagerFixture.cs" />
-    <Compile Include="Schema\Envelope.cs">
+    <Compile Include="Unit\Resources\ResourceManagerFixture.cs" />
+    <Compile Include="Unit\Schema\Envelope.cs">
       <DependentUpon>Envelope.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Schema\SchemaFixtureFixture.cs" />
-    <Compile Include="ServiceModel\StubServiceHostFixture.cs" />
-    <Compile Include="ServiceModel\Stub\OperationCallSetupCollectionFixture.cs" />
-    <Compile Include="ServiceModel\Stub\StubServiceClient.cs" />
-    <Compile Include="ServiceModel\Stub\StubServiceFixture.cs" />
-    <Compile Include="Transform\TransformFixtureFixture.cs" />
+    <Compile Include="Unit\Schema\SchemaFixtureFixture.cs" />
+    <Compile Include="Unit\ServiceModel\StubServiceHostFixture.cs" />
+    <Compile Include="Unit\ServiceModel\Stub\OperationCallSetupCollectionFixture.cs" />
+    <Compile Include="Unit\ServiceModel\Stub\StubServiceClient.cs" />
+    <Compile Include="Unit\ServiceModel\Stub\StubServiceFixture.cs" />
+    <Compile Include="Unit\Transform\TransformFixtureFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\be.stateless.public.snk">
@@ -112,14 +122,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Schema\Data\Message.xml" />
-    <EmbeddedResource Include="Transform\Data\Message.xml" />
-    <EmbeddedResource Include="Resources\Resource.txt" />
-    <EmbeddedResource Include="Resources\Resource.Composite.Name.txt" />
-    <EmbeddedResource Include="Resources\Data\Resource.Composite.Name.txt" />
-    <EmbeddedResource Include="Resources\Data\Resource.txt" />
-    <EmbeddedResource Include="Schema\Data\Envelope.xml" />
-    <EmbeddedResource Include="Schema\Envelope.xsd" />
+    <EmbeddedResource Include="Unit\Schema\Data\Message.xml" />
+    <EmbeddedResource Include="Unit\Transform\Data\Message.xml" />
+    <EmbeddedResource Include="Unit\Resources\Resource.txt" />
+    <EmbeddedResource Include="Unit\Resources\Resource.Composite.Name.txt" />
+    <EmbeddedResource Include="Unit\Resources\Data\Resource.Composite.Name.txt" />
+    <EmbeddedResource Include="Unit\Resources\Data\Resource.txt" />
+    <EmbeddedResource Include="Unit\Schema\Data\Envelope.xml" />
+    <EmbeddedResource Include="Unit\Schema\Envelope.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

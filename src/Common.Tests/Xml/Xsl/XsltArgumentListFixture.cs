@@ -29,7 +29,7 @@ namespace Be.Stateless.Xml.Xsl
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			_extensions = new Dictionary<string, object> {

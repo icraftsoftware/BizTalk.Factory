@@ -40,9 +40,9 @@
     <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Explorer.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.BizTalk.ExplorerOM">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
@@ -70,12 +70,12 @@
     <Compile Include="Explorer\ReceivePortCollection.cs" />
     <Compile Include="Explorer\SendPortCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\be.stateless.public.snk">
       <Link>be.stateless.public.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Be.Stateless.Common.csproj">

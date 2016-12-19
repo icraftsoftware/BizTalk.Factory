@@ -99,7 +99,7 @@ namespace Be.Stateless.BizTalk.Tracking
 				// payload is claimed to disk and file extension is .rtrk
 				var captureDescriptor = trackingStream.CaptureDescriptor;
 				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Is.StringStarting(DateTime.Today.ToString(@"yyyyMMdd\\")));
+				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rtrk")), Is.True);
 
 				// archive job descriptor file is written next to captured payload
@@ -147,7 +147,7 @@ namespace Be.Stateless.BizTalk.Tracking
 				// payload is claimed to disk and file extension is .rchk
 				var captureDescriptor = trackingStream.CaptureDescriptor;
 				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Is.StringStarting(DateTime.Today.ToString(@"yyyyMMdd\\")));
+				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rchk")), Is.True);
 
 				// archive job descriptor file is written next to captured payload
@@ -196,7 +196,7 @@ namespace Be.Stateless.BizTalk.Tracking
 				// payload is claimed to disk and file extension is .rchk
 				var captureDescriptor = trackingStream.CaptureDescriptor;
 				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Is.StringStarting(DateTime.Today.ToString(@"yyyyMMdd\\")));
+				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rtrk")), Is.True);
 
 				// archive job descriptor file is written next to captured payload
@@ -229,7 +229,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			// payload is claimed to disk and file extension is .trk
 			var captureDescriptor = trackingStream.CaptureDescriptor;
 			Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-			Assert.That(captureDescriptor.Data, Is.StringStarting(DateTime.Today.ToString(@"yyyyMMdd\\")));
+			Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 			Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".trk")), Is.True);
 		}
 
@@ -366,7 +366,7 @@ namespace Be.Stateless.BizTalk.Tracking
 				// payload is claimed to disk and file extension is .chk
 				var captureDescriptor = trackingStream.CaptureDescriptor;
 				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Is.StringStarting(DateTime.Today.ToString(@"yyyyMMdd\\")));
+				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".chk")), Is.True);
 			}
 		}

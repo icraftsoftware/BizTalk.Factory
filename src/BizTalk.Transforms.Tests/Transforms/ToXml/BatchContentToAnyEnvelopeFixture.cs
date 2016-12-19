@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToXml
 	{
 		#region Setup/Teardown
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			AddNamespace("env", new SchemaMetadata(typeof(Envelope)).TargetNamespace);
