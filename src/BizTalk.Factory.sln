@@ -50,9 +50,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".imports", ".imports", "{6C
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging", "Logging\Be.Stateless.Logging.csproj", "{8F890272-22E8-4668-9F0E-C12DD48474D2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D73E3CF5-25E6-4059-A50F-268287F9D148} = {D73E3CF5-25E6-4059-A50F-268287F9D148}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging.Tests", "Logging.Tests\Be.Stateless.Logging.Tests.csproj", "{419F432B-325C-4D50-A0F3-1D1B2AF40223}"
 EndProject
@@ -81,8 +78,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl", "BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj", "{46E0347E-7978-4F76-86D7-7D31201D856D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Tests", "BizTalk.Dsl.Tests\Be.Stateless.BizTalk.Dsl.Tests.csproj", "{DF6F0133-E4A1-4518-BDD0-192D8C399C02}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Generated.Items", "BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj", "{D73E3CF5-25E6-4059-A50F-268287F9D148}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Pipelines", "BizTalk.Pipelines\Be.Stateless.BizTalk.Pipelines.btproj", "{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -146,7 +141,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Bi
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 41
+		SccNumberOfProjects = 40
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -234,42 +229,39 @@ Global
 		SccProjectUniqueName28 = BizTalk.Explorer\\Be.Stateless.BizTalk.Explorer.csproj
 		SccProjectName28 = BizTalk.Explorer
 		SccLocalPath28 = BizTalk.Explorer
-		SccProjectUniqueName29 = BizTalk.Generated.Items\\Be.Stateless.BizTalk.Generated.Items.csproj
-		SccProjectName29 = BizTalk.Generated.Items
-		SccLocalPath29 = BizTalk.Generated.Items
-		SccProjectUniqueName30 = Extensions\\Be.Stateless.Extensions.csproj
-		SccProjectName30 = Extensions
-		SccLocalPath30 = Extensions
-		SccProjectUniqueName31 = Extensions.Tests\\Be.Stateless.Extensions.Tests.csproj
-		SccProjectName31 = Extensions.Tests
-		SccLocalPath31 = Extensions.Tests
-		SccProjectUniqueName32 = BizTalk.TestArtifacts\\Be.Stateless.BizTalk.TestArtifacts.btproj
-		SccProjectName32 = BizTalk.TestArtifacts
-		SccLocalPath32 = BizTalk.TestArtifacts
-		SccProjectUniqueName33 = BizTalk.Binding\\Be.Stateless.BizTalk.Binding.csproj
-		SccProjectName33 = BizTalk.Binding
-		SccLocalPath33 = BizTalk.Binding
-		SccProjectUniqueName34 = BizTalk.Pipeline.Components.Tests\\Be.Stateless.BizTalk.Pipeline.Components.Tests.csproj
-		SccProjectName34 = BizTalk.Pipeline.Components.Tests
-		SccLocalPath34 = BizTalk.Pipeline.Components.Tests
-		SccProjectUniqueName35 = BizTalk.Pipeline.Components\\Be.Stateless.BizTalk.Pipeline.Components.csproj
-		SccProjectName35 = BizTalk.Pipeline.Components
-		SccLocalPath35 = BizTalk.Pipeline.Components
-		SccProjectUniqueName36 = Quartz.Server\\Quartz.Server.csproj
-		SccProjectName36 = Quartz.Server
-		SccLocalPath36 = Quartz.Server
-		SccProjectUniqueName37 = BizTalk.TestArtifacts.Binding\\Be.Stateless.BizTalk.TestArtifacts.Binding.csproj
-		SccProjectName37 = BizTalk.TestArtifacts.Binding
-		SccLocalPath37 = BizTalk.TestArtifacts.Binding
-		SccProjectUniqueName38 = BizTalk.Explorer.Tests\\Be.Stateless.BizTalk.Explorer.Tests.csproj
-		SccProjectName38 = BizTalk.Explorer.Tests
-		SccLocalPath38 = BizTalk.Explorer.Tests
-		SccProjectUniqueName39 = BizTalk.Dsl.Binding.Conventions\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.csproj
-		SccProjectName39 = BizTalk.Dsl.Binding.Conventions
-		SccLocalPath39 = BizTalk.Dsl.Binding.Conventions
-		SccProjectUniqueName40 = BizTalk.Dsl.Binding.Conventions.Tests\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.Tests.csproj
-		SccProjectName40 = BizTalk.Dsl.Binding.Conventions.Tests
-		SccLocalPath40 = BizTalk.Dsl.Binding.Conventions.Tests
+		SccProjectUniqueName29 = Extensions\\Be.Stateless.Extensions.csproj
+		SccProjectName29 = Extensions
+		SccLocalPath29 = Extensions
+		SccProjectUniqueName30 = Extensions.Tests\\Be.Stateless.Extensions.Tests.csproj
+		SccProjectName30 = Extensions.Tests
+		SccLocalPath30 = Extensions.Tests
+		SccProjectUniqueName31 = BizTalk.TestArtifacts\\Be.Stateless.BizTalk.TestArtifacts.btproj
+		SccProjectName31 = BizTalk.TestArtifacts
+		SccLocalPath31 = BizTalk.TestArtifacts
+		SccProjectUniqueName32 = BizTalk.Binding\\Be.Stateless.BizTalk.Binding.csproj
+		SccProjectName32 = BizTalk.Binding
+		SccLocalPath32 = BizTalk.Binding
+		SccProjectUniqueName33 = BizTalk.Pipeline.Components.Tests\\Be.Stateless.BizTalk.Pipeline.Components.Tests.csproj
+		SccProjectName33 = BizTalk.Pipeline.Components.Tests
+		SccLocalPath33 = BizTalk.Pipeline.Components.Tests
+		SccProjectUniqueName34 = BizTalk.Pipeline.Components\\Be.Stateless.BizTalk.Pipeline.Components.csproj
+		SccProjectName34 = BizTalk.Pipeline.Components
+		SccLocalPath34 = BizTalk.Pipeline.Components
+		SccProjectUniqueName35 = Quartz.Server\\Quartz.Server.csproj
+		SccProjectName35 = Quartz.Server
+		SccLocalPath35 = Quartz.Server
+		SccProjectUniqueName36 = BizTalk.TestArtifacts.Binding\\Be.Stateless.BizTalk.TestArtifacts.Binding.csproj
+		SccProjectName36 = BizTalk.TestArtifacts.Binding
+		SccLocalPath36 = BizTalk.TestArtifacts.Binding
+		SccProjectUniqueName37 = BizTalk.Explorer.Tests\\Be.Stateless.BizTalk.Explorer.Tests.csproj
+		SccProjectName37 = BizTalk.Explorer.Tests
+		SccLocalPath37 = BizTalk.Explorer.Tests
+		SccProjectUniqueName38 = BizTalk.Dsl.Binding.Conventions\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.csproj
+		SccProjectName38 = BizTalk.Dsl.Binding.Conventions
+		SccLocalPath38 = BizTalk.Dsl.Binding.Conventions
+		SccProjectUniqueName39 = BizTalk.Dsl.Binding.Conventions.Tests\\Be.Stateless.BizTalk.Dsl.Binding.Conventions.Tests.csproj
+		SccProjectName39 = BizTalk.Dsl.Binding.Conventions.Tests
+		SccLocalPath39 = BizTalk.Dsl.Binding.Conventions.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -368,10 +360,6 @@ Global
 		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF6F0133-E4A1-4518-BDD0-192D8C399C02}.Release|x86.ActiveCfg = Release|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|x86.ActiveCfg = Release|Any CPU
 		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C77ABB3-FAD7-41FA-80BC-616BF3762C70}.Debug|x86.ActiveCfg = Debug|Any CPU

@@ -208,7 +208,7 @@
       <LocationPath>..\packages\SharpZipLib.0.86.0\lib\20</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="log4net.dll">
-      <LocationPath>..\packages\log4net.2.0.5\lib\net45-full</LocationPath>
+      <LocationPath>..\packages\log4net.2.0.3\lib\net40-full</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Quartz.dll">
       <LocationPath>..\packages\Quartz.2.3.3\lib\net40</LocationPath>

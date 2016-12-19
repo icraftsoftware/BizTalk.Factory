@@ -27,13 +27,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging", "Log
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Common", "BizTalk.Common\Be.Stateless.BizTalk.Common.csproj", "{68E5CFCC-205D-4526-923C-09F5F46058E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Generated.Items", "BizTalk.Generated.Items\Be.Stateless.BizTalk.Generated.Items.csproj", "{D73E3CF5-25E6-4059-A50F-268287F9D148}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Schemas", "BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj", "{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -64,12 +62,9 @@ Global
 		SccProjectUniqueName9 = BizTalk.Common\\Be.Stateless.BizTalk.Common.csproj
 		SccProjectName9 = BizTalk.Common
 		SccLocalPath9 = BizTalk.Common
-		SccProjectUniqueName10 = BizTalk.Generated.Items\\Be.Stateless.BizTalk.Generated.Items.csproj
-		SccProjectName10 = BizTalk.Generated.Items
-		SccLocalPath10 = BizTalk.Generated.Items
-		SccProjectUniqueName11 = BizTalk.Schemas\\Be.Stateless.BizTalk.Schemas.btproj
-		SccProjectName11 = BizTalk.Schemas
-		SccLocalPath11 = BizTalk.Schemas
+		SccProjectUniqueName10 = BizTalk.Schemas\\Be.Stateless.BizTalk.Schemas.btproj
+		SccProjectName10 = BizTalk.Schemas
+		SccLocalPath10 = BizTalk.Schemas
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,10 +127,6 @@ Global
 		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68E5CFCC-205D-4526-923C-09F5F46058E4}.Release|x86.ActiveCfg = Release|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D73E3CF5-25E6-4059-A50F-268287F9D148}.Release|x86.ActiveCfg = Release|Any CPU
 		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}.Debug|x86.ActiveCfg = Debug|Any CPU
