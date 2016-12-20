@@ -350,7 +350,7 @@ function Invoke-MSBuildCore
 .SYNOPSIS
     Returns the numerically sorted version numbers of all the locally installed Visual Studio versions.
 .DESCRIPTION
-    This command will returns the version numbers of all the locally installed Visual Studio versions sorted either ascendingly or descendingly.
+    This command will returns the version numbers of all the locally installed Visual Studio versions sorted either ascendingly or descendingly. Notice that only those versions for which the common tools are deployed and configured will be returned.
 .EXAMPLE
     PS> Get-VisualStudioVersionNumbers
 
@@ -386,7 +386,8 @@ function Get-VisualStudioVersionNumbers
             $installedVisualStudioVersionNumbers = Get-ChildItem -Path $path |
                 Where-Object { $_.GetValue('InstallDir') } |
                 Select-Object -ExpandProperty PSChildName |
-                Where-Object { $_ -match '^\d+\.\d+$' }
+                Where-Object { $_ -match '^\d+\.\d+$' } |
+                Where-Object { Test-Path -Path Env:\"$(VisualStudioCommonToolsEnvironmentVariableFromVersionNumber $_)" }
         }
         $installedVisualStudioVersionNumbers = @($installedVisualStudioVersionNumbers)
         $MyInvocation.MyCommand.Module.PrivateData['InstalledVisualStudioVersionNumbers'] = $installedVisualStudioVersionNumbers
@@ -565,8 +566,7 @@ function Switch-VisualStudioEnvironment
             throw "Version $Version of Visual Studio is not supported (yet)!"
         }
 
-        $name = "VS$($versionNumber.Replace('.',''))COMNTOOLS"
-        $path = Get-Item Env:\$name
+        $path = Get-Item -Path Env:\"$(VisualStudioCommonToolsEnvironmentVariableFromVersionNumber $versionNumber)"
         $batchPath = [System.IO.Path]::GetFullPath("$($path.Value)..\..\VC\vcvarsall.bat")
         if ($PsCmdlet.ShouldProcess("Environment variables", "Pushing EnvironmentBlock for Visual Studio $Version")) {
             Push-EnvironmentBlock -Description "VisualStudioVersion=$Version"
@@ -884,6 +884,11 @@ function Convert-ToolsVersionToVisualStudioVersion([string]$version)
         '12.0' { '2013' }
         default { throw "Tools Version $version is not supported and cannot be used to dertermine the version of Visual Studio to use." }
     }
+}
+
+function Get-VisualStudioCommonToolsEnvironmentVariableFromVersionNumber([string] $versionNumber)
+{
+    "VS$($versionNumber.Replace('.',''))COMNTOOLS"
 }
 
 #endregion
