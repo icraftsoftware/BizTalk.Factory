@@ -16,28 +16,35 @@
 -->
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildProjectDirectory)\src\AssignBuildNumber\Be.Stateless.AssignBuildNumber.proj" />
-  <Target Name="Build" DependsOnTargets="GetLatestVersion;AssignBuildNumber;BuildSolution;CheckInBuildTools;Label" />
+  <Target Name="Build" DependsOnTargets="GetLatestVersion;AssignBuildNumber;BuildSolution;UpdateBuildTools;Label" />
   <Target Name="GetLatestVersion">
     <Message Text="Getting Latest Version" />
     <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Get" ItemPath="." All="true" Overwrite="true" Force="true" VersionSpec="T" />
   </Target>
   <Target Name="BuildSolution" >
     <Message Text="Building Solution in Debug Configuration" />
-    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Debug;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild"/>
+    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Debug;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
     <Message Text="Building Solution in Release Configuration" />
-    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild"/>
-    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Monitoring.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild"/>
+    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Monitoring.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
   </Target>
-  <Target Name="CheckInBuildTools">
+  <Target Name="UpdateBuildTools">
     <ItemGroup>
-      <FilesToAdd Include="$(MSBuildProjectDirectory)\src\Version.cs"/>
-      <FilesToAdd Include="$(MSBuildProjectDirectory)\src\.imports\*.dll"/>
+      <SourceBuildTools Include="$(MSBuildProjectDirectory)\src\BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.dll" />
+      <SourceBuildTools Include="$(MSBuildProjectDirectory)\src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll" />
+      <SourceBuildTools Include="$(MSBuildProjectDirectory)\src\Common\bin\Debug\Be.Stateless.Common.dll" />
+      <SourceBuildTools Include="$(MSBuildProjectDirectory)\src\Extensions\bin\Debug\Be.Stateless.Extensions.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SourceBuildTools)" DestinationFolder="$(MSBuildProjectDirectory)\src\.imports" />
+
+    <ItemGroup>
+      <BuildTools Include="$(MSBuildProjectDirectory)\src\Version.cs" />
+      <BuildTools Include="$(MSBuildProjectDirectory)\src\.imports\*.dll" />
     </ItemGroup>
     <MSBuild.ExtensionPack.VisualStudio.TfsSource
       TaskAction="Checkin"
-      ItemCol="@(FilesToAdd)"
+      ItemCol="@(BuildTools)"
       Comments="BizTalk.Factory.$(BuildNumber) Build Tools." />
-    <!--WorkingDirectory="$(MSBuildProjectDirectory)\src"-->
   </Target>
   <Target Name="Label">
     <Message Text="Applying TFS label with version: $(BuildNumber)" />

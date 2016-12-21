@@ -105,9 +105,3 @@ Copy-Item 'utils\Decode Bindings\bindings-cleaner.xslt' '.exports\utils\Decode B
 New-Item -Path . -Name '.exports\utils\Deployment Tools' -ItemType Directory -Force | Out-Null
 Copy-Item 'utils\Deployment Tools\adapterXPaths.txt' '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
 Copy-Item src\Deployment\BizTalk.Factory.Deployment.targets '.exports\utils\Deployment Tools' -Force -PassThru | % { $_.Name }
-
-# Update src\.imports
-Copy-Item src\BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.dll src\.imports -Force -PassThru | % { $_.Name }
-Copy-Item src\BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll src\.imports -Force -PassThru | % { $_.Name }
-Copy-Item src\Common\bin\Debug\Be.Stateless.Common.dll src\.imports -Force -PassThru | % { $_.Name }
-Copy-Item src\Extensions\bin\Debug\Be.Stateless.Extensions.dll src\.imports -Force -PassThru | % { $_.Name }
