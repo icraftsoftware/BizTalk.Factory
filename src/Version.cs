@@ -18,6 +18,6 @@
 
 using System.Reflection;
 
-[assembly: AssemblyFileVersion("1.0.16354.57241")]
-[assembly: AssemblyInformationalVersion("1.0.16354.57241")]
+[assembly: AssemblyFileVersion("1.0.16356.51869")]
+[assembly: AssemblyInformationalVersion("1.0.16356.51869")]
 [assembly: AssemblyVersion("1.0.0.0")]
