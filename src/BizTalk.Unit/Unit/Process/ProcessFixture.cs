@@ -79,13 +79,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 		protected IEnumerable<MessageBoxServiceInstance> BizTalkServiceInstances
 		{
-			get
-			{
-				using (var bizTalkOperations = new BizTalkOperations())
-				{
-					return bizTalkOperations.GetRunningOrSuspendedServiceInstances();
-				}
-			}
+			get { return BizTalkOperationsExtensions.GetRunningOrSuspendedServiceInstances(); }
 		}
 
 		/// <summary>
@@ -154,10 +148,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		/// </summary>
 		protected void TerminateUncompletedBizTalkServiceInstances()
 		{
-			using (var bizTalkOperations = new BizTalkOperations())
-			{
-				bizTalkOperations.TerminateUncompletedBizTalkServiceInstances();
-			}
+			BizTalkOperationsExtensions.TerminateUncompletedBizTalkServiceInstances();
 		}
 
 		private void CleanFolders(IEnumerable<string> folders)

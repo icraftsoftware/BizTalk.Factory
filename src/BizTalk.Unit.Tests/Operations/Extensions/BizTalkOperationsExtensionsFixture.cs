@@ -16,31 +16,19 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Be.Stateless.BizTalk.Operations.Extensions;
-using Microsoft.BizTalk.Operations;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
-namespace Be.Stateless.BizTalk.Unit.Constraints
+namespace Be.Stateless.BizTalk.Operations.Extensions
 {
 	[TestFixture]
-	public class UncompletedInstanceConstraintFixture
+	public class BizTalkOperationsExtensionsFixture
 	{
 		[Test]
-		public void HasNoUncompletedInstances()
+		[SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+		public void TerminateUncompletedBizTalkServiceInstances()
 		{
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
-		}
-
-		[Test]
-		public void NullHasNoUncompletedInstances()
-		{
-			Assert.That((MessageBoxServiceInstance[]) null, Has.No.UncompletedInstances());
-		}
-
-		private IEnumerable<MessageBoxServiceInstance> BizTalkServiceInstances
-		{
-			get { return BizTalkOperationsExtensions.GetRunningOrSuspendedServiceInstances(); }
+			Assert.That(() => BizTalkOperationsExtensions.TerminateUncompletedBizTalkServiceInstances(), Throws.Nothing);
 		}
 	}
 }

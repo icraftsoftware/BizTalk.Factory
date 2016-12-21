@@ -78,6 +78,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Operations\Extensions\BizTalkOperationsExtensionsFixture.cs" />
     <Compile Include="Unit\Constraints\UncompletedInstanceConstraintFixture.cs" />
     <Compile Include="Unit\Message\MockFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
