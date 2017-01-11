@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
-using Be.Stateless.BizTalk.Unit.Constraints;
 using Be.Stateless.BizTalk.Unit.Process;
 using Be.Stateless.IO.Extensions;
 using NUnit.Framework;
@@ -73,8 +73,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			var part = BatchAdapter.Parts.Single();
 			Assert.That(part.MessagingStepActivityId, Is.EqualTo(addPartMessage.ActivityID));
 			Assert.That(part.Partition, Is.EqualTo("0"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -102,8 +100,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			var part = BatchAdapter.Parts.Single();
 			Assert.That(part.MessagingStepActivityId, Is.EqualTo(addPartMessage.ActivityID));
 			Assert.That(part.Partition, Is.EqualTo("partition-z"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		protected override IEnumerable<string> InputFolders
@@ -111,6 +107,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			get { return new[] { DropFolders.INPUT_FOLDER }; }
 		}
 
-		private static readonly string _envelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName;
+		private static readonly string _envelopeSpecName = typeof(Envelope).GetMetadata().DocumentSpec.DocSpecStrongName;
 	}
 }

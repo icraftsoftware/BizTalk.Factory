@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Be.Stateless.BizTalk.Explorer;
 using Be.Stateless.BizTalk.Factory.Areas;
+using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
@@ -128,8 +129,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(
 				queuedControlledReleases.Select(qcr => qcr.Partition).Distinct(),
 				Is.EquivalentTo(new[] { "0", "p-one", "p-two", "p-six" }));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -177,8 +176,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(
 				queuedControlledReleases.Select(qcr => qcr.Partition).Distinct().Single(),
 				Is.EqualTo("p-one"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -227,8 +224,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(
 				queuedControlledReleases.Select(qcr => qcr.Partition),
 				Is.EquivalentTo(new[] { "0", "p-one", "p-two", "p-six" }));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -278,8 +273,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(
 				envelopeMessagingStep.Message.Body,
 				Is.EqualTo("<ns0:Envelope xmlns:ns0=\"urn:schemas.stateless.be:biztalk:envelope:2013:07\"><data>some-value</data></ns0:Envelope>"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -332,8 +325,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(
 				envelopeMessagingStep.Message.Body,
 				Is.EqualTo("<ns0:Envelope xmlns:ns0=\"urn:schemas.stateless.be:biztalk:envelope:2013:07\"><data>some-partitioned-value</data></ns0:Envelope>"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -358,8 +349,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(s.Value1));
 
 			Assert.That(BatchAdapter.QueuedControlledReleases.Count(), Is.EqualTo(0));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -388,8 +377,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(s.Value1));
 
 			Assert.That(BatchAdapter.QueuedControlledReleases.Count(), Is.EqualTo(0));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -429,8 +416,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value2 == "six");
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -480,8 +465,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// 2 parts have been left in the database
 			Assert.That(BatchAdapter.Parts.Count(), Is.EqualTo(2));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -578,8 +561,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(), Is.EqualTo(2));
 			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
 			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Default.Processes.Unidentified), Is.Not.Null);
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -680,8 +661,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(), Is.EqualTo(2));
 			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Factory.Areas.Batch.Processes.Release), Is.Not.Null);
 			Assert.That(releaseProcessBatchMessagingStep.Processes.SingleOrDefault(p => p.Name == Default.Processes.Unidentified), Is.Not.Null);
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -713,8 +692,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// no batch release process has been created as no parts provide a MessagingStepActivityId that could be used to link a part to its batch
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(p => p.Name == Factory.Areas.Batch.Processes.Release && p.BeginTime > StartTime), Is.EqualTo(0));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		protected override IEnumerable<string> InputFolders
@@ -746,6 +723,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			}
 		}
 
-		private static readonly string _envelopeSpecName = new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName;
+		private static readonly string _envelopeSpecName = typeof(Envelope).GetMetadata().DocumentSpec.DocSpecStrongName;
 	}
 }

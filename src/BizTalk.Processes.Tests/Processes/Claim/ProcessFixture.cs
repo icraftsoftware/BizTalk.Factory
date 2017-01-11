@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2016 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
-using Be.Stateless.BizTalk.Unit.Constraints;
 using Be.Stateless.BizTalk.Unit.Process;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.IO;
@@ -61,8 +60,6 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					process.SingleMessagingStep(s => s.Name == "BizTalk.Factory.RL1.Claim.CheckOut.WCF-SQL.XML" && s.Value1 == ct && s.Status == TrackingStatus.Received);
 					process.SingleMessagingStep(s => s.Name == "BizTalk.Factory.SP1.UnitTest.Claim.Redeem.FILE.XML" && s.Value1 == ct && s.Status == TrackingStatus.Sent);
 				});
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -103,8 +100,6 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					&& s.Value3 == senderName
 					&& s.Status == TrackingStatus.Sent);
 			Assert.That(tokenMessagingStep.Message.Body, Does.EndWith("</clm:Url>" + extraContent + "</clm:CheckOut>"));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -127,8 +122,6 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			var token = FindTokens().Single();
 			Assert.That(File.Exists(Path.Combine(CheckInFolder, token.Url.Replace("\\", string.Empty) + ".chk")));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		[Test]
@@ -210,8 +203,6 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// original inbound message payload has been restored
 			Assert.That(inboundMessagingStep.Message.Body, Is.EqualTo(outboundMessagingStep.Message.Body));
-
-			Assert.That(BizTalkServiceInstances, Has.No.UncompletedInstances());
 		}
 
 		protected internal override IEnumerable<string> SystemOutputFolders
