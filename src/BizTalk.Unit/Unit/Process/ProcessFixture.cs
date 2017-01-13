@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ using System.Threading;
 using Be.Stateless.BizTalk.Operations.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
+using Microsoft.BizTalk.Operations;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Unit.Process
@@ -75,6 +76,11 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		protected internal virtual IEnumerable<string> SystemOutputFolders
 		{
 			get { return Enumerable.Empty<string>(); }
+		}
+
+		protected IEnumerable<MessageBoxServiceInstance> BizTalkServiceInstances
+		{
+			get { return BizTalkOperationsExtensions.GetRunningOrSuspendedServiceInstances(); }
 		}
 
 		/// <summary>
