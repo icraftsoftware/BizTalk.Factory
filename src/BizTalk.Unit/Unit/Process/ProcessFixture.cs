@@ -33,7 +33,6 @@ namespace Be.Stateless.BizTalk.Unit.Process
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-	[AssertNoUncompletedBizTalkServiceInstance]
 	public abstract class ProcessFixture
 	{
 		/// <summary>

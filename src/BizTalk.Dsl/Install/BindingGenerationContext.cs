@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,19 +16,45 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Be.Stateless.BizTalk.Install
 {
-	public class BindingGenerationContext
+	public static class BindingGenerationContext
 	{
-		public static BindingGenerationContext Instance
+		#region Nested Type: BindingGenerationContextMemento
+
+		[SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+		private class BindingGenerationContextMemento : IBindingGenerationContext
+		{
+			#region IBindingGenerationContext Members
+
+			public string EnvironmentSettingRootPath { get; internal set; }
+
+			public string TargetEnvironment { get; internal set; }
+
+			#endregion
+		}
+
+		#endregion
+
+		public static string EnvironmentSettingRootPath
+		{
+			get { return _instance.EnvironmentSettingRootPath; }
+			internal set { _instance.EnvironmentSettingRootPath = value; }
+		}
+
+		public static IBindingGenerationContext Instance
 		{
 			get { return _instance; }
 		}
 
-		public string EnvironmentSettingRootPath { get; internal set; }
+		public static string TargetEnvironment
+		{
+			get { return _instance.TargetEnvironment; }
+			internal set { _instance.TargetEnvironment = value; }
+		}
 
-		public string TargetEnvironment { get; internal set; }
-
-		private static readonly BindingGenerationContext _instance = new BindingGenerationContext();
+		private static readonly BindingGenerationContextMemento _instance = new BindingGenerationContextMemento();
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Constants
 {
 	public static class TargetEnvironment
 	{
+		public static bool IsDevelopmentOrBuild(this string environment)
+		{
+			return environment.IsDevelopment() || environment.IsBuild();
+		}
+
 		public static bool IsDevelopment(this string environment)
 		{
 			return Equals(environment, DEVELOPMENT);
@@ -28,6 +33,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Constants
 		public static bool IsBuild(this string environment)
 		{
 			return Equals(environment, BUILD);
+		}
+
+		public static bool IsAcceptanceOrProduction(this string environment)
+		{
+			return environment.IsAcceptance() || environment.IsProduction();
 		}
 
 		public static bool IsAcceptance(this string environment)

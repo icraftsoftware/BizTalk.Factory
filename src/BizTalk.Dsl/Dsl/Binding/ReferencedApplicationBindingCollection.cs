@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
 using Be.Stateless.Linq.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
@@ -27,11 +26,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		IReferencedApplicationBindingCollection,
 		IVisitable<IApplicationBindingVisitor>
 	{
-		public ReferencedApplicationBindingCollection()
-		{
-			_visitor = new ApplicationBindingSettlerVisitor();
-		}
-
 		#region IReferencedApplicationBindingCollection Members
 
 		IReferencedApplicationBindingCollection IReferencedApplicationBindingCollection.Add<TReferencedApplicationNamingConvention>(
@@ -46,7 +40,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			applicationBindings.Each(
 				applicationBinding => {
 					var visitable = (IVisitable<IApplicationBindingVisitor>) applicationBinding;
-					visitable.Accept(_visitor);
 					Add(visitable);
 				});
 			return this;
@@ -67,7 +60,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		#endregion
-
-		private readonly ApplicationBindingSettlerVisitor _visitor;
 	}
 }

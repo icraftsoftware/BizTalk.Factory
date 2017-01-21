@@ -370,6 +370,7 @@
     <Compile Include="Dsl\Transform.cs" />
     <Compile Include="Dsl\Pipeline\Interpreters\ReceivePipelineInterpreter.cs" />
     <Compile Include="Dsl\Pipeline\Interpreters\SendPipelineInterpreter.cs" />
+    <Compile Include="Install\IBindingGenerationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Install\RuleSetInstaller.cs">
       <SubType>Component</SubType>

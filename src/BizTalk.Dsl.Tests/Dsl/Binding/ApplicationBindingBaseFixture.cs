@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[SetUp]
 		public void SetUp()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+			BindingGenerationContext.TargetEnvironment = "ANYTHING";
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = null;
+			BindingGenerationContext.TargetEnvironment = null;
 		}
 
 		#endregion
@@ -49,26 +49,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			var applicationBindingMock = new Mock<ApplicationBindingBase<string>> { CallBase = true };
 
+			var referencedApplicationBindingCollectionMock = new Mock<ReferencedApplicationBindingCollection>();
+			Reflection.Reflector.SetField(applicationBindingMock.Object, "_referencedApplications", referencedApplicationBindingCollectionMock.Object);
+
 			var orchestrationBindingCollectionMock = new Mock<OrchestrationBindingCollection<string>>(applicationBindingMock.Object) { CallBase = false };
-			var visitableOrchestrationBindingCollectionMock = orchestrationBindingCollectionMock.As<IVisitable<IApplicationBindingVisitor>>();
 			Reflection.Reflector.SetField(applicationBindingMock.Object, "_orchestrations", orchestrationBindingCollectionMock.Object);
 
 			var receivePortCollectionMock = new Mock<ReceivePortCollection<string>>(applicationBindingMock.Object) { CallBase = false };
-			var visitableReceivePortCollectionMock = receivePortCollectionMock.As<IVisitable<IApplicationBindingVisitor>>();
 			Reflection.Reflector.SetField(applicationBindingMock.Object, "_receivePorts", receivePortCollectionMock.Object);
 
 			var sendPortCollectionMock = new Mock<SendPortCollection<string>>(applicationBindingMock.Object) { CallBase = false };
-			var visitableSendPortCollectionMock = sendPortCollectionMock.As<IVisitable<IApplicationBindingVisitor>>();
 			Reflection.Reflector.SetField(applicationBindingMock.Object, "_sendPorts", sendPortCollectionMock.Object);
 
 			var visitorMock = new Mock<IApplicationBindingVisitor>();
 
 			((IVisitable<IApplicationBindingVisitor>) applicationBindingMock.Object).Accept(visitorMock.Object);
 
+			referencedApplicationBindingCollectionMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
 			visitorMock.Verify(m => m.VisitApplicationBinding(applicationBindingMock.Object), Times.Once);
-			visitableOrchestrationBindingCollectionMock.Verify(m => m.Accept(visitorMock.Object), Times.Once);
-			visitableReceivePortCollectionMock.Verify(m => m.Accept(visitorMock.Object), Times.Once);
-			visitableSendPortCollectionMock.Verify(m => m.Accept(visitorMock.Object), Times.Once);
+			orchestrationBindingCollectionMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
+			receivePortCollectionMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
+			sendPortCollectionMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
 		}
 
 		[Test]

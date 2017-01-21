@@ -30,7 +30,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Processes.Batch
 {
 	[TestFixture]
-	public class AggregateProcessFixture : ProcessFixture
+	public class AggregateProcessFixture : CompletedProcessFixture
 	{
 		#region Setup/Teardown
 

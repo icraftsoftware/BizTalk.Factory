@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			get
 			{
-				if (BindingGenerationContext.Instance.EnvironmentSettingRootPath != null && _environmentSettingOverrides == null)
+				if (BindingGenerationContext.EnvironmentSettingRootPath != null && _environmentSettingOverrides == null)
 				{
 					_environmentSettingOverrides = new EnvironmentSettingOverrides(
 						Path.Combine(
-							BindingGenerationContext.Instance.EnvironmentSettingRootPath,
+							BindingGenerationContext.EnvironmentSettingRootPath,
 							SettingsFileName + ".xml"));
 				}
 				return _environmentSettingOverrides;
@@ -50,13 +50,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			{
 				if (_targetEnvironmentsIndex < 0)
 				{
-					_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.Instance.TargetEnvironment);
+					_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.TargetEnvironment);
 				}
 				if (_targetEnvironmentsIndex < 0)
 					throw new InvalidOperationException(
 						string.Format(
 							"'{0}' is not a target environment declared in the '{1}' file.",
-							BindingGenerationContext.Instance.TargetEnvironment,
+							BindingGenerationContext.TargetEnvironment,
 							SettingsFileName));
 				return _targetEnvironmentsIndex;
 			}
@@ -71,7 +71,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					string.Format(
 						"'{0}' does not have a defined value neither for '{1}' or default target environment.",
 						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
+						BindingGenerationContext.TargetEnvironment));
 			return value.Value;
 		}
 
@@ -84,7 +84,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					string.Format(
 						"'{0}' does not have a defined value neither for '{1}' or default target environment.",
 						propertyName,
-						BindingGenerationContext.Instance.TargetEnvironment));
+						BindingGenerationContext.TargetEnvironment));
 			return value;
 		}
 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,27 +30,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[SetUp]
 		public void SetUp()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "ANYTHING";
+			BindingGenerationContext.TargetEnvironment = "ANYTHING";
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = null;
+			BindingGenerationContext.TargetEnvironment = null;
 		}
 
 		#endregion
 
 		[Test]
-		public void ApplicationHasItsEnvironmentOverridesSettledOnceReferenced()
+		public void AcceptsAndPropagatesVisitor()
 		{
-			var applicationBindingMock = new Mock<IApplicationBinding<string>>();
-			var visitableApplicationBindingMock = applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>();
+			var applicationBindingMock = new Mock<ApplicationBindingBase<string>> { CallBase = true };
 
-			IReferencedApplicationBindingCollection sut = new ReferencedApplicationBindingCollection();
-			sut.Add(applicationBindingMock.Object);
+			var referencedApplicationBindingCollection = new ReferencedApplicationBindingCollection();
+			referencedApplicationBindingCollection.Add(applicationBindingMock.Object);
 
-			visitableApplicationBindingMock.Verify(ab => ab.Accept(It.IsAny<IApplicationBindingVisitor>()), Times.Once);
+			var visitorMock = new Mock<IApplicationBindingVisitor>();
+			((IVisitable<IApplicationBindingVisitor>) referencedApplicationBindingCollection).Accept(visitorMock.Object);
+
+			applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
 		}
 	}
 }

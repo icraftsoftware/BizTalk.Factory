@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ReferenceTypeForTargetEnvironmentWithNotFoundOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = _rootPath;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			Assert.That(
@@ -58,8 +58,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ReferenceTypeForTargetEnvironmentWithoutOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = null;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = null;
 
 			var sut = new EnvironmentSettingsFixture();
 			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory");
@@ -69,8 +69,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ReferenceTypeForTargetEnvironmentWithOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = _rootPath;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory");
@@ -80,8 +80,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ValueTypeForTargetEnvironmentWithNotFoundOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = _rootPath;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			Assert.That(
@@ -96,8 +96,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ValueTypeForTargetEnvironmentWithoutOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = null;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = null;
 
 			var sut = new EnvironmentSettingsFixture();
 			var value = sut.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }, "BamArchiveWindowTimeLength");
@@ -107,8 +107,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void ValueTypeForTargetEnvironmentWithOverride()
 		{
-			BindingGenerationContext.Instance.TargetEnvironment = "DEV";
-			BindingGenerationContext.Instance.EnvironmentSettingRootPath = _rootPath;
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			var value = sut.ValueForTargetEnvironment(new int?[] { null, 1, 2, 3, 4 }, "BamArchiveWindowTimeLength");

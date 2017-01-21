@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch;
 using Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim;
 using Be.Stateless.BizTalk.XPath;
-using Be.Stateless.Extensions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using RetryPolicy = Be.Stateless.BizTalk.Dsl.Binding.Convention.RetryPolicy;
@@ -258,7 +257,7 @@ namespace Be.Stateless.BizTalk
 
 		protected override void ApplyEnvironmentOverrides(string environment)
 		{
-			if (environment.IsDevelopment() || environment.IsBuild())
+			if (environment.IsDevelopmentOrBuild())
 			{
 				SendPorts.Add(
 					SendPort(
@@ -426,7 +425,7 @@ namespace Be.Stateless.BizTalk
 		{
 			get
 			{
-				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD)
+				return BindingGenerationContext.TargetEnvironment.IsDevelopmentOrBuild()
 					? TimeSpan.FromSeconds(5)
 					: TimeSpan.FromMinutes(15);
 			}
@@ -436,7 +435,7 @@ namespace Be.Stateless.BizTalk
 		{
 			get
 			{
-				return BindingGenerationContext.Instance.TargetEnvironment.IsOneOf(TargetEnvironment.DEVELOPMENT, TargetEnvironment.BUILD)
+				return BindingGenerationContext.TargetEnvironment.IsDevelopmentOrBuild()
 					? TimeSpan.FromSeconds(5)
 					: TimeSpan.FromMinutes(5);
 			}
