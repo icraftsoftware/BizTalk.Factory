@@ -90,7 +90,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// </item>
 		/// </list>
 		/// </remarks>
-		public string Promote(string qname, string value)
+		public void Promote(string qname, string value)
 		{
 			var qn = qname.ToQName(_xmlNamespaceResolver);
 			_context.Promote(qn.Name, qn.Namespace, value);
@@ -117,7 +117,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// </item>
 		/// </list>
 		/// </remarks>
-		public string Write(string qname, string value)
+		public void Write(string qname, string value)
 		{
 			var qn = qname.ToQName(_xmlNamespaceResolver);
 			_context.Write(qn.Name, qn.Namespace, value);
