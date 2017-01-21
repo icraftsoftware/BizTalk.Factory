@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="Operations\Extensions\BizTalkOperationsExtensionsFixture.cs" />
     <Compile Include="Unit\Constraints\UncompletedInstanceConstraintFixture.cs" />
+    <Compile Include="Unit\Message\Context\MockFixture.cs" />
     <Compile Include="Unit\Message\MockFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\Resources\ResourceManagerFixture.cs" />

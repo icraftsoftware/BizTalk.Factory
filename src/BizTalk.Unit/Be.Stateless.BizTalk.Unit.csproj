@@ -93,9 +93,13 @@
     <Compile Include="Unit\Constraints\ConstraintExpressionExtensions.cs" />
     <Compile Include="Unit\Constraints\ConstraintExtensions.cs" />
     <Compile Include="Unit\Constraints\UncompletedInstanceConstraint.cs" />
+    <Compile Include="Unit\MessageContextMock.cs" />
+    <Compile Include="Unit\MessageMock.cs" />
+    <Compile Include="Unit\Message\Context\Mock.cs" />
     <Compile Include="Unit\Message\Mock.cs" />
     <Compile Include="Unit\MicroComponent\MicroPipelineComponentFixture.cs" />
     <Compile Include="Unit\Process\AssertNoUncompletedBizTalkServiceInstanceAttribute.cs" />
+    <Compile Include="Unit\Process\CompletedProcessFixture.cs" />
     <Compile Include="Unit\Process\ProcessFixture.cs" />
     <Compile Include="Unit\Process\ClaimBasedProcessFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

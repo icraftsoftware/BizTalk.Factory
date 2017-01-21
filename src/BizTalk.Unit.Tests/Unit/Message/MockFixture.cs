@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -98,15 +98,6 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			Assert.That(contextMock.Object.IsPromoted(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace), Is.True);
 
 			message.Verify();
-		}
-
-		[Test]
-		public void MockSupportsDefaultValueEmpty()
-		{
-			var message = new Mock<IBaseMessage> { DefaultValue = DefaultValue.Empty };
-			message.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
-
-			Assert.That(message.Object.Direction().IsInbound());
 		}
 
 		[Test]

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Microsoft.BizTalk.Message.Interop;
@@ -40,37 +40,33 @@ namespace Be.Stateless.BizTalk.Unit.Message
 	/// <seealso cref="BaseMessage.SetProperty{T,TV}(IBaseMessage,ContextProperties.MessageContextProperty{T,TV},TV)"/>
 	/// <seealso cref="BaseMessage.Promote{T}(IBaseMessage,ContextProperties.MessageContextProperty{T,string},string)"/>
 	/// <seealso cref="BaseMessage.Promote{T,TV}(IBaseMessage,ContextProperties.MessageContextProperty{T,TV},TV)"/>
+	[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 	public class Mock<T> : Moq.Mock<T> where T : class, IBaseMessage
 	{
-		public Mock()
-		{
-			InitializeMock(MockBehavior.Default);
-		}
+		public Mock() : this(MockBehavior.Default) { }
 
-		public Mock(MockBehavior behavior) : base(behavior)
-		{
-			InitializeMock(behavior);
-		}
+		public Mock(MockBehavior behavior) : this(behavior, new object[0]) { }
 
-		public Mock(MockBehavior behavior, params object[] args)
-			: base(behavior, args)
-		{
-			InitializeMock(behavior);
-		}
+		public Mock(params object[] args) : this(MockBehavior.Default, args) { }
 
-		public Mock(params object[] args)
-			: base(args)
+		public Mock(MockBehavior behavior, params object[] args) : base(behavior, args)
 		{
-			InitializeMock(MockBehavior.Default);
+			// avoid NullReferenceException when calling .GetProperty() extension on IBaseMessage mock and no property setup has been performed
+			_contextMock = new Context.Mock<IBaseMessageContext>(behavior);
+			Setup(m => m.Context).Returns(_contextMock.Object);
+
+			// hook GetOriginalDataStream() onto BodyPart.Data, so that it does not fail when BodyPart has a Data stream
+			Setup(m => m.BodyPart.GetOriginalDataStream()).Returns(() => Object.BodyPart.Data);
 		}
 
 		public ISetup<T> Setup(Expression<Action<IBaseMessage>> expression)
 		{
-			// intercept and rewrite IBaseMessage Setups against IBaseMessageContext
+			// intercept Setups
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
 			{
-				var qualifiedName = GetContextPropertyXmlQualifiedName(methodCallExpression);
+				// rewrite Setups
+				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
 				switch (methodCallExpression.Method.Name)
 				{
 					case "DeleteProperty":
@@ -89,37 +85,36 @@ namespace Be.Stateless.BizTalk.Unit.Message
 				}
 			}
 
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			// let base class handle all other Setups
 			return Setup((Expression<Action<T>>) (Expression) expression);
 		}
 
 		public ISetup<T, object> Setup(Expression<Func<IBaseMessage, string>> expression)
 		{
-			// intercept and rewrite IBaseMessage Setups against IBaseMessageContext
+			// intercept Setups
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "GetProperty")
 			{
-				var qualifiedName = GetContextPropertyXmlQualifiedName(methodCallExpression);
+				// rewrite Setups
+				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
 				return SetupContext(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			// let base class handle all other Setups
 			return Setup((Expression<Func<T, object>>) (Expression) expression);
 		}
 
 		public ISetup<T, bool> Setup(Expression<Func<IBaseMessage, bool>> expression)
 		{
-			// intercept and rewrite IBaseMessage Setups against IBaseMessageContext
+			// intercept Setups
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "IsPromoted")
 			{
-				var qualifiedName = GetContextPropertyXmlQualifiedName(methodCallExpression);
+				// rewrite Setups
+				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
 				return SetupContext(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			// let base class handle all other Setups
 			return Setup((Expression<Func<T, bool>>) (Expression) expression);
 		}
@@ -130,18 +125,18 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "GetProperty")
 			{
-				var qualifiedName = GetContextPropertyXmlQualifiedName(methodCallExpression);
+				// rewrite Setups
+				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
 				return SetupContext(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			// let base class handle all other Setups
 			return Setup((Expression<Func<T, object>>) (Expression) expression);
 		}
 
 		public ISetup<T, TResult> Setup<TResult>(Expression<Func<IBaseMessage, TResult>> expression)
 		{
-			// intercept and rewrite IBaseMessage Setups against IBaseMessageContext
+			// intercept Setups
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
 				throw new NotSupportedException(
@@ -149,7 +144,6 @@ namespace Be.Stateless.BizTalk.Unit.Message
 						"Unexpected IBaseMessage extension method: '{0}'.",
 						methodCallExpression.Method.Name));
 
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			// let base class handle all other Setups
 			return Setup((Expression<Func<T, TResult>>) (Expression) expression);
 		}
@@ -192,7 +186,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
 			{
-				var qname = GetContextPropertyXmlQualifiedName(methodCallExpression);
+				var qname = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
 				var mock = Get(Object.Context);
 				switch (methodCallExpression.Method.Name)
 				{
@@ -211,31 +205,9 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			}
 			else
 			{
-				// ReSharper disable SuspiciousTypeConversion.Global
 				// let base class handle all other Verify calls
 				Verify((Expression<Action<T>>) (Expression) expression, times, failMessage);
-				// ReSharper restore SuspiciousTypeConversion.Global
 			}
-		}
-
-		private void InitializeMock(MockBehavior behavior)
-		{
-			// avoid NullReferenceException when calling .GetProperty() extension on IBaseMessage mock and no property setup has been performed
-			_contextMock = new Moq.Mock<IBaseMessageContext>(behavior) { DefaultValue = DefaultValue.Empty };
-			Setup(m => m.Context).Returns(_contextMock.Object);
-
-			// hook GetOriginalDataStream() onto BodyPart.Data, so that it does not fail when BodyPart has a Data stream
-			Setup(m => m.BodyPart.GetOriginalDataStream())
-				.Returns(() => Object.BodyPart.Data);
-		}
-
-		private XmlQualifiedName GetContextPropertyXmlQualifiedName(MethodCallExpression methodCallExpression)
-		{
-			var propertyArgument = methodCallExpression.Arguments[1];
-			if (!propertyArgument.Type.IsGenericType || propertyArgument.Type.GetGenericTypeDefinition() != typeof(MessageContextProperty<,>)) throw new NotSupportedException();
-			dynamic contextProperty = Expression.Lambda(propertyArgument).Compile().DynamicInvoke();
-			var qualifiedName = new XmlQualifiedName(contextProperty.Name, contextProperty.Namespace);
-			return qualifiedName;
 		}
 
 		private ISetup<T> SetupContext(Expression<Action<T>> expression)
@@ -283,6 +255,6 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			}
 		}
 
-		private Moq.Mock<IBaseMessageContext> _contextMock;
+		private readonly Context.Mock<IBaseMessageContext> _contextMock;
 	}
 }
