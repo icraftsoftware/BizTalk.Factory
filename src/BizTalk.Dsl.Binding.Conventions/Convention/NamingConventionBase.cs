@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ using Be.Stateless.Extensions;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 {
 	public abstract class NamingConventionBase<TNamingConvention, TParty, TMessageName> :
-			IApplicationNameMemento<string>,
-			IPartyMemento<TParty>,
-			IMessageNameMemento<TMessageName>,
-			IMessageFormatMemento<string>
+		IApplicationNameMemento<string>,
+		IPartyMemento<TParty>,
+		IMessageNameMemento<TMessageName>,
+		IMessageFormatMemento<string>
 		where TNamingConvention : NamingConventionBase<TNamingConvention, TParty, TMessageName>, INamingConvention<TNamingConvention>
 	{
 		#region IApplicationNameMemento<string> Members
@@ -64,7 +64,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		protected string ComputeReceivePortName(IReceivePort<TNamingConvention> receivePort)
 		{
-			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
+			if (receivePort.ApplicationBinding == null)
+				throw new NamingConventionException(
+					string.Format(
+						"ReceivePort '{0}' is not bound to application's receive port collection.",
+						receivePort.GetType().Name));
+			if (Equals(Party, default(TParty)))
+				throw new NamingConventionException(
+					string.Format(
+						"ReceivePort '{0}''s Party is required.",
+						receivePort.GetType().Name));
 
 			var area = ComputeArea(receivePort.GetType());
 			return string.Format(
@@ -77,15 +86,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		protected string ComputeReceiveLocationName(IReceiveLocation<TNamingConvention> receiveLocation)
 		{
+			if (receiveLocation.ReceivePort == null)
+				throw new NamingConventionException(
+					string.Format(
+						"ReceiveLocation '{0}' is not bound to any receive port.",
+						receiveLocation.GetType().Name));
 			if (Equals(Party, default(TParty))) Party = receiveLocation.ReceivePort.Name.Party;
-			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
+			if (Equals(Party, default(TParty)))
+				throw new NamingConventionException(
+					string.Format(
+						"ReceiveLocation '{0}''s Party is required.",
+						receiveLocation.GetType().Name));
 			if (!Equals(Party, receiveLocation.ReceivePort.Name.Party))
 				throw new NamingConventionException(
 					string.Format(
-						"ReceiveLocation's Party '{0}' does not match its ReceivePort's one '{1}'.",
+						"ReceiveLocation '{0}''s Party '{1}' does not match its ReceivePort's one '{2}'.",
+						receiveLocation.GetType().Name,
 						Party,
 						receiveLocation.ReceivePort.Name.Party));
-			if (Equals(MessageName, default(TMessageName))) throw new NamingConventionException("MessageName is required.");
+			if (Equals(MessageName, default(TMessageName)))
+				throw new NamingConventionException(
+					string.Format(
+						"ReceiveLocation '{0}''s MessageName is required.",
+						receiveLocation.GetType().Name));
 			if (MessageFormat == null) throw new NamingConventionException("A non null MessageFormat is required.");
 
 			var area = ComputeArea(receiveLocation.GetType());
@@ -94,7 +117,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			if (!receivePortArea.IsNullOrEmpty() && receivePortArea != area)
 				throw new NamingConventionException(
 					string.Format(
-						"ReceiveLocation's Area '{0}' does not match its ReceivePort's one '{1}'.",
+						"ReceiveLocation '{0}''s Area '{1}' does not match its ReceivePort's one '{2}'.",
+						receiveLocation.GetType().Name,
 						area,
 						receivePortArea));
 
@@ -111,8 +135,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 
 		protected string ComputeSendPortName(ISendPort<TNamingConvention> sendPort)
 		{
-			if (Equals(Party, default(TParty))) throw new NamingConventionException("Party is required.");
-			if (Equals(MessageName, default(TMessageName))) throw new NamingConventionException("MessageName is required.");
+			if (sendPort.ApplicationBinding == null)
+				throw new NamingConventionException(
+					string.Format(
+						"SendPort '{0}' is not bound to application's send port collection.",
+						sendPort.GetType().Name));
+			if (Equals(Party, default(TParty)))
+				throw new NamingConventionException(
+					string.Format(
+						"SendPort '{0}''s Party is required.",
+						sendPort.GetType().Name));
+			if (Equals(MessageName, default(TMessageName)))
+				throw new NamingConventionException(
+					string.Format(
+						"SendPort '{0}''s MessageName is required.",
+						sendPort.GetType().Name));
 			if (MessageFormat == null) throw new NamingConventionException("A non null MessageFormat is required.");
 
 			var area = ComputeArea(sendPort.GetType());

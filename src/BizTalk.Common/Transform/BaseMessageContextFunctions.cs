@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,6 +66,61 @@ namespace Be.Stateless.BizTalk.Transform
 		{
 			var qn = qname.ToQName(_xmlNamespaceResolver);
 			return Convert.ToString(_context.Read(qn.Name, qn.Namespace));
+		}
+
+		/// <summary>
+		/// Promote the property, identified by its XML Qualified name, with a given value into the current message
+		/// context.
+		/// </summary>
+		/// <param name="qname">
+		/// The XML Qualified name of the property, e.g. <c>bts:MessageType</c>.
+		/// </param>
+		/// <param name="value">
+		/// The property value as a <see cref="string"/>.
+		/// </param>
+		/// <remarks>
+		/// <paramref name="qname"/> has to be an XML Qualified of the form <c>ns:name</c> where
+		/// <list type="bullet">
+		/// <item>
+		/// <c>ns</c> is the prefix that the XSLT, to which an instance of this class will be added as an extension
+		/// object, defines when declaring the target namespace of some property schema;
+		/// </item>
+		/// <item>
+		/// <c>name</c> is the name a property defined in the latter property schema.
+		/// </item>
+		/// </list>
+		/// </remarks>
+		public string Promote(string qname, string value)
+		{
+			var qn = qname.ToQName(_xmlNamespaceResolver);
+			_context.Promote(qn.Name, qn.Namespace, value);
+		}
+
+		/// <summary>
+		/// Write the property, identified by its XML Qualified name, with a given value into the current message context.
+		/// </summary>
+		/// <param name="qname">
+		/// The XML Qualified name of the property, e.g. <c>bts:MessageType</c>.
+		/// </param>
+		/// <param name="value">
+		/// The property value as a <see cref="string"/>.
+		/// </param>
+		/// <remarks>
+		/// <paramref name="qname"/> has to be an XML Qualified of the form <c>ns:name</c> where
+		/// <list type="bullet">
+		/// <item>
+		/// <c>ns</c> is the prefix that the XSLT, to which an instance of this class will be added as an extension
+		/// object, defines when declaring the target namespace of some property schema;
+		/// </item>
+		/// <item>
+		/// <c>name</c> is the name a property defined in the latter property schema.
+		/// </item>
+		/// </list>
+		/// </remarks>
+		public string Write(string qname, string value)
+		{
+			var qn = qname.ToQName(_xmlNamespaceResolver);
+			_context.Write(qn.Name, qn.Namespace, value);
 		}
 
 		/// <summary>
