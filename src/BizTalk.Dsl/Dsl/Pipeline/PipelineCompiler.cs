@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.IO;
 using Be.Stateless.Reflection;
 using Microsoft.BizTalk.PipelineEditor.PipelineFile;
 using BizTalkPipelineCompiler = Microsoft.BizTalk.PipelineEditor.PipelineCompiler;
+using PolicyFileDocument = Microsoft.BizTalk.PipelineEditor.PolicyFile.Document;
 
 namespace Be.Stateless.BizTalk.Dsl.Pipeline
 {
@@ -31,7 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 			_pipeline = pipeline;
 		}
 
-		#region IPipelineSerializer Members
+		#region IDslSerializer Members
 
 		/// <summary>
 		/// </summary>
@@ -46,8 +47,7 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 			var policyFilePath = Path.IsPathRooted(pipelineDocument.PolicyFilePath)
 				? pipelineDocument.PolicyFilePath
 				: Path.Combine((string) Reflector.GetProperty<Document>("PolicyFileDirectory"), pipelineDocument.PolicyFilePath);
-			var policyDocument =
-				(Microsoft.BizTalk.PipelineEditor.PolicyFile.Document) Reflector.InvokeMethod<Microsoft.BizTalk.PipelineEditor.PolicyFile.Document>("Load", policyFilePath);
+			var policyDocument = (PolicyFileDocument) Reflector.InvokeMethod<PolicyFileDocument>("Load", policyFilePath);
 			Reflector.InvokeMethod<Document>("MergePipelineFileWithPolicyFile", pipelineDocument, policyDocument);
 
 			var compiler = Activator.CreateInstance<BizTalkPipelineCompiler>();
