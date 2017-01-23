@@ -109,6 +109,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tracking\Messaging\ProcessName.cs" />
+    <Compile Include="Xml\EmbeddedXmlResolver.cs" />
     <Compile Include="Xml\EncodingXmlSerializer.cs" />
     <Compile Include="Xml\PolicyNameXmlSerializer.cs" />
     <Compile Include="Xml\RuntimeTypeXmlSerializer.cs" />

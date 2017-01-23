@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		[Test]
 		public void BatchDescriptor()
 		{
-			using (var stream = ResourceManager.Load("BatchContent.xml").AsMarkable())
+			using (var stream = ResourceManager.Load("Be.Stateless.BizTalk.Streaming.Data.BatchContent.xml").AsMarkable())
 			{
 				var batchDescriptor = ((IProbeBatchContentStream) stream.Probe()).BatchDescriptor;
 				Assert.That(batchDescriptor.EnvelopeSpecName, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
@@ -94,7 +94,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		[Test]
 		public void BatchTrackingContext()
 		{
-			using (var stream = ResourceManager.Load("BatchContent.xml").AsMarkable())
+			using (var stream = ResourceManager.Load("Be.Stateless.BizTalk.Streaming.Data.BatchContent.xml").AsMarkable())
 			{
 				var batchTrackingContext = ((IProbeBatchContentStream) stream.Probe()).BatchTrackingContext;
 				Assert.That(

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 				throw new ArgumentException(
 					string.Format("The type {0} does not derive from TransformBase.", transform.AssemblyQualifiedName),
 					"transform");
+			_transform = transform;
 
 			var transformBase = Activator.CreateInstance(transform) as TransformBase;
 			if (transformBase == null) throw new ArgumentNullException("transform", string.Format("Cannot instantiate type '{0}'.", transform.AssemblyQualifiedName));
@@ -92,6 +93,8 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		/// </summary>
 		public XslCompiledTransform XslCompiledTransform { get; private set; }
 
+		private readonly Type _transform;
+
 		#region Helpers
 
 		private static XPathNavigator CreateNavigator(string xmlContent)
@@ -128,7 +131,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 #else
 				new XslCompiledTransform();
 #endif
-			transform.Load(stylesheet, XsltSettings.TrustedXslt, new XmlUrlResolver());
+			transform.Load(stylesheet, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(_transform));
 			return transform;
 		}
 
