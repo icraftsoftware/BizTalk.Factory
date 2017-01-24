@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(stream, new Mock<IBaseMessageContext>().Object);
+				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 			}
@@ -51,7 +51,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchPartition.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(stream, new Mock<IBaseMessageContext>().Object);
+				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Single("//usp:partition/text()").Value, Is.EqualTo("A"));
 			}
@@ -68,7 +68,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(stream, contextMock.Object);
+				var result = Transform<QueueControlledRelease>(contextMock.Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.Single("//usp:processActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));

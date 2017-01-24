@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(stream, contextMock.Object);
+				var result = Transform<AddPart>(contextMock.Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.Select("//usp:messagingStepActivityId").Count, Is.EqualTo(0));
@@ -59,7 +59,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(stream, contextMock.Object);
+				var result = Transform<AddPart>(contextMock.Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.Single("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(stream, contextMock.Object);
+				var result = Transform<AddPart>(contextMock.Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Single("//usp:partition/text()").Value, Is.EqualTo("A"));
 				Assert.That(result.Single("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));

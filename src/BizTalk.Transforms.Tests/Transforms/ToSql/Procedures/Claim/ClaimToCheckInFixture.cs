@@ -42,7 +42,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 
 			using (var stream = ResourceManager.Load("Data.Token.1.xml"))
 			{
-				var result = Transform<CheckIn>(stream, contextMock.Object);
+				var result = Transform<CheckIn>(contextMock.Object, stream);
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Single("//usp:correlationToken/text()").Value, Is.EqualTo("context-correlation-token"));
 				Assert.That(result.Single("//usp:messageType/text()").Value, Is.EqualTo("context-claimed-message-type"));
@@ -65,7 +65,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 
 			using (var stream = ResourceManager.Load("Data.Token.3.xml"))
 			{
-				var result = Transform<CheckIn>(stream, contextMock.Object);
+				var result = Transform<CheckIn>(contextMock.Object, stream);
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Single("//usp:correlationToken/text()").Value, Is.EqualTo("embedded-correlation-token"));
 				Assert.That(result.Single("//usp:messageType/text()").Value, Is.EqualTo("embedded-claimed-message-type"));
@@ -82,7 +82,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 		{
 			using (var stream = ResourceManager.Load("Data.Token.2.xml"))
 			{
-				var result = Transform<CheckIn>(stream, new Mock<IBaseMessageContext>().Object);
+				var result = Transform<CheckIn>(new Mock<IBaseMessageContext>().Object, stream);
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Select("//usp:any").Count, Is.EqualTo(1));
 				Assert.That(
@@ -96,7 +96,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 		{
 			using (var stream = ResourceManager.Load("Data.Token.1.xml"))
 			{
-				var result = Transform<CheckIn>(stream, new Mock<IBaseMessageContext>().Object);
+				var result = Transform<CheckIn>(new Mock<IBaseMessageContext>().Object, stream);
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Select("//usp:any").Count, Is.EqualTo(0));
 			}
