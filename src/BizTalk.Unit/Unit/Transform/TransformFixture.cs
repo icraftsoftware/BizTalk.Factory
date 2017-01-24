@@ -2,17 +2,14 @@
 
 // Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at
 // 
 // http://www.apache.org/licenses/LICENSE-2.0
 // 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
 
 #endregion
 
@@ -263,8 +260,8 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		/// The full path to the file being transformed.
 		/// </param>
 		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be
-		/// further validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
 		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
 		/// </returns>
 		/// <remarks>
@@ -275,6 +272,29 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			where TSchema : SchemaBase, new()
 		{
 			return Transform<TSchema>(XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
+		/// XML schema.
+		/// </summary>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(Stream inputStream)
+			where TSchema : SchemaBase, new()
+		{
+			return Transform<TSchema>(XmlSchemaContentProcessing.Strict, inputStream);
 		}
 
 		/// <summary>
@@ -301,6 +321,29 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema"/>.
+		/// </summary>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(params Stream[] inputStreams)
+			where TSchema : SchemaBase, new()
+		{
+			return Transform<TSchema>(XmlSchemaContentProcessing.Strict, inputStreams);
+		}
+
+		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
 		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
 		/// XML schema.
@@ -323,10 +366,33 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		protected TransformResult Transform<TSchema>(IBaseMessageContext context, string inputPath)
 			where TSchema : SchemaBase, new()
 		{
-			using (var inputStream = File.OpenRead(inputPath))
-			{
-				return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputStream);
-			}
+			return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
+		/// XML schema.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(IBaseMessageContext context, Stream inputStream)
+			where TSchema : SchemaBase, new()
+		{
+			return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputStream);
 		}
 
 		/// <summary>
@@ -352,16 +418,33 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		protected TransformResult Transform<TSchema>(IBaseMessageContext context, params string[] inputPaths)
 			where TSchema : SchemaBase, new()
 		{
-			var inputStreams = Enumerable.Empty<Stream>().ToArray();
-			try
-			{
-				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
-				return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputStreams);
-			}
-			finally
-			{
-				inputStreams.Where(s => s != null).Each(s => s.Dispose());
-			}
+			return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputPaths);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(IBaseMessageContext context, params Stream[] inputStreams)
+			where TSchema : SchemaBase, new()
+		{
+			return Transform<TSchema>(context, XmlSchemaContentProcessing.Strict, inputStreams);
 		}
 
 		/// <summary>
@@ -376,8 +459,8 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		/// The full path to the file being transformed.
 		/// </param>
 		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be
-		/// further validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
 		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
 		/// </returns>
 		/// <remarks>
@@ -390,6 +473,36 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			using (var inputStream = File.OpenRead(inputPath))
 			{
 				return Transform<TSchema>(contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
+		/// XML schema.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
 			}
 		}
 
@@ -429,6 +542,36 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
+			where TSchema : SchemaBase, new()
+		{
+			using (var resultStream = inputStreams.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
 		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
 		/// XML schema.
@@ -457,6 +600,39 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			using (var inputStream = File.OpenRead(inputPath))
 			{
 				return Transform<TSchema>(context, contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
+		/// XML schema.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
 			}
 		}
 
@@ -499,6 +675,39 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
+			where TSchema : SchemaBase, new()
+		{
+			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
 		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
 		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
@@ -520,6 +729,30 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			where TSchema2 : SchemaBase, new()
 		{
 			return Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing.Strict, inputStream);
 		}
 
 		/// <summary>
@@ -547,6 +780,30 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing.Strict, inputStreams);
+		}
+
+		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
 		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
 		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
@@ -570,10 +827,34 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			where TSchema1 : SchemaBase, new()
 			where TSchema2 : SchemaBase, new()
 		{
-			using (var inputStream = File.OpenRead(inputPath))
-			{
-				return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputStream);
-			}
+			return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputStream);
 		}
 
 		/// <summary>
@@ -600,16 +881,34 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			where TSchema1 : SchemaBase, new()
 			where TSchema2 : SchemaBase, new()
 		{
-			var inputStreams = Enumerable.Empty<Stream>().ToArray();
-			try
-			{
-				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
-				return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputStreams);
-			}
-			finally
-			{
-				inputStreams.Where(s => s != null).Each(s => s.Dispose());
-			}
+			return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputPaths);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2>(context, XmlSchemaContentProcessing.Strict, inputStreams);
 		}
 
 		/// <summary>
@@ -639,6 +938,37 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			using (var inputStream = File.OpenRead(inputPath))
 			{
 				return Transform<TSchema1, TSchema2>(contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
 			}
 		}
 
@@ -679,6 +1009,37 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			using (var resultStream = inputStreams.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
 		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
 		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
@@ -708,6 +1069,40 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			using (var inputStream = File.OpenRead(inputPath))
 			{
 				return Transform<TSchema1, TSchema2>(context, contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
 			}
 		}
 
@@ -751,444 +1146,6 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
-		/// XML schema.
-		/// </summary>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(Stream inputStream)
-			where TSchema : SchemaBase, new()
-		{
-			return Transform<TSchema>(XmlSchemaContentProcessing.Strict, inputStream);
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema"/>.
-		/// </summary>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(params Stream[] inputStreams)
-			where TSchema : SchemaBase, new()
-		{
-			return Transform<TSchema>(XmlSchemaContentProcessing.Strict, inputStreams);
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
-		/// XML schema.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(IBaseMessageContext context, Stream inputStream)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema"/>.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(IBaseMessageContext context, params Stream[] inputStreams)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
-		/// XML schema.
-		/// </summary>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(XmlSchemaContentProcessing contentProcessing, Stream inputStream)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema"/>.
-		/// </summary>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStreams.Transform().Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the <typeparamref name="TSchema"/>-<see cref="SchemaBase"/>-derived
-		/// XML schema.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, Stream inputStream)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema"/>.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
-			where TSchema : SchemaBase, new()
-		{
-			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(Stream inputStream)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			return Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing.Strict, inputStream);
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(params Stream[] inputStreams)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			return Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing.Strict, inputStreams);
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, Stream inputStream)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, params Stream[] inputStreams)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing contentProcessing, Stream inputStream)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStreams">
-		/// The XML streams to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			using (var resultStream = inputStreams.Transform().Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
-		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
-		/// validates the resulting document against the schema identified by the type parameter <typeparamref
-		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
-		/// </summary>
-		/// <param name="context">
-		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
-		/// </param>
-		/// <param name="contentProcessing">
-		/// Validation mode.
-		/// </param>
-		/// <param name="inputStream">
-		/// The XML stream to be transformed.
-		/// </param>
-		/// <returns>
-		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
-		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
-		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
-		/// </returns>
-		/// <remarks>
-		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
-		/// cref="TransformBase"/>-derived BizTalk map.
-		/// </remarks>
-		protected TransformResult Transform<TSchema1, TSchema2>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, Stream inputStream)
-			where TSchema1 : SchemaBase, new()
-			where TSchema2 : SchemaBase, new()
-		{
-			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
-			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
-			{
-				return new TransformResult(reader, _namespaceManager);
-			}
-		}
-
-		/// <summary>
 		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
 		/// validates the resulting document against the schema identified by the type parameter <typeparamref
 		/// name="TSchema1"/> and <typeparamref name="TSchema2"/>.
@@ -1217,6 +1174,497 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
 			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="inputPath">
+		/// The full path to the file being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(string inputPath)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing.Strict, inputStream);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the documents at <paramref name="inputPaths"/> and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="inputPaths">
+		/// The full paths to the files being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(params string[] inputPaths)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing.Strict, inputPaths);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing.Strict, inputStreams);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputPath">
+		/// The full path to the file being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, string inputPath)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(context, XmlSchemaContentProcessing.Strict, inputPath);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(context, XmlSchemaContentProcessing.Strict, inputStream);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the documents at <paramref name="inputPaths"/> and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputPaths">
+		/// The full paths to the files being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, params string[] inputPaths)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(context, XmlSchemaContentProcessing.Strict, inputPaths);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			return Transform<TSchema1, TSchema2, TSchema3>(context, XmlSchemaContentProcessing.Strict, inputStreams);
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputPath">
+		/// The full path to the file being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing contentProcessing, string inputPath)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var inputStream = File.OpenRead(inputPath))
+			{
+				return Transform<TSchema1, TSchema2, TSchema3>(contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2, TSchema3>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the documents at <paramref name="inputPaths"/> and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputPaths">
+		/// The full paths to the files being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing contentProcessing, params string[] inputPaths)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			var inputStreams = Enumerable.Empty<Stream>().ToArray();
+			try
+			{
+				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
+				return Transform<TSchema1, TSchema2, TSchema3>(contentProcessing, inputStreams);
+			}
+			finally
+			{
+				inputStreams.Where(s => s != null).Each(s => s.Dispose());
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(XmlSchemaContentProcessing contentProcessing, params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var resultStream = inputStreams.Transform().Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2, TSchema3>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the document at <paramref name="inputPath"/> and
+		/// validates the resulting document against the schemas identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputPath">
+		/// The full path to the file being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, string inputPath)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var inputStream = File.OpenRead(inputPath))
+			{
+				return Transform<TSchema1, TSchema2, TSchema3>(context, contentProcessing, inputStream);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStream"/> stream and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStream">
+		/// The XML stream to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, Stream inputStream)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var resultStream = inputStream.Transform().ExtendWith(context).Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2, TSchema3>(resultStream, contentProcessing))
+			{
+				return new TransformResult(reader, _namespaceManager);
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the documents at <paramref name="inputPaths"/> and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputPaths">
+		/// The full paths to the files being transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(IBaseMessageContext context, XmlSchemaContentProcessing contentProcessing, params string[] inputPaths)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			var inputStreams = Enumerable.Empty<Stream>().ToArray();
+			try
+			{
+				inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToArray();
+				return Transform<TSchema1, TSchema2, TSchema3>(context, contentProcessing, inputStreams);
+			}
+			finally
+			{
+				inputStreams.Where(s => s != null).Each(s => s.Dispose());
+			}
+		}
+
+		/// <summary>
+		/// Executes the given BizTalk map <typeparamref name="T"/> on the <paramref name="inputStreams"/> streams and
+		/// validates the resulting document against the schema identified by the type parameter <typeparamref
+		/// name="TSchema1"/>, <typeparamref name="TSchema2"/> and <typeparamref name="TSchema3"/>.
+		/// </summary>
+		/// <param name="context">
+		/// The <see cref="IBaseMessageContext"/> that the <typeparamref name="T"/> transform requires to be applied.
+		/// </param>
+		/// <param name="contentProcessing">
+		/// Validation mode.
+		/// </param>
+		/// <param name="inputStreams">
+		/// The XML streams to be transformed.
+		/// </param>
+		/// <returns>
+		/// A <see cref="TransformResult"/> containing the transform results. The contents of this document can be further
+		/// validated by the caller using for instance either the <see cref="TransformResult.Select"/> or the <see
+		/// cref="TransformResult.StringJoin(string,char)"/> methods if necessary.
+		/// </returns>
+		/// <remarks>
+		/// The executed transform is the <see cref="XslCompiledTransform"/> equivalent of the <see
+		/// cref="TransformBase"/>-derived BizTalk map.
+		/// </remarks>
+		protected TransformResult Transform<TSchema1, TSchema2, TSchema3>(
+			IBaseMessageContext context,
+			XmlSchemaContentProcessing contentProcessing,
+			params Stream[] inputStreams)
+			where TSchema1 : SchemaBase, new()
+			where TSchema2 : SchemaBase, new()
+			where TSchema3 : SchemaBase, new()
+		{
+			using (var resultStream = inputStreams.Transform().ExtendWith(context).Apply(typeof(T)))
+			using (var reader = ValidatingXmlReader.Create<TSchema1, TSchema2, TSchema3>(resultStream, contentProcessing))
 			{
 				return new TransformResult(reader, _namespaceManager);
 			}
