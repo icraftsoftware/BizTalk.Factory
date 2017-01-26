@@ -270,7 +270,7 @@
     <Compile Include="Dsl\Binding\IApplicationBinding.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingVisitor.cs" />
     <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
-    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingSettlerVisitor.cs" />
+    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingEnvironmentSettlerVisitor.cs" />
     <Compile Include="Dsl\Binding\Visitor\BizTalkServiceConfiguratorVisitor.cs" />
     <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderConfiguratorVisitor.cs" />
     <Compile Include="Dsl\BizTalkAssemblyResolver.cs" />

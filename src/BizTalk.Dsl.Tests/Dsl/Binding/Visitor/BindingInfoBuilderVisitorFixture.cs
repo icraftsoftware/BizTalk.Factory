@@ -23,6 +23,7 @@ using Be.Stateless.BizTalk.Orchestrations.Dummy;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.Deployment.Binding;
 using Microsoft.BizTalk.ExplorerOM;
+using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
@@ -285,6 +286,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			Assert.That(binding.Ports[3].Name, Is.EqualTo("SolicitResponsePort"));
 			Assert.That(binding.Ports[3].ReceivePortRef, Is.Null);
 			Assert.That(binding.Ports[3].SendPortRef.Name, Is.EqualTo(((ISupportNamingConvention) new TestApplication.TwoWaySendPort()).Name));
+		}
+
+		[Test]
+		public void VisitReferencedApplicationBindingDoesNotPropagateVisitor()
+		{
+			var applicationBindingMock = new Mock<IVisitable<IApplicationBindingVisitor>>();
+
+			var visitor = BindingInfoBuilderVisitor.Create();
+			visitor.VisitReferencedApplicationBinding(applicationBindingMock.Object);
+
+			applicationBindingMock.Verify(a => a.Accept(visitor), Times.Never);
 		}
 	}
 }

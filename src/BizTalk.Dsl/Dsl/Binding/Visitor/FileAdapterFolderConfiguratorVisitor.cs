@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		private FileAdapterFolderConfiguratorVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
+			_applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
 		}
 
 		private FileAdapterFolderConfiguratorVisitor(string[] users) : this()
@@ -59,10 +59,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		#region IApplicationBindingVisitor Members
 
+		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)
+		{
+			// do not setup file adapters' physical paths for referenced applications
+		}
+
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitApplicationBinding(applicationBinding);
+			_applicationBindingEnvironmentSettlerVisitor.VisitApplicationBinding(applicationBinding);
 		}
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding) { }
@@ -70,13 +75,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceivePort(receivePort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceivePort(receivePort);
 		}
 
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceiveLocation(receiveLocation);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var fileAdapter = receiveLocation.Transport.Adapter as FileAdapter.Inbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.ReceiveFolder);
 		}
@@ -84,7 +89,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitSendPort(sendPort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitSendPort(sendPort);
 			var fileAdapter = sendPort.Transport.Adapter as FileAdapter.Outbound;
 			if (fileAdapter != null) _directoryOperation(fileAdapter.DestinationFolder);
 		}
@@ -176,7 +181,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		#endregion
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(FileAdapterFolderConfiguratorVisitor));
-		private readonly ApplicationBindingSettlerVisitor _applicationBindingSettlerVisitor;
+		private readonly ApplicationBindingEnvironmentSettlerVisitor _applicationBindingEnvironmentSettlerVisitor;
 		private readonly Action<string> _directoryOperation;
 		private readonly string[] _users;
 	}

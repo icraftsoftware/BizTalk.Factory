@@ -29,9 +29,9 @@ Set-StrictMode -Version Latest
 .EXAMPLE
     Get-ChildItem -Directory | Clear-Project
 .EXAMPLE
-    Clear-Project -All
+    Clear-Project -Recurse
 
-    The -All switch is shorthand for the following compound command: Get-ChildItem -Directory | Clear-Project.
+    The -Recurse switch is shorthand for the following compound command: Get-ChildItem -Directory | Clear-Project.
 .EXAMPLE
     Clear-Project .\BizTalk.Dsl, .\BizTalk.Dsl.Tests
 .EXAMPLE
@@ -47,17 +47,22 @@ function Clear-Project
         [psobject[]]
         $Path,
 
-        [Parameter(Mandatory=$true,ParameterSetName='All')]
+        [Parameter(Mandatory=$true,ParameterSetName='Packages')]
+        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
-        $All
+        $Packages,
+
+        [Parameter(Mandatory=$true,ParameterSetName='Recurse')]
+        [switch]
+        $Recurse
 
         #TODO switch to also clean .user, .dotsettings.user, etc... files
     )
 
     #begin { }
     process {
-        if ($PsCmdlet.ParameterSetName -eq 'All') {
-            if ($All) {
+        if ($PsCmdlet.ParameterSetName -eq 'Recurse') {
+            if ($Recurse) {
                 $Path = Get-ChildItem -Path . -Directory
             } else {
                 $Path = Get-Item -Path .
@@ -74,6 +79,9 @@ function Clear-Project
             Get-ChildItem -Path $p -Filter *.btm.cs -Recurse | Remove-Item -Confirm:$false
             Get-ChildItem -Path $p -Filter *.btp.cs -Recurse | Remove-Item -Confirm:$false
             Get-ChildItem -Path $p -Filter *.xsd.cs -Recurse | Remove-Item -Confirm:$false
+        }
+        if ($Packages) {
+            Get-ChildItem -Path .\packages\ -Directory | Remove-Item -Recurse -Force -Confirm:$false
         }
     }
     #end { }

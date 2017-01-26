@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,22 +52,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		private BindingInfoBuilderVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
+			_applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
 		}
 
 		#region IApplicationBindingVisitor Members
 
+		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)
+		{
+			// do not generate BindingInfo for referenced applications
+		}
+
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitApplicationBinding(applicationBinding);
+			_applicationBindingEnvironmentSettlerVisitor.VisitApplicationBinding(applicationBinding);
 			ApplicationName = ((ISupportNamingConvention) applicationBinding).Name;
 			BindingInfo = CreateBindingInfo(applicationBinding);
 		}
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
-			_applicationBindingSettlerVisitor.VisitOrchestration(orchestrationBinding);
+			_applicationBindingEnvironmentSettlerVisitor.VisitOrchestration(orchestrationBinding);
 			var moduleRef = CreateOrFindModuleRef(orchestrationBinding);
 			// a ModuleRef just created has no ServiceRef in its Services collection yet
 			if (moduleRef.Services.Count == 0) BindingInfo.ModuleRefCollection.Add(moduleRef);
@@ -78,7 +83,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceivePort(receivePort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceivePort(receivePort);
 			_lastVisitedReceivePort = CreateReceivePort(receivePort);
 			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
@@ -86,7 +91,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceiveLocation(receiveLocation);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
 			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
 		}
@@ -94,7 +99,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitSendPort(sendPort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitSendPort(sendPort);
 			var visitedSendPort = CreateSendPort(sendPort);
 			BindingInfo.SendPortCollection.Add(visitedSendPort);
 		}
@@ -341,7 +346,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return tp;
 		}
 
-		private readonly ApplicationBindingSettlerVisitor _applicationBindingSettlerVisitor;
+		private readonly ApplicationBindingEnvironmentSettlerVisitor _applicationBindingEnvironmentSettlerVisitor;
 
 		private BtsReceivePort _lastVisitedReceivePort;
 	}

@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void IVisitable<IApplicationBindingVisitor>.Accept(IApplicationBindingVisitor visitor)
 		{
-			this.Each(applicationBinding => applicationBinding.Accept(visitor));
+			this.Each(visitor.VisitReferencedApplicationBinding);
 		}
 
 		#endregion

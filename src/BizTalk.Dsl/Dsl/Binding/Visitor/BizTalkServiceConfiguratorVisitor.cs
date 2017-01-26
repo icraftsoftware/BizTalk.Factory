@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,22 +50,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 
 		private BizTalkServiceConfiguratorVisitor()
 		{
-			_applicationBindingSettlerVisitor = new ApplicationBindingSettlerVisitor();
+			_applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
 		}
 
 		#region IApplicationBindingVisitor Members
 
+		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)
+		{
+			// do not configure BizTalk Service for referenced applications
+		}
+
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitApplicationBinding(applicationBinding);
+			_applicationBindingEnvironmentSettlerVisitor.VisitApplicationBinding(applicationBinding);
 			var name = ((ISupportNamingConvention) applicationBinding).Name;
 			_application = BizTalkServerGroup.Applications[name];
 		}
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
-			_applicationBindingSettlerVisitor.VisitOrchestration(orchestrationBinding);
+			_applicationBindingEnvironmentSettlerVisitor.VisitOrchestration(orchestrationBinding);
 			var name = orchestrationBinding.Type.FullName;
 			var orchestration = _application.Orchestrations[name];
 			if (_logger.IsDebugEnabled)
@@ -80,7 +85,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceivePort(receivePort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceivePort(receivePort);
 			var name = ((ISupportNamingConvention) receivePort).Name;
 			_receivePort = _application.ReceivePorts[name];
 		}
@@ -88,7 +93,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitReceiveLocation(receiveLocation);
+			_applicationBindingEnvironmentSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var name = ((ISupportNamingConvention) receiveLocation).Name;
 			var rl = _receivePort.ReceiveLocations[name];
 			if (_logger.IsDebugEnabled) _logger.DebugFormat(receiveLocation.Enabled ? "Enabling receive location '{0}'" : "Disabling receive location '{0}'", name);
@@ -98,7 +103,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 			where TNamingConvention : class
 		{
-			_applicationBindingSettlerVisitor.VisitSendPort(sendPort);
+			_applicationBindingEnvironmentSettlerVisitor.VisitSendPort(sendPort);
 			var name = ((ISupportNamingConvention) sendPort).Name;
 			var sp = _application.SendPorts[name];
 			if (_logger.IsDebugEnabled)
@@ -119,7 +124,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(BizTalkServiceConfiguratorVisitor));
-		private readonly ApplicationBindingSettlerVisitor _applicationBindingSettlerVisitor;
+		private readonly ApplicationBindingEnvironmentSettlerVisitor _applicationBindingEnvironmentSettlerVisitor;
 		private Application _application;
 		private Explorer.ReceivePort _receivePort;
 	}

@@ -218,7 +218,7 @@
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\WcfBindingRegistryFixture.cs" />
     <Compile Include="Dsl\Binding\ServiceStateFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\SftpAdapterFixture.cs" />
-    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingSettlerVisitorFixture.cs" />
+    <Compile Include="Dsl\Binding\Visitor\ApplicationBindingEnvironmentSettlerVisitorFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\BindingInfoBuilderVisitorFixture.cs" />
     <Compile Include="Dsl\Binding\Extensions\ObjectExtensionsFixture.cs" />
     <Compile Include="Dsl\Binding\CodeDom\BizTalkAssemblyExtensionsFixture.cs" />

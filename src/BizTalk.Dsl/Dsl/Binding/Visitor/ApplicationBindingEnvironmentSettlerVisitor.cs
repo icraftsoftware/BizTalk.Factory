@@ -24,9 +24,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// Base <see cref="IApplicationBindingVisitor"/> implementation that ensures that environment overrides are applied
 	/// and validated before visit.
 	/// </summary>
-	public class ApplicationBindingSettlerVisitor : IApplicationBindingVisitor
+	public class ApplicationBindingEnvironmentSettlerVisitor : IApplicationBindingVisitor
 	{
 		#region IApplicationBindingVisitor Members
+
+		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)
+		{
+			applicationBinding.Accept(this);
+		}
 
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding) where TNamingConvention : class
 		{

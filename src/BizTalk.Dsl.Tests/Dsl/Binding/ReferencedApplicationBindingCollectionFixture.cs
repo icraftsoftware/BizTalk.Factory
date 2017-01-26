@@ -42,17 +42,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		[Test]
-		public void AcceptsAndPropagatesVisitor()
+		public void AcceptsVisitorAndVisitReferencedApplications()
 		{
 			var applicationBindingMock = new Mock<ApplicationBindingBase<string>> { CallBase = true };
 
-			var referencedApplicationBindingCollection = new ReferencedApplicationBindingCollection();
-			referencedApplicationBindingCollection.Add(applicationBindingMock.Object);
+			var referencedApplicationBindingCollection = new ReferencedApplicationBindingCollection { applicationBindingMock.Object };
 
 			var visitorMock = new Mock<IApplicationBindingVisitor>();
 			((IVisitable<IApplicationBindingVisitor>) referencedApplicationBindingCollection).Accept(visitorMock.Object);
 
-			applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>().Verify(m => m.Accept(visitorMock.Object), Times.Once);
+			visitorMock.Verify(m => m.VisitReferencedApplicationBinding(applicationBindingMock.Object), Times.Once);
 		}
 	}
 }
