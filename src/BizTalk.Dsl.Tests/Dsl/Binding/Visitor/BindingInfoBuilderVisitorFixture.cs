@@ -289,14 +289,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		}
 
 		[Test]
-		public void VisitReferencedApplicationBindingDoesNotPropagateVisitor()
+		public void VisitApplicationBindingSettlesTargetEnvironmentOverrides()
 		{
-			var applicationBindingMock = new Mock<IVisitable<IApplicationBindingVisitor>>();
+			var applicationBindingMock = new Mock<IApplicationBinding<string>>();
+			applicationBindingMock.As<ISupportNamingConvention>();
+			applicationBindingMock.As<ISupportValidation>();
+			var visitableApplicationBindingMock = applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>();
 
 			var visitor = BindingInfoBuilderVisitor.Create();
-			visitor.VisitReferencedApplicationBinding(applicationBindingMock.Object);
+			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 
-			applicationBindingMock.Verify(a => a.Accept(visitor), Times.Never);
+			visitableApplicationBindingMock.Verify(a => a.Accept(It.IsAny<ApplicationBindingEnvironmentSettlerVisitor>()), Times.Once);
 		}
 	}
 }

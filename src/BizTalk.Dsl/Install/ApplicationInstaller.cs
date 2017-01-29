@@ -110,21 +110,22 @@ namespace Be.Stateless.BizTalk.Install
 		{
 			if (users == null) throw new ArgumentNullException("users");
 
-			var visitor = FileAdapterFolderConfiguratorVisitor.CreateInstaller(users);
-			ApplicationBinding.Accept(visitor);
-		}
-
-		private void TeardownFileAdapterPaths(bool recurse)
-		{
-			var visitor = FileAdapterFolderConfiguratorVisitor.CreateUninstaller(recurse);
+			var visitor = CurrentApplicationBindingVisitor.Create(FileAdapterFolderSetUpVisitor.Create(users));
 			ApplicationBinding.Accept(visitor);
 		}
 
 		private void InitializeServices()
 		{
-			var visitor = BizTalkServiceConfiguratorVisitor.Create();
+			var bizTalkServiceConfiguratorVisitor = BizTalkServiceConfiguratorVisitor.Create();
+			var visitor = CurrentApplicationBindingVisitor.Create(bizTalkServiceConfiguratorVisitor);
 			ApplicationBinding.Accept(visitor);
-			visitor.Commit();
+			bizTalkServiceConfiguratorVisitor.Commit();
+		}
+
+		private void TeardownFileAdapterPaths(bool recurse)
+		{
+			var visitor = CurrentApplicationBindingVisitor.Create(FileAdapterFolderTearDownVisitor.Create(recurse));
+			ApplicationBinding.Accept(visitor);
 		}
 
 		private T _applicationBinding;

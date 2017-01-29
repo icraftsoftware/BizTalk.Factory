@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ using System;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IApplicationBinding<TNamingConvention> : IObjectBinding<TNamingConvention> where TNamingConvention : class
+	public interface IApplicationBinding : IFluentInterface { }
+
+	public interface IApplicationBinding<TNamingConvention> : IApplicationBinding, IObjectBinding<TNamingConvention> where TNamingConvention : class
 	{
 		IOrchestrationBindingCollection Orchestrations { get; }
 

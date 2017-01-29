@@ -50,10 +50,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return new BindingInfoBuilderVisitor();
 		}
 
-		private BindingInfoBuilderVisitor()
-		{
-			_applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
-		}
+		private BindingInfoBuilderVisitor() { }
 
 		#region IApplicationBindingVisitor Members
 
@@ -65,14 +62,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitApplicationBinding(applicationBinding);
+			// ensure referenced application is settled for environment
+			var applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
+			((IVisitable<IApplicationBindingVisitor>) applicationBinding).Accept(applicationBindingEnvironmentSettlerVisitor);
+
 			ApplicationName = ((ISupportNamingConvention) applicationBinding).Name;
 			BindingInfo = CreateBindingInfo(applicationBinding);
 		}
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitOrchestration(orchestrationBinding);
 			var moduleRef = CreateOrFindModuleRef(orchestrationBinding);
 			// a ModuleRef just created has no ServiceRef in its Services collection yet
 			if (moduleRef.Services.Count == 0) BindingInfo.ModuleRefCollection.Add(moduleRef);
@@ -83,7 +82,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitReceivePort(receivePort);
 			_lastVisitedReceivePort = CreateReceivePort(receivePort);
 			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
@@ -91,7 +89,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
 			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
 		}
@@ -99,7 +96,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitSendPort(sendPort);
 			var visitedSendPort = CreateSendPort(sendPort);
 			BindingInfo.SendPortCollection.Add(visitedSendPort);
 		}
@@ -345,8 +341,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			tp.TrackingOption = PipelineTrackingTypes.None;
 			return tp;
 		}
-
-		private readonly ApplicationBindingEnvironmentSettlerVisitor _applicationBindingEnvironmentSettlerVisitor;
 
 		private BtsReceivePort _lastVisitedReceivePort;
 	}

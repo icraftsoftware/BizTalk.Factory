@@ -27,7 +27,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			IOrchestrationBindingCollection,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
-
 	{
 		public OrchestrationBindingCollection(IApplicationBinding<TNamingConvention> applicationBinding)
 		{
@@ -43,7 +42,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		IOrchestrationBindingCollection IOrchestrationBindingCollection.Add(params IOrchestrationBinding[] orchestrationBindings)
 		{
-			orchestrationBindings.Each(Add);
+			orchestrationBindings.Each(
+				ob => {
+					ob.ApplicationBinding = _applicationBinding;
+					Add(ob);
+				});
 			return this;
 		}
 

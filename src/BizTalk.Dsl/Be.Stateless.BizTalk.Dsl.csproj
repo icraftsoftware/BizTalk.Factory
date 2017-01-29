@@ -272,7 +272,10 @@
     <Compile Include="Dsl\Binding\IBindingSerializerFactory.cs" />
     <Compile Include="Dsl\Binding\Visitor\ApplicationBindingEnvironmentSettlerVisitor.cs" />
     <Compile Include="Dsl\Binding\Visitor\BizTalkServiceConfiguratorVisitor.cs" />
-    <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderConfiguratorVisitor.cs" />
+    <Compile Include="Dsl\Binding\Visitor\CurrentApplicationBindingVisitor.cs" />
+    <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderSetUpVisitor.cs" />
+    <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderTearDownVisitor.cs" />
+    <Compile Include="Dsl\Binding\Visitor\FileAdapterFolderVisitorBase.cs" />
     <Compile Include="Dsl\BizTalkAssemblyResolver.cs" />
     <Compile Include="Install\ApplicationInstaller.cs">
       <SubType>Component</SubType>

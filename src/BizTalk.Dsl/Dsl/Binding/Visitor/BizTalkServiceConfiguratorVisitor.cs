@@ -25,7 +25,7 @@ using PortStatus = Microsoft.BizTalk.ExplorerOM.PortStatus;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 {
 	/// <summary>
-	/// <see cref="IApplicationBindingVisitor"/> implementation that manage BizTalk Server services' state.
+	/// <see cref="IApplicationBindingVisitor"/> implementation that manages BizTalk Server services' state.
 	/// </summary>
 	/// <remarks>
 	/// <see cref="IApplicationBindingVisitor"/> implementation that either
@@ -48,29 +48,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			return new BizTalkServiceConfiguratorVisitor();
 		}
 
-		private BizTalkServiceConfiguratorVisitor()
-		{
-			_applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
-		}
+		private BizTalkServiceConfiguratorVisitor() { }
 
 		#region IApplicationBindingVisitor Members
 
-		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)
-		{
-			// do not configure BizTalk Service for referenced applications
-		}
+		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding) { }
 
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitApplicationBinding(applicationBinding);
 			var name = ((ISupportNamingConvention) applicationBinding).Name;
 			_application = BizTalkServerGroup.Applications[name];
 		}
 
 		public void VisitOrchestration(IOrchestrationBinding orchestrationBinding)
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitOrchestration(orchestrationBinding);
 			var name = orchestrationBinding.Type.FullName;
 			var orchestration = _application.Orchestrations[name];
 			if (_logger.IsDebugEnabled)
@@ -85,7 +77,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceivePort<TNamingConvention>(IReceivePort<TNamingConvention> receivePort)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitReceivePort(receivePort);
 			var name = ((ISupportNamingConvention) receivePort).Name;
 			_receivePort = _application.ReceivePorts[name];
 		}
@@ -93,17 +84,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitReceiveLocation<TNamingConvention>(IReceiveLocation<TNamingConvention> receiveLocation)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitReceiveLocation(receiveLocation);
 			var name = ((ISupportNamingConvention) receiveLocation).Name;
 			var rl = _receivePort.ReceiveLocations[name];
-			if (_logger.IsDebugEnabled) _logger.DebugFormat(receiveLocation.Enabled ? "Enabling receive location '{0}'" : "Disabling receive location '{0}'", name);
+			if (_logger.IsDebugEnabled)
+				_logger.DebugFormat(
+					receiveLocation.Enabled ? "Enabling receive location '{0}'" : "Disabling receive location '{0}'",
+					name);
 			rl.Enabled = receiveLocation.Enabled;
 		}
 
 		public void VisitSendPort<TNamingConvention>(ISendPort<TNamingConvention> sendPort)
 			where TNamingConvention : class
 		{
-			_applicationBindingEnvironmentSettlerVisitor.VisitSendPort(sendPort);
 			var name = ((ISupportNamingConvention) sendPort).Name;
 			var sp = _application.SendPorts[name];
 			if (_logger.IsDebugEnabled)
@@ -124,7 +116,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(BizTalkServiceConfiguratorVisitor));
-		private readonly ApplicationBindingEnvironmentSettlerVisitor _applicationBindingEnvironmentSettlerVisitor;
 		private Application _application;
 		private Explorer.ReceivePort _receivePort;
 	}
