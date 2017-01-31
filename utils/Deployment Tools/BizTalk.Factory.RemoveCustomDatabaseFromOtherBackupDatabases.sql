@@ -1,5 +1,5 @@
-/*
-Copyright © 2012 - 2014 François Chabot, Yves Dierick
+ï»¿/*
+Copyright Â© 2012 - 2014 FranÃ§ois Chabot, Yves Dierick
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
