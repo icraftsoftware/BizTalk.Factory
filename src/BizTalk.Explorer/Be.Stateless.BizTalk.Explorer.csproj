@@ -47,8 +47,21 @@
     <Reference Include="Microsoft.BizTalk.ExplorerOM">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.XLANGs.BizTalk.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BizTalk.ProcessInterface, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BizTalk.ProcessInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.Engine, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.Engine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -69,6 +82,8 @@
     <Compile Include="Explorer\ReceivePort.cs" />
     <Compile Include="Explorer\ReceivePortCollection.cs" />
     <Compile Include="Explorer\SendPortCollection.cs" />
+    <Compile Include="Management\Orchestration.cs" />
+    <Compile Include="Management\OrchestrationOfT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +100,10 @@
     <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
       <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
       <Name>Be.Stateless.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Be.Stateless.Logging.csproj">
+      <Project>{8f890272-22e8-4668-9f0e-c12dd48474d2}</Project>
+      <Name>Be.Stateless.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

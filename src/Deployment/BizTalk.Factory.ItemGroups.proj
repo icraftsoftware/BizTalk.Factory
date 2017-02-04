@@ -25,7 +25,7 @@
   <ItemGroup>
     <!-- customized version of the deploy tools and any supplementary tools we need during deployment -->
     <RedistributableCustomDeployTools Include="MSBuild.ExtensionPack.dll;Ionic.Zip.dll">
-      <LocationPath>$(MSBuildThisFileDirectory)\..\packages\MSBuild.Extension.Pack.1.8.0\tools\net40</LocationPath>
+      <LocationPath>$(ExtensionTasksPath)</LocationPath>
     </RedistributableCustomDeployTools>
   </ItemGroup>
 
