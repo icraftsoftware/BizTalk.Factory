@@ -269,5 +269,4 @@
   -->
   <Target Name="BeforeBuild" DependsOnTargets="GenerateTypedBamApi">
   </Target>
-  <Import Project="..\.imports\MSBuild.Extension.Pack.targets" />
 </Project>
