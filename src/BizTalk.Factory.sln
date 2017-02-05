@@ -48,7 +48,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".imports", ".imports", "{6C
 	ProjectSection(SolutionItems) = preProject
 		.imports\Be.Stateless.BizTalk.targets = .imports\Be.Stateless.BizTalk.targets
 		.imports\Be.Stateless.Dsl.targets = .imports\Be.Stateless.Dsl.targets
-		.imports\MSBuild.Extension.Pack.targets = .imports\MSBuild.Extension.Pack.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Logging", "Logging\Be.Stateless.Logging.csproj", "{8F890272-22E8-4668-9F0E-C12DD48474D2}"
