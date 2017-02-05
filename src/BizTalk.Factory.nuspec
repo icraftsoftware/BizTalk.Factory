@@ -10,6 +10,8 @@
   </metadata>
   <files>
     <file src=".imports\Be.Stateless.Dsl.targets" target="assemblies\net45\Be.Stateless.Dsl.targets" />
+    <!-- Be.Stateless.BizTalk.Dsl.MSBuild.dll needs log4net on its side -->
+    <file src="packages\log4net.2.0.3\lib\net40-full\log4net.dll" target="assemblies\net45\log4net.dll" />
     <file src="BizTalk.Binding\bin\Release\Be.Stateless.BizTalk.Binding.dll" target="assemblies\net45\Be.Stateless.BizTalk.Binding.dll" />
     <file src="BizTalk.Binding\bin\Release\Be.Stateless.BizTalk.Binding.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Binding.pdb" />
     <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.dll" target="assemblies\net45\Be.Stateless.BizTalk.Common.dll" />
