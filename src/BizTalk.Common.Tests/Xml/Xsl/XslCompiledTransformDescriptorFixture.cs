@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		[Test]
 		public void ImplicitlyReliesOnEmbeddedXmlResolver()
 		{
-			Assert.That(() => new XslCompiledTransformDescriptor(typeof(EmbeddedTransform)), Throws.Nothing);
+			Assert.That(() => new XslCompiledTransformDescriptor(typeof(CompositeTransform)), Throws.Nothing);
 		}
 
 		[Test]

@@ -29,10 +29,10 @@ namespace Be.Stateless.BizTalk.Xml
 		[Test]
 		public void ResolveImportedAndIncludedXslt()
 		{
-			using (var reader = XmlReader.Create(ResourceManager.Load("Data.EmbeddedTransform.xsl")))
+			using (var reader = XmlReader.Create(ResourceManager.Load("Data.CompositeTransform.xsl")))
 			{
 				Assert.That(
-					() => new XslCompiledTransform().Load(reader, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(typeof(EmbeddedTransform))),
+					() => new XslCompiledTransform().Load(reader, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(typeof(CompositeTransform))),
 					Throws.Nothing);
 			}
 		}

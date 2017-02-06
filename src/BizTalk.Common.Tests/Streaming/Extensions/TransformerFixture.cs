@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		[Test]
 		public void ApplyTransformsWithImportedAndIncludedStylesheets()
 		{
-			using (var stream = ResourceManager.Load("Be.Stateless.BizTalk.Streaming.Data.BatchContent.xml").Transform().Apply(typeof(EmbeddedTransform)))
+			using (var stream = ResourceManager.Load("Be.Stateless.BizTalk.Streaming.Data.BatchContent.xml").Transform().Apply(typeof(CompositeTransform)))
 			using (var reader = XmlReader.Create(stream))
 			{
 				reader.MoveToContent();
