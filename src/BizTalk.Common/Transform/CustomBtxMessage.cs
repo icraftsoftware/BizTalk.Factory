@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ namespace Be.Stateless.BizTalk.Transform
 	[Serializable]
 	internal sealed class CustomBtxMessage : BTXMessage
 	{
-		public CustomBtxMessage(string messageName, Context context)
-			: base(messageName, context)
+		public CustomBtxMessage(string messageName, Context context) : base(messageName, context)
 		{
 			context.RefMessage(this);
 		}
