@@ -135,8 +135,11 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			context.Object.Promote(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
 
 			context.Verify(m => m.Promote(BtsProperties.ActualRetryCount, 10));
+			context.Verify(m => m.Promote(BtsProperties.ActualRetryCount, 10), Times.Once);
 			context.Verify(m => m.Promote(BtsProperties.AckRequired, true));
+			context.Verify(m => m.Promote(BtsProperties.AckRequired, true), Times.Once);
 			context.Verify(m => m.Promote(BtsProperties.SendPortName, "send-port-name"));
+			context.Verify(m => m.Promote(BtsProperties.SendPortName, "send-port-name"), Times.Once);
 		}
 
 		[Test]
@@ -149,8 +152,11 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			context.Object.Write(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
 
 			context.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, 10));
+			context.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, 10), Times.Once);
 			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, true));
+			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, true), Times.Once);
 			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
+			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"), Times.Once);
 		}
 	}
 }

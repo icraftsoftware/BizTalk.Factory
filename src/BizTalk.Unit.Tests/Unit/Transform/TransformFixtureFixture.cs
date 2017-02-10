@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using BTF2Schemas;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Unit.Resources;
+using BTF2Schemas;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
@@ -42,13 +43,12 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		#endregion
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void InvalidTransformResultThrows()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(MessageFactory.CreateMessage<btf2_services_header>().OuterXml)))
 			{
-				// ReSharper disable AccessToDisposedClosure
 				Assert.That(() => Transform<btf2_services_header>(stream), Throws.InstanceOf<XmlSchemaValidationException>());
-				// ReSharper restore AccessToDisposedClosure
 			}
 		}
 
@@ -73,13 +73,12 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void ValidTransformResultDoesNotThrow()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
 			{
-				// ReSharper disable AccessToDisposedClosure
 				Assert.That(() => Transform<btf2_services_header>(stream), Throws.Nothing);
-				// ReSharper restore AccessToDisposedClosure
 			}
 		}
 

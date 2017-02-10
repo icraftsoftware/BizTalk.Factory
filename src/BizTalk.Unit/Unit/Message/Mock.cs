@@ -170,6 +170,11 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			Verify(expression, Times.AtLeastOnce(), null);
 		}
 
+		public void Verify(Expression<Action<IBaseMessage>> expression, Func<Times> times)
+		{
+			Verify(expression, times(), null);
+		}
+
 		public void Verify(Expression<Action<IBaseMessage>> expression, Times times)
 		{
 			Verify(expression, times, null);
@@ -178,6 +183,11 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		public void Verify(Expression<Action<IBaseMessage>> expression, string failMessage)
 		{
 			Verify(expression, Times.AtLeastOnce(), failMessage);
+		}
+
+		public void Verify(Expression<Action<IBaseMessage>> expression, Func<Times> times, string failMessage)
+		{
+			Verify(expression, times(), failMessage);
 		}
 
 		public void Verify(Expression<Action<IBaseMessage>> expression, Times times, string failMessage)

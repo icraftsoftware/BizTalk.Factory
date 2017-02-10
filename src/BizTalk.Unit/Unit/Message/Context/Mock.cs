@@ -150,6 +150,11 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			Verify(expression, Times.AtLeastOnce(), null);
 		}
 
+		public void Verify(Expression<Action<IBaseMessageContext>> expression, Func<Times> times)
+		{
+			Verify(expression, times(), null);
+		}
+
 		public void Verify(Expression<Action<IBaseMessageContext>> expression, Times times)
 		{
 			Verify(expression, times, null);
@@ -158,6 +163,11 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		public void Verify(Expression<Action<IBaseMessageContext>> expression, string failMessage)
 		{
 			Verify(expression, Times.AtLeastOnce(), failMessage);
+		}
+
+		public void Verify(Expression<Action<IBaseMessageContext>> expression, Func<Times> times, string failMessage)
+		{
+			Verify(expression, times(), failMessage);
 		}
 
 		public void Verify(Expression<Action<IBaseMessageContext>> expression, Times times, string failMessage)
