@@ -84,7 +84,8 @@ namespace Be.Stateless.BizTalk.Xml
 				var type = Type.GetType(typeName, true);
 				var transform = (TransformBase) Activator.CreateInstance(type);
 				// http://stackoverflow.com/questions/11864564/xslcompiledtransform-and-custom-xmlurlresolver-an-entry-with-the-same-key-alre
-				using (var reader = XmlReader.Create(new StringReader(transform.XmlContent), new XmlReaderSettings(), absoluteUri.GetLeftPart(UriPartial.Authority)))
+				var baseUri = absoluteUri.GetLeftPart(UriPartial.Authority) + "/" + type.FullName;
+				using (var reader = XmlReader.Create(new StringReader(transform.XmlContent), new XmlReaderSettings(), baseUri))
 				{
 					// http://stackoverflow.com/questions/1440023/can-i-assign-a-baseuri-to-an-xdocument
 					var xDocument = XDocument.Load(reader, LoadOptions.SetBaseUri);

@@ -22,11 +22,11 @@ using Microsoft.XLANGs.BaseTypes;
 namespace Be.Stateless.BizTalk.Xml
 {
 	[SchemaReference(@"Be.Stateless.BizTalk.Schemas.Xml.Any", typeof(Schemas.Xml.Any))]
-	internal class CompositeTransform : TransformBase
+	internal class CompoundMapTypeTransform11 : TransformBase
 	{
-		static CompositeTransform()
+		static CompoundMapTypeTransform11()
 		{
-			_xmlContent = ResourceManager.LoadString("Data.CompositeTransform.xsl");
+			_xmlContent = ResourceManager.LoadString("Data.CompoundMapTypeTransform11.xsl");
 		}
 
 		#region Base Class Member Overrides

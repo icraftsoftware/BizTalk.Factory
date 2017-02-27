@@ -29,12 +29,24 @@ namespace Be.Stateless.BizTalk.Xml
 	{
 		[Test]
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-		public void ResolveImportedAndIncludedXslt()
+		public void ResolveImportedAndIncludedEmbeddedXslt()
 		{
-			using (var reader = XmlReader.Create(ResourceManager.Load("Data.CompositeTransform.xsl")))
+			using (var reader = XmlReader.Create(ResourceManager.Load("Data.CompositeEmbeddedTransform.xsl")))
 			{
 				Assert.That(
-					() => new XslCompiledTransform().Load(reader, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(typeof(CompositeTransform))),
+					() => new XslCompiledTransform().Load(reader, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(typeof(EmbeddedXmlResolverFixture))),
+					Throws.Nothing);
+			}
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		public void ResolveImportedAndIncludedMapTypes()
+		{
+			using (var reader = XmlReader.Create(ResourceManager.Load("Data.CompositeMapTypeTransform.xsl")))
+			{
+				Assert.That(
+					() => new XslCompiledTransform().Load(reader, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(typeof(EmbeddedXmlResolverFixture))),
 					Throws.Nothing);
 			}
 		}
