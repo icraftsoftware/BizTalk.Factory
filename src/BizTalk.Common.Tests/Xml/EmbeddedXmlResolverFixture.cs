@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Xsl;
 using Be.Stateless.BizTalk.Unit.Resources;
@@ -27,6 +28,7 @@ namespace Be.Stateless.BizTalk.Xml
 	public class EmbeddedXmlResolverFixture
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void ResolveImportedAndIncludedXslt()
 		{
 			using (var reader = XmlReader.Create(ResourceManager.Load("Data.CompositeTransform.xsl")))
