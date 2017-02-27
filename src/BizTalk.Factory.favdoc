@@ -52,6 +52,15 @@
           <absolutePath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Common.targets</absolutePath>
         </Favorite>
         <Favorite>
+          <name>BizTalkC.targets</name>
+          <absolutePath>C:\Program Files (x86)\MSBuild\Microsoft\BizTalk\BizTalkC.targets</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>wqpQ8jMiwAfYg6xfg6Otc5hF3AgV1CNZEQE2tZ4nmWg=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
           <name>BizTalkCommon.targets</name>
           <absolutePath>C:\Program Files (x86)\MSBuild\Microsoft\BizTalk\BizTalkCommon.targets</absolutePath>
         </Favorite>
