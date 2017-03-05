@@ -18,6 +18,41 @@
 
 Set-StrictMode -Version Latest
 
+function ConvertTo-WorkingFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [object[]]
+        $Folders
+    )
+
+    @(
+        $Folders |
+            Where-Object { $_.LocalItem -ne $null } |
+            ForEach-Object {
+                New-Object `
+                    -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
+                    -ArgumentList @(
+                        $_.ServerItem,
+                        $_.LocalItem,
+                        [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Map
+                    )
+            }
+        $Folders |
+            Where-Object { $_.LocalItem -eq $null } |
+            ForEach-Object {
+                New-Object `
+                    -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
+                    -ArgumentList @(
+                        $_.ServerItem,
+                        $null,
+                        [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Cloak
+                    )
+            }
+    )
+}
+
 function New-Workspace
 {
     [CmdletBinding()]
@@ -34,6 +69,7 @@ function New-Workspace
         [string]
         $Root,
 
+        [Parameter(Mandatory=$true)]
         [object[]]
         $Folders
     )
@@ -42,30 +78,7 @@ function New-Workspace
         $workspaceParameters = New-Object `
             -TypeName Microsoft.TeamFoundation.VersionControl.Client.CreateWorkspaceParameters `
             -ArgumentList $Name
-        $workspaceParameters.Folders = @(
-            $Folders |
-                Where-Object { $_.LocalItem -ne $null } |
-                ForEach-Object {
-                    New-Object `
-                        -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
-                        -ArgumentList @(
-                            $_.ServerItem,
-                            $_.LocalItem,
-                            [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Map
-                        )
-                }
-            $Folders |
-                Where-Object { $_.LocalItem -eq $null } |
-                ForEach-Object {
-                    New-Object `
-                        -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
-                        -ArgumentList @(
-                            $_.ServerItem,
-                            $null,
-                            [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Cloak
-                        )
-                }
-        )
+        $workspaceParameters.Folders = (ConvertTo-WorkingFolder -Folders $Folders)
         $workspaceParameters.WorkspaceOptions = [Microsoft.TeamFoundation.VersionControl.Common.WorkspaceOptions]::SetFileTimeToCheckin
 
         $tfs = New-Object Microsoft.TeamFoundation.Client.TeamFoundationServer($Uri)
@@ -88,11 +101,27 @@ function Test-Workspace
         $Name
     )
 
+    (Get-Workspace -Uri $Uri -Name $Name) -ne $null
+}
+
+function Get-Workspace
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Uri,
+
+        [ValidateScript({ $_ -ne $null })]
+        [string]
+        $Name
+    )
+
     $tfs = New-Object Microsoft.TeamFoundation.Client.TeamFoundationServer($uri)
     $tfs.Authenticate()
     $vcs = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
     $workspace = Invoke-Method -InputObject $vcs -MethodName 'QueryWorkspaces' -Arguments $Name, '.', $env:COMPUTERNAME
-    $workspace -ne $null
+    $workspace
 }
 
 <#
