@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-# Copyright © 2012 - 2015 François Chabot, Yves Dierick
+# Copyright © 2012 - 2017 François Chabot, Yves Dierick
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,83 @@
 #endregion
 
 Set-StrictMode -Version Latest
+
+function New-Workspace
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Uri,
+
+        [ValidateScript({ $_ -ne $null })]
+        [string]
+        $Name,
+
+        [ValidateScript({ Test-Path $_ -PathType 'Container' })]
+        [string]
+        $Root,
+
+        [object[]]
+        $Folders
+    )
+
+    if (-not(Test-Workspace -Uri $Uri -Name $Name)) {
+        $workspaceParameters = New-Object `
+            -TypeName Microsoft.TeamFoundation.VersionControl.Client.CreateWorkspaceParameters `
+            -ArgumentList $Name
+        $workspaceParameters.Folders = @(
+            $Folders |
+                Where-Object { $_.LocalItem -ne $null } |
+                ForEach-Object {
+                    New-Object `
+                        -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
+                        -ArgumentList @(
+                            $_.ServerItem,
+                            $_.LocalItem,
+                            [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Map
+                        )
+                }
+            $Folders |
+                Where-Object { $_.LocalItem -eq $null } |
+                ForEach-Object {
+                    New-Object `
+                        -TypeName Microsoft.TeamFoundation.VersionControl.Client.WorkingFolder `
+                        -ArgumentList @(
+                            $_.ServerItem,
+                            $null,
+                            [Microsoft.TeamFoundation.VersionControl.Client.WorkingFolderType]::Cloak
+                        )
+                }
+        )
+        $workspaceParameters.WorkspaceOptions = [Microsoft.TeamFoundation.VersionControl.Common.WorkspaceOptions]::SetFileTimeToCheckin
+
+        $tfs = New-Object Microsoft.TeamFoundation.Client.TeamFoundationServer($Uri)
+        $tfs.Authenticate()
+        $vcs = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
+        $workspace = $vcs.CreateWorkspace($workspaceParameters)
+    }
+}
+
+function Test-Workspace
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Uri,
+
+        [ValidateScript({ $_ -ne $null })]
+        [string]
+        $Name
+    )
+
+    $tfs = New-Object Microsoft.TeamFoundation.Client.TeamFoundationServer($uri)
+    $tfs.Authenticate()
+    $vcs = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
+    $workspace = Invoke-Method -InputObject $vcs -MethodName 'QueryWorkspaces' -Arguments $Name, '.', $env:COMPUTERNAME
+    $workspace -ne $null
+}
 
 <#
 .SYNOPSIS
@@ -40,15 +117,6 @@ function Get-Workspaces
         [string]
         $Uri
     )
-
-    $highestVisualStudioVersionNumber = Get-VisualStudioVersionNumbers -Descending | Select-Object -First 1
-
-    if ($highestVisualStudioVersionNumber -eq $null) {
-        throw 'Visual Studio is not installed.'
-    }
-
-    Add-Type -AssemblyName "Microsoft.TeamFoundation.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-    Add-Type -AssemblyName "Microsoft.TeamFoundation.VersionControl.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
     $tfs = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($Uri)
     $versionControl = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
@@ -111,3 +179,54 @@ function New-WorkspaceShortcut
     }
     #end { }
 }
+
+<#
+ # Private Helper Functions
+ #>
+
+function Assert-TeamFoundation
+{
+    [CmdletBinding()]
+    param(
+        [switch]
+        $Force
+    )
+
+    if (-not(Test-TeamFoundation)) {
+        if (-not($Force)) {
+            throw "TeamFoundation assemblies are required to run this Cmdlet!"
+        }
+        Add-TeamFoundation
+    }
+}
+
+function Add-TeamFoundation
+{
+    [CmdletBinding()]
+    param()
+
+    $highestVisualStudioVersionNumber = Get-VisualStudioVersionNumbers -Descending | Select-Object -First 1
+    if ($highestVisualStudioVersionNumber -eq $null) {
+        throw 'Visual Studio is not installed.'
+    }
+
+    Add-Type -AssemblyName "Microsoft.TeamFoundation.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    Add-Type -AssemblyName "Microsoft.TeamFoundation.VersionControl.Client, Version=$highestVisualStudioVersionNumber.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+}
+
+function Test-TeamFoundation
+{
+    [CmdletBinding()]
+    param()
+
+    # http://stackoverflow.com/questions/16552801/how-do-i-conditionally-add-a-class-with-add-type-typedefinition-if-it-isnt-add
+    -not ([System.Management.Automation.PSTypeName] 'Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory').Type `
+    -and -not ([System.Management.Automation.PSTypeName] 'Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer').Type
+}
+
+
+<#
+ # Main
+ #>
+
+Add-TeamFoundation

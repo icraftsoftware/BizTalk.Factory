@@ -30,6 +30,6 @@
 
     AliasesToExport       = @()
     CmdletsToExport       = @()
-    FunctionsToExport     = @('Get-*', 'New-*')
+    FunctionsToExport     = @('*-Workspace*')
     VariablesToExport     = @()
 }
