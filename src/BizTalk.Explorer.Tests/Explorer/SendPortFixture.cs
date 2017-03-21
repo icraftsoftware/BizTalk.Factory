@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ namespace Be.Stateless.BizTalk.Explorer
 		[Test]
 		public void Unenlist()
 		{
-			var application = BizTalkServerGroup.Applications["BizTalk EDI Application"];
-			var sendPort = application.SendPorts["ResendPort"];
+			var application = BizTalkServerGroup.Applications["BizTalk.Factory"];
+			var sendPort = application.SendPorts["BizTalk.Factory.SP1.Sink.FailedMessage.FILE"];
 
 			sendPort.Unenlist();
 			application.ApplyChanges();
@@ -41,6 +41,10 @@ namespace Be.Stateless.BizTalk.Explorer
 			sendPort.Unenlist();
 			application.ApplyChanges();
 			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Bound));
+
+			sendPort.Start();
+			application.ApplyChanges();
+			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Started));
 		}
 	}
 }
