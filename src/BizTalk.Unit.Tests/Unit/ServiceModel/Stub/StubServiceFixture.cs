@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,6 +71,51 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 				throw;
 			}
 			Assert.That(calledBack, Is.True);
+		}
+
+		[Test]
+		public void SetupConsecutiveResponseExpectationsAgainstAction()
+		{
+			StubServiceHost.FindDefaultService<IWork>()
+				.Setup(s => s.Perform(It.IsAny<System.ServiceModel.Channels.Message>()))
+				.Callback(
+					() => StubServiceHost.FindDefaultService<IWork>()
+						.Setup(s => s.Perform(It.IsAny<System.ServiceModel.Channels.Message>()))
+						.Returns(new StringStream("<response2 />"))
+				)
+				.Returns(new StringStream("<response1 />"));
+
+			var message1 = System.ServiceModel.Channels.Message.CreateMessage(
+				MessageVersion.Soap11,
+				"urn:services.stateless.be:unit:work:perform:request",
+				XmlReader.Create(new StringReader("<request />")));
+			var message2 = System.ServiceModel.Channels.Message.CreateMessage(
+				MessageVersion.Soap11,
+				"urn:services.stateless.be:unit:work:perform:request",
+				XmlReader.Create(new StringReader("<request />")));
+			var client = StubServiceClient<IWork>.Create();
+			try
+			{
+				var result1 = client.Perform(message1);
+				var result2 = client.Perform(message2);
+
+				var reader1 = result1.GetReaderAtBodyContents();
+				reader1.MoveToContent();
+				var outerXml1 = reader1.ReadOuterXml();
+				Assert.That(outerXml1, Is.EqualTo("<response1 />"));
+
+				var reader2 = result2.GetReaderAtBodyContents();
+				reader2.MoveToContent();
+				var outerXml2 = reader2.ReadOuterXml();
+				Assert.That(outerXml2, Is.EqualTo("<response2 />"));
+
+				client.Close();
+			}
+			catch (Exception)
+			{
+				client.Abort();
+				throw;
+			}
 		}
 
 		[Test]

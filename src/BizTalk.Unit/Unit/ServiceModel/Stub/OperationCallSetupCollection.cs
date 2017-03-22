@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,9 +65,8 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 		}
 
 		/// <summary>
-		/// Adds a <see cref="IOperationCallbackSetup{TContract,TResult}"/> object to the <see
-		/// cref="OperationCallSetupCollection"/> if the key does not already exist; returns the <see
-		/// cref="IOperationCallbackSetup{TContract,TResult}"/> object otherwise.
+		/// Adds or overwrite a <see cref="IOperationCallbackSetup{TContract,TResult}"/> object to the <see
+		/// cref="OperationCallSetupCollection"/>.
 		/// </summary>
 		/// <param name="key">
 		/// The key to use, which is either a <see cref="DocumentSpec"/> message type or a SOAP action.
@@ -89,7 +88,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 
 		private OperationCallSetup Add(string key, Func<OperationCallSetup> operationCallSetupFactory)
 		{
-			return _setups.GetOrAdd(key, k => operationCallSetupFactory());
+			return _setups.AddOrUpdate(key, k => operationCallSetupFactory(), (k, s) => operationCallSetupFactory());
 		}
 
 		internal void Clear()
