@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,16 +29,29 @@ using Microsoft.BizTalk.Component.Interop;
 namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 {
 	[ServiceBehavior(AddressFilterMode = AddressFilterMode.Any,
-		ConcurrencyMode = ConcurrencyMode.Multiple,
+		ConcurrencyMode = ConcurrencyMode.Single,
 		InstanceContextMode = InstanceContextMode.Single,
 		ValidateMustUnderstand = false)]
 	internal class StubService : IStubService
 	{
-		#region Nested type: SetupRecorder
+		#region Nested Type: SetupRecorder
 
 		private class SetupRecorder<TContract> : ISetupOperation<TContract>
 			where TContract : class
 		{
+			private static string GetOperationAction(OperationContractAttribute operationContractAttribute, MethodInfo methodInfo)
+			{
+				if (!operationContractAttribute.Action.IsNullOrEmpty()) return operationContractAttribute.Action;
+
+				var sca = typeof(TContract).GetCustomAttributes(typeof(ServiceContractAttribute), false)
+					.Cast<ServiceContractAttribute>()
+					.Single();
+				var serviceName = sca.Name ?? typeof(TContract).Name;
+				var operationName = operationContractAttribute.AsyncPattern ? methodInfo.Name.Substring("Begin".Length) : methodInfo.Name;
+				// http://msdn.microsoft.com/en-us/library/system.servicemodel.operationcontractattribute.action.aspx
+				return string.Format("{0}/{1}/{2}", sca.Namespace, serviceName, operationName);
+			}
+
 			internal SetupRecorder(StubService stubService)
 			{
 				_operationCallSetupCollection = stubService._operationCallSetupCollection;
@@ -84,23 +97,6 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 			public void ClearSetups()
 			{
 				_operationCallSetupCollection.Clear();
-			}
-
-			#endregion
-
-			#region Helpers
-
-			private static string GetOperationAction(OperationContractAttribute operationContractAttribute, MethodInfo methodInfo)
-			{
-				if (!operationContractAttribute.Action.IsNullOrEmpty()) return operationContractAttribute.Action;
-
-				var sca = typeof(TContract).GetCustomAttributes(typeof(ServiceContractAttribute), false)
-					.Cast<ServiceContractAttribute>()
-					.Single();
-				var serviceName = sca.Name ?? typeof(TContract).Name;
-				var operationName = operationContractAttribute.AsyncPattern ? methodInfo.Name.Substring("Begin".Length) : methodInfo.Name;
-				// http://msdn.microsoft.com/en-us/library/system.servicemodel.operationcontractattribute.action.aspx
-				return string.Format("{0}/{1}/{2}", sca.Namespace, serviceName, operationName);
 			}
 
 			#endregion
