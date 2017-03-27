@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,8 @@ namespace Be.Stateless.BizTalk
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-					}));
+					})
+			);
 			ReceivePorts.Add(
 				_twoWayReceivePort = ReceivePort(
 					rp => {
@@ -63,6 +64,13 @@ namespace Be.Stateless.BizTalk
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}));
 					}));
+		}
+
+		#region Base Class Member Overrides
+
+		protected override void ApplyEnvironmentOverrides(string environment)
+		{
+			base.ApplyEnvironmentOverrides(environment);
 			Orchestrations.Add(
 				new Orchestrations.Direct.ProcessOrchestrationBinding(
 					o => { o.Host = CommonSettings.ReceiveHost; }),
@@ -76,6 +84,8 @@ namespace Be.Stateless.BizTalk
 						o.State = ServiceState.Unenlisted;
 					}));
 		}
+
+		#endregion
 
 		private readonly IReceivePort<NamingConvention> _twoWayReceivePort;
 		private readonly ISendPort<NamingConvention> _twoWaySendPort;
