@@ -47,8 +47,7 @@ namespace Be.Stateless.BizTalk
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
-					})
-			);
+					}));
 			ReceivePorts.Add(
 				_twoWayReceivePort = ReceivePort(
 					rp => {
