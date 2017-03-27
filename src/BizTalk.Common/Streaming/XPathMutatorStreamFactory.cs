@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Streaming
 {
 #pragma warning disable 1584,1711,1572,1581,1580
 	/// <summary>
-	/// <see cref="XPathMutatorStream"/> factory that goes along with <see
+	/// <see cref="XPathMutatorStream"/> that goes along with <see
 	/// cref="T:Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent"/>.
 	/// </summary>
 #pragma warning restore 1584,1711,1572,1581,1580

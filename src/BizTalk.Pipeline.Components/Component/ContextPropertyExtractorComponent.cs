@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Component
 	public class ContextPropertyExtractorComponent : PipelineComponent
 	{
 		/// <summary>
-		/// Creates a new intansce of a <see cref="ContextPropertyExtractorComponent"/>.
+		/// Creates a new instance of a <see cref="ContextPropertyExtractorComponent"/>.
 		/// </summary>
 		public ContextPropertyExtractorComponent()
 		{
