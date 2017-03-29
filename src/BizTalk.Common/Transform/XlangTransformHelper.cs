@@ -91,9 +91,8 @@ namespace Be.Stateless.BizTalk.Transform
 			if (mapType == null) throw new ArgumentNullException("mapType");
 			using (sourceMessages)
 			{
-				var outputStream = Transform(sourceMessages.ToXmlReader(), mapType, null);
-				var btxMessage = new CustomBtxMessage(Service.RootService.XlangStore.OwningContext, outputStream);
-				XLANGMessage resultMessage = btxMessage.GetMessageWrapperForUserCode();
+				var contentStream = Transform(sourceMessages.ToXmlReader(), mapType, null);
+				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, contentStream);
 				trackingContext.Apply(resultMessage);
 				return resultMessage;
 			}

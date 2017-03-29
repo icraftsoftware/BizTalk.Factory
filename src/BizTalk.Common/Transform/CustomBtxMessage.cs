@@ -18,28 +18,43 @@
 
 using System;
 using System.IO;
+using System.Xml;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
+using Microsoft.XLANGs.BaseTypes;
 using Microsoft.XLANGs.Core;
 
 namespace Be.Stateless.BizTalk.Transform
 {
 	[Serializable]
-	internal sealed class CustomBtxMessage : BTXMessage
+	public sealed class XlangMessage : BTXMessage
 	{
-		public CustomBtxMessage(Context context, Stream stream) : base(DEFAULT_MESSAGE_NAME, context)
+		public static XLANGMessage Create(Context context, Stream content)
 		{
-			context.RefMessage(this);
-			AddPart(string.Empty, DEFAULT_PART_NAME);
-			this[0].LoadFrom(stream);
+			var message = new XlangMessage(context, content);
+			return message.GetMessageWrapperForUserCode();
 		}
 
-		// TODO to be deprecated
+		public static XLANGMessage Create(Context context, XmlDocument content)
+		{
+			var message = new XlangMessage(context, content);
+			return message.GetMessageWrapperForUserCode();
+		}
+
+		private XlangMessage(Context context, object content) : base("CustomXlangMessage", context)
+		{
+			context.RefMessage(this);
+			AddPart(string.Empty, "Main");
+			this[0].LoadFrom(content);
+		}
+	}
+
+	[Serializable]
+	// TODO to be deprecated
+	internal sealed class CustomBtxMessage : BTXMessage
+	{
 		public CustomBtxMessage(string messageName, Context context) : base(messageName, context)
 		{
 			context.RefMessage(this);
 		}
-
-		private const string DEFAULT_MESSAGE_NAME = "transformedMessage";
-		private const string DEFAULT_PART_NAME = "Main";
 	}
 }
