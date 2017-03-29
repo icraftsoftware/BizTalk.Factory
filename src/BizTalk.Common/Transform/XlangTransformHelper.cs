@@ -24,6 +24,7 @@ using System.Xml.Xsl;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.Logging;
+using Be.Stateless.Xml.Extensions;
 using Microsoft.BizTalk.Streaming;
 using Microsoft.XLANGs.BaseTypes;
 using Microsoft.XLANGs.Core;
@@ -36,18 +37,18 @@ namespace Be.Stateless.BizTalk.Transform
 	public static class XlangTransformHelper
 	{
 		/// <summary>
-		/// Applies an XSL transformation to the specified <paramref name="sourceMessage"/>. The XSL transformation to be
-		/// applied is specified in <paramref name="mapType"/>. The supplied <paramref name="trackingContext"/> is
-		/// propagated to the resulting message.
+		/// Applies an XSL transformation to the specified <paramref name="message"/>. The XSL transformation to be
+		/// applied is specified in <paramref name="map"/>. The supplied <paramref name="trackingContext"/> is propagated
+		/// to the resulting message.
 		/// </summary>
 		/// <remarks>
-		/// This method assumes only the first part of a multipart <paramref name="sourceMessage"/> message has to be
+		/// This method assumes only the first part of a multipart <paramref name="message"/> message has to be
 		/// transformed and creates an output message with a single part named "Main".
 		/// </remarks>
-		/// <param name="sourceMessage">
+		/// <param name="message">
 		/// The <see cref="XLANGMessage"/> to be transformed.
 		/// </param>
-		/// <param name="mapType">
+		/// <param name="map">
 		/// The type of the BizTalk map class containing the transform to apply.
 		/// </param>
 		/// <param name="trackingContext">
@@ -56,26 +57,26 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <returns>
 		/// The transformed message with the result in the first part (at index 0).
 		/// </returns>
-		public static XLANGMessage Transform(XLANGMessage sourceMessage, Type mapType, TrackingContext trackingContext)
+		public static XLANGMessage Transform(XLANGMessage message, Type map, TrackingContext trackingContext)
 		{
-			if (sourceMessage == null) throw new ArgumentNullException("sourceMessage");
-			if (mapType == null) throw new ArgumentNullException("mapType");
-			return Transform(new XlangMessageCollection { sourceMessage }, mapType, trackingContext);
+			if (message == null) throw new ArgumentNullException("message");
+			if (map == null) throw new ArgumentNullException("map");
+			return Transform(new XlangMessageCollection { message }, map, trackingContext);
 		}
 
 		/// <summary>
-		/// Applies an XSL transformation to the specified <paramref name="sourceMessages"/>. The XSL transformation to be
-		/// applied is specified in <paramref name="mapType"/>. The supplied <paramref name="trackingContext"/> is
-		/// propagated to the resulting message.
+		/// Applies an XSL transformation to the specified <paramref name="messages"/>. The XSL transformation to be
+		/// applied is specified in <paramref name="map"/>. The supplied <paramref name="trackingContext"/> is propagated
+		/// to the resulting message.
 		/// </summary>
 		/// <remarks>
-		/// This method assumes only the first part of any multipart <paramref name="sourceMessages"/> message has to be
+		/// This method assumes only the first part of any multipart <paramref name="messages"/> message has to be
 		/// transformed and creates an output message with a single part named "Main".
 		/// </remarks>
-		/// <param name="sourceMessages">
+		/// <param name="messages">
 		/// The <see cref="XlangMessageCollection"/> to be transformed.
 		/// </param>
-		/// <param name="mapType">
+		/// <param name="map">
 		/// The type of the BizTalk map class containing the transform to apply.
 		/// </param>
 		/// <param name="trackingContext">
@@ -84,64 +85,41 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <returns>
 		/// The transformed message with the result in the first part (at index 0).
 		/// </returns>
-		public static XLANGMessage Transform(XlangMessageCollection sourceMessages, Type mapType, TrackingContext trackingContext)
+		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext)
 		{
-			if (sourceMessages == null) throw new ArgumentNullException("sourceMessages");
-			if (sourceMessages.Count == 0) throw new ArgumentException("XLangMessageCollection is empty.", "sourceMessages");
-			if (mapType == null) throw new ArgumentNullException("mapType");
-			using (sourceMessages)
+			if (messages == null) throw new ArgumentNullException("messages");
+			if (messages.Count == 0) throw new ArgumentException("XLangMessageCollection is empty.", "messages");
+			if (map == null) throw new ArgumentNullException("map");
+			using (messages)
 			{
-				var contentStream = Transform(sourceMessages.ToXmlReader(), mapType, null);
-				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, contentStream);
+				var resultContent = Transform(messages, map, null);
+				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, resultContent);
 				trackingContext.Apply(resultMessage);
 				return resultMessage;
 			}
 		}
 
-		private static Stream Transform(XmlReader xmlReader, Type mapType, object[] splatteredTransformArguments)
+		private static Stream Transform(XmlReader reader, Type map, object[] splatteredXsltArguments)
 		{
-			if (_logger.IsDebugEnabled) _logger.DebugFormat("About to execute transform '{0}'.", mapType.AssemblyQualifiedName);
-			var transformDescriptor = XsltCache.Instance[mapType];
-			using (xmlReader)
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("About to execute transform '{0}'.", map.AssemblyQualifiedName);
+			var transformDescriptor = XsltCache.Instance[map];
+			using (reader)
 			{
 				var outputStream = new VirtualStream(DEFAULT_BUFFER_SIZE, DEFAULT_THRESHOLD_SIZE);
-				using (var writer = XmlWriter.Create(outputStream, transformDescriptor.XslCompiledTransform.OutputSettings.Override(s => s.Encoding = Encoding.UTF8)))
+				var writerSettings = transformDescriptor.XslCompiledTransform.OutputSettings.Override(
+					s => {
+						s.CloseOutput = false;
+						s.Encoding = Encoding.UTF8;
+					});
+				using (var writer = XmlWriter.Create(outputStream, writerSettings))
 				{
-					if (_logger.IsFineEnabled) _logger.FineFormat("Executing transform '{0}'.", mapType.AssemblyQualifiedName);
-					transformDescriptor.XslCompiledTransform.Transform(xmlReader, transformDescriptor.Arguments.Concat(splatteredTransformArguments), writer);
+					if (_logger.IsFineEnabled) _logger.FineFormat("Executing transform '{0}'.", map.AssemblyQualifiedName);
+					var xsltArguments = transformDescriptor.Arguments.Union(splatteredXsltArguments);
+					transformDescriptor.XslCompiledTransform.Transform(reader, xsltArguments, writer);
 				}
 				outputStream.Seek(0, SeekOrigin.Begin);
 				return outputStream;
 			}
-		}
-
-		/// <summary>
-		/// This method will add custom transform arguments to the base transform arguments. For BizTalk maps, the base
-		/// transform arguments essentially contain the necessary references to the extension objects used if any.
-		/// </summary>
-		/// <param name="argumentListTemplate"></param>
-		/// <param name="splatteredTransformArguments"></param>
-		/// <returns></returns>
-		private static XsltArgumentList Concat(this Stateless.Xml.Xsl.XsltArgumentList argumentListTemplate, object[] splatteredTransformArguments)
-		{
-			var argumentList = argumentListTemplate.Clone();
-			if (splatteredTransformArguments == null) return argumentList;
-
-			for (var i = 0; i < splatteredTransformArguments.Length; i += 3)
-			{
-				argumentList.AddParam((string) splatteredTransformArguments[i], (string) splatteredTransformArguments[i + 1], splatteredTransformArguments[i + 2]);
-			}
-			return argumentList;
-		}
-
-		private static XmlWriterSettings Override(this XmlWriterSettings outputSettingsTemplate, Action<XmlWriterSettings> overrider)
-		{
-			// get a modifiable copy of the settings
-			var outputSettings = outputSettingsTemplate.Clone();
-			overrider(outputSettings);
-			// ensure the underlying stream stay open
-			outputSettings.CloseOutput = false;
-			return outputSettings;
 		}
 
 		private const int DEFAULT_BUFFER_SIZE = 10 * 1024; //10 KB

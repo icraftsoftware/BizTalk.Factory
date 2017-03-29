@@ -34,6 +34,18 @@ namespace Be.Stateless.BizTalk.Transform
 	[Serializable]
 	public sealed class XlangMessageCollection : List<XLANGMessage>, IDisposable
 	{
+		#region Operators
+
+		public static implicit operator XmlReader(XlangMessageCollection messages)
+		{
+			var xmlReaderSettings = new XmlReaderSettings { CloseInput = true };
+			return messages.Count == 1
+				? XmlReader.Create(messages[0].AsStream(), xmlReaderSettings)
+				: CompositeXmlReader.Create(messages.Select(m => m.AsStream()).ToArray(), xmlReaderSettings);
+		}
+
+		#endregion
+
 		public XlangMessageCollection() { }
 
 		public XlangMessageCollection(int capacity) : base(capacity) { }
@@ -48,13 +60,5 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		#endregion
-
-		internal XmlReader ToXmlReader()
-		{
-			var xmlReaderSettings = new XmlReaderSettings { CloseInput = true };
-			return Count == 1
-				? XmlReader.Create(this[0].AsStream(), xmlReaderSettings)
-				: CompositeXmlReader.Create(this.Select(m => m.AsStream()).ToArray(), xmlReaderSettings);
-		}
 	}
 }

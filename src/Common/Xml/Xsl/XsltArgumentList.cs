@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,6 +69,30 @@ namespace Be.Stateless.Xml.Xsl
 			return target;
 		}
 
+		/// <summary>
+		/// Adds custom transform arguments to the transform argument list.
+		/// </summary>
+		/// <param name="splatteredArguments"></param>
+		/// <returns></returns>
+		public System.Xml.Xsl.XsltArgumentList Union(object[] splatteredArguments)
+		{
+			var union = Clone();
+			if (splatteredArguments == null) return union;
+			for (var i = 0; i < splatteredArguments.Length; i += 3)
+			{
+				union.AddParam(
+					name: (string) splatteredArguments[i],
+					namespaceUri: (string) splatteredArguments[i + 1],
+					parameter: splatteredArguments[i + 2]);
+			}
+			return union;
+		}
+
+		/// <summary>
+		/// Adds custom transform arguments to the transform argument list.
+		/// </summary>
+		/// <param name="arguments"></param>
+		/// <returns></returns>
 		public System.Xml.Xsl.XsltArgumentList Union(System.Xml.Xsl.XsltArgumentList arguments)
 		{
 			var union = Clone();
