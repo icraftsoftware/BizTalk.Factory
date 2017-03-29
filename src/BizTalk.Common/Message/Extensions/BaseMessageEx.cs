@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.IO;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.Extensions;
@@ -39,6 +40,11 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		public static bool HasFailed(this IBaseMessage message)
 		{
 			return message.GetProperty(ErrorReportProperties.ErrorType) != null;
+		}
+
+		public static Stream AsStream(this XLANGMessage message)
+		{
+			return message[0].AsStream();
 		}
 
 		#region message direction and exchange pattern

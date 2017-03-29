@@ -108,6 +108,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tracking\Messaging\ProcessName.cs" />
+    <Compile Include="Transform\XlangMessageCollection.cs" />
+    <Compile Include="Transform\XlangTransformHelper.cs" />
     <Compile Include="Xml\EmbeddedXmlResolver.cs" />
     <Compile Include="Xml\EncodingXmlSerializer.cs" />
     <Compile Include="Xml\PolicyNameXmlSerializer.cs" />

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,11 +28,17 @@ using Be.Stateless.Logging;
 using Be.Stateless.Xml.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Message.Extensions
 {
 	public static class BaseMessagePart
 	{
+		public static Stream AsStream(this XLANGPart messagePart)
+		{
+			return (Stream) messagePart.RetrieveAs(typeof(Stream));
+		}
+
 		/// <summary>
 		/// Return the content of a claim token message, either <see cref="Claim.Check"/>, <see cref="Claim.CheckIn"/>, or
 		/// <see cref="Claim.CheckOut"/>, as a <see cref="MessageBodyCaptureDescriptor"/> filled in according to the
