@@ -44,17 +44,17 @@ namespace Be.Stateless.BizTalk.Transform
 
 		void IDisposable.Dispose()
 		{
-			this.Each(m => m.Dispose());
+			this.Where(m => m != null).Each(m => m.Dispose());
 		}
 
 		#endregion
 
-		internal XmlReader ToCompositeXmlReader()
+		internal XmlReader ToXmlReader()
 		{
 			var xmlReaderSettings = new XmlReaderSettings { CloseInput = true };
 			return Count == 1
 				? XmlReader.Create(this[0].AsStream(), xmlReaderSettings)
-				: CompositeXmlReader.Create(this.Select(m => BaseMessageEx.AsStream(m)).ToArray(), xmlReaderSettings);
+				: CompositeXmlReader.Create(this.Select(m => m.AsStream()).ToArray(), xmlReaderSettings);
 		}
 	}
 }

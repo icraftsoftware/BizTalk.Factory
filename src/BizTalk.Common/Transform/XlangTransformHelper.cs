@@ -91,11 +91,9 @@ namespace Be.Stateless.BizTalk.Transform
 			if (mapType == null) throw new ArgumentNullException("mapType");
 			using (sourceMessages)
 			{
-				var outputStream = Transform(sourceMessages.ToCompositeXmlReader(), mapType, null);
-				var customBtxMessage = new CustomBtxMessage(DEFAULT_MESSAGE_NAME, Service.RootService.XlangStore.OwningContext);
-				customBtxMessage.AddPart(string.Empty, DEFAULT_PART_NAME);
-				customBtxMessage[0].LoadFrom(outputStream);
-				XLANGMessage resultMessage = customBtxMessage.GetMessageWrapperForUserCode();
+				var outputStream = Transform(sourceMessages.ToXmlReader(), mapType, null);
+				var btxMessage = new CustomBtxMessage(Service.RootService.XlangStore.OwningContext, outputStream);
+				XLANGMessage resultMessage = btxMessage.GetMessageWrapperForUserCode();
 				trackingContext.Apply(resultMessage);
 				return resultMessage;
 			}
@@ -148,8 +146,6 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		private const int DEFAULT_BUFFER_SIZE = 10 * 1024; //10 KB
-		private const string DEFAULT_MESSAGE_NAME = "transformedMessage";
-		private const string DEFAULT_PART_NAME = "Main";
 		private const int DEFAULT_THRESHOLD_SIZE = 1024 * 1024; //1 MB
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(XlangTransformHelper));

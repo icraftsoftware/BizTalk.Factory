@@ -44,6 +44,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// href="http://blogs.msdn.com/b/paolos/archive/2010/01/29/how-to-boost-message-transformations-using-the-xslcompiledtransform-class.aspx"/>.
 	/// </remarks>
 #pragma warning restore 612,618
+	// TODO to be deprecated
 	public static class XslCompiledTransformHelper
 	{
 		#region XLANGMessage based tranforms

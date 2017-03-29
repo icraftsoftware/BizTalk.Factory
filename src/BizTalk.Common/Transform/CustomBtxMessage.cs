@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.IO;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
 using Microsoft.XLANGs.Core;
 
@@ -25,9 +26,20 @@ namespace Be.Stateless.BizTalk.Transform
 	[Serializable]
 	internal sealed class CustomBtxMessage : BTXMessage
 	{
+		public CustomBtxMessage(Context context, Stream stream) : base(DEFAULT_MESSAGE_NAME, context)
+		{
+			context.RefMessage(this);
+			AddPart(string.Empty, DEFAULT_PART_NAME);
+			this[0].LoadFrom(stream);
+		}
+
+		// TODO to be deprecated
 		public CustomBtxMessage(string messageName, Context context) : base(messageName, context)
 		{
 			context.RefMessage(this);
 		}
+
+		private const string DEFAULT_MESSAGE_NAME = "transformedMessage";
+		private const string DEFAULT_PART_NAME = "Main";
 	}
 }
