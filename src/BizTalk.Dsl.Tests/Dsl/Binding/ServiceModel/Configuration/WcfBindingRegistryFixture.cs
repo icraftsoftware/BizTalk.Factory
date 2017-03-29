@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,14 +24,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration
 	public class WcfBindingRegistryFixture
 	{
 		[Test]
-		public void GetBindingNameForDecoratedBindingElement()
+		public void GetBindingNameForDecoratedNetMsmqBindingElement()
 		{
 			var bindingElement = new NetMsmqBindingElement();
 			Assert.That(WcfBindingRegistry.GetBindingName(bindingElement), Is.EqualTo("netMsmqBinding"));
 		}
 
 		[Test]
-		public void GetBindingNameForStandardBindingElement()
+		public void GetBindingNameForStandardCustomBindingElement()
+		{
+			var bindingElement = new System.ServiceModel.Configuration.CustomBindingElement();
+			Assert.That(WcfBindingRegistry.GetBindingName(bindingElement), Is.EqualTo("customBinding"));
+		}
+
+		[Test]
+		public void GetBindingNameForStandardNetMsmqBindingElement()
 		{
 			var bindingElement = new System.ServiceModel.Configuration.NetMsmqBindingElement();
 			Assert.That(WcfBindingRegistry.GetBindingName(bindingElement), Is.EqualTo("netMsmqBinding"));

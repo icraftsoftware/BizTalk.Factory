@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
+		static WcfCustomAdapterBase()
+		{
+			// BizTalk Server does only depend on BasicHttpBinding even for https
+			if (typeof(TBinding) == typeof(BasicHttpsBindingElement))
+				throw new BindingException(
+					string.Format(
+						"{0} has to be used for https addresses as well.",
+						typeof(BasicHttpBindingElement).Name));
+		}
+
 		protected WcfCustomAdapterBase(ProtocolType protocolType) : base(protocolType) { }
 
 		#region Base Class Member Overrides

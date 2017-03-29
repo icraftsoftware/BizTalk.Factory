@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,19 +16,39 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
+using System;
+using System.ServiceModel.Configuration;
 using Be.Stateless.Reflection;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 using Microsoft.BizTalk.Deployment.Binding;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using NetMsmqBindingElement = Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.NetMsmqBindingElement;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[TestFixture]
 	public class WcfCustomAdapterBaseFixture
 	{
+		[Test]
+		public void BasicHttpBindingElementIsSupported()
+		{
+			var adapterMock = new Mock<WcfCustomAdapterBase<BasicHttpBindingElement, CustomRLConfig>>(new ProtocolType()) { CallBase = true };
+			Assert.That(() => adapterMock.Object, Throws.Nothing);
+		}
+
+		[Test]
+		public void BasicHttpsBindingElementIsNotSupported()
+		{
+			var adapterMock = new Mock<WcfCustomAdapterBase<BasicHttpsBindingElement, CustomRLConfig>>(new ProtocolType()) { CallBase = true };
+			Assert.That(
+				() => adapterMock.Object,
+				Throws.TypeOf<TypeInitializationException>()
+					.With.InnerException.TypeOf<BindingException>()
+					.And.InnerException.Message.EqualTo("BasicHttpBindingElement has to be used for https addresses as well."));
+		}
+
 		[Test]
 		public void EnvironmentOverridesAreAppliedForGivenEnvironment()
 		{
