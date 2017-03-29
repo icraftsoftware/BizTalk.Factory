@@ -31,6 +31,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// A collection of <see cref="XLANGMessage"/> messages.
 	/// </summary>
 	/// <seealso cref="XlangTransformHelper.Transform(Microsoft.XLANGs.BaseTypes.XLANGMessage,System.Type,Be.Stateless.BizTalk.Tracking.TrackingContext)"/>
+	[Serializable]
 	public sealed class XlangMessageCollection : List<XLANGMessage>, IDisposable
 	{
 		public XlangMessageCollection() { }
