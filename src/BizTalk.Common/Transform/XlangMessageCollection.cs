@@ -33,6 +33,12 @@ namespace Be.Stateless.BizTalk.Transform
 	/// <seealso cref="XlangTransformHelper.Transform(Microsoft.XLANGs.BaseTypes.XLANGMessage,System.Type,Be.Stateless.BizTalk.Tracking.TrackingContext)"/>
 	public sealed class XlangMessageCollection : List<XLANGMessage>, IDisposable
 	{
+		public XlangMessageCollection() { }
+
+		public XlangMessageCollection(int capacity) : base(capacity) { }
+
+		public XlangMessageCollection(IEnumerable<XLANGMessage> collection) : base(collection) { }
+
 		#region IDisposable Members
 
 		void IDisposable.Dispose()
