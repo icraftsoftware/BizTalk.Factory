@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,11 @@
 
 using System;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Configuration;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using NUnit.Framework;
 using CustomBindingElement = Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.CustomBindingElement;
 
@@ -118,6 +120,33 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public void Validate()
 		{
 			Assert.Fail("TODO");
+		}
+
+		[Test]
+		public void ValidateCustomBasicHttpBindingWithTransportSecurity()
+		{
+			var wca = new WcfCustomAdapter.Outbound<BasicHttpBindingElement>(
+				a => {
+					a.Address = new EndpointAddress("https://services.stateless.be/soap/default");
+					a.Binding.Security.Mode = BasicHttpSecurityMode.Transport;
+					a.Binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+					a.EndpointBehaviors = new[] {
+						new ClientCredentialsElement {
+							ClientCertificate = {
+								FindValue = "*.stateless.be",
+								StoreLocation = StoreLocation.LocalMachine,
+								StoreName = StoreName.My,
+								X509FindType = X509FindType.FindBySubjectName
+							}
+						}
+					};
+					a.Identity = EndpointIdentityFactory.CreateCertificateIdentity(
+						StoreLocation.LocalMachine,
+						StoreName.TrustedPeople,
+						X509FindType.FindBySubjectDistinguishedName,
+						"*.services.party.be");
+				});
+			Assert.That(() => ((ISupportValidation) wca).Validate(), Throws.Nothing);
 		}
 
 		[Test]

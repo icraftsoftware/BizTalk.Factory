@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using Be.Stateless.Reflection;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -81,6 +82,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			((ISupportEnvironmentOverride) adapterMock.Object).ApplyEnvironmentOverrides("ACC");
 
 			environmentSensitiveBindingMock.Verify(b => b.ApplyEnvironmentOverrides("ACC"), Times.Once());
+		}
+
+		[Test]
+		public void ValidateCustomBasicHttpBindingWithTransportSecurity()
+		{
+			var adapterMock = new Mock<WcfCustomAdapterBase<BasicHttpBindingElement, CustomTLConfig>>(new ProtocolType()) { CallBase = true };
+			adapterMock.Object.Address = new EndpointAddress("https://services.stateless.be/soap/default");
+			adapterMock.Object.Binding.Security.Mode = BasicHttpSecurityMode.Transport;
+			Assert.That(() => ((ISupportValidation) adapterMock.Object).Validate(), Throws.Nothing);
 		}
 	}
 }
