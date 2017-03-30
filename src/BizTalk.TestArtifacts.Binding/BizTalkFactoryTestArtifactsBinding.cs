@@ -16,10 +16,13 @@
 
 #endregion
 
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
+using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
+using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.EnvironmentSettings;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.Adapters.Sql;
@@ -45,6 +48,34 @@ namespace Be.Stateless.BizTalk
 									InstanceName = CommonSettings.ProcessingDatabaseInstanceName
 								};
 								a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
+							});
+						sp.Transport.Host = CommonSettings.TransmitHost;
+					}),
+				SendPort(
+					sp => {
+						sp.Name = SendPortName.Towards("Service").About("Dummy").FormattedAs.None;
+						sp.ReceivePipeline = new ReceivePipeline<PassThruReceive>();
+						sp.SendPipeline = new SendPipeline<PassThruTransmit>();
+						sp.Transport.Adapter = new WcfCustomAdapter.Outbound<BasicHttpBindingElement>(
+							a => {
+								a.Address = new EndpointAddress("https://services.stateless.be/soap/default");
+								a.Binding.Security.Mode = BasicHttpSecurityMode.Transport;
+								a.Binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+								a.EndpointBehaviors = new[] {
+									new ClientCredentialsElement {
+										ClientCertificate = {
+											FindValue = "*.stateless.be",
+											StoreLocation = StoreLocation.LocalMachine,
+											StoreName = StoreName.My,
+											X509FindType = X509FindType.FindBySubjectName
+										}
+									}
+								};
+								a.Identity = EndpointIdentityFactory.CreateCertificateIdentity(
+									StoreLocation.LocalMachine,
+									StoreName.TrustedPeople,
+									X509FindType.FindBySubjectDistinguishedName,
+									"*.services.party.be");
 							});
 						sp.Transport.Host = CommonSettings.TransmitHost;
 					}));
