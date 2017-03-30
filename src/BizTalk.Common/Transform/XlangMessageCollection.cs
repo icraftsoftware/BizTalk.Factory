@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Xml;
@@ -32,25 +33,25 @@ namespace Be.Stateless.BizTalk.Transform
 	/// </summary>
 	/// <seealso cref="XlangTransformHelper.Transform(Microsoft.XLANGs.BaseTypes.XLANGMessage,System.Type,Be.Stateless.BizTalk.Tracking.TrackingContext)"/>
 	[Serializable]
-	public sealed class XlangMessageCollection : List<XLANGMessage>, IDisposable
+	public sealed class XlangMessageCollection : LinkedList<XLANGMessage>, IDisposable
 	{
 		#region Operators
 
-		public static implicit operator XmlReader(XlangMessageCollection messages)
+		public static implicit operator XmlReader(XlangMessageCollection collection)
 		{
 			var xmlReaderSettings = new XmlReaderSettings { CloseInput = true };
-			return messages.Count == 1
-				? XmlReader.Create(messages[0].AsStream(), xmlReaderSettings)
-				: CompositeXmlReader.Create(messages.Select(m => m.AsStream()).ToArray(), xmlReaderSettings);
+			return collection.Count == 1
+				? XmlReader.Create(collection.First.Value.AsStream(), xmlReaderSettings)
+				: CompositeXmlReader.Create(collection.Select(m => m.AsStream()).ToArray(), xmlReaderSettings);
 		}
 
 		#endregion
 
 		public XlangMessageCollection() { }
 
-		public XlangMessageCollection(int capacity) : base(capacity) { }
-
 		public XlangMessageCollection(IEnumerable<XLANGMessage> collection) : base(collection) { }
+
+		private XlangMessageCollection(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
 		#region IDisposable Members
 
@@ -60,5 +61,10 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		#endregion
+
+		public void Add(XLANGMessage message)
+		{
+			AddLast(message);
+		}
 	}
 }
