@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,18 +22,21 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfTwoWayAdapterBase<TAddress, TBinding, TConfig> : WcfAdapterBase<TAddress, TBinding, TConfig>
+	public abstract class WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>
+		: WcfAdapterBase<TAddress, TBinding, TConfig>,
+			IAdapterConfigInboundMessageMarshalling,
+			IAdapterConfigOutboundMessageMarshalling
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
 	{
 		protected WcfTwoWayAdapterBase(ProtocolType protocolType) : base(protocolType) { }
 
-		#region Messages Tab - Inbound BizTalk Message Body Settings
+		#region IAdapterConfigInboundMessageMarshalling Members
 
 		/// <summary>
 		/// Specify the data selection for the SOAP Body element of incoming WCF messages.
@@ -138,7 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Messages Tab - Outbound WCF Message Body Settings
+		#region IAdapterConfigOutboundMessageMarshalling Members
 
 		/// <summary>
 		/// Specify the data selection for the SOAP Body element of outgoing WCF messages.

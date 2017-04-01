@@ -1,6 +1,6 @@
-ï»¿#region Copyright & License
+#region Copyright & License
 
-// Copyright Â© 2012 - 2015 FranÃ§ois Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public class Credentials
+	public interface IAdapterConfigAddress<TAddress>
 	{
-		public string Password { get; set; }
-
-		public string UserName { get; set; }
+		TAddress Address { get; set; }
 	}
 }

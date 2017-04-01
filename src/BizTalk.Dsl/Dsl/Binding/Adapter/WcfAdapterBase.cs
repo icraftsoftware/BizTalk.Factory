@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,11 +45,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245975.aspx">What Are the WCF Adapters?</seealso>
 	/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfAdapterBase<TAddress, TBinding, TConfig> : AdapterBase, IAdapterConfigTimeouts
+	public abstract class WcfAdapterBase<TAddress, TBinding, TConfig>
+		: AdapterBase,
+			IAdapterConfigAddress<TAddress>,
+			IAdapterConfigIdentity,
+			IAdapterConfigTimeouts
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			new()
 	{
 		protected WcfAdapterBase(ProtocolType protocolType) : base(protocolType)
@@ -57,6 +61,47 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_adapterConfig = new TConfig();
 			_bindingConfigurationElement = new TBinding();
 		}
+
+		#region IAdapterConfigAddress<TAddress> Members
+
+		public TAddress Address { get; set; }
+
+		#endregion
+
+		#region IAdapterConfigIdentity Members
+
+		/// <summary>
+		/// Specify the identity of the service that this receive location provides.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The values that can be specified for the Identity property differ according to the security configuration.
+		/// These settings enable the client to authenticate this receive location. In the handshake process between the
+		/// client and service, the Windows Communication Foundation (WCF) infrastructure will ensure that the identity of
+		/// the expected service matches the values of this element.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="string.Empty"/>.
+		/// </para>
+		/// </remarks>
+		/// <example>
+		/// XML Blob example:
+		/// <code><![CDATA[&lt;identity&gt;
+		///   &lt;userPrincipalName value="username@contoso.com" /&gt;
+		/// &lt;/identity&gt;]]>
+		/// </code>
+		/// </example>
+		public IdentityElement Identity
+		{
+			get { return _identity; }
+			set
+			{
+				_adapterConfig.Identity = new IdentityElementSurrogate(value).ConfigXml;
+				_identity = value;
+			}
+		}
+
+		#endregion
 
 		#region IAdapterConfigTimeouts Members
 
@@ -151,42 +196,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		protected readonly TConfig _adapterConfig;
 		protected readonly TBinding _bindingConfigurationElement;
 		private IdentityElement _identity;
-
-		#region General Tab - Endpoint Address Settings
-
-		public TAddress Address { get; set; }
-
-		/// <summary>
-		/// Specify the identity of the service that this receive location provides.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The values that can be specified for the Identity property differ according to the security configuration.
-		/// These settings enable the client to authenticate this receive location. In the handshake process between the
-		/// client and service, the Windows Communication Foundation (WCF) infrastructure will ensure that the identity of
-		/// the expected service matches the values of this element.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="string.Empty"/>.
-		/// </para>
-		/// </remarks>
-		/// <example>
-		/// XML Blob example:
-		/// <code><![CDATA[&lt;identity&gt;
-		///   &lt;userPrincipalName value="username@contoso.com" /&gt;
-		/// &lt;/identity&gt;]]>
-		/// </code>
-		/// </example>
-		public IdentityElement Identity
-		{
-			get { return _identity; }
-			set
-			{
-				_adapterConfig.Identity = new IdentityElementSurrogate(value).ConfigXml;
-				_identity = value;
-			}
-		}
-
-		#endregion
 	}
 }

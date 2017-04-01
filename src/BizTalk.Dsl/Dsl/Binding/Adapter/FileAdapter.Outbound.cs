@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination folder.");
 				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination file name.");
 				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
-				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
+				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.UserName.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
 			}
 
 			#endregion

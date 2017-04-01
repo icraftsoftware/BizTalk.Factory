@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-US/library/aa561097.aspx">How to Configure an HTTP Send Handler</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-US/library/aa559324.aspx">How to Configure an HTTP Send Port</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-US/library/aa577471.aspx">Restrictions on the Destination URL Property</seealso>
-		public class Outbound : HttpAdapter, IOutboundAdapter
+		public class Outbound : HttpAdapter, IOutboundAdapter, IAdapterConfigOutboundCredentials
 		{
 			public Outbound()
 			{
@@ -60,6 +60,46 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				adapterConfigurator(this);
 			}
+
+			#region IAdapterConfigOutboundCredentials Members
+
+			/// <summary>
+			/// Specifies if SSO will be used for the send port.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <c>False</c>.
+			/// </remarks>
+			public bool UseSSO { get; set; }
+
+			/// <summary>
+			/// Name of the affiliate application to use for SSO.
+			/// </summary>
+			/// <remarks>
+			/// Required if <see cref="UseSSO"/> is <c>True</c>.
+			/// </remarks>
+			public string AffiliateApplicationName { get; set; }
+
+			/// <summary>
+			/// User name to use for authentication with the server.
+			/// </summary>
+			/// <remarks>
+			/// This value is required if you select <see cref="HttpAdapter.AuthenticationScheme.Basic"/> or <see
+			/// cref="HttpAdapter.AuthenticationScheme.Digest"/> authentication. The HTTP adapter ignores the value of this
+			/// property if <see cref="UseSSO"/> is <c>True</c>.
+			/// </remarks>
+			public string UserName { get; set; }
+
+			/// <summary>
+			/// User password to use for authentication with the server.
+			/// </summary>
+			/// <remarks>
+			/// This value is required if you select <see cref="HttpAdapter.AuthenticationScheme.Basic"/> or <see
+			/// cref="HttpAdapter.AuthenticationScheme.Digest"/> authentication. The HTTP adapter ignores the value of this
+			/// property if <see cref="UseSSO"/> is <c>True</c>.
+			/// </remarks>
+			public string Password { get; set; }
+
+			#endregion
 
 			#region Base Class Member Overrides
 
@@ -80,11 +120,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					propertyBag.WriteAdapterCustomProperty("UseProxy", UseProxy);
 					propertyBag.WriteAdapterCustomProperty("ProxyName", ProxyName);
 					propertyBag.WriteAdapterCustomProperty("ProxyPort", ProxyPort);
-					propertyBag.WriteAdapterCustomProperty("ProxyUsername", ProxyUsername);
+					propertyBag.WriteAdapterCustomProperty("ProxyUsername", ProxyUserName);
 					propertyBag.WriteAdapterCustomProperty("ProxyPassword", ProxyPassword);
 				}
 				propertyBag.WriteAdapterCustomProperty("AuthenticationScheme", AuthenticationScheme.ToString());
-				propertyBag.WriteAdapterCustomProperty("Username", Username);
+				propertyBag.WriteAdapterCustomProperty("Username", UserName);
 				propertyBag.WriteAdapterCustomProperty("Password", Password);
 				propertyBag.WriteAdapterCustomProperty("UseSSO", UseSSO);
 				propertyBag.WriteAdapterCustomProperty("AffiliateApplicationName", AffiliateApplicationName);
@@ -97,10 +137,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				if (ProxyPort < 0 || ProxyPort > 65535) throw new BindingException("ProxyPort must range from 0 to 65535.");
 				if (AuthenticationScheme.IsOneOf(AuthenticationScheme.Basic, AuthenticationScheme.Digest))
 				{
-					if (Username.IsNullOrEmpty() || Password.IsNullOrEmpty())
+					if (UserName.IsNullOrEmpty() || Password.IsNullOrEmpty())
 						throw new BindingException(
 							string.Format(
-								"Username and Password must neither be null nor empty when AuthenticationScheme is either {0} or {1}.",
+								"UserName and Password must neither be null nor empty when AuthenticationScheme is either {0} or {1}.",
 								AuthenticationScheme.Basic,
 								AuthenticationScheme.Digest));
 				}
@@ -120,42 +160,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 #pragma warning disable 108
 			public AuthenticationScheme AuthenticationScheme { get; set; }
 #pragma warning restore 108
-
-			/// <summary>
-			/// User name to use for authentication with the server.
-			/// </summary>
-			/// <remarks>
-			/// This value is required if you select <see cref="HttpAdapter.AuthenticationScheme.Basic"/> or <see
-			/// cref="HttpAdapter.AuthenticationScheme.Digest"/> authentication. The HTTP adapter ignores the value of this
-			/// property if <see cref="UseSSO"/> is <c>True</c>.
-			/// </remarks>
-			public string Username { get; set; }
-
-			/// <summary>
-			/// User password to use for authentication with the server.
-			/// </summary>
-			/// <remarks>
-			/// This value is required if you select <see cref="HttpAdapter.AuthenticationScheme.Basic"/> or <see
-			/// cref="HttpAdapter.AuthenticationScheme.Digest"/> authentication. The HTTP adapter ignores the value of this
-			/// property if <see cref="UseSSO"/> is <c>True</c>.
-			/// </remarks>
-			public string Password { get; set; }
-
-			/// <summary>
-			/// Specifies if SSO will be used for the send port.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool UseSSO { get; set; }
-
-			/// <summary>
-			/// Name of the affiliate application to use for SSO.
-			/// </summary>
-			/// <remarks>
-			/// Required if <see cref="UseSSO"/> is <c>True</c>.
-			/// </remarks>
-			public string AffiliateApplicationName { get; set; }
 
 			/// <summary>
 			/// Specify the thumbprint of the client certificate to use for establishing a Secure Sockets Layer (SSL)
@@ -227,7 +231,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// The HTTP send adapter ignores this property if <see cref="UseHandlerProxySettings"/> is <c>True</c>.
 			/// Otherwise, HTTP send adapter uses this property only if <see cref="UseProxy"/> is <c>True</c>.
 			/// </remarks>
-			public string ProxyUsername { get; set; }
+			public string ProxyUserName { get; set; }
 
 			/// <summary>
 			/// Specifies the user password for authentication with the proxy server.

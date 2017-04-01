@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#region IAdapterConfigOutboundCredentials Members
 
+			public bool UseSSO
+			{
+				get { return _adapterConfig.UseSSO; }
+				set { _adapterConfig.UseSSO = value; }
+			}
+
 			public string AffiliateApplicationName
 			{
 				get { return _adapterConfig.AffiliateApplicationName; }
@@ -83,12 +89,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.UserName; }
 				set { _adapterConfig.UserName = value; }
-			}
-
-			public bool UseSSO
-			{
-				get { return _adapterConfig.UseSSO; }
-				set { _adapterConfig.UseSSO = value; }
 			}
 
 			#endregion

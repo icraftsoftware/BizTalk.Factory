@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(
 				a => {
 					a.DestinationFolder = @"\\server\folder";
-					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.UserName = "user";
 					a.NetworkCredentials.Password = "pwd";
 				});
 			Assert.That(() => ((ISupportValidation) ofa).Validate(), Throws.Nothing);
@@ -41,7 +41,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(
 				a => {
 					a.DestinationFolder = @"c:\files\drops";
-					a.NetworkCredentials.Username = "user";
+					a.NetworkCredentials.UserName = "user";
 					a.NetworkCredentials.Password = "pwd";
 				});
 			Assert.That(

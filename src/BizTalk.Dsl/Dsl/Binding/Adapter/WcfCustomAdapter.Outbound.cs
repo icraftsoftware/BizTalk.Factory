@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,12 +43,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226446.aspx">How to Configure a WCF-Custom Send Port</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound<TBinding> : WcfCustomAdapter<TBinding, CustomTLConfig>,
-			IOutboundAdapter,
-			IAdapterConfigOutboundAction,
-			IAdapterConfigOutboundCredentials,
-			IAdapterConfigOutboundPropagateFaultMessage,
-			IAdapterConfigOutboundTransactionIsolation
+		public class Outbound<TBinding>
+			: WcfCustomAdapter<TBinding, CustomTLConfig>,
+				IOutboundAdapter,
+				IAdapterConfigOutboundAction,
+				IAdapterConfigOutboundCredentials,
+				IAdapterConfigOutboundPropagateFaultMessage,
+				IAdapterConfigOutboundTransactionIsolation,
+				IAdapterConfigProxySettings,
+				IAdapterConfigProxyToUse
 			where TBinding : StandardBindingElement, new()
 		{
 			public Outbound()
@@ -126,7 +129,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Credentials Tab - Proxy Settings
+			#region IAdapterConfigProxySettings Members
 
 			/// <summary>
 			/// Specify the address of the proxy server. Use the <b>https</b> or the http scheme depending on the security
@@ -153,6 +156,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				get { return _adapterConfig.ProxyPassword; }
 				set { _adapterConfig.ProxyPassword = value; }
 			}
+
+			/// <summary>
+			/// Specify the user name to use for the proxy server specified in the ProxyAddress property. The property is
+			/// required if the <see cref="ProxyToUse"/> property is set to <see cref="ProxySelection.UserSpecified"/>.
+			/// </summary>
+			/// <remarks>
+			/// For more information about this property, see <see
+			/// href="https://msdn.microsoft.com/en-us/library/bb245939.aspx">How to Configure a WCF-WSHttp Send Port</see>
+			/// and <see href="https://msdn.microsoft.com/en-us/library/bb226467.aspx">How to Configure a WCF-BasicHttp
+			/// Send Port</see>.
+			/// </remarks>
+			public string ProxyUserName
+			{
+				get { return _adapterConfig.ProxyUserName; }
+				set { _adapterConfig.ProxyUserName = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigProxyToUse Members
 
 			/// <summary>
 			/// Specify which proxy server to use for outgoing HTTP traffic.
@@ -182,22 +205,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.ProxyToUse; }
 				set { _adapterConfig.ProxyToUse = value; }
-			}
-
-			/// <summary>
-			/// Specify the user name to use for the proxy server specified in the ProxyAddress property. The property is
-			/// required if the <see cref="ProxyToUse"/> property is set to <see cref="ProxySelection.UserSpecified"/>.
-			/// </summary>
-			/// <remarks>
-			/// For more information about this property, see <see
-			/// href="https://msdn.microsoft.com/en-us/library/bb245939.aspx">How to Configure a WCF-WSHttp Send Port</see>
-			/// and <see href="https://msdn.microsoft.com/en-us/library/bb226467.aspx">How to Configure a WCF-BasicHttp
-			/// Send Port</see>.
-			/// </remarks>
-			public string ProxyUserName
-			{
-				get { return _adapterConfig.ProxyUserName; }
-				set { _adapterConfig.ProxyUserName = value; }
 			}
 
 			#endregion

@@ -729,21 +729,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 		private class CustomAdapterFake<TBinding, TConfig> : WcfCustomAdapter<TBinding, TConfig>
 			where TBinding : StandardBindingElement, new()
 			where TConfig : AdapterConfig,
-			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
-			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
-			IAdapterConfigInboundMessageMarshalling,
-			IAdapterConfigOutboundMessageMarshalling,
-			new() { }
+				IAdapterConfigAddress,
+				Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
+				IAdapterConfigBinding,
+				IAdapterConfigEndpointBehavior,
+				IAdapterConfigInboundMessageMarshalling,
+				IAdapterConfigOutboundMessageMarshalling,
+				new() { }
 
 		private class CustomIsolatedAdapterFake<TBinding, TConfig> : WcfCustomIsolatedAdapter<TBinding, TConfig>
 			where TBinding : StandardBindingElement, new()
 			where TConfig : RLConfig,
-			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
-			IAdapterConfigInboundMessageMarshalling,
-			IAdapterConfigOutboundMessageMarshalling,
-			new() { }
+				IAdapterConfigBinding,
+				IAdapterConfigEndpointBehavior,
+				IAdapterConfigInboundMessageMarshalling,
+				IAdapterConfigOutboundMessageMarshalling,
+				new() { }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,11 +38,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp Transport Properties Dialog Box, Send, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Outbound : WcfWSHttpAdapter<EndpointAddress, WSHttpTLConfig>,
-			IOutboundAdapter,
-			IAdapterConfigOutboundAction,
-			IAdapterConfigOutboundPropagateFaultMessage,
-			IAdapterConfigOutboundCredentials
+		public class Outbound
+			: WcfWSHttpAdapter<EndpointAddress, WSHttpTLConfig>,
+				IOutboundAdapter,
+				IAdapterConfigClientCertificate,
+				IAdapterConfigOutboundAction,
+				IAdapterConfigOutboundCredentials,
+				IAdapterConfigOutboundPropagateFaultMessage,
+				IAdapterConfigProxySettings,
+				IAdapterConfigProxyToUse
 		{
 			public Outbound()
 			{
@@ -57,6 +61,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				adapterConfigurator(this);
 			}
+
+			#region IAdapterConfigClientCertificate Members
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the <see cref="WcfWSHttpAdapter{TAddress,TConfig}.MessageClientCredentialType"/>
+			/// property is set to <see cref="MessageCredentialType.Certificate"/>.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location of the user account for the send handler hosting this send port.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificate
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
+			}
+
+			#endregion
 
 			#region IAdapterConfigOutboundAction Members
 
@@ -106,60 +134,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the <see cref="WcfWSHttpAdapter{TAddress,TConfig}.MessageClientCredentialType"/>
-			/// property is set to <see cref="MessageCredentialType.Certificate"/>.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ClientCertificate
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
-			}
-
-			#endregion
-
-			#region Proxy Tab - General Settings
-
-			/// <summary>
-			/// Specify which proxy server to use for outgoing HTTP traffic.
-			/// </summary>
-			/// <remarks>
-			/// <list type="bullet">
-			/// <item>
-			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
-			/// port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
-			/// property.
-			/// </item>
-			/// </list>
-			/// It defaults to <see cref="ProxySelection.None"/>.
-			/// </remarks>
-			public ProxySelection ProxyToUse
-			{
-				get { return _adapterConfig.ProxyToUse; }
-				set { _adapterConfig.ProxyToUse = value; }
-			}
-
-			#endregion
-
-			#region Proxy Tab - Proxy Settings
+			#region IAdapterConfigProxySettings Members
 
 			/// <summary>
 			/// Specify the address of the proxy server.
@@ -217,6 +192,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.ProxyPassword; }
 				set { _adapterConfig.ProxyPassword = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigProxyToUse Members
+
+			/// <summary>
+			/// Specify which proxy server to use for outgoing HTTP traffic.
+			/// </summary>
+			/// <remarks>
+			/// <list type="bullet">
+			/// <item>
+			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
+			/// port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
+			/// property.
+			/// </item>
+			/// </list>
+			/// It defaults to <see cref="ProxySelection.None"/>.
+			/// </remarks>
+			public ProxySelection ProxyToUse
+			{
+				get { return _adapterConfig.ProxyToUse; }
+				set { _adapterConfig.ProxyToUse = value; }
 			}
 
 			#endregion

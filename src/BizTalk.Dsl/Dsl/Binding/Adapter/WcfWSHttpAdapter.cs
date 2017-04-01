@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,12 +27,18 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfWSHttpAdapter<TAddress, TConfig> : WcfTwoWayAdapterBase<TAddress, WSHttpBindingElement, TConfig>,
-		IAdapterConfigMaxReceivedMessageSize,
-		IAdapterConfigServiceCertificate
+	public abstract class WcfWSHttpAdapter<TAddress, TConfig>
+		: WcfTwoWayAdapterBase<TAddress, WSHttpBindingElement, TConfig>,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigMessageSecurity<MessageCredentialType>,
+			IAdapterConfigMessageEncoding,
+			IAdapterConfigSecurityMode<SecurityMode>,
+			IAdapterConfigServiceCertificate,
+			IAdapterConfigTransactions,
+			IAdapterConfigTransportSecurity<HttpClientCredentialType>
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigTransactions,
 			IAdapterConfigInboundMessageMarshalling,
@@ -81,127 +87,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region IAdapterConfigServiceCertificate Members
+		#region IAdapterConfigMessageEncoding Members
 
-		public string ServiceCertificate
-		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Transactions
-
-		/// <summary>
-		/// Specify whether a message is submitted to the MessageBox database using the transaction flowed from
-		/// clients.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// If this property is <c>True</c>, the clients are required to submit messages using the WS-AtomicTransaction
-		/// protocol. If the clients submit messages outside the transactional scope then this receive location returns
-		/// an exception back to the clients and no messages are suspended.
-		/// </para>
-		/// <para>
-		/// </para>
-		/// The option is available only for one-way receive locations. If the clients submit messages in a
-		/// transactional context for request-response receive locations, then an exception is returned back to the
-		/// clients and no messages are suspended.
-		/// <para>
-		/// It defaults to <c>False</c>.
-		/// </para>
-		/// </remarks>
-		public bool EnableTransaction
-		{
-			get { return _adapterConfig.EnableTransaction; }
-			set { _adapterConfig.EnableTransaction = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Security Mode Settings
-
-		/// <summary>
-		/// Specify the type of security that is used.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="SecurityMode"/> property, see the Security mode
-		/// property in <see href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties
-		/// Dialog Box, Receive, Security Tab</see> and <see
-		/// href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp Transport Properties Dialog Box,
-		/// Send, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="System.ServiceModel.SecurityMode.Message"/>.
-		/// </para>
-		/// </remarks>
-		public SecurityMode SecurityMode
-		{
-			get { return _adapterConfig.SecurityMode; }
-			set { _adapterConfig.SecurityMode = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Transport Security Settings
-
-		/// <summary>
-		/// Specify the type of credential to be used when performing the client authentication.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="TransportClientCredentialType"/> property, see
-		/// the Transport client credential type property in <see
-		/// href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties Dialog Box,
-		/// Receive, Security Tab</see> and <see href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp
-		/// Transport Properties Dialog Box, Send, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="HttpClientCredentialType.Windows"/>.
-		/// </para>
-		/// </remarks>
-		public HttpClientCredentialType TransportClientCredentialType
-		{
-			get { return _adapterConfig.TransportClientCredentialType; }
-			set { _adapterConfig.TransportClientCredentialType = value; }
-		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		#region Binding Tab - Encoding Settings
-
-		/// <summary>
-		/// Specify the encoder used to encode the SOAP message.
-		/// </summary>
-		/// <remarks>
-		/// <list type="bullet">
-		/// <item>
-		/// <see cref="WSMessageEncoding.Text"/> &#8212; Use a text message encoder.</item>
-		/// <item>
-		/// <see cref="WSMessageEncoding.Mtom"/> &#8212; Use a Message Transmission Optimization Mechanism 1.0 (MTOM)
-		/// encoder.
-		/// </item>
-		/// </list>
-		/// It defaults to <see cref="WSMessageEncoding.Text"/>.
-		/// </remarks>
 		public WSMessageEncoding MessageEncoding
 		{
 			get { return _adapterConfig.MessageEncoding; }
 			set { _adapterConfig.MessageEncoding = value; }
 		}
 
-		/// <summary>
-		/// Specify the character set encoding to be used for emitting messages on the binding when the <see
-		/// cref="MessageEncoding"/> property is set to <see cref="WSMessageEncoding.Text"/>.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <see cref="Encoding.UTF8"/>.
-		/// </remarks>
 		public Encoding TextEncoding
 		{
 			get { return Encoding.GetEncoding(_adapterConfig.TextEncoding); }
@@ -210,7 +103,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Security Tab - Message Security Settings
+		#region IAdapterConfigMessageSecurity<MessageCredentialType> Members
 
 		/// <summary>
 		/// Specify the type of credential to be used when performing client authentication using message-based security.
@@ -254,6 +147,99 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _adapterConfig.AlgorithmSuite; }
 			set { _adapterConfig.AlgorithmSuite = value; }
 		}
+
+		#endregion
+
+		#region IAdapterConfigSecurityMode<SecurityMode> Members
+
+		/// <summary>
+		/// Specify the type of security that is used.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For more information about the member names for the <see cref="SecurityMode"/> property, see the Security mode
+		/// property in <see href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties
+		/// Dialog Box, Receive, Security Tab</see> and <see
+		/// href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp Transport Properties Dialog Box,
+		/// Send, Security Tab</see>.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="System.ServiceModel.SecurityMode.Message"/>.
+		/// </para>
+		/// </remarks>
+		public SecurityMode SecurityMode
+		{
+			get { return _adapterConfig.SecurityMode; }
+			set { _adapterConfig.SecurityMode = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigServiceCertificate Members
+
+		public string ServiceCertificate
+		{
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigTransactions Members
+
+		/// <summary>
+		/// Specify whether a message is submitted to the MessageBox database using the transaction flowed from
+		/// clients.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If this property is <c>True</c>, the clients are required to submit messages using the WS-AtomicTransaction
+		/// protocol. If the clients submit messages outside the transactional scope then this receive location returns
+		/// an exception back to the clients and no messages are suspended.
+		/// </para>
+		/// <para>
+		/// </para>
+		/// The option is available only for one-way receive locations. If the clients submit messages in a
+		/// transactional context for request-response receive locations, then an exception is returned back to the
+		/// clients and no messages are suspended.
+		/// <para>
+		/// It defaults to <c>False</c>.
+		/// </para>
+		/// </remarks>
+		public bool EnableTransaction
+		{
+			get { return _adapterConfig.EnableTransaction; }
+			set { _adapterConfig.EnableTransaction = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigTransportSecurity<HttpClientCredentialType> Members
+
+		/// <summary>
+		/// Specify the type of credential to be used when performing the client authentication.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For more information about the member names for the <see cref="TransportClientCredentialType"/> property, see
+		/// the Transport client credential type property in <see
+		/// href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties Dialog Box,
+		/// Receive, Security Tab</see> and <see href="https://msdn.microsoft.com/en-us/library/bb226397.aspx">WCF-WSHttp
+		/// Transport Properties Dialog Box, Send, Security Tab</see>.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="HttpClientCredentialType.Windows"/>.
+		/// </para>
+		/// </remarks>
+		public HttpClientCredentialType TransportClientCredentialType
+		{
+			get { return _adapterConfig.TransportClientCredentialType; }
+			set { _adapterConfig.TransportClientCredentialType = value; }
+		}
+
+		#endregion
+
+		#region Security Tab - Message Security Settings
 
 		/// <summary>
 		/// Specify whether the service credential is provisioned at the client out of band, or is obtained from the
@@ -303,5 +289,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

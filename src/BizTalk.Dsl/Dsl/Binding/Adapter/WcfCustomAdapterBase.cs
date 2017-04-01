@@ -31,7 +31,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,

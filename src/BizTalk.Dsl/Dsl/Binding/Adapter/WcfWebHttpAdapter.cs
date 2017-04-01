@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,13 +30,16 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfWebHttpAdapter<TAddress, TConfig> : WcfAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
-		IAdapterConfigMaxReceivedMessageSize,
-		IAdapterConfigServiceCertificate
+	public abstract class WcfWebHttpAdapter<TAddress, TConfig>
+		: WcfAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigServiceCertificate,
+			IAdapterConfigSecurityMode<Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode>,
+			IAdapterConfigTransportSecurity<HttpClientCredentialType>
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigEndpointBehavior,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigOutboundHttpProperty,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigRequestHttpProperty,
@@ -84,12 +87,110 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		#region IAdapterConfigSecurityMode<WebHttpSecurityMode> Members
+
+		/// <summary>
+		/// Specify the type of security that is used.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Valid values include the following:
+		/// <list type="bullet">
+		/// <item>
+		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.None"/>: Messages are not secured during
+		/// transfer.
+		/// </item>
+		/// <item>
+		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.Transport"/>: Security is provided using
+		/// the HTTPS transport. The messages are secured using HTTPS. To use this mode, you must set up Secure Sockets
+		/// Layer (SSL) in Microsoft Internet Information Services (IIS).
+		/// </item>
+		/// <item>
+		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.TransportCredentialOnly"/>: Integrity,
+		/// confidentiality, and service authentication are provided by the HTTPS transport. To use this mode, you must
+		/// set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS).
+		/// </item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.Transport"/>.
+		/// </para>
+		/// </remarks>
+		public Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode SecurityMode
+		{
+			get { return _adapterConfig.SecurityMode; }
+			set { _adapterConfig.SecurityMode = value; }
+		}
+
+		#endregion
+
 		#region IAdapterConfigServiceCertificate Members
 
 		public string ServiceCertificate
 		{
 			get { return _adapterConfig.ServiceCertificate; }
 			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigTransportSecurity<HttpClientCredentialType> Members
+
+		/// <summary>
+		/// Specify the type of credential to be used when performing the client authentication.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Valid values include the following:
+		/// <list type="bullet">
+		/// <item>
+		/// <see cref="HttpClientCredentialType.None"/>: No authentication occurs at the transport level.
+		/// </item>
+		/// <item>
+		/// <see cref="HttpClientCredentialType.Basic"/>: Basic authentication. In Basic authentication, user names and
+		/// passwords are sent in plain text over the network. You must create the domain or local user accounts
+		/// corresponding to the credentials.
+		/// </item>
+		/// <item>
+		/// <see cref="HttpClientCredentialType.Digest"/>: Digest authentication. This authentication method operates much
+		/// like Basic authentication, except that passwords are sent across the network as a hash value for additional
+		/// security. Digest authentication is available only on domains with domain controllers running Windows Server
+		/// operating systems authentication. You must create the domain or local user accounts corresponding to client
+		/// credentials.
+		/// </item>
+		/// <item>
+		/// <see cref="HttpClientCredentialType.Ntlm"/>: NTLM authentication. Clients can send the credentials without
+		/// sending a password to this receive location. You must create the domain or local user accounts corresponding
+		/// to client credentials.
+		/// </item>
+		/// <item>
+		/// <see cref="HttpClientCredentialType.Windows"/>: Windows integrated authentication. Windows Communication
+		/// Foundation negotiates Kerberos or NTLM, preferring Kerberos if a domain is present. If you want to use
+		/// Kerberos it is important to have the client identify the service with a service principal name (SPN). You must
+		/// create the domain or local user accounts corresponding to client credentials.
+		/// </item>
+		/// <item>
+		/// <see cref="HttpClientCredentialType.Certificate"/>: Client authentication using the client certificate. The CA
+		/// certificate chain for the client X.509 certificates must be installed in the Trusted Root Certification
+		/// Authorities certificate store of this computer so that the clients can be authenticated to this receive
+		/// location.
+		/// </item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// The Transport client credential type property must match the authentication scheme of the IIS virtual
+		/// directory hosting this receive location. For example, if the property is set to Windows, you also need to
+		/// enable Integrated Windows authentication for the virtual directory that hosts it. Similarly if the property is
+		/// set to None, you must allow anonymous access to the virtual directory that hosts this receive location.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="HttpClientCredentialType.Windows"/>.
+		/// </para>
+		/// </remarks>
+		public HttpClientCredentialType TransportClientCredentialType
+		{
+			get { return _adapterConfig.TransportClientCredentialType; }
+			set { _adapterConfig.TransportClientCredentialType = value; }
 		}
 
 		#endregion
@@ -165,104 +266,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _adapterConfig.HttpMethodAndUrl; }
 			set { _adapterConfig.HttpMethodAndUrl = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Security Mode Settings
-
-		/// <summary>
-		/// Specify the type of security that is used.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Valid values include the following:
-		/// <list type="bullet">
-		/// <item>
-		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.None"/>: Messages are not secured during
-		/// transfer.
-		/// </item>
-		/// <item>
-		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.Transport"/>: Security is provided using
-		/// the HTTPS transport. The messages are secured using HTTPS. To use this mode, you must set up Secure Sockets
-		/// Layer (SSL) in Microsoft Internet Information Services (IIS).
-		/// </item>
-		/// <item>
-		/// <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.TransportCredentialOnly"/>: Integrity,
-		/// confidentiality, and service authentication are provided by the HTTPS transport. To use this mode, you must
-		/// set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS).
-		/// </item>
-		/// </list>
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode.Transport"/>.
-		/// </para>
-		/// </remarks>
-		public Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode SecurityMode
-		{
-			get { return _adapterConfig.SecurityMode; }
-			set { _adapterConfig.SecurityMode = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Transport Security Settings
-
-		/// <summary>
-		/// Specify the type of credential to be used when performing the client authentication.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Valid values include the following:
-		/// <list type="bullet">
-		/// <item>
-		/// <see cref="HttpClientCredentialType.None"/>: No authentication occurs at the transport level.
-		/// </item>
-		/// <item>
-		/// <see cref="HttpClientCredentialType.Basic"/>: Basic authentication. In Basic authentication, user names and
-		/// passwords are sent in plain text over the network. You must create the domain or local user accounts
-		/// corresponding to the credentials.
-		/// </item>
-		/// <item>
-		/// <see cref="HttpClientCredentialType.Digest"/>: Digest authentication. This authentication method operates much
-		/// like Basic authentication, except that passwords are sent across the network as a hash value for additional
-		/// security. Digest authentication is available only on domains with domain controllers running Windows Server
-		/// operating systems authentication. You must create the domain or local user accounts corresponding to client
-		/// credentials.
-		/// </item>
-		/// <item>
-		/// <see cref="HttpClientCredentialType.Ntlm"/>: NTLM authentication. Clients can send the credentials without
-		/// sending a password to this receive location. You must create the domain or local user accounts corresponding
-		/// to client credentials.
-		/// </item>
-		/// <item>
-		/// <see cref="HttpClientCredentialType.Windows"/>: Windows integrated authentication. Windows Communication
-		/// Foundation negotiates Kerberos or NTLM, preferring Kerberos if a domain is present. If you want to use
-		/// Kerberos it is important to have the client identify the service with a service principal name (SPN). You must
-		/// create the domain or local user accounts corresponding to client credentials.
-		/// </item>
-		/// <item>
-		/// <see cref="HttpClientCredentialType.Certificate"/>: Client authentication using the client certificate. The CA
-		/// certificate chain for the client X.509 certificates must be installed in the Trusted Root Certification
-		/// Authorities certificate store of this computer so that the clients can be authenticated to this receive
-		/// location.
-		/// </item>
-		/// </list>
-		/// </para>
-		/// <para>
-		/// The Transport client credential type property must match the authentication scheme of the IIS virtual
-		/// directory hosting this receive location. For example, if the property is set to Windows, you also need to
-		/// enable Integrated Windows authentication for the virtual directory that hosts it. Similarly if the property is
-		/// set to None, you must allow anonymous access to the virtual directory that hosts this receive location.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="HttpClientCredentialType.Windows"/>.
-		/// </para>
-		/// </remarks>
-		public HttpClientCredentialType TransportClientCredentialType
-		{
-			get { return _adapterConfig.TransportClientCredentialType; }
-			set { _adapterConfig.TransportClientCredentialType = value; }
 		}
 
 		#endregion

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,8 +39,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Outbound : WcfNetMsmqAdapter<NetMsmqTLConfig>,
 			IOutboundAdapter,
-			IAdapterConfigOutboundMessageMarshalling, IAdapterConfigOutboundCredentials,
-			IAdapterConfigOutboundAction
+			IAdapterConfigClientCertificate,
+			IAdapterConfigNetMsmqBinding,
+			IAdapterConfigOutboundAction,
+			IAdapterConfigOutboundCredentials,
+			IAdapterConfigOutboundMessageMarshalling
 		{
 			public Outbound()
 			{
@@ -55,45 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
-			#region IAdapterConfigOutboundAction Members
-
-			public string StaticAction
-			{
-				get { return _adapterConfig.StaticAction; }
-				set { _adapterConfig.StaticAction = value; }
-			}
-
-			#endregion
-
-			#region IAdapterConfigOutboundCredentials Members
-
-			public string UserName
-			{
-				get { return _adapterConfig.UserName; }
-				set { _adapterConfig.UserName = value; }
-			}
-
-			public bool UseSSO
-			{
-				get { return _adapterConfig.UseSSO; }
-				set { _adapterConfig.UseSSO = value; }
-			}
-
-			public string Password
-			{
-				get { return _adapterConfig.Password; }
-				set { _adapterConfig.Password = value; }
-			}
-
-			public string AffiliateApplicationName
-			{
-				get { return _adapterConfig.AffiliateApplicationName; }
-				set { _adapterConfig.AffiliateApplicationName = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Client Certificate Settings
+			#region IAdapterConfigClientCertificate Members
 
 			/// <summary>
 			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
@@ -103,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// <remarks>
 			/// <para>
 			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
+			/// location of the user account for the send handler hosting this send port.
 			/// </para>
 			/// <para>
 			/// It defaults to an <see cref="string.Empty"/> string.
@@ -117,7 +82,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Queue Settings
+			#region IAdapterConfigNetMsmqBinding Members
 
 			/// <summary>
 			/// Specify a time span for how long the messages are valid before they are expired and put into the
@@ -209,7 +174,45 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Messages Tab - Outbound WCF Message Body Settings
+			#region IAdapterConfigOutboundAction Members
+
+			public string StaticAction
+			{
+				get { return _adapterConfig.StaticAction; }
+				set { _adapterConfig.StaticAction = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundCredentials Members
+
+			public bool UseSSO
+			{
+				get { return _adapterConfig.UseSSO; }
+				set { _adapterConfig.UseSSO = value; }
+			}
+
+			public string AffiliateApplicationName
+			{
+				get { return _adapterConfig.AffiliateApplicationName; }
+				set { _adapterConfig.AffiliateApplicationName = value; }
+			}
+
+			public string UserName
+			{
+				get { return _adapterConfig.UserName; }
+				set { _adapterConfig.UserName = value; }
+			}
+
+			public string Password
+			{
+				get { return _adapterConfig.Password; }
+				set { _adapterConfig.Password = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundMessageMarshalling Members
 
 			/// <summary>
 			/// Specify the data selection for the SOAP Body element of outgoing WCF messages.

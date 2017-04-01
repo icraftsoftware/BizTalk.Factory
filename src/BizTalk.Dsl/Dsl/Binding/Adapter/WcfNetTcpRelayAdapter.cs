@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,12 +29,16 @@ using WCF;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfNetTcpRelayAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetTcpRelayBindingElement, TConfig>,
-		IAdapterConfigMaxReceivedMessageSize
+	public abstract class WcfNetTcpRelayAdapter<TConfig>
+		: WcfTwoWayAdapterBase<EndpointAddress, NetTcpRelayBindingElement, TConfig>,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigMessageSecurity<MessageCredentialType>,
+			IAdapterConfigOptionalAccessControlService,
+			IAdapterConfigSecurityMode<EndToEndSecurityMode>
 		where TConfig : AdapterConfig,
 			IAdapterConfigAcsCredentials,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			IAdapterConfigNetTcpBinding,
@@ -80,7 +84,134 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Security Tab - Security Mode Settings
+		#region IAdapterConfigMessageSecurity<MessageCredentialType> Members
+
+		/// <summary>
+		/// Specify the type of credential to be used when performing client authentication using message-based security.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is required only if the Security mode is set to Message or TransportWithMessageCredential.
+		/// </para>
+		/// <para>
+		/// Valid values include the following:
+		/// <list type="bullet">
+		/// <item>
+		/// <term><see cref="MessageCredentialType.None"/></term>
+		/// <description>
+		/// This allows the service to interact with anonymous clients. This indicates that this client does not provide
+		/// any client credential.
+		/// </description>
+		/// </item>
+		/// <item>
+		/// <term><see cref="MessageCredentialType.Certificate"/></term>
+		/// <description>
+		/// Clients are authenticated to this receive location using the client certificate specified through <see
+		/// cref="ServiceCertificate"/> thumbprint property. The credential is passed through the SOAP Header element
+		/// using the WSS SOAP Message Security X509 Token Profile 1.0 protocol. To authenticate the client certificates,
+		/// the CA certificate chain for the client certificates must be installed in the Trusted Root Certification
+		/// Authorities certificate store of this computer.
+		/// </description>
+		/// </item>
+		/// <item>
+		/// <term><see cref="MessageCredentialType.UserName"/></term>
+		/// <description>
+		/// Clients are authenticated to this receive location with a UserName credential. The credential is passed
+		/// through the SOAP Header element using the WSS SOAP Message Security UsernameToken Profile 1.0 protocol. You
+		/// must create the domain or local user accounts corresponding to client credentials.
+		/// </description>
+		/// </item>
+		/// <item>
+		/// <term><see cref="MessageCredentialType.Windows"/></term>
+		/// <description>
+		/// Allow the SOAP exchanges to be under the authenticated context of a Windows credential. The client credential
+		/// is passed through the SOAP Header element using the WSS SOAP Message Security Kerberos Token Profile 1.0
+		/// protocol. You must create the domain or local user accounts corresponding to client credentials. In addition,
+		/// the client's userPrincipalName element must be configured with the user account name running this receive
+		/// handler.
+		/// </description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="MessageCredentialType.Windows"/>.
+		/// </para>
+		/// </remarks>
+		public MessageCredentialType MessageClientCredentialType
+		{
+			get { return _adapterConfig.MessageClientCredentialType; }
+			set { _adapterConfig.MessageClientCredentialType = value; }
+		}
+
+		/// <summary>
+		/// Specify the message encryption and key-wrap algorithms. These algorithms map to those specified in the
+		/// Security Policy Language (WS-SecurityPolicy) specification.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For more information about the member names for the <see cref="AlgorithmSuite"/> property, see the Algorithm
+		/// suite property in <see href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport
+		/// Properties Dialog Box, Receive, Security Tab</see> and <see
+		/// href="https://msdn.microsoft.com/en-us/library/bb226527.aspx">WCF-NetTcp Transport Properties Dialog Box,
+		/// Send, Security Tab</see>.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
+		/// </para>
+		/// </remarks>
+		public SecurityAlgorithmSuiteValue AlgorithmSuite
+		{
+			get { return _adapterConfig.AlgorithmSuite; }
+			set { _adapterConfig.AlgorithmSuite = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigOptionalAccessControlService Members
+
+		/// <summary>
+		/// Access Control Service (ACS) must be configured to issue token in Simple Web Token (SWT) format using a
+		/// service identity symmetric key. The SWT token will be sent in the HTTP Authorization header.
+		/// </summary>
+		public bool UseAcsAuthentication
+		{
+			get { return _adapterConfig.UseAcsAuthentication; }
+			set { _adapterConfig.UseAcsAuthentication = value; }
+		}
+
+		/// <summary>
+		/// Access Control Service STS URI.
+		/// </summary>
+		public Uri StsUri
+		{
+			get { return new Uri(_adapterConfig.StsUri); }
+			set { _adapterConfig.StsUri = value.ToString(); }
+		}
+
+		/// <summary>
+		/// Specify the issuer name.
+		/// </summary>
+		/// <remarks>
+		/// Typically this is set to owner.
+		/// </remarks>
+		public string IssuerName
+		{
+			get { return _adapterConfig.IssuerName; }
+			set { _adapterConfig.IssuerName = value; }
+		}
+
+		/// <summary>
+		/// Specify the issuer key.
+		/// </summary>
+		public string IssuerSecret
+		{
+			get { return _adapterConfig.IssuerSecret; }
+			set { _adapterConfig.IssuerSecret = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigSecurityMode<EndToEndSecurityMode> Members
 
 		/// <summary>
 		/// Specify the type of security that is used.
@@ -188,132 +319,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static readonly ProtocolType _protocolType;
-
-		#region Security Tab - Message Security Settings
-
-		/// <summary>
-		/// Specify the type of credential to be used when performing client authentication using message-based security.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This is required only if the Security mode is set to Message or TransportWithMessageCredential.
-		/// </para>
-		/// <para>
-		/// Valid values include the following:
-		/// <list type="bullet">
-		/// <item>
-		/// <term><see cref="MessageCredentialType.None"/></term>
-		/// <description>
-		/// This allows the service to interact with anonymous clients. This indicates that this client does not provide
-		/// any client credential.
-		/// </description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="MessageCredentialType.Certificate"/></term>
-		/// <description>
-		/// Clients are authenticated to this receive location using the client certificate specified through <see
-		/// cref="ServiceCertificate"/> thumbprint property. The credential is passed through the SOAP Header element
-		/// using the WSS SOAP Message Security X509 Token Profile 1.0 protocol. To authenticate the client certificates,
-		/// the CA certificate chain for the client certificates must be installed in the Trusted Root Certification
-		/// Authorities certificate store of this computer.
-		/// </description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="MessageCredentialType.UserName"/></term>
-		/// <description>
-		/// Clients are authenticated to this receive location with a UserName credential. The credential is passed
-		/// through the SOAP Header element using the WSS SOAP Message Security UsernameToken Profile 1.0 protocol. You
-		/// must create the domain or local user accounts corresponding to client credentials.
-		/// </description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="MessageCredentialType.Windows"/></term>
-		/// <description>
-		/// Allow the SOAP exchanges to be under the authenticated context of a Windows credential. The client credential
-		/// is passed through the SOAP Header element using the WSS SOAP Message Security Kerberos Token Profile 1.0
-		/// protocol. You must create the domain or local user accounts corresponding to client credentials. In addition,
-		/// the client's userPrincipalName element must be configured with the user account name running this receive
-		/// handler.
-		/// </description>
-		/// </item>
-		/// </list>
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="MessageCredentialType.Windows"/>.
-		/// </para>
-		/// </remarks>
-		public MessageCredentialType MessageClientCredentialType
-		{
-			get { return _adapterConfig.MessageClientCredentialType; }
-			set { _adapterConfig.MessageClientCredentialType = value; }
-		}
-
-		/// <summary>
-		/// Specify the message encryption and key-wrap algorithms. These algorithms map to those specified in the
-		/// Security Policy Language (WS-SecurityPolicy) specification.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="AlgorithmSuite"/> property, see the Algorithm
-		/// suite property in <see href="https://msdn.microsoft.com/en-us/library/bb246097.aspx">WCF-NetTcp Transport
-		/// Properties Dialog Box, Receive, Security Tab</see> and <see
-		/// href="https://msdn.microsoft.com/en-us/library/bb226527.aspx">WCF-NetTcp Transport Properties Dialog Box,
-		/// Send, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
-		/// </para>
-		/// </remarks>
-		public SecurityAlgorithmSuiteValue AlgorithmSuite
-		{
-			get { return _adapterConfig.AlgorithmSuite; }
-			set { _adapterConfig.AlgorithmSuite = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Access Control Service Settings
-
-		/// <summary>
-		/// Access Control Service (ACS) must be configured to issue token in Simple Web Token (SWT) format using a
-		/// service identity symmetric key. The SWT token will be sent in the HTTP Authorization header.
-		/// </summary>
-		public bool UseAcsAuthentication
-		{
-			get { return _adapterConfig.UseAcsAuthentication; }
-			set { _adapterConfig.UseAcsAuthentication = value; }
-		}
-
-		/// <summary>
-		/// Access Control Service STS URI.
-		/// </summary>
-		public Uri StsUri
-		{
-			get { return new Uri(_adapterConfig.StsUri); }
-			set { _adapterConfig.StsUri = value.ToString(); }
-		}
-
-		/// <summary>
-		/// Specify the issuer name.
-		/// </summary>
-		/// <remarks>
-		/// Typically this is set to owner.
-		/// </remarks>
-		public string IssuerName
-		{
-			get { return _adapterConfig.IssuerName; }
-			set { _adapterConfig.IssuerName = value; }
-		}
-
-		/// <summary>
-		/// Specify the issuer key.
-		/// </summary>
-		public string IssuerSecret
-		{
-			get { return _adapterConfig.IssuerSecret; }
-			set { _adapterConfig.IssuerSecret = value; }
-		}
-
-		#endregion
 	}
 }

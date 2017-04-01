@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
 					a.UserName = "domain\\reader/owner";
 					a.Password = "p@ssw0rd";
-					a.UseSSL = true;
+					a.UseSsl = true;
 					a.BodyPartContentType = "text/";
 					a.ErrorThreshold = 50;
 					a.PollingInterval = TimeSpan.FromSeconds(15);
@@ -73,7 +73,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
 					a.UserName = "owner";
 					a.Password = "p@ssw0rd";
-					a.UseSSL = true;
+					a.UseSsl = true;
 					a.BodyPartContentType = "text/";
 					a.ErrorThreshold = 50;
 					a.PollingInterval = TimeSpan.FromSeconds(15);
@@ -94,7 +94,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.AuthenticationScheme = Pop3Adapter.AuthenticationScheme.SecurePasswordAuthentication;
 					a.UserName = "domain\\reader/owner";
 					a.Password = "p@ssw0rd";
-					a.UseSSL = true;
+					a.UseSsl = true;
 					a.BodyPartContentType = "text/";
 					a.ErrorThreshold = 50;
 					a.PollingInterval = TimeSpan.FromSeconds(15);

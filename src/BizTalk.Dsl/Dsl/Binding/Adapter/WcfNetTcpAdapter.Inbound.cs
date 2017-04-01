@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,9 +43,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Inbound : WcfNetTcpAdapter<NetTcpRLConfig>,
 			IInboundAdapter,
-			IAdapterConfigMaxConcurrentCalls,
 			IAdapterConfigInboundIncludeExceptionDetailInFaults,
-			IAdapterConfigInboundSuspendRequestMessageOnFailure
+			IAdapterConfigInboundSuspendRequestMessageOnFailure,
+			IAdapterConfigMaxConcurrentCalls,
+			IAdapterConfigServiceCertificate,
+			IAdapterConfigSSO
 		{
 			public Inbound()
 			{
@@ -95,31 +97,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Binding Tab - Connection Pool Settings
-
-			/// <summary>
-			/// Specify the maximum lifetime of an active pooled connection. After the specified time elapses, the
-			/// connection closes after the current request is serviced.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class to communicate with an endpoint.
-			/// When using the <see cref="NetTcpBinding"/> in load-balanced scenarios, consider reducing the default lease
-			/// timeout.
-			/// </para>
-			/// <para>
-			/// It defaults to 00:05:00.
-			/// </para>
-			/// </remarks>
-			public TimeSpan LeaseTimeout
-			{
-				get { return _adapterConfig.LeaseTimeout; }
-				set { _adapterConfig.LeaseTimeout = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Service Certificate Settings
+			#region IAdapterConfigServiceCertificate Members
 
 			/// <summary>
 			/// Specify the thumbprint of the X.509 certificate for this receive location that the clients use to
@@ -143,7 +121,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Security Mode Settings
+			#region IAdapterConfigSSO Members
 
 			/// <summary>
 			/// Specify whether to use Enterprise Single Sign-On (SSO) to retrieve client credentials to issue an SSO
@@ -159,6 +137,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.UseSSO; }
 				set { _adapterConfig.UseSSO = value; }
+			}
+
+			#endregion
+
+			#region Binding Tab - Connection Pool Settings
+
+			/// <summary>
+			/// Specify the maximum lifetime of an active pooled connection. After the specified time elapses, the
+			/// connection closes after the current request is serviced.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The WCF-NetTcp adapter leverages the <see cref="NetTcpBinding"/> class to communicate with an endpoint.
+			/// When using the <see cref="NetTcpBinding"/> in load-balanced scenarios, consider reducing the default lease
+			/// timeout.
+			/// </para>
+			/// <para>
+			/// It defaults to 00:05:00.
+			/// </para>
+			/// </remarks>
+			public TimeSpan LeaseTimeout
+			{
+				get { return _adapterConfig.LeaseTimeout; }
+				set { _adapterConfig.LeaseTimeout = value; }
 			}
 
 			#endregion

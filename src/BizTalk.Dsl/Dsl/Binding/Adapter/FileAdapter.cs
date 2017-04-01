@@ -50,8 +50,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		protected override void Save(IPropertyBag propertyBag)
 		{
-			if (NetworkCredentials.Username.IsNullOrEmpty()) return;
-			propertyBag.WriteAdapterCustomProperty("Username", NetworkCredentials.Username);
+			if (NetworkCredentials.UserName.IsNullOrEmpty()) return;
+			propertyBag.WriteAdapterCustomProperty("Username", NetworkCredentials.UserName);
 			propertyBag.WriteAdapterCustomProperty("Password", NetworkCredentials.Password);
 		}
 

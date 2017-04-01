@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,11 +37,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb226411.aspx">WCF-WSHttp Transport Properties Dialog Box, Receive, Security Tab</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound : WcfWSHttpAdapter<Uri, WSHttpRLConfig>,
-			IInboundAdapter,
-			IAdapterConfigMaxConcurrentCalls,
-			IAdapterConfigInboundIncludeExceptionDetailInFaults,
-			IAdapterConfigInboundSuspendRequestMessageOnFailure
+		public class Inbound
+			: WcfWSHttpAdapter<Uri, WSHttpRLConfig>,
+				IInboundAdapter,
+				IAdapterConfigInboundIncludeExceptionDetailInFaults,
+				IAdapterConfigInboundSuspendRequestMessageOnFailure,
+				IAdapterConfigMaxConcurrentCalls,
+				IAdapterConfigSSO
 		{
 			public Inbound()
 			{
@@ -88,7 +90,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Security Mode Settings
+			#region IAdapterConfigSSO Members
 
 			/// <summary>
 			/// Specify whether to use Enterprise Single Sign-On (SSO) to retrieve client credentials to issue an SSO

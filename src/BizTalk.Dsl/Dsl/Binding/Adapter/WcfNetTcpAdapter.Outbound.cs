@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.ServiceModel;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
@@ -38,9 +39,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
 		public class Outbound : WcfNetTcpAdapter<NetTcpTLConfig>,
 			IOutboundAdapter,
+			IAdapterConfigClientCertificate,
 			IAdapterConfigOutboundAction,
-			IAdapterConfigOutboundPropagateFaultMessage,
-			IAdapterConfigOutboundCredentials
+			IAdapterConfigOutboundCredentials,
+			IAdapterConfigOutboundPropagateFaultMessage
 		{
 			public Outbound()
 			{
@@ -52,6 +54,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				adapterConfigurator(this);
 			}
+
+			#region IAdapterConfigClientCertificate Members
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the <see cref="WcfNetTcpAdapter{TConfig}.TransportClientCredentialType"/> property
+			/// is set to <see cref="TcpClientCredentialType.Certificate"/>.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location of the user account for the send handler hosting this send port.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificate
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
+			}
+
+			#endregion
 
 			#region IAdapterConfigOutboundAction Members
 
@@ -97,29 +123,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.PropagateFaultMessage; }
 				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
-			/// property is required if the ClientCredentialsType property is set to Certificate.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The certificate to be used for this property must be installed into the My store in the Current User
-			/// location.
-			/// </para>
-			/// <para>
-			/// It defaults to an <see cref="string.Empty"/> string.
-			/// </para>
-			/// </remarks>
-			public string ClientCertificate
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
 			}
 
 			#endregion

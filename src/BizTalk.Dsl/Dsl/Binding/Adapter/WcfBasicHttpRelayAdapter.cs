@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,12 +28,16 @@ using Microsoft.ServiceBus.Configuration;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfBasicHttpRelayAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, BasicHttpRelayBindingElement, TConfig>,
-		IAdapterConfigMaxReceivedMessageSize,
-		IAdapterConfigServiceCertificate
+	public abstract class WcfBasicHttpRelayAdapter<TConfig>
+		: WcfTwoWayAdapterBase<EndpointAddress, BasicHttpRelayBindingElement, TConfig>,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigMessageEncoding,
+			IAdapterConfigSecurityMode<EndToEndBasicHttpSecurityMode>,
+			IAdapterConfigMessageSecurity<BasicHttpMessageCredentialType>,
+			IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			IAdapterConfigBasicHttpBinding,
@@ -81,103 +85,46 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region IAdapterConfigServiceCertificate Members
+		#region IAdapterConfigMessageEncoding Members
 
-		public string ServiceCertificate
+		public WSMessageEncoding MessageEncoding
 		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
+			get { return _adapterConfig.MessageEncoding; }
+			set { _adapterConfig.MessageEncoding = value; }
 		}
 
-		#endregion
-
-		#region Security Tab - Client Security Settings
-
 		/// <summary>
-		/// Specify the option to authenticate with the Service Bus relay endpoint from where the message is received.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Valid values include the following:
-		/// <list type="definition">
-		/// <item>
-		/// <term><see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.None"/></term>
-		/// <description>No authentication is required.</description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.RelayAccessToken"/></term>
-		/// <description>Specify this to use a security token to authorize with the Service Bus Relay endpoint.</description>
-		/// </item>
-		/// </list>
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.RelayAccessToken"/>.
-		/// </para>
-		/// </remarks>
-		public RelayClientAuthenticationType RelayClientAuthenticationType
-		{
-			get { return _adapterConfig.RelayClientAuthenticationType; }
-			set { _adapterConfig.RelayClientAuthenticationType = value; }
-		}
-
-		#endregion
-
-		#region Security Tab
-
-		/// <summary>
-		/// Specify the type of security that is used.
+		/// Specify the character set encoding to be used for emitting messages on the binding when the <see
+		/// cref="MessageEncoding"/> property is set to <see cref="WSMessageEncoding.Text"/>.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// Valid values include the following:
 		/// <list type="bullet">
 		/// <item>
-		/// <term><see cref="EndToEndBasicHttpSecurityMode.None"/></term>
-		/// <description>
-		/// Messages are not secured during transfer.
-		/// </description>
+		/// <see cref="Encoding.BigEndianUnicode"/>
 		/// </item>
 		/// <item>
-		/// <term><see cref="EndToEndBasicHttpSecurityMode.Transport"/></term>
-		/// <description>
-		/// Security is provided using the HTTPS transport. The SOAP messages are secured using HTTPS. To use this
-		/// mode, you must set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS).
-		/// </description>
+		/// <see cref="Encoding.Unicode"/>
 		/// </item>
 		/// <item>
-		/// <term><see cref="EndToEndBasicHttpSecurityMode.Message"/></term>
-		/// <description>
-		/// Security is provided using SOAP message security over the HTTP transport. By default, the SOAP Body is
-		/// encrypted and signed. The only valid Message client credential type for the WCF-Basic adapter is
-		/// Certificate. This mode requires the HTTP transport. When using this security mode, the service certificate
-		/// for this receive location needs to be provided through the Service certificate - Thumbprint property.
-		/// </description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="EndToEndBasicHttpSecurityMode.TransportWithMessageCredential"/></term>
-		/// <description>
-		/// Integrity, confidentiality, and service authentication are provided by the HTTPS transport. To use this
-		/// mode, you must set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS). 
-		/// </description>
+		/// <see cref="Encoding.UTF8"/>
 		/// </item>
 		/// </list>
 		/// </para>
 		/// <para>
-		/// It defaults to <see cref="EndToEndBasicHttpSecurityMode.Transport"/>.
+		/// It defaults to <see cref="Encoding.UTF8"/>.
 		/// </para>
 		/// </remarks>
-		public EndToEndBasicHttpSecurityMode SecurityMode
+		public Encoding TextEncoding
 		{
-			get { return _adapterConfig.SecurityMode; }
-			set { _adapterConfig.SecurityMode = value; }
+			get { return Encoding.GetEncoding(_adapterConfig.TextEncoding); }
+			set { _adapterConfig.TextEncoding = value.BodyName; }
 		}
 
 		#endregion
 
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		#region Security Tab - Message Security Settings
+		#region IAdapterConfigMessageSecurity<BasicHttpMessageCredentialType> Members
 
 		/// <summary>
 		/// Specify the message-level security options only if you set the Security mode above to Message or
@@ -240,64 +187,100 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Binding Tab - Encoding Settings
+		#region IAdapterConfigSecurityMode<EndToEndBasicHttpSecurityMode> Members
 
 		/// <summary>
-		/// Specify the encoder used to encode the SOAP message.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Valid values include the following:
-		/// <list type="definition">
-		/// <item>
-		/// <term><see cref="WSMessageEncoding.Mtom"/></term>
-		/// <description>Use a Message Transmission Organization Mechanism 1.0 (MTOM) encoder.</description>
-		/// </item>
-		/// <item>
-		/// <term><see cref="WSMessageEncoding.Text"/></term>
-		/// <description>Use a text message encoder.</description>
-		/// </item>
-		/// </list>
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="WSMessageEncoding.Text"/>.
-		/// </para>
-		/// </remarks>
-		public WSMessageEncoding MessageEncoding
-		{
-			get { return _adapterConfig.MessageEncoding; }
-			set { _adapterConfig.MessageEncoding = value; }
-		}
-
-		/// <summary>
-		/// Specify the character set encoding to be used for emitting messages on the binding when the Message
-		/// encoding property is set to Text.
+		/// Specify the type of security that is used.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// Valid values include the following:
 		/// <list type="bullet">
 		/// <item>
-		/// <see cref="Encoding.BigEndianUnicode"/>
+		/// <term><see cref="EndToEndBasicHttpSecurityMode.None"/></term>
+		/// <description>
+		/// Messages are not secured during transfer.
+		/// </description>
 		/// </item>
 		/// <item>
-		/// <see cref="Encoding.Unicode"/>
+		/// <term><see cref="EndToEndBasicHttpSecurityMode.Transport"/></term>
+		/// <description>
+		/// Security is provided using the HTTPS transport. The SOAP messages are secured using HTTPS. To use this
+		/// mode, you must set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS).
+		/// </description>
 		/// </item>
 		/// <item>
-		/// <see cref="Encoding.UTF8"/>
+		/// <term><see cref="EndToEndBasicHttpSecurityMode.Message"/></term>
+		/// <description>
+		/// Security is provided using SOAP message security over the HTTP transport. By default, the SOAP Body is
+		/// encrypted and signed. The only valid Message client credential type for the WCF-Basic adapter is
+		/// Certificate. This mode requires the HTTP transport. When using this security mode, the service certificate
+		/// for this receive location needs to be provided through the Service certificate - Thumbprint property.
+		/// </description>
+		/// </item>
+		/// <item>
+		/// <term><see cref="EndToEndBasicHttpSecurityMode.TransportWithMessageCredential"/></term>
+		/// <description>
+		/// Integrity, confidentiality, and service authentication are provided by the HTTPS transport. To use this
+		/// mode, you must set up Secure Sockets Layer (SSL) in Microsoft Internet Information Services (IIS). 
+		/// </description>
 		/// </item>
 		/// </list>
 		/// </para>
 		/// <para>
-		/// It defaults to <see cref="Encoding.UTF8"/>.
+		/// It defaults to <see cref="EndToEndBasicHttpSecurityMode.Transport"/>.
 		/// </para>
 		/// </remarks>
-		public Encoding TextEncoding
+		public EndToEndBasicHttpSecurityMode SecurityMode
 		{
-			get { return Encoding.GetEncoding(_adapterConfig.TextEncoding); }
-			set { _adapterConfig.TextEncoding = value.BodyName; }
+			get { return _adapterConfig.SecurityMode; }
+			set { _adapterConfig.SecurityMode = value; }
 		}
 
 		#endregion
+
+		#region IAdapterConfigServiceCertificate Members
+
+		public string ServiceCertificate
+		{
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
+
+		#region Security Tab - Client Security Settings
+
+		/// <summary>
+		/// Specify the option to authenticate with the Service Bus relay endpoint from where the message is received.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Valid values include the following:
+		/// <list type="definition">
+		/// <item>
+		/// <term><see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.None"/></term>
+		/// <description>No authentication is required.</description>
+		/// </item>
+		/// <item>
+		/// <term><see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.RelayAccessToken"/></term>
+		/// <description>Specify this to use a security token to authorize with the Service Bus Relay endpoint.</description>
+		/// </item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="Microsoft.ServiceBus.RelayClientAuthenticationType.RelayAccessToken"/>.
+		/// </para>
+		/// </remarks>
+		public RelayClientAuthenticationType RelayClientAuthenticationType
+		{
+			get { return _adapterConfig.RelayClientAuthenticationType; }
+			set { _adapterConfig.RelayClientAuthenticationType = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

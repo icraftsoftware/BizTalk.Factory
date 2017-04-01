@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,12 +25,13 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	// https://msdn.microsoft.com/en-us/library/dd787907.aspx
-	public abstract class WcfSapAdapter<TConfig> : WcfLobAdapterBase<SAPConnectionUri, SAPAdapterBindingConfigurationElement, TConfig>,
-		IAdapterConfigBizTalkCompatibilityMode,
-		IAdapterConfigPerformanceCounters
+	public abstract class WcfSapAdapter<TConfig>
+		: WcfLobAdapterBase<SAPConnectionUri, SAPAdapterBindingConfigurationElement, TConfig>,
+			IAdapterConfigBizTalkCompatibilityMode,
+			IAdapterConfigPerformanceCounters
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigBinding,
 			IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,
@@ -429,9 +430,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
 		#region Binding Tab - Connection Settings
 
 		/// <summary>
@@ -605,5 +603,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				if (ReceiveFolder.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source folder.");
 				if (FileMask.IsNullOrEmpty()) throw new BindingException("Inbound file adapter has no source file mask.");
-				if (!Path.IsNetworkPath(ReceiveFolder) && !NetworkCredentials.Username.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
+				if (!Path.IsNetworkPath(ReceiveFolder) && !NetworkCredentials.UserName.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
 			}
 
 			#endregion

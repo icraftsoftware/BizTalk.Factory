@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 #endregion
 
+using System.ServiceModel.Configuration;
+
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public class Credentials
+	public interface IAdapterConfigIdentity
 	{
-		public string Password { get; set; }
-
-		public string UserName { get; set; }
+		IdentityElement Identity { get; set; }
 	}
 }

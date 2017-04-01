@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,9 +40,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572859.aspx">How to Configure a WCF-WebHttp Receive Location</seealso>
-		public class Inbound : WcfWebHttpAdapter<Uri, WebHttpRLConfig>,
-			IInboundAdapter,
-			IAdapterConfigMaxConcurrentCalls
+		public class Inbound
+			: WcfWebHttpAdapter<Uri, WebHttpRLConfig>,
+				IInboundAdapter,
+				IAdapterConfigInboundDisableLocationOnFailure,
+				IAdapterConfigInboundIncludeExceptionDetailInFaults,
+				IAdapterConfigInboundSuspendRequestMessageOnFailure,
+				IAdapterConfigMaxConcurrentCalls,
+				IAdapterConfigSSO
 		{
 			public Inbound()
 			{
@@ -54,7 +59,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 				// Messages Tab - Error Handling Settings
 				DisableLocationOnFailure = false;
-				SuspendMessageOnFailure = true;
+				SuspendRequestMessageOnFailure = true;
 				IncludeExceptionDetailInFaults = true;
 			}
 
@@ -63,12 +68,59 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
+			#region IAdapterConfigInboundDisableLocationOnFailure Members
+
+			public bool DisableLocationOnFailure
+			{
+				get { return _adapterConfig.DisableLocationOnFailure; }
+				set { _adapterConfig.DisableLocationOnFailure = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundIncludeExceptionDetailInFaults Members
+
+			public bool IncludeExceptionDetailInFaults
+			{
+				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
+				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigInboundSuspendRequestMessageOnFailure Members
+
+			public bool SuspendRequestMessageOnFailure
+			{
+				get { return _adapterConfig.SuspendMessageOnFailure; }
+				set { _adapterConfig.SuspendMessageOnFailure = value; }
+			}
+
+			#endregion
+
 			#region IAdapterConfigMaxConcurrentCalls Members
 
 			public int MaxConcurrentCalls
 			{
 				get { return _adapterConfig.MaxConcurrentCalls; }
 				set { _adapterConfig.MaxConcurrentCalls = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigSSO Members
+
+			/// <summary>
+			/// Specify whether to use Enterprise Single Sign-On (SSO) to retrieve client credentials to issue an SSO
+			/// ticket.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <c>False</c>.
+			/// </remarks>
+			public bool UseSSO
+			{
+				get { return _adapterConfig.UseSSO; }
+				set { _adapterConfig.UseSSO = value; }
 			}
 
 			#endregion
@@ -109,65 +161,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			#region Behavior Tab
 
 			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
-
-			#endregion
-
-			#region Security Tab - Security Mode Settings
-
-			/// <summary>
-			/// Specify whether to use Enterprise Single Sign-On (SSO) to retrieve client credentials to issue an SSO
-			/// ticket.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool UseSSO
-			{
-				get { return _adapterConfig.UseSSO; }
-				set { _adapterConfig.UseSSO = value; }
-			}
-
-			#endregion
-
-			#region Message Tab - Error Handling Settings
-
-			/// <summary>
-			/// Specify whether to disable the receive location that fails inbound processing due to a receive pipeline
-			/// failure or a routing failure.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>False</c>.
-			/// </remarks>
-			public bool DisableLocationOnFailure
-			{
-				get { return _adapterConfig.DisableLocationOnFailure; }
-				set { _adapterConfig.DisableLocationOnFailure = value; }
-			}
-
-			/// <summary>
-			/// Specify whether to suspend the request message that fails inbound processing due to a receive pipeline
-			/// failure or a routing failure.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>True</c>.
-			/// </remarks>
-			public bool SuspendMessageOnFailure
-			{
-				get { return _adapterConfig.SuspendMessageOnFailure; }
-				set { _adapterConfig.SuspendMessageOnFailure = value; }
-			}
-
-			/// <summary>
-			/// Specify whether to return SOAP faults when an error occurs to easy debugging.
-			/// </summary>
-			/// <remarks>
-			/// It defaults to <c>True</c>.
-			/// </remarks>
-			public bool IncludeExceptionDetailInFaults
-			{
-				get { return _adapterConfig.IncludeExceptionDetailInFaults; }
-				set { _adapterConfig.IncludeExceptionDetailInFaults = value; }
-			}
 
 			#endregion
 		}

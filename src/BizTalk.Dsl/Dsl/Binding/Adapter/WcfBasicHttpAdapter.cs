@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,14 +27,17 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfBasicHttpAdapter<TAddress, TConfig> : WcfTwoWayAdapterBase<TAddress, BasicHttpBindingElement, TConfig>,
-		IAdapterConfigMaxReceivedMessageSize,
-		IAdapterConfigServiceCertificate
+	public abstract class WcfBasicHttpAdapter<TAddress, TConfig>
+		: WcfTwoWayAdapterBase<TAddress, BasicHttpBindingElement, TConfig>,
+			IAdapterConfigBasicHttpSecurity,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigMessageEncoding,
+			IAdapterConfigServiceCertificate
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigBasicHttpBinding,
-			IAdapterConfigBasicHttpSecurity,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigBasicHttpSecurity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
@@ -65,42 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 		}
 
-		#region IAdapterConfigMaxReceivedMessageSize Members
-
-		/// <summary>
-		/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
-		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this property
-		/// to limit exposure to denial of service (DoS) attacks. 
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The WCF-BasicHttp adapter leverages the <see cref="BasicHttpBinding"/> class in the buffered transfer mode to
-		/// communicate with an endpoint. For the buffered transport mode, the <see cref="HttpBindingBase"/>.<see
-		/// cref="HttpBindingBase.MaxBufferSize"/> property is always equal to the value of this property.
-		/// </para>
-		/// <para>
-		/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
-		/// </para>
-		/// </remarks>
-		public int MaxReceivedMessageSize
-		{
-			get { return _adapterConfig.MaxReceivedMessageSize; }
-			set { _adapterConfig.MaxReceivedMessageSize = value; }
-		}
-
-		#endregion
-
-		#region IAdapterConfigServiceCertificate Members
-
-		public string ServiceCertificate
-		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
-		}
-
-		#endregion
-
-		#region Security Tab - Security Mode Settings
+		#region IAdapterConfigBasicHttpSecurity Members
 
 		/// <summary>
 		/// Specify the type of security that is used.
@@ -123,10 +91,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			set { _adapterConfig.SecurityMode = value; }
 		}
 
-		#endregion
-
-		#region Security Tab - Transport Security Settings
-
 		/// <summary>
 		/// Specify the type of credential to be used when performing the client authentication.
 		/// </summary>
@@ -148,50 +112,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _adapterConfig.TransportClientCredentialType; }
 			set { _adapterConfig.TransportClientCredentialType = value; }
 		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		#region Binding Tab - Encoding Settings
-
-		/// <summary>
-		/// Specify the encoder used to encode the SOAP message.
-		/// </summary>
-		/// <remarks>
-		/// <list type="bullet">
-		/// <item>
-		/// <see cref="WSMessageEncoding.Text"/> &#8212; Use a text message encoder.</item>
-		/// <item>
-		/// <see cref="WSMessageEncoding.Mtom"/> &#8212; Use a Message Transmission Optimization Mechanism 1.0 (MTOM)
-		/// encoder.
-		/// </item>
-		/// </list>
-		/// It defaults to <see cref="WSMessageEncoding.Text"/>.
-		/// </remarks>
-		public WSMessageEncoding MessageEncoding
-		{
-			get { return _adapterConfig.MessageEncoding; }
-			set { _adapterConfig.MessageEncoding = value; }
-		}
-
-		/// <summary>
-		/// Specify the character set encoding to be used for emitting messages on the binding when the <see
-		/// cref="MessageEncoding"/> property is set to <see cref="WSMessageEncoding.Text"/>.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <see cref="Encoding.UTF8"/>.
-		/// </remarks>
-		public Encoding TextEncoding
-		{
-			get { return Encoding.GetEncoding(_adapterConfig.TextEncoding); }
-			set { _adapterConfig.TextEncoding = value.WebName; }
-		}
-
-		#endregion
-
-		#region Security Tab - Message Security Settings
 
 		/// <summary>
 		/// Specify the type of credential to be used when performing client authentication using message-based security.
@@ -238,5 +158,59 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		#region IAdapterConfigMaxReceivedMessageSize Members
+
+		/// <summary>
+		/// Specify the maximum size, in bytes, for a message (including headers) that can be received on the wire. The
+		/// size of the messages is bounded by the amount of memory allocated for each message. You can use this property
+		/// to limit exposure to denial of service (DoS) attacks. 
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The WCF-BasicHttp adapter leverages the <see cref="BasicHttpBinding"/> class in the buffered transfer mode to
+		/// communicate with an endpoint. For the buffered transport mode, the <see cref="HttpBindingBase"/>.<see
+		/// cref="HttpBindingBase.MaxBufferSize"/> property is always equal to the value of this property.
+		/// </para>
+		/// <para>
+		/// It defaults to roughly <see cref="ushort"/>.<see cref="ushort.MaxValue"/>, 65536.
+		/// </para>
+		/// </remarks>
+		public int MaxReceivedMessageSize
+		{
+			get { return _adapterConfig.MaxReceivedMessageSize; }
+			set { _adapterConfig.MaxReceivedMessageSize = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigMessageEncoding Members
+
+		public WSMessageEncoding MessageEncoding
+		{
+			get { return _adapterConfig.MessageEncoding; }
+			set { _adapterConfig.MessageEncoding = value; }
+		}
+
+		public Encoding TextEncoding
+		{
+			get { return Encoding.GetEncoding(_adapterConfig.TextEncoding); }
+			set { _adapterConfig.TextEncoding = value.WebName; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigServiceCertificate Members
+
+		public string ServiceCertificate
+		{
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,12 +47,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb259941.aspx">How to Configure a WCF-Custom Receive Location</seealso>.
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/bb245991.aspx">WCF Adapters Property Schema and Properties</seealso>.
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API")]
-		public class Inbound<TBinding> : WcfCustomAdapter<TBinding, CustomRLConfig>,
-			IInboundAdapter,
-			IAdapterConfigInboundCredentials,
-			IAdapterConfigInboundDisableLocationOnFailure,
-			IAdapterConfigInboundIncludeExceptionDetailInFaults,
-			IAdapterConfigInboundSuspendRequestMessageOnFailure
+		public class Inbound<TBinding>
+			: WcfCustomAdapter<TBinding, CustomRLConfig>,
+				IInboundAdapter,
+				IAdapterConfigInboundCredentials,
+				IAdapterConfigInboundDisableLocationOnFailure,
+				IAdapterConfigInboundIncludeExceptionDetailInFaults,
+				IAdapterConfigInboundSuspendRequestMessageOnFailure,
+				IAdapterConfigOrdering
 			where TBinding : StandardBindingElement, new()
 		{
 			public Inbound()
@@ -131,17 +133,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Base Class Member Overrides
-
-			protected override void Save(IPropertyBag propertyBag)
-			{
-				_adapterConfig.ServiceBehaviorConfiguration = ServiceBehaviors.GetServiceBehaviorElementXml();
-				base.Save(propertyBag);
-			}
-
-			#endregion
-
-			#region Other Tab - Message Order
+			#region IAdapterConfigOrdering Members
 
 			/// <summary>
 			/// Specify whether to preserve message order when processing messages received over the NetMsmq binding.
@@ -153,6 +145,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.OrderedProcessing; }
 				set { _adapterConfig.OrderedProcessing = value; }
+			}
+
+			#endregion
+
+			#region Base Class Member Overrides
+
+			protected override void Save(IPropertyBag propertyBag)
+			{
+				_adapterConfig.ServiceBehaviorConfiguration = ServiceBehaviors.GetServiceBehaviorElementXml();
+				base.Save(propertyBag);
 			}
 
 			#endregion

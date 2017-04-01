@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -141,8 +141,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <c>0</c>.
 			/// </para>
 			/// <para>
-			/// A value of <c>0</c> indicates to use the default POP3 port of <c>110</c> if <see cref="UseSSL"/> is
-			/// <c>False</c> or port <c>995</c> if <see cref="UseSSL"/> is <c>True</c>.
+			/// A value of <c>0</c> indicates to use the default POP3 port of <c>110</c> if <see cref="UseSsl"/> is
+			/// <c>False</c> or port <c>995</c> if <see cref="UseSsl"/> is <c>True</c>.
 			/// </para>
 			/// </remarks>
 			[XmlElement("serverPort")]
@@ -184,7 +184,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// </remarks>
 			[XmlElement("authenticationScheme")]
 #pragma warning disable 108
-				public AuthenticationScheme AuthenticationScheme { get; set; }
+			public AuthenticationScheme AuthenticationScheme { get; set; }
 #pragma warning disable 108
 
 			/// <summary>
@@ -214,7 +214,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// It defaults to <c>False</c>.
 			/// </remarks>
 			[XmlElement("sslRequired")]
-			public bool UseSSL { get; set; }
+			public bool UseSsl { get; set; }
 
 			#endregion
 

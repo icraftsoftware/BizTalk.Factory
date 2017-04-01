@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,11 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class SBMessagingAdapter<TConfig> : AdapterBase, IAdapterConfigAccessControlService
+	public abstract class SBMessagingAdapter<TConfig>
+		: AdapterBase,
+			IAdapterConfigAddress<Uri>,
+			IAdapterConfigOptionalAccessControlService,
+			IAdapterConfigSasCredentials
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			IAdapterConfigTimeouts,
@@ -43,7 +47,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_adapterConfig = new TConfig();
 		}
 
-		#region IAdapterConfigAccessControlService Members
+		#region IAdapterConfigAddress<Uri> Members
+
+		/// <summary>
+		/// Specify the URL where the Service Bus queue is deployed.
+		/// </summary>
+		/// <remarks>
+		/// Typically the URL is in the following format:
+		/// <![CDATA[sb://<namespace>.servicebus.windows.net/<queue_name>/]]>
+		/// </remarks>
+		public Uri Address { get; set; }
+
+		#endregion
+
+		#region IAdapterConfigOptionalAccessControlService Members
+
+		public bool UseAcsAuthentication
+		{
+			get { return _adapterConfig.UseAcsAuthentication; }
+			set { _adapterConfig.UseAcsAuthentication = value; }
+		}
 
 		public Uri StsUri
 		{
@@ -61,6 +84,37 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			get { return _adapterConfig.IssuerSecret; }
 			set { _adapterConfig.IssuerSecret = value; }
+		}
+
+		#endregion
+
+		#region IAdapterConfigSasCredentials Members
+
+		/// <summary>
+		/// Specify the SAS key value.
+		/// </summary>
+		public string SharedAccessKey
+		{
+			get { return _adapterConfig.SharedAccessKey; }
+			set { _adapterConfig.SharedAccessKey = value; }
+		}
+
+		/// <summary>
+		/// Specify the SAS key name.
+		/// </summary>
+		public string SharedAccessKeyName
+		{
+			get { return _adapterConfig.SharedAccessKeyName; }
+			set { _adapterConfig.SharedAccessKeyName = value; }
+		}
+
+		/// <summary>
+		/// Whether to use Shared Access Signature for authentication.
+		/// </summary>
+		public bool UseSasAuthentication
+		{
+			get { return _adapterConfig.UseSasAuthentication; }
+			set { _adapterConfig.UseSasAuthentication = value; }
 		}
 
 		#endregion
@@ -86,21 +140,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		protected readonly TConfig _adapterConfig;
-
-		#region General Tab
-
 		/// <summary>
-		/// Specify the URL where the Service Bus queue is deployed.
+		/// Specifies a time span value that indicates the time for a channel close operation to complete.
 		/// </summary>
 		/// <remarks>
-		/// Typically the URL is in the following format:
-		/// <![CDATA[sb://<namespace>.servicebus.windows.net/<queue_name>/]]>
+		/// It defaults to <c>1</c> minute.
 		/// </remarks>
-		public Uri Address { get; set; }
+		public TimeSpan CloseTimeout
+		{
+			get { return _adapterConfig.CloseTimeout; }
+			set { _adapterConfig.CloseTimeout = value; }
+		}
 
 		/// <summary>
 		/// Specifies a time span value that indicates the time for a channel open operation to complete.
@@ -114,58 +164,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			set { _adapterConfig.OpenTimeout = value; }
 		}
 
-		/// <summary>
-		/// Specifies a time span value that indicates the time for a channel close operation to complete.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <c>1</c> minute.
-		/// </remarks>
-		public TimeSpan CloseTimeout
-		{
-			get { return _adapterConfig.CloseTimeout; }
-			set { _adapterConfig.CloseTimeout = value; }
-		}
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 
-		#endregion
-
-		#region Authentication Tab
-
-		/// <summary>
-		/// Whether to use an Access Control Service for authentication.
-		/// </summary>
-		public bool UseAcsAuthentication
-		{
-			get { return _adapterConfig.UseAcsAuthentication; }
-			set { _adapterConfig.UseAcsAuthentication = value; }
-		}
-
-		/// <summary>
-		/// Whether to use Shared Access Signature for authentication.
-		/// </summary>
-		public bool UseSasAuthentication
-		{
-			get { return _adapterConfig.UseSasAuthentication; }
-			set { _adapterConfig.UseSasAuthentication = value; }
-		}
-
-		/// <summary>
-		/// Specify the SAS key name.
-		/// </summary>
-		public string SharedAccessKeyName
-		{
-			get { return _adapterConfig.SharedAccessKeyName; }
-			set { _adapterConfig.SharedAccessKeyName = value; }
-		}
-
-		/// <summary>
-		/// Specify the SAS key value.
-		/// </summary>
-		public string SharedAccessKey
-		{
-			get { return _adapterConfig.SharedAccessKey; }
-			set { _adapterConfig.SharedAccessKey = value; }
-		}
-
-		#endregion
+		protected readonly TConfig _adapterConfig;
 	}
 }

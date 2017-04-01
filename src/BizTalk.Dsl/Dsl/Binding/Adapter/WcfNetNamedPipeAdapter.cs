@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,14 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetNamedPipeAdapter<TConfig> : WcfTwoWayAdapterBase<EndpointAddress, NetNamedPipeBindingElement, TConfig>, IAdapterConfigMaxReceivedMessageSize
+	public abstract class WcfNetNamedPipeAdapter<TConfig>
+		: WcfTwoWayAdapterBase<EndpointAddress, NetNamedPipeBindingElement, TConfig>,
+			IAdapterConfigMaxReceivedMessageSize,
+			IAdapterConfigSecurityMode<NetNamedPipeSecurityMode>,
+			IAdapterConfigTransactions
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			IAdapterConfigNetNamedPipeBinding,
@@ -69,7 +73,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Security Tab - Security Mode Settings
+		#region IAdapterConfigSecurityMode<NetNamedPipeSecurityMode> Members
 
 		/// <summary>
 		/// Specify the type of security that is used.
@@ -93,28 +97,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Security Tab - Transport Security Settings
-
-		/// <summary>
-		/// Define security at the level of the TCP transport. Signing messages mitigates the risk of a third party
-		/// tampering with the message while it is being transferred. Encryption provides data-level privacy during
-		/// transport.
-		/// </summary>
-		/// <remarks>
-		/// It defaults to <see cref="ProtectionLevel.EncryptAndSign"/>.
-		/// </remarks>
-		public ProtectionLevel TransportProtectionLevel
-		{
-			get { return _adapterConfig.TransportProtectionLevel; }
-			set { _adapterConfig.TransportProtectionLevel = value; }
-		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		#region Binding Tab - Transactions Settings
+		#region IAdapterConfigTransactions Members
 
 		/// <summary>
 		/// Specify whether a message is send under transaction scope.
@@ -147,6 +130,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			set { _adapterConfig.EnableTransaction = value; }
 		}
 
+		#endregion
+
+		#region Binding Tab - Transactions Settings
+
 		/// <summary>
 		/// Specify the transaction protocol to be used with this binding.
 		/// </summary>
@@ -160,5 +147,26 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		#region Security Tab - Transport Security Settings
+
+		/// <summary>
+		/// Define security at the level of the TCP transport. Signing messages mitigates the risk of a third party
+		/// tampering with the message while it is being transferred. Encryption provides data-level privacy during
+		/// transport.
+		/// </summary>
+		/// <remarks>
+		/// It defaults to <see cref="ProtectionLevel.EncryptAndSign"/>.
+		/// </remarks>
+		public ProtectionLevel TransportProtectionLevel
+		{
+			get { return _adapterConfig.TransportProtectionLevel; }
+			set { _adapterConfig.TransportProtectionLevel = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

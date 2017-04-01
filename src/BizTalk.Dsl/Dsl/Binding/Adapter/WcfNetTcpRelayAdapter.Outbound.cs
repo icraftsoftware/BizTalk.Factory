@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572849.aspx">How to Configure a WCF-NetTcpRelay Send Port</seealso>
 		public class Outbound : WcfNetTcpRelayAdapter<NetTcpRelayTLConfig>,
 			IOutboundAdapter,
+			IAdapterConfigClientCertificate,
 			IAdapterConfigOutboundAction,
 			IAdapterConfigOutboundPropagateFaultMessage
 		{
@@ -50,27 +51,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
-			#region IAdapterConfigOutboundAction Members
-
-			public string StaticAction
-			{
-				get { return _adapterConfig.StaticAction; }
-				set { _adapterConfig.StaticAction = value; }
-			}
-
-			#endregion
-
-			#region IAdapterConfigOutboundPropagateFaultMessage Members
-
-			public bool PropagateFaultMessage
-			{
-				get { return _adapterConfig.PropagateFaultMessage; }
-				set { _adapterConfig.PropagateFaultMessage = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Client Certificate Settings
+			#region IAdapterConfigClientCertificate Members
 
 			/// <summary>
 			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
@@ -92,7 +73,27 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				set { _adapterConfig.ClientCertificate = value; }
 			}
 
-			#endregion	}
+			#endregion
+
+			#region IAdapterConfigOutboundAction Members
+
+			public string StaticAction
+			{
+				get { return _adapterConfig.StaticAction; }
+				set { _adapterConfig.StaticAction = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOutboundPropagateFaultMessage Members
+
+			public bool PropagateFaultMessage
+			{
+				get { return _adapterConfig.PropagateFaultMessage; }
+				set { _adapterConfig.PropagateFaultMessage = value; }
+			}
+
+			#endregion
 		}
 
 		#endregion

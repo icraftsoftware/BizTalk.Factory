@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,13 +27,19 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfNetMsmqAdapter<TConfig> : WcfAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>, IAdapterConfigServiceCertificate
+	public abstract class WcfNetMsmqAdapter<TConfig>
+		: WcfAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>,
+			IAdapterConfigMessageSecurity<MessageCredentialType>,
+			IAdapterConfigNetMsmqSecurity,
+			IAdapterConfigSecurityMode<NetMsmqSecurityMode>,
+			IAdapterConfigServiceCertificate,
+			IAdapterConfigTransactions
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigIdentity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
-			IAdapterConfigTransactions,
 			IAdapterConfigNetMsmqSecurity,
+			IAdapterConfigTransactions,
 			new()
 	{
 		static WcfNetMsmqAdapter()
@@ -60,44 +66,53 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			AlgorithmSuite = SecurityAlgorithmSuiteValue.Basic256;
 		}
 
-		#region IAdapterConfigServiceCertificate Members
-
-		public string ServiceCertificate
-		{
-			get { return _adapterConfig.ServiceCertificate; }
-			set { _adapterConfig.ServiceCertificate = value; }
-		}
-
-		#endregion
-
-		#region Binding Tab - Transactions Settings
+		#region IAdapterConfigMessageSecurity<MessageCredentialType> Members
 
 		/// <summary>
-		/// Specify whether the message queue is transactional or nontransactional.
+		/// Specify the type of credential to be used when performing client authentication using message-based
+		/// security.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// If this property is selected, each message is delivered only once, and the sender is notified of delivery
-		/// failures. To send messages through transactional send ports, both the <c>durable</c> and <c>exactlyOnce</c>
-		/// binding elements of the client must be set to <c>True</c>. If this property is cleared, messages are
-		/// transferred without delivery assurance.
+		/// For more information about the member names for the <see cref="MessageClientCredentialType"/> property, see
+		/// the Message client credential type property in <see
+		/// href="https://msdn.microsoft.com/en-us/library/bb226546.aspx">WCF-NetMsmq Transport Properties Dialog Box,
+		/// Receive, Security Tab</see>.
 		/// </para>
 		/// <para>
-		/// </para>
-		/// If you use a transactional queue under this receive location, this property must be selected.
-		/// <para>
-		/// It defaults to <c>False</c>.
+		/// It defaults to <see cref="MessageCredentialType.Windows"/>.
 		/// </para>
 		/// </remarks>
-		public bool EnableTransaction
+		public MessageCredentialType MessageClientCredentialType
 		{
-			get { return _adapterConfig.EnableTransaction; }
-			set { _adapterConfig.EnableTransaction = value; }
+			get { return _adapterConfig.MessageClientCredentialType; }
+			set { _adapterConfig.MessageClientCredentialType = value; }
+		}
+
+		/// <summary>
+		/// Specify the message encryption and key-wrap algorithms. These algorithms map to those specified in the
+		/// Security Policy Language (WS-SecurityPolicy) specification.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// For more information about the member names for the <see cref="SecurityAlgorithmSuiteValue"/> property, see
+		/// the Message client credential type property in <see
+		/// href="https://msdn.microsoft.com/en-us/library/bb226546.aspx">WCF-NetMsmq Transport Properties Dialog Box,
+		/// Receive, Security Tab</see>.
+		/// </para>
+		/// <para>
+		/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
+		/// </para>
+		/// </remarks>
+		public SecurityAlgorithmSuiteValue AlgorithmSuite
+		{
+			get { return _adapterConfig.AlgorithmSuite; }
+			set { _adapterConfig.AlgorithmSuite = value; }
 		}
 
 		#endregion
 
-		#region Security Tab - Security Mode Settings
+		#region IAdapterConfigNetMsmqSecurity Members
 
 		/// <summary>
 		/// Specify the type of security that is used.
@@ -117,13 +132,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			get { return _adapterConfig.SecurityMode; }
 			set { _adapterConfig.SecurityMode = value; }
 		}
-
-		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
-
-		#region Security Tab - Transport Security Settings
 
 		/// <summary>
 		/// Specify how the message must be authenticated by the MSMQ transport.
@@ -203,50 +211,44 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
-		#region Security Tab - Message Security Settings
+		#region IAdapterConfigServiceCertificate Members
 
-		/// <summary>
-		/// Specify the type of credential to be used when performing client authentication using message-based
-		/// security.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="MessageClientCredentialType"/> property, see
-		/// the Message client credential type property in <see
-		/// href="https://msdn.microsoft.com/en-us/library/bb226546.aspx">WCF-NetMsmq Transport Properties Dialog Box,
-		/// Receive, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="MessageCredentialType.Windows"/>.
-		/// </para>
-		/// </remarks>
-		public MessageCredentialType MessageClientCredentialType
+		public string ServiceCertificate
 		{
-			get { return _adapterConfig.MessageClientCredentialType; }
-			set { _adapterConfig.MessageClientCredentialType = value; }
-		}
-
-		/// <summary>
-		/// Specify the message encryption and key-wrap algorithms. These algorithms map to those specified in the
-		/// Security Policy Language (WS-SecurityPolicy) specification.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// For more information about the member names for the <see cref="SecurityAlgorithmSuiteValue"/> property, see
-		/// the Message client credential type property in <see
-		/// href="https://msdn.microsoft.com/en-us/library/bb226546.aspx">WCF-NetMsmq Transport Properties Dialog Box,
-		/// Receive, Security Tab</see>.
-		/// </para>
-		/// <para>
-		/// It defaults to <see cref="SecurityAlgorithmSuiteValue.Basic256"/>.
-		/// </para>
-		/// </remarks>
-		public SecurityAlgorithmSuiteValue AlgorithmSuite
-		{
-			get { return _adapterConfig.AlgorithmSuite; }
-			set { _adapterConfig.AlgorithmSuite = value; }
+			get { return _adapterConfig.ServiceCertificate; }
+			set { _adapterConfig.ServiceCertificate = value; }
 		}
 
 		#endregion
+
+		#region IAdapterConfigTransactions Members
+
+		/// <summary>
+		/// Specify whether the message queue is transactional or nontransactional.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If this property is selected, each message is delivered only once, and the sender is notified of delivery
+		/// failures. To send messages through transactional send ports, both the <c>durable</c> and <c>exactlyOnce</c>
+		/// binding elements of the client must be set to <c>True</c>. If this property is cleared, messages are
+		/// transferred without delivery assurance.
+		/// </para>
+		/// <para>
+		/// </para>
+		/// If you use a transactional queue under this receive location, this property must be selected.
+		/// <para>
+		/// It defaults to <c>False</c>.
+		/// </para>
+		/// </remarks>
+		public bool EnableTransaction
+		{
+			get { return _adapterConfig.EnableTransaction; }
+			set { _adapterConfig.EnableTransaction = value; }
+		}
+
+		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }

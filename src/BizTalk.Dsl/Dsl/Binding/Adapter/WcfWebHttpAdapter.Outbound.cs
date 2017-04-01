@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,9 +36,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// </remarks>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572846.aspx">WCF-WebHttp Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/jj572853.aspx">How to Configure a WCF-WebHttp Send Port</seealso>
-		public class Outbound : WcfWebHttpAdapter<EndpointAddress, WebHttpTLConfig>,
-			IOutboundAdapter,
-			IAdapterConfigAccessControlService
+		public class Outbound
+			: WcfWebHttpAdapter<EndpointAddress, WebHttpTLConfig>,
+				IOutboundAdapter,
+				IAdapterConfigClientCertificate,
+				IAdapterConfigOutboundCredentials,
+				IAdapterConfigOptionalAccessControlService,
+				IAdapterConfigProxySettings,
+				IAdapterConfigProxyToUse
 		{
 			public Outbound()
 			{
@@ -50,7 +55,43 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				adapterConfigurator(this);
 			}
 
-			#region IAdapterConfigAccessControlService Members
+			#region IAdapterConfigClientCertificate Members
+
+			/// <summary>
+			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to services. This
+			/// property is required if the <see cref="WcfWebHttpAdapter{TAddress,TConfig}.TransportClientCredentialType"/>
+			/// property is set to <see cref="HttpClientCredentialType.Certificate"/>.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The certificate to be used for this property must be installed into the My store in the Current User
+			/// location of the user account for the send handler hosting this send port.
+			/// </para>
+			/// <para>
+			/// It defaults to an <see cref="string.Empty"/> string.
+			/// </para>
+			/// </remarks>
+			public string ClientCertificate
+			{
+				get { return _adapterConfig.ClientCertificate; }
+				set { _adapterConfig.ClientCertificate = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigOptionalAccessControlService Members
+
+			/// <summary>
+			/// Specify whether to authenticate with the Service Bus.
+			/// </summary>
+			/// <remarks>
+			/// This is required only when invoking a REST interface for Service Bus related entities.
+			/// </remarks>
+			public bool UseAcsAuthentication
+			{
+				get { return _adapterConfig.UseAcsAuthentication; }
+				set { _adapterConfig.UseAcsAuthentication = value; }
+			}
 
 			public Uri StsUri
 			{
@@ -72,96 +113,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Security Tab - Client Certificate Settings
-
-			/// <summary>
-			/// Specify the thumbprint of the X.509 certificate for authenticating this send port to the endpoint.
-			/// </summary>
-			/// <remarks>
-			/// You must install the client certificate into the Current User location of the user account for the send
-			/// handler hosting this send port.
-			/// </remarks>
-			public string ClientCertificate
-			{
-				get { return _adapterConfig.ClientCertificate; }
-				set { _adapterConfig.ClientCertificate = value; }
-			}
-
-			#endregion
-
-			#region Proxy Tab - General Settings
-
-			/// <summary>
-			/// Specify which proxy server to use for outgoing HTTP traffic.
-			/// </summary>
-			/// <remarks>
-			/// <list type="bullet">
-			/// <item>
-			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
-			/// port.
-			/// </item>
-			/// <item>
-			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
-			/// property.
-			/// </item>
-			/// </list>
-			/// It defaults to <see cref="ProxySelection.None"/>.
-			/// </remarks>
-			public ProxySelection ProxyToUse
-			{
-				get { return _adapterConfig.ProxyToUse; }
-				set { _adapterConfig.ProxyToUse = value; }
-			}
-
-			#endregion
-
-			#region Message Tab - Outbound Message Settings
-
-			/// <summary>
-			/// Specify whether to remove the message payload for outgoing HTTP request made for some HTTP verbs.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// Based on the verb you use to invoke a REST endpoint, you may or may not require a message payload. For
-			/// example, you may not need a message payload while using the GET or DELETE verbs. However, to trigger a call
-			/// to the REST endpoint using the send port, you may use a dummy message that includes a message payload.
-			/// Before the message is sent to the REST endpoint, the message payload from the dummy message must be
-			/// removed. You can specify the verbs for which the message payload must be removed using the Suppress Body
-			/// for Verbs property.
-			/// </para>
-			/// <para>
-			/// For example, if you want to remove the message payload while using a GET verb, specify the value for this
-			/// property as GET.
-			/// </para>
-			/// </remarks>
-			public string SuppressMessageBodyForHttpVerbs
-			{
-				get { return _adapterConfig.SuppressMessageBodyForHttpVerbs; }
-				set { _adapterConfig.SuppressMessageBodyForHttpVerbs = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - Access Control Service Settings
-
-			/// <summary>
-			/// Specify whether to authenticate with the Service Bus.
-			/// </summary>
-			/// <remarks>
-			/// This is required only when invoking a REST interface for Service Bus related entities.
-			/// </remarks>
-			public bool UseAcsAuthentication
-			{
-				get { return _adapterConfig.UseAcsAuthentication; }
-				set { _adapterConfig.UseAcsAuthentication = value; }
-			}
-
-			#endregion
-
-			#region Security Tab - User Name Credentials Settings
+			#region IAdapterConfigOutboundCredentials Members
 
 			/// <summary>
 			/// Specify the affiliate application to use for Enterprise Single Sign-On (SSO).
@@ -250,7 +202,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
-			#region Proxy Tab - Proxy Settings
+			#region IAdapterConfigProxySettings Members
 
 			/// <summary>
 			/// Specify the address of the proxy server.
@@ -309,6 +261,62 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			{
 				get { return _adapterConfig.ProxyPassword; }
 				set { _adapterConfig.ProxyPassword = value; }
+			}
+
+			#endregion
+
+			#region IAdapterConfigProxyToUse Members
+
+			/// <summary>
+			/// Specify which proxy server to use for outgoing HTTP traffic.
+			/// </summary>
+			/// <remarks>
+			/// <list type="bullet">
+			/// <item>
+			/// <see cref="ProxySelection.None"/> &#8212; Do not use a proxy server for this send port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.Default"/> &#8212; Use the proxy settings in the send handler hosting this send
+			/// port.
+			/// </item>
+			/// <item>
+			/// <see cref="ProxySelection.UserSpecified"/> &#8212; Use the proxy server specified in the <see cref="ProxyAddress"/>
+			/// property.
+			/// </item>
+			/// </list>
+			/// It defaults to <see cref="ProxySelection.None"/>.
+			/// </remarks>
+			public ProxySelection ProxyToUse
+			{
+				get { return _adapterConfig.ProxyToUse; }
+				set { _adapterConfig.ProxyToUse = value; }
+			}
+
+			#endregion
+
+			#region Message Tab - Outbound Message Settings
+
+			/// <summary>
+			/// Specify whether to remove the message payload for outgoing HTTP request made for some HTTP verbs.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Based on the verb you use to invoke a REST endpoint, you may or may not require a message payload. For
+			/// example, you may not need a message payload while using the GET or DELETE verbs. However, to trigger a call
+			/// to the REST endpoint using the send port, you may use a dummy message that includes a message payload.
+			/// Before the message is sent to the REST endpoint, the message payload from the dummy message must be
+			/// removed. You can specify the verbs for which the message payload must be removed using the Suppress Body
+			/// for Verbs property.
+			/// </para>
+			/// <para>
+			/// For example, if you want to remove the message payload while using a GET verb, specify the value for this
+			/// property as GET.
+			/// </para>
+			/// </remarks>
+			public string SuppressMessageBodyForHttpVerbs
+			{
+				get { return _adapterConfig.SuppressMessageBodyForHttpVerbs; }
+				set { _adapterConfig.SuppressMessageBodyForHttpVerbs = value; }
 			}
 
 			#endregion
