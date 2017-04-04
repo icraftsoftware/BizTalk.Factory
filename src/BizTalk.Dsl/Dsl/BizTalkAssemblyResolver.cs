@@ -39,6 +39,7 @@ namespace Be.Stateless.BizTalk.Dsl
 			}
 
 			_defaultProbingPaths = new[] {
+				_installPath,
 				Path.Combine(_installPath, @"Developer Tools"),
 				Path.Combine(_installPath, @"SDK\Utilities\PipelineTools")
 			};

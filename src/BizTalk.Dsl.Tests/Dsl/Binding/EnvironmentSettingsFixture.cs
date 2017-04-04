@@ -67,6 +67,17 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		[Test]
+		public void ReferenceTypeForTargetEnvironmentDoesNotThrowWhenNoSettingsFile()
+		{
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = Path.Combine(_rootPath, "dummy");
+
+			var sut = new EnvironmentSettingsFixture();
+			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory");
+			Assert.That(value, Is.EqualTo("C:\\Files\\Drops\\BizTalk.Factory\\CheckIn"));
+		}
+
+		[Test]
 		public void ReferenceTypeForTargetEnvironmentWithOverride()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";

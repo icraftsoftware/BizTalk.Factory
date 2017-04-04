@@ -35,10 +35,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			{
 				if (BindingGenerationContext.EnvironmentSettingRootPath != null && _environmentSettingOverrides == null)
 				{
-					_environmentSettingOverrides = new EnvironmentSettingOverrides(
-						Path.Combine(
-							BindingGenerationContext.EnvironmentSettingRootPath,
-							SettingsFileName + ".xml"));
+					var filePath = Path.Combine(
+						BindingGenerationContext.EnvironmentSettingRootPath,
+						SettingsFileName + ".xml");
+					if (File.Exists(filePath))
+					{
+						_environmentSettingOverrides = new EnvironmentSettingOverrides(
+							filePath);
+					}
 				}
 				return _environmentSettingOverrides;
 			}
@@ -64,6 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected T ValueForTargetEnvironment<T>(T?[] values, [CallerMemberName] string propertyName = null) where T : struct
 		{
+			// TODO: allow individual values to NOT be overridden ?
 			if (SettingsOverrides != null) return SettingsOverrides.ValueTypeValueForTargetEnvironment<T>(propertyName, TargetEnvironmentIndex);
 			var value = values[TargetEnvironmentIndex] ?? values[0];
 			if (value == null)
@@ -77,6 +82,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		protected T ValueForTargetEnvironment<T>(T[] values, [CallerMemberName] string propertyName = null) where T : class
 		{
+			// TODO: allow individual values to NOT be overridden
 			if (SettingsOverrides != null) return SettingsOverrides.ReferenceTypeValueForTargetEnvironment<T>(propertyName, TargetEnvironmentIndex);
 			var value = values[TargetEnvironmentIndex] ?? values[0];
 			if (value == null)
