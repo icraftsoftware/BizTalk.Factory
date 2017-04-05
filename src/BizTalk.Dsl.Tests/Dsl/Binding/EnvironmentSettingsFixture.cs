@@ -40,34 +40,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#endregion
 
 		[Test]
-		public void ReferenceTypeForTargetEnvironmentWithNotFoundOverride()
+		public void ReferenceTypeValueForTargetEnvironmentThrowsWhenValueIsNull()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			Assert.That(
-				() => sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory2"),
-				Throws.InvalidOperationException.With.Message.EqualTo(
-					string.Format(
-						"Environment setting file '{0}' does not define the setting '{1}'.",
-						Path.Combine(_rootPath, SettingsFileName + ".xml"),
-						"ClaimStoreCheckInDirectory2")));
+				() => sut.ValueForTargetEnvironment(new string[] { null, null, null, null, null }, "ClaimStoreCheckInDirectory2"),
+				Throws.InvalidOperationException.With.Message.EqualTo("'ClaimStoreCheckInDirectory2' does not have a defined value neither for 'DEV' or default target environment."));
 		}
 
 		[Test]
-		public void ReferenceTypeForTargetEnvironmentWithoutOverride()
+		public void ReferenceTypeValueForTargetEnvironmentWithNotFoundOverridePropertyFallsBackToEmbeddedValue()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
-			BindingGenerationContext.EnvironmentSettingRootPath = null;
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
-			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\Drops\\BizTalk.Factory\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory");
-			Assert.That(value, Is.EqualTo("C:\\Files\\Drops\\BizTalk.Factory\\CheckIn"));
+			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory2");
+			Assert.That(value, Is.EqualTo("C:\\Files\\CheckIn"));
 		}
 
 		[Test]
-		public void ReferenceTypeForTargetEnvironmentDoesNotThrowWhenNoSettingsFile()
+		public void ReferenceTypeValueForTargetEnvironmentWithNotFoundSettingOverrideFileFallsBackToEmbeddedValue()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = Path.Combine(_rootPath, "dummy");
@@ -78,7 +74,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		[Test]
-		public void ReferenceTypeForTargetEnvironmentWithOverride()
+		public void ReferenceTypeValueForTargetEnvironmentWithoutOverride()
+		{
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = null;
+
+			var sut = new EnvironmentSettingsFixture();
+			var value = sut.ValueForTargetEnvironment(new[] { null, "C:\\Files\\CheckIn", null, null, null }, "ClaimStoreCheckInDirectory");
+			Assert.That(value, Is.EqualTo("C:\\Files\\CheckIn"));
+		}
+
+		[Test]
+		public void ReferenceTypeValueForTargetEnvironmentWithOverride()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
@@ -89,23 +96,41 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		[Test]
-		public void ValueTypeForTargetEnvironmentWithNotFoundOverride()
+		public void ValueTypeValueForTargetEnvironmentThrowsWhenValueIsNull()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
 
 			var sut = new EnvironmentSettingsFixture();
 			Assert.That(
-				() => sut.ValueForTargetEnvironment(new int?[] { null, 1, 2, 3, 4 }, "BamArchiveWindowTimeLength2"),
-				Throws.InvalidOperationException.With.Message.EqualTo(
-					string.Format(
-						"Environment setting file '{0}' does not define the setting '{1}'.",
-						Path.Combine(_rootPath, SettingsFileName + ".xml"),
-						"BamArchiveWindowTimeLength2")));
+				() => sut.ValueForTargetEnvironment(new int?[] { null, null, null, null, null }, "BamArchiveWindowTimeLength2"),
+				Throws.InvalidOperationException.With.Message.EqualTo("'BamArchiveWindowTimeLength2' does not have a defined value neither for 'DEV' or default target environment."));
 		}
 
 		[Test]
-		public void ValueTypeForTargetEnvironmentWithoutOverride()
+		public void ValueTypeValueForTargetEnvironmentWithNotFoundOverridePropertyFallsBackToEmbeddedValue()
+		{
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;
+
+			var sut = new EnvironmentSettingsFixture();
+			var value = sut.ValueForTargetEnvironment(new int?[] { null, 1, 2, 3, 4 }, "BamArchiveWindowTimeLength2");
+			Assert.That(value, Is.EqualTo(1));
+		}
+
+		[Test]
+		public void ValueTypeValueForTargetEnvironmentWithNotFoundSettingOverrideFileFallsBackToEmbeddedValue()
+		{
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = Path.Combine(_rootPath, "dummy");
+
+			var sut = new EnvironmentSettingsFixture();
+			var value = sut.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }, "BamArchiveWindowTimeLength");
+			Assert.That(value, Is.EqualTo(30));
+		}
+
+		[Test]
+		public void ValueTypeValueForTargetEnvironmentWithoutOverride()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = null;
@@ -116,7 +141,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		}
 
 		[Test]
-		public void ValueTypeForTargetEnvironmentWithOverride()
+		public void ValueTypeValueForTargetEnvironmentWithOverride()
 		{
 			BindingGenerationContext.TargetEnvironment = "DEV";
 			BindingGenerationContext.EnvironmentSettingRootPath = _rootPath;

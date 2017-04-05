@@ -20,18 +20,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Be.Stateless.BizTalk.Install;
 using Be.Stateless.Extensions;
 using Be.Stateless.Xml.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	internal class EnvironmentSettingOverrides
+	internal class EnvironmentSettingOverrides : IEnvironmentSettingOverrides
 	{
 		internal EnvironmentSettingOverrides(string filePath)
 		{
 			if (filePath == null) throw new ArgumentNullException("filePath");
-			_filePath = filePath;
 			var xmlDocument = new XmlDocument();
 			xmlDocument.Load(filePath);
 			_nsm = xmlDocument.GetNamespaceManager();
@@ -39,35 +37,25 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			_data = xmlDocument.SelectSingleNode("/ss:Workbook/ss:Worksheet[@ss:Name='Settings']/ss:Table", _nsm);
 		}
 
-		internal T ReferenceTypeValueForTargetEnvironment<T>(string propertyName, int targetEnvironmentIndex) where T : class
+		#region IEnvironmentSettingOverrides Members
+
+		T[] IEnvironmentSettingOverrides.ValuesForProperty<T>(string propertyName, T[] defaultValues)
 		{
 			var values = ValuesForProperty(propertyName)
 				.Select(v => (T) Convert.ChangeType(v, typeof(T)))
 				.ToArray();
-			var value = values[targetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"Setting overrides '{0}' does not have a defined value neither for '{1}' or default target environment.",
-						propertyName,
-						BindingGenerationContext.TargetEnvironment));
-			return value;
+			return values.Any() ? values : defaultValues;
 		}
 
-		internal T ValueTypeValueForTargetEnvironment<T>(string propertyName, int targetEnvironmentIndex) where T : struct
+		T?[] IEnvironmentSettingOverrides.ValuesForProperty<T>(string propertyName, T?[] defaultValues)
 		{
 			var values = ValuesForProperty(propertyName)
 				.Select(v => (T?) v.IfNotNull(v2 => Convert.ChangeType(v2, typeof(T))))
 				.ToArray();
-			var value = values[targetEnvironmentIndex] ?? values[0];
-			if (value == null)
-				throw new InvalidOperationException(
-					string.Format(
-						"Setting overrides '{0}' does not have a defined value neither for '{1}' or default target environment.",
-						propertyName,
-						BindingGenerationContext.TargetEnvironment));
-			return value.Value;
+			return values.Any() ? values : defaultValues;
 		}
+
+		#endregion
 
 		private IEnumerable<string> ValuesForProperty(string propertyName)
 		{
@@ -77,17 +65,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				.Cast<XmlNode>()
 				.Select(cell => cell.SelectSingleNode("ss:Data/text()", _nsm).IfNotNull(data => data.Value))
 				.ToArray();
-			if (!values.Any())
-				throw new InvalidOperationException(
-					string.Format(
-						"Environment setting file '{0}' does not define the setting '{1}'.",
-						_filePath,
-						propertyName));
+
 			return values;
 		}
 
 		private readonly XmlNode _data;
-		private readonly string _filePath;
 		private readonly XmlNamespaceManager _nsm;
 	}
 }

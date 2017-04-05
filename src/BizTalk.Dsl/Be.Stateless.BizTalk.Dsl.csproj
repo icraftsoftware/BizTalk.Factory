@@ -216,6 +216,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Outbound.cs" />
+    <Compile Include="Dsl\Binding\IEnvironmentSettingOverrides.cs" />
     <Compile Include="Dsl\Binding\IReferencedApplicationBindingCollection.cs" />
     <Compile Include="Dsl\Binding\ReferencedApplicationBindingCollection.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\CustomBindingElement.cs" />
