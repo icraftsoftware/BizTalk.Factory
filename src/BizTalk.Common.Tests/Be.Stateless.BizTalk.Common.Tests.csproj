@@ -108,8 +108,10 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Component\ConstantExtractorFixture.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentExtensionsFixture.cs" />
     <Compile Include="Component\MicroPipelineComponentEnumerableConverterFixture.cs" />
+    <Compile Include="Component\PropertyExtractorFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessageContextFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessageExFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessagePartFixture.cs" />
@@ -161,8 +163,8 @@
     <Compile Include="Xml\RuntimeTypeXmlSerializerFixture.cs" />
     <Compile Include="Xml\Xsl\XslCompiledTransformDescriptorFixture.cs" />
     <Compile Include="XPath\ReactiveXPathExtractorCollectionFixture.cs" />
-    <Compile Include="XPath\XPathExtractorEnumerableConverterFixture.cs" />
-    <Compile Include="XPath\XPathExtractorEnumerableSerializerFixture.cs" />
+    <Compile Include="Component\PropertyExtractorCollectionConverterFixture.cs" />
+    <Compile Include="Component\PropertyExtractorCollectionFixture.cs" />
     <Compile Include="XPath\XPathExtractorFixture.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -173,10 +175,6 @@
     <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
       <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
       <Name>Be.Stateless.BizTalk.Dsl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Pipeline.Components\Be.Stateless.BizTalk.Pipeline.Components.csproj">
-      <Project>{6791C30D-4390-46CA-9CF4-BEF953817756}</Project>
-      <Name>Be.Stateless.BizTalk.Pipeline.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\BizTalk.Policies\Be.Stateless.BizTalk.Policies.csproj">
       <Project>{62EC131F-0984-4C8C-B1BD-66BEF9800CFA}</Project>

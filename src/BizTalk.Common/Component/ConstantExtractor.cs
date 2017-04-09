@@ -18,50 +18,52 @@
 
 using System;
 using System.Xml;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
-using Microsoft.BizTalk.Message.Interop;
-using Microsoft.BizTalk.XPath;
+using Be.Stateless.Extensions;
 
-namespace Be.Stateless.BizTalk.XPath
+namespace Be.Stateless.BizTalk.Component
 {
-	/// <summary>
-	/// Denotes a context property whose value will be extracted from an <see cref="IBaseMessagePart"/>'s payload while
-	/// being processed by the <c>Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent</c> pipeline
-	/// component.
-	/// </summary>
-	public class XPathExtractor : PropertyExtractor, IEquatable<XPathExtractor>
+	public class ConstantExtractor : PropertyExtractor, IEquatable<ConstantExtractor>
 	{
 		#region Operators
 
-		public static bool operator ==(XPathExtractor left, XPathExtractor right)
+		public static bool operator ==(ConstantExtractor left, ConstantExtractor right)
 		{
 			return Equals(left, right);
 		}
 
-		public static bool operator !=(XPathExtractor left, XPathExtractor right)
+		public static bool operator !=(ConstantExtractor left, ConstantExtractor right)
 		{
 			return !Equals(left, right);
 		}
 
 		#endregion
 
-		public XPathExtractor(XmlQualifiedName propertyName, string xpathExpression, ExtractionMode extractionMode = ExtractionMode.Write)
+		public ConstantExtractor(XmlQualifiedName propertyName, string value, ExtractionMode extractionMode = ExtractionMode.Write)
 			: base(propertyName, extractionMode)
 		{
-			XPathExpression = new XPathExpression(xpathExpression);
+			if (value.IsNullOrEmpty()) throw new ArgumentNullException("value");
+			if (extractionMode == ExtractionMode.Demote)
+				throw new ArgumentException(
+					string.Format(
+						"{0} '{1}' is not supported by {2}.",
+						typeof(ExtractionMode).Name,
+						ExtractionMode.Demote,
+						typeof(ConstantExtractor).Name),
+					"extractionMode");
+			Value = value;
 		}
 
-		public XPathExtractor(IMessageContextProperty property, string xpathExpression, ExtractionMode extractionMode = ExtractionMode.Write)
-			: this(property.QName, xpathExpression, extractionMode) { }
+		public ConstantExtractor(IMessageContextProperty property, string value, ExtractionMode extractionMode = ExtractionMode.Write)
+			: this(property.QName, value, extractionMode) { }
 
-		#region IEquatable<XPathExtractor> Members
+		#region IEquatable<ConstantExtractor> Members
 
-		public bool Equals(XPathExtractor other)
+		public bool Equals(ConstantExtractor other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return base.Equals(other) && Equals(XPathExpression.XPath, other.XPathExpression.XPath);
+			return base.Equals(other) && string.Equals(Value, other.Value);
 		}
 
 		#endregion
@@ -73,30 +75,30 @@ namespace Be.Stateless.BizTalk.XPath
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			if (other.GetType() != GetType()) return false;
-			return Equals((XPathExtractor) other);
+			return Equals((ConstantExtractor) other);
 		}
 
 		public override int GetHashCode()
 		{
 			unchecked
 			{
-				return (base.GetHashCode() * 397) ^ XPathExpression.XPath.GetHashCode();
+				return (base.GetHashCode() * 397) ^ Value.GetHashCode();
 			}
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0}[XPath:{1}]", base.ToString(), XPathExpression.XPath);
+			return string.Format("{0}[Value:{1}]", base.ToString(), Value);
 		}
 
 		protected internal override void WriteXmlCore(XmlWriter writer)
 		{
 			base.WriteXmlCore(writer);
-			writer.WriteAttributeString("xpath", XPathExpression.XPath);
+			writer.WriteAttributeString("value", Value);
 		}
 
 		#endregion
 
-		public XPathExpression XPathExpression { get; private set; }
+		public string Value { get; private set; }
 	}
 }

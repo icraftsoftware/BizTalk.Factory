@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	{
 		public ContextPropertyExtractor()
 		{
-			Extractors = Enumerable.Empty<XPathExtractor>();
+			Extractors = new PropertyExtractorCollection();
 		}
 
 		#region IMicroPipelineComponent Members
@@ -137,7 +137,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				message.BodyPart.WrapOriginalDataStream(
 					originalStream => XPathMutatorStreamFactory.Create(
 						originalStream,
-						extractors,
+						// TODO .OfType<XPathExtractor>()
+						extractors.OfType<XPathExtractor>(),
 						(propertyName, value, extractionMode) => OnMatch(message.Context, propertyName, value, extractionMode)),
 					pipelineContext.ResourceTracker);
 			}
@@ -147,19 +148,19 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		#endregion
 
 		[XmlIgnore]
-		public IEnumerable<XPathExtractor> Extractors { get; set; }
+		public PropertyExtractorCollection Extractors { get; set; }
 
 		[Browsable(false)]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[XmlElement("Extractors")]
-		public XPathExtractorEnumerableSerializerSurrogate ExtractorSerializerSurrogate
+		public PropertyExtractorCollectionSerializerSurrogate ExtractorSerializerSurrogate
 		{
-			get { return new XPathExtractorEnumerableSerializerSurrogate(Extractors); }
-			set { Extractors = value.Extractors; }
+			get { return new PropertyExtractorCollectionSerializerSurrogate(Extractors); }
+			set { Extractors = value; }
 		}
 
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
-		internal IEnumerable<XPathExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
+		internal IEnumerable<PropertyExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
 		{
 			var messageType = message.GetProperty(BtsProperties.MessageType);
 			if (messageType.IsNullOrEmpty())
@@ -180,7 +181,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				// merge configured and schema-annotated extractors so as to give precedence to schema annotations.
 				// Union enumerates first and second in that order and yields each element that has not already been
 				// yielded, see http://msdn.microsoft.com/en-us/library/bb358407(v=VS.90)
-				? schemaAnnotations.Union(Extractors).Union(Extractors, new LambdaComparer<XPathExtractor>((le, re) => le.PropertyName == re.PropertyName))
+				? schemaAnnotations.Union(Extractors).Union(Extractors, new LambdaComparer<PropertyExtractor>((le, re) => le.PropertyName == re.PropertyName))
 				: Extractors;
 		}
 

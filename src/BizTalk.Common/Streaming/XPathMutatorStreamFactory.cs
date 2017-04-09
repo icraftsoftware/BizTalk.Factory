@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.XPath;
 using Microsoft.BizTalk.Streaming;
 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
+using Be.Stateless.BizTalk.Component;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.XPath
@@ -32,15 +33,39 @@ namespace Be.Stateless.BizTalk.XPath
 			Assert.That(
 				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
 				Is.EqualTo(new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write)));
+		}
 
-			Assert.That(
-				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
-				Is.Not.EqualTo(new XPathExtractor(new XmlQualifiedName("prop2", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write)));
-
+		[Test]
+		public void InequalityOfExtractionMode()
+		{
 			Assert.That(
 				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
 				Is.Not.EqualTo(new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Promote)));
+		}
 
+		[Test]
+		public void InequalityOfProperty()
+		{
+			Assert.That(
+				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
+				Is.Not.EqualTo(new XPathExtractor(new XmlQualifiedName("prop2", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write)));
+		}
+
+		[Test]
+		public void InequalityOfType()
+		{
+			Assert.That(
+				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
+				Is.Not.EqualTo(new ConstantExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Promote)));
+
+			Assert.That(
+				new ConstantExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Promote),
+				Is.Not.EqualTo(new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write)));
+		}
+
+		[Test]
+		public void InequalityOfXPathExpression()
+		{
 			Assert.That(
 				new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'element']", ExtractionMode.Write),
 				Is.Not.EqualTo(new XPathExtractor(new XmlQualifiedName("prop", "urn"), "/*[local-name() = 'another']", ExtractionMode.Write)));

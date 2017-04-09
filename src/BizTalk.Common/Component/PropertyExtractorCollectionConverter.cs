@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -26,62 +25,57 @@ using System.Linq;
 using System.Xml;
 using Be.Stateless.Extensions;
 
-namespace Be.Stateless.BizTalk.XPath
+namespace Be.Stateless.BizTalk.Component
 {
 	/// <summary>
-	/// Converts an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s back and forth to a <see
-	/// cref="string"/>.
+	/// Converts a <see cref="PropertyExtractorCollection"/> back and forth to a <see cref="string"/>.
 	/// </summary>
 	/// <remarks>
-	/// Notice that <see cref="XPathExtractorEnumerableConverter"/> delegates the XML serialization and deserialization
-	/// to <see cref="XPathExtractorEnumerableSerializer"/>.
+	/// Notice that <see cref="PropertyExtractorCollectionConverter"/> delegates the XML serialization and
+	/// deserialization to <see cref="PropertyExtractorCollection"/>.
 	/// </remarks>
-	/// <seealso cref="XPathExtractorEnumerableSerializer"/>
-	public class XPathExtractorEnumerableConverter : ExpandableObjectConverter
+	/// <seealso cref="PropertyExtractorCollection"/>
+	public class PropertyExtractorCollectionConverter : ExpandableObjectConverter
 	{
 		/// <summary>
-		/// Deserializes an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s from its XML serialization <see
-		/// cref="string"/>.
+		/// Deserializes a <see cref="PropertyExtractorCollection"/> from its XML serialization <see cref="string"/>.
 		/// </summary>
 		/// <param name="xml">
-		/// A <see cref="string"/> denoting the XML serialization of an <see cref="IEnumerable{T}"/> of <see
-		/// cref="XPathExtractor"/>s.
+		/// A <see cref="string"/> denoting the XML serialization of a <see cref="PropertyExtractorCollection"/>.
 		/// </param>
 		/// <returns>
-		/// The deserialized <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
+		/// The deserialized <see cref="PropertyExtractorCollection"/>.
 		/// </returns>
 		/// <seealso cref="Serialize"/>
-		public static IEnumerable<XPathExtractor> Deserialize(string xml)
+		public static PropertyExtractorCollection Deserialize(string xml)
 		{
-			if (xml.IsNullOrEmpty()) return Enumerable.Empty<XPathExtractor>();
-
+			var collection = new PropertyExtractorCollection();
+			if (xml.IsNullOrEmpty()) return collection;
 			using (var reader = XmlReader.Create(new StringReader(xml), new XmlReaderSettings { IgnoreWhitespace = true, IgnoreComments = true }))
 			{
-				var serializer = new XPathExtractorEnumerableSerializer();
-				serializer.ReadXml(reader);
-				return serializer.Extractors;
+				collection.ReadXml(reader);
+				return collection;
 			}
 		}
 
 		/// <summary>
-		/// Serializes an <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s to its XML <see cref="string"/>
-		/// representation.
+		/// Serializes a <see cref="PropertyExtractorCollection"/> to its XML <see cref="string"/> representation.
 		/// </summary>
 		/// <param name="extractors">
-		/// The <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/> to serialize.
+		/// The <see cref="PropertyExtractorCollection"/> to serialize.
 		/// </param>
 		/// <returns>
-		/// A <see cref="string"/> that represents the <see cref="IEnumerable{T}"/> of <see cref="XPathExtractor"/>s.
+		/// A <see cref="string"/> that represents the <see cref="PropertyExtractorCollection"/>.
 		/// </returns>
 		/// <seealso cref="Deserialize"/>
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
-		public static string Serialize(IEnumerable<XPathExtractor> extractors)
+		public static string Serialize(PropertyExtractorCollection extractors)
 		{
 			if (!extractors.Any()) return null;
 			using (var stringWriter = new StringWriter())
 			using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
-				new XPathExtractorEnumerableSerializer(extractors).WriteXml(writer);
+				extractors.WriteXml(writer);
 				writer.Flush();
 				return stringWriter.ToString();
 			}
@@ -174,7 +168,7 @@ namespace Be.Stateless.BizTalk.XPath
 		/// </exception>
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
-			var collection = value as IEnumerable<XPathExtractor>;
+			var collection = value as PropertyExtractorCollection;
 			return collection != null && destinationType == typeof(string) ? Serialize(collection) : base.ConvertTo(context, culture, value, destinationType);
 		}
 

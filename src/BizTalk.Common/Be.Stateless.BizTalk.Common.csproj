@@ -220,11 +220,15 @@
     <Compile Include="Xml\Xsl\Extensions\TransformBaseExtensions.cs" />
     <Compile Include="Xml\Xsl\Extensions\XslCompiledTransformExtensions.cs" />
     <Compile Include="Xml\Xsl\XslCompiledTransformDescriptor.cs" />
+    <Compile Include="Component\ConstantExtractor.cs" />
+    <Compile Include="Component\ExtractionMode.cs" />
+    <Compile Include="Component\ExtractorPrecedence.cs" />
+    <Compile Include="Component\PropertyExtractor.cs" />
     <Compile Include="XPath\ReactiveXPathExtractorCollection.cs" />
     <Compile Include="XPath\XPathExtractor.cs" />
-    <Compile Include="XPath\XPathExtractorEnumerableConverter.cs" />
-    <Compile Include="XPath\XPathExtractorEnumerableSerializer.cs" />
-    <Compile Include="XPath\XPathExtractorEnumerableSerializerSurrogate.cs" />
+    <Compile Include="Component\PropertyExtractorCollectionConverter.cs" />
+    <Compile Include="Component\PropertyExtractorCollection.cs" />
+    <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogate.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EventLogSourceInstaller.resx">

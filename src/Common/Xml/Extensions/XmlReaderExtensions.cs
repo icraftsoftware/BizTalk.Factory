@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -170,6 +170,11 @@ namespace Be.Stateless.Xml.Extensions
 			if (reader.MoveToAttribute(name)) return reader.Value;
 			var info = (IXmlLineInfo) reader;
 			throw new XmlException(string.Format("Attribute '{0}' was not found. Line {1}, position {2}.", name, info.LineNumber, info.LinePosition));
+		}
+
+		public static bool HasAttribute(this XmlReader reader, string name)
+		{
+			return reader.MoveToAttribute(name);
 		}
 
 		/// <summary>

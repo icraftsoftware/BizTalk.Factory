@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.Xml.Extensions;
 
-namespace Be.Stateless.BizTalk.XPath
+namespace Be.Stateless.BizTalk.Component
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Required by XML serialization")]
-	public class XPathExtractorEnumerableSerializerSurrogate : XPathExtractorEnumerableSerializer
+	public class PropertyExtractorCollectionSerializerSurrogate : PropertyExtractorCollection
 	{
-		public XPathExtractorEnumerableSerializerSurrogate() { }
+		public PropertyExtractorCollectionSerializerSurrogate() { }
 
-		public XPathExtractorEnumerableSerializerSurrogate(IEnumerable<XPathExtractor> extractors) : base(extractors) { }
+		public PropertyExtractorCollectionSerializerSurrogate(PropertyExtractorCollection extractors) : base(extractors) { }
 
 		#region Base Class Member Overrides
 

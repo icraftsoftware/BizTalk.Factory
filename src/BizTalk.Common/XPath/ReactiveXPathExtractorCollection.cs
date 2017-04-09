@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
+using Be.Stateless.BizTalk.Component;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Streaming;
@@ -34,11 +35,12 @@ namespace Be.Stateless.BizTalk.XPath
 	/// </summary>
 	internal class ReactiveXPathExtractorCollection : XPathCollection
 	{
-		#region Nested type: XPathMatch
+		#region Nested Type: XPathMatch
 
 		private class XPathMatch
 		{
 			public int Count { get; set; }
+
 			public IEnumerable<XPathExtractor> Extractors { get; set; }
 		}
 

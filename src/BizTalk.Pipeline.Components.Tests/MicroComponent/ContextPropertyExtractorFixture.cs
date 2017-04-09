@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,19 +20,20 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
-using Be.Stateless.BizTalk.Unit.MicroComponent;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.IO;
 using Be.Stateless.IO.Extensions;
 using Microsoft.BizTalk.Streaming;
 using Moq;
 using NUnit.Framework;
+using MicroPipelineComponentFixture = Be.Stateless.BizTalk.Unit.MicroComponent.MicroPipelineComponentFixture;
 
 namespace Be.Stateless.BizTalk.MicroComponent
 {
@@ -101,10 +102,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				var annotationsMock = new Mock<ISchemaAnnotations>();
 				annotationsMock.Setup(am => am.Extractors).Returns(
-					new[] {
-						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
-						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")
-					});
+					new PropertyExtractorCollection(
+						new[] {
+							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
+							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")
+						}));
 				SchemaMetadataMock.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
 
 				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -282,7 +282,7 @@ namespace Be.Stateless.BizTalk.Component
 							+ "<Extractors>"
 							+ "<s0:Properties xmlns:s0=\"urn:schemas.stateless.be:biztalk:annotations:2013:01\" xmlns:s1=\"urn\">"
 							+ "<s1:Property1 xpath=\"*/some-node\" />"
-							+ "<s1:Property2 promoted=\"true\" xpath=\"*/other-node\" />"
+							+ "<s1:Property2 mode=\"promote\" xpath=\"*/other-node\" />"
 							+ "</s0:Properties>"
 							+ "</Extractors>"
 							+ "</mComponent>"
@@ -336,15 +336,15 @@ namespace Be.Stateless.BizTalk.Component
 			public bool Enabled { get; set; }
 
 			[XmlIgnore]
-			public IEnumerable<XPathExtractor> Extractors { get; set; }
+			public PropertyExtractorCollection Extractors { get; set; }
 
 			[Browsable(false)]
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			[XmlElement("Extractors")]
-			public XPathExtractorEnumerableSerializerSurrogate ExtractorSerializerSurrogate
+			public PropertyExtractorCollectionSerializerSurrogate ExtractorSerializerSurrogate
 			{
-				get { return new XPathExtractorEnumerableSerializerSurrogate(Extractors); }
-				set { Extractors = value.Extractors; }
+				get { return new PropertyExtractorCollectionSerializerSurrogate(Extractors); }
+				set { Extractors = value; }
 			}
 		}
 

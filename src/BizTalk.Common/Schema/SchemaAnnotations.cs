@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
-using Be.Stateless.BizTalk.XPath;
+using Be.Stateless.BizTalk.Component;
 using Be.Stateless.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 
@@ -72,6 +72,7 @@ namespace Be.Stateless.BizTalk.Schema
 	/// ]]>
 	/// </code>
 	/// </example>
+	/// <seealso cref="PropertyExtractorCollection"/>
 	public class SchemaAnnotations : ISchemaAnnotations
 	{
 		#region Nested Type: EmptySchemaAnnotations
@@ -85,9 +86,9 @@ namespace Be.Stateless.BizTalk.Schema
 				get { return null; }
 			}
 
-			public IEnumerable<XPathExtractor> Extractors
+			public PropertyExtractorCollection Extractors
 			{
-				get { return Enumerable.Empty<XPathExtractor>(); }
+				get { return new PropertyExtractorCollection(); }
 			}
 
 			#endregion
@@ -116,11 +117,11 @@ namespace Be.Stateless.BizTalk.Schema
 				.SingleOrDefault(e => e.Name.LocalName == "Properties")
 				.IfNotNull(
 					p => {
-						var xpathExtractorEnumerableSerializer = new XPathExtractorEnumerableSerializer();
-						xpathExtractorEnumerableSerializer.ReadXml(p.CreateReader());
-						return xpathExtractorEnumerableSerializer.Extractors;
+						var extractorCollection = new PropertyExtractorCollection();
+						extractorCollection.ReadXml(p.CreateReader());
+						return extractorCollection;
 					})
-				?? Enumerable.Empty<XPathExtractor>();
+				?? new PropertyExtractorCollection();
 
 			return new SchemaAnnotations {
 				EnvelopingMap = envelopeMap,
@@ -148,7 +149,7 @@ namespace Be.Stateless.BizTalk.Schema
 
 		public Type EnvelopingMap { get; private set; }
 
-		public IEnumerable<XPathExtractor> Extractors { get; private set; }
+		public PropertyExtractorCollection Extractors { get; private set; }
 
 		#endregion
 

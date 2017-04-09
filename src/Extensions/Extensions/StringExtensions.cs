@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -97,6 +97,27 @@ namespace Be.Stateless.Extensions
 		}
 
 		/// <summary>
+		/// Converts the string representation of the name or numeric value of one or more enumerated constants to an
+		/// equivalent enumerated object.
+		/// </summary>
+		/// <typeparam name="T">
+		/// An enumeration type.
+		/// </typeparam>
+		/// <param name="value">
+		/// A string containing the name or value to convert.
+		/// </param>
+		/// <param name="ignoreCase">
+		/// Whether to ignore case or not; <c>true</c> by default.
+		/// </param>
+		/// <returns>
+		/// One or more enumerated constants of type <typeparamref name="T"/> that represents <paramref name="value"/>.
+		/// </returns>
+		public static T Parse<T>(this string value, bool ignoreCase = true) where T : struct
+		{
+			return (T) Enum.Parse(typeof(T), value, ignoreCase);
+		}
+
+		/// <summary>
 		/// Extract the last <c>length</c> characters of a string.
 		/// </summary>
 		/// <param name="string">The string to extract characters of.</param>
@@ -136,6 +157,20 @@ namespace Be.Stateless.Extensions
 			return length < 0
 				? @string.Right(-length)
 				: length > @string.Length ? @string : @string.Substring(0, length);
+		}
+
+		/// <summary>
+		/// Converts a Pascal-case string to a camel-case one.
+		/// </summary>
+		/// <param name="string">
+		/// A Pascal-case string.
+		/// </param>
+		/// <returns>
+		/// The camel-case equivalent string.
+		/// </returns>
+		public static string ToCamelCase(this string @string)
+		{
+			return char.ToLower(@string[0]) + @string.Substring(1);
 		}
 
 		public static string Tokens(this string text, char separator, params int[] tokens)

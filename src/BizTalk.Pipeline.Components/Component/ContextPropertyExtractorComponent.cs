@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
 using Be.Stateless.BizTalk.MicroComponent;
-using Be.Stateless.BizTalk.XPath;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -80,7 +78,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// <param name="propertyBag">Configuration property bag</param>
 		protected override void Load(IPropertyBag propertyBag)
 		{
-			propertyBag.ReadProperty("Extractors", value => Extractors = XPathExtractorEnumerableConverter.Deserialize(value));
+			propertyBag.ReadProperty("Extractors", value => Extractors = PropertyExtractorCollectionConverter.Deserialize(value));
 		}
 
 		/// <summary>
@@ -89,7 +87,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// <param name="propertyBag">Configuration property bag</param>
 		protected override void Save(IPropertyBag propertyBag)
 		{
-			propertyBag.WriteProperty("Extractors", XPathExtractorEnumerableConverter.Serialize(Extractors));
+			propertyBag.WriteProperty("Extractors", PropertyExtractorCollectionConverter.Serialize(Extractors));
 		}
 
 		#endregion
@@ -99,8 +97,8 @@ namespace Be.Stateless.BizTalk.Component
 		/// </summary>
 		[Browsable(true)]
 		[Description("Pipeline's configuration of the properties to extract out of the current message.")]
-		[TypeConverter(typeof(XPathExtractorEnumerableConverter))]
-		public IEnumerable<XPathExtractor> Extractors
+		[TypeConverter(typeof(PropertyExtractorCollectionConverter))]
+		public PropertyExtractorCollection Extractors
 		{
 			get { return _microComponent.Extractors; }
 			set { _microComponent.Extractors = value; }
