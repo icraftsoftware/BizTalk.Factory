@@ -224,7 +224,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region IAdapterConfigTransactions Members
 
 		/// <summary>
-		/// Specify whether the message queue is transactional or nontransactional.
+		/// Specify whether the message queue is transactional or non-transactional.
 		/// </summary>
 		/// <remarks>
 		/// <para>

@@ -134,7 +134,7 @@ namespace Be.Stateless.BizTalk.Streaming
 				catch (NotSupportedException)
 				{
 					// avoid logging in this case as Microsoft.BizTalk.Internal.MessagePart.GetSize() systematically calls
-					// this getter without first calling CanSeek's getter as is expected against any Stream-derived class.
+					// this getter without first calling CanSeek getter as is expected against any Stream-derived class.
 					// see Microsoft.BizTalk.Messaging, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35
 					throw;
 				}

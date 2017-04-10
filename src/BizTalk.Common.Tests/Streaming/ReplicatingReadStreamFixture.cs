@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Be.Stateless.IO;
@@ -41,13 +42,12 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void LengthIsUnknownBeforeStreamExhaustion()
 		{
 			using (var stream = new ReplicatingReadStream(new MemoryStream(_content), new MemoryStream()))
 			{
-				// ReSharper disable AccessToDisposedClosure
 				Assert.That(() => stream.Length, Throws.TypeOf<NotSupportedException>());
-				// ReSharper restore AccessToDisposedClosure
 			}
 		}
 
@@ -89,6 +89,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void SourceStreamCannotBeSoughtBeforeExhaustion()
 		{
 			using (var stream = new ReplicatingReadStream(new MemoryStream(_content), new MemoryStream()))
@@ -97,16 +98,12 @@ namespace Be.Stateless.BizTalk.Streaming
 				// don't drain the whole stream
 				stream.Read(new byte[1024], 0, 1024);
 				Assert.That(
-					// ReSharper disable AccessToDisposedClosure
 					() => stream.Position = 0,
-					// ReSharper restore AccessToDisposedClosure
 					Throws.InstanceOf<InvalidOperationException>()
 						.With.Message.EqualTo(
 							string.Format("{0} is not seekable while the inner stream has not been thoroughly read and replicated.", typeof(ReplicatingReadStream).Name)));
 				Assert.That(
-					// ReSharper disable AccessToDisposedClosure
 					() => stream.Seek(0, SeekOrigin.Begin),
-					// ReSharper restore AccessToDisposedClosure
 					Throws.InstanceOf<InvalidOperationException>()
 						.With.Message.EqualTo(
 							string.Format("{0} cannot be sought while the inner stream has not been thoroughly read and replicated.", typeof(ReplicatingReadStream).Name)));
@@ -125,6 +122,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void SourceStreamIsSeekableAfterExhaustion()
 		{
 			using (var stream = new ReplicatingReadStream(new MemoryStream(_content), new MemoryStream()))
@@ -132,14 +130,12 @@ namespace Be.Stateless.BizTalk.Streaming
 				Assert.That(stream.CanSeek, Is.False);
 				stream.Drain();
 				Assert.That(stream.CanSeek);
-				// ReSharper disable AccessToDisposedClosure
 				Assert.That(() => stream.Position = 0, Throws.Nothing);
-				// ReSharper restore AccessToDisposedClosure
 			}
 		}
 
 		[Test]
-		public void TargetStreamIsCommitedOnlyOnceEvenIfStreamIsRewinded()
+		public void TargetStreamIsCommittedOnlyOnceEvenIfStreamIsRewinded()
 		{
 			var targetStream = new Mock<Stream> { CallBase = true };
 			var streamTransacted = targetStream.As<IStreamTransacted>();

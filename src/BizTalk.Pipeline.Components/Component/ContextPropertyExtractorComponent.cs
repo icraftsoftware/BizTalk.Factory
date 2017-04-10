@@ -27,10 +27,12 @@ using Microsoft.BizTalk.Message.Interop;
 namespace Be.Stateless.BizTalk.Component
 {
 	/// <summary>
-	/// This component allows to promote or write properties in the message context whose values are extracted out of an
-	/// XML message by defining less restrictive XPath expressions than the traditional canonical XPath expressions
-	/// supported by BizTalk Server; limitations are however still present and relatively strong.
+	/// This component allows to manipulate the message context by either clearing, demoting, writing or promoting
+	/// property values. These values can either be constant or extracted out of an XML message by defining XPath
+	/// expressions. Notice that these XPath expressions are less restrictive than the traditional canonical XPath
+	/// expressions supported by BizTalk Server; limitations are however still present and relatively strong.
 	/// </summary>
+	/// <seealso cref="ContextPropertyExtractor"/>
 	[ComponentCategory(CategoryTypes.CATID_PipelineComponent)]
 	[ComponentCategory(CategoryTypes.CATID_Any)]
 	[Guid(CLASS_ID)]
@@ -53,7 +55,7 @@ namespace Be.Stateless.BizTalk.Component
 		[Description("Description of the pipeline component.")]
 		public override string Description
 		{
-			get { return "Promotes or writes properties in context by extracting values out of messages using XPath expressions."; }
+			get { return "Manipulates the message context by either clearing, demoting, writing or promoting property values out of the current message payload."; }
 		}
 
 		protected internal override IBaseMessage ExecuteCore(IPipelineContext pipelineContext, IBaseMessage message)
@@ -93,10 +95,11 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		/// <summary>
-		/// XPath expressions used to extract values out of XML message and either promote or write them in the context.
+		/// <see cref="PropertyExtractor"/>-derived extractors used to manipulate the message context out of the current
+		/// message payload.
 		/// </summary>
 		[Browsable(true)]
-		[Description("Pipeline's configuration of the properties to extract out of the current message.")]
+		[Description("PropertyExtractor-derived extractors used to manipulate the message context out of the current message payload.")]
 		[TypeConverter(typeof(PropertyExtractorCollectionConverter))]
 		public PropertyExtractorCollection Extractors
 		{

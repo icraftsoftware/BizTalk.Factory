@@ -33,13 +33,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			applicationBindingMock.As<ISupportValidation>();
 			var visitableApplicationBindingMock = applicationBindingMock.As<IVisitable<IApplicationBindingVisitor>>();
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
 
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 
 			visitableApplicationBindingMock.Verify(a => a.Accept(It.IsAny<ApplicationBindingEnvironmentSettlerVisitor>()), Times.Once);
-			decoraterVisitorMock.Verify(v => v.VisitApplicationBinding(applicationBindingMock.Object), Times.Once);
+			decoratorVisitorMock.Verify(v => v.VisitApplicationBinding(applicationBindingMock.Object), Times.Once);
 		}
 
 		[Test]
@@ -55,13 +55,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var orchestrationBindingMock = new Mock<IOrchestrationBinding>();
 			orchestrationBindingMock.Setup(o => o.ApplicationBinding).Returns(referencedApplicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitOrchestration(orchestrationBindingMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitOrchestration(orchestrationBindingMock.Object), Times.Never);
+			decoratorVisitorMock.Verify(v => v.VisitOrchestration(orchestrationBindingMock.Object), Times.Never);
 		}
 
 		[Test]
@@ -75,13 +75,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var orchestrationBindingMock = new Mock<IOrchestrationBinding>();
 			orchestrationBindingMock.Setup(o => o.ApplicationBinding).Returns(applicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitOrchestration(orchestrationBindingMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitOrchestration(orchestrationBindingMock.Object), Times.Once);
+			decoratorVisitorMock.Verify(v => v.VisitOrchestration(orchestrationBindingMock.Object), Times.Once);
 		}
 
 		[Test]
@@ -100,13 +100,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var receiveLocationMock = new Mock<IReceiveLocation<string>>();
 			receiveLocationMock.Setup(o => o.ReceivePort).Returns(receivePortMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitReceiveLocation(receiveLocationMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitReceiveLocation(receiveLocationMock.Object), Times.Never);
+			decoratorVisitorMock.Verify(v => v.VisitReceiveLocation(receiveLocationMock.Object), Times.Never);
 		}
 
 		[Test]
@@ -123,13 +123,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var receiveLocationMock = new Mock<IReceiveLocation<string>>();
 			receiveLocationMock.Setup(o => o.ReceivePort).Returns(receivePortMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitReceiveLocation(receiveLocationMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitReceiveLocation(receiveLocationMock.Object), Times.Once);
+			decoratorVisitorMock.Verify(v => v.VisitReceiveLocation(receiveLocationMock.Object), Times.Once);
 		}
 
 		[Test]
@@ -145,13 +145,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var receivePortMock = new Mock<IReceivePort<string>>();
 			receivePortMock.Setup(o => o.ApplicationBinding).Returns(referencedApplicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitReceivePort(receivePortMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitReceivePort(receivePortMock.Object), Times.Never);
+			decoratorVisitorMock.Verify(v => v.VisitReceivePort(receivePortMock.Object), Times.Never);
 		}
 
 		[Test]
@@ -165,13 +165,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var receivePortMock = new Mock<IReceivePort<string>>();
 			receivePortMock.Setup(o => o.ApplicationBinding).Returns(applicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitReceivePort(receivePortMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitReceivePort(receivePortMock.Object), Times.Once);
+			decoratorVisitorMock.Verify(v => v.VisitReceivePort(receivePortMock.Object), Times.Once);
 		}
 
 		[Test]
@@ -179,13 +179,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var referencedApplicationBindingMock = new Mock<IVisitable<IApplicationBindingVisitor>>();
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
 
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 			visitor.VisitReferencedApplicationBinding(referencedApplicationBindingMock.Object);
 
 			referencedApplicationBindingMock.Verify(a => a.Accept(visitor), Times.Never);
-			decoraterVisitorMock.Verify(v => v.VisitReferencedApplicationBinding(referencedApplicationBindingMock.Object), Times.Never);
+			decoratorVisitorMock.Verify(v => v.VisitReferencedApplicationBinding(referencedApplicationBindingMock.Object), Times.Never);
 		}
 
 		[Test]
@@ -201,13 +201,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var sendPortMock = new Mock<ISendPort<string>>();
 			sendPortMock.Setup(o => o.ApplicationBinding).Returns(referencedApplicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitSendPort(sendPortMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitSendPort(sendPortMock.Object), Times.Never);
+			decoratorVisitorMock.Verify(v => v.VisitSendPort(sendPortMock.Object), Times.Never);
 		}
 
 		[Test]
@@ -221,13 +221,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			var sendPortMock = new Mock<ISendPort<string>>();
 			sendPortMock.Setup(o => o.ApplicationBinding).Returns(applicationBindingMock.Object);
 
-			var decoraterVisitorMock = new Mock<IApplicationBindingVisitor>();
-			var visitor = CurrentApplicationBindingVisitor.Create(decoraterVisitorMock.Object);
+			var decoratorVisitorMock = new Mock<IApplicationBindingVisitor>();
+			var visitor = CurrentApplicationBindingVisitor.Create(decoratorVisitorMock.Object);
 
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 			visitor.VisitSendPort(sendPortMock.Object);
 
-			decoraterVisitorMock.Verify(v => v.VisitSendPort(sendPortMock.Object), Times.Once);
+			decoratorVisitorMock.Verify(v => v.VisitSendPort(sendPortMock.Object), Times.Once);
 		}
 	}
 }

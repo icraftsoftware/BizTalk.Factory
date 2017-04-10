@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var ofa = new FileAdapter.Outbound(a => { });
 			Assert.That(
 				() => ((ISupportValidation) ofa).Validate(),
-				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbond file adapter has no destination folder."));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbound file adapter has no destination folder."));
 		}
 
 		[Test]
@@ -69,7 +69,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				});
 			Assert.That(
 				() => ((ISupportValidation) ofa).Validate(),
-				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbond file adapter has no destination file name."));
+				Throws.TypeOf<BindingException>().With.Message.EqualTo("Outbound file adapter has no destination file name."));
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			Assert.That(
 				() => ((ISupportValidation) ofa).Validate(),
 				Throws.TypeOf<BindingException>()
-					.With.Message.EqualTo("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file."));
+					.With.Message.EqualTo("Outbound file adapter cannot use a temporary file when it is meant to append or overwrite an existing file."));
 		}
 	}
 }

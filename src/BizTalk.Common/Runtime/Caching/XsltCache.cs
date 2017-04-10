@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Xsl;
 using Be.Stateless.BizTalk.Xml.Xsl;
 using Be.Stateless.BizTalk.Xml.Xsl.Extensions;
@@ -30,6 +31,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 	/// cref="XslCompiledTransform"/> equivalents of <see cref="TransformBase"/>-derived types.
 	/// </summary>
 	/// <seealso cref="Cache{TKey,TItem}"/>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class XsltCache : Cache<Type, XslCompiledTransformDescriptor>
 	{
 		/// <summary>
@@ -64,7 +66,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		#region Helpers
 
 		[Conditional("DEBUG")]
-		private static void ValidateKey(Type key)
+		private void ValidateKey(Type key)
 		{
 			if (!key.IsTransform()) throw new ArgumentException("Type is not a TransformBase derived Type instance.", "key");
 		}

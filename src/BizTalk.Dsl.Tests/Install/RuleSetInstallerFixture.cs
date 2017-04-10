@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.Install
 				typeof(AlwaysTrueRuleFixture.AlwaysTrueRuleSet).FullName,
 				typeof(LogicalPredicateRuleFixture.LogicalPredicateRuleSet).FullName,
 				typeof(MultiRulePolicyFixture.MultiRuleRuleSet).FullName,
-				typeof(ResolvedProcessNameRuleFixture.ResolvedProcessNameRuleet).FullName,
+				typeof(ResolvedProcessNameRuleFixture.ResolvedProcessNameRuleset).FullName,
 				typeof(StaticMemberAccessRuleFixture.StaticMemberAccessRuleSet).FullName,
 				typeof(SchemaAndTransformRuleFixture.WriteFromContextRuleSet).FullName,
 				typeof(TypeMemberAccessRuleFixture.TypeMemberAccessRuleSet).FullName,

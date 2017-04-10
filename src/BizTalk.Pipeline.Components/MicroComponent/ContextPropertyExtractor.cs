@@ -40,9 +40,10 @@ using Microsoft.BizTalk.XPath;
 namespace Be.Stateless.BizTalk.MicroComponent
 {
 	/// <summary>
-	/// This component allows to promote or write properties in the message context whose values are extracted out of an
-	/// XML message by defining less restrictive XPath expressions than the traditional canonical XPath expressions
-	/// supported by BizTalk Server; limitations are however still present and relatively strong.
+	/// This component allows to manipulate the message context by either clearing, demoting, writing or promoting
+	/// property values. These values can either be constant or extracted out of an XML message by defining XPath
+	/// expressions. Notice that these XPath expressions are less restrictive than the traditional canonical XPath
+	/// expressions supported by BizTalk Server; limitations are however still present and relatively strong.
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -97,27 +98,38 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// into account for extraction (i.e. write or promote) and other matches are discarded. The component can possibly
 	/// be slightly enhanced to take a specific match index into account, by modifying the <see cref="OnMatch"/> method.
 	/// Given the limitations of the component, it could be necessary to change its implementation in the future if it
-	/// cannot answer to new requirements that may arise. The current implementation uses a full streaming approach, and
+	/// cannot meet the new requirements that may arise. The current implementation uses a full streaming approach, and
 	/// the alternate way to do it is using an <see cref="System.Xml.XPath.XPathNavigator"/> in combination with a <see
 	/// cref="VirtualStream"/>. That would allow almost all XPath queries of arbitrary complexity, at the cost of some
 	/// performance loss.
 	/// </para>
 	/// </remarks>
 	/// <example>
+	/// <para>
 	/// Example of an XML fragment configuration that can either be declared at the pipeline-level configuration or
-	/// directly embedded in a schema: <code><![CDATA[
-	/// <san:Properties extractorPrecedence='pipeline | pipelineOnly | schema | schemaOnly'
+	/// directly embedded in a schema, <see cref="PropertyExtractorCollection"/>: <code><![CDATA[
+	/// <san:Properties [extractorPrecedence='pipeline | pipelineOnly | schema | schemaOnly']
 	///                 xmlns:tp='urn:schemas.stateless.be:biztalk:properties:tracking:2012:04'
 	///                 xmlns:san='urn:schemas.stateless.be:biztalk:annotations:2013:01'>
-	///   <tp:Value1 xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Id']" />
-	///   <tp:Value2 xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Subject']" />
-	///   <tp:Value3 promoted="true"
-	///              xpath="/*[local-name()='Send']/*[local-name()='Message']*[local-name()='Priority']" />
+	///   <tp:Value1 [mode="clear | ignore | promote | write"]
+	///              value="constant-string-literal" />
+	///   <tp:Value2 [mode="clear | demote | ignore | promote | write"]
+	///              xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Subject']" />
+	///   <tp:Value3 mode="clear | ignore"] />
 	/// </san:Properties>
-	/// ]]></code> Notice that the <c>san:extractorPrecedence</c> attribute is relevant only when configured at the
+	/// ]]></code>
+	/// </para>
+	/// <para>
+	/// Notice that the <c>san:extractorPrecedence</c> attribute is relevant only when configured at the
 	/// pipeline level and can only have one of the following values: <c>pipeline</c>, <c>pipelineOnly</c>,
 	/// <c>schema</c>, or <c>schemaOnly</c>.
+	/// </para>
 	/// </example>
+	/// <seealso cref="PropertyExtractorCollection"/>
+	/// <seealso cref="ExtractionMode"/>
+	/// <seealso cref="PropertyExtractor"/>
+	/// <seealso cref="ConstantExtractor"/>
+	/// <seealso cref="XPathExtractor"/>
 	public class ContextPropertyExtractor : IMicroPipelineComponent
 	{
 		public ContextPropertyExtractor()
@@ -133,11 +145,12 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			var extractors = BuildExtractorCollection(pipelineContext, message);
 			if (extractors.Any())
 			{
+				// TODO handle simple PropertyExtractor and ConstantExtractor
+				// TODO handle clear, demote, ignore, promote, write
 				// setup a stream that will invoke our callback whenever an XPathExtractor's XPath expression is matched
 				message.BodyPart.WrapOriginalDataStream(
 					originalStream => XPathMutatorStreamFactory.Create(
 						originalStream,
-						// TODO .OfType<XPathExtractor>()
 						extractors.OfType<XPathExtractor>(),
 						(propertyName, value, extractionMode) => OnMatch(message.Context, propertyName, value, extractionMode)),
 					pipelineContext.ResourceTracker);
@@ -187,6 +200,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		private void OnMatch(IBaseMessageContext messageContext, XmlQualifiedName propertyName, string value, ExtractionMode extractionMode)
 		{
+			// TODO handle clear, demote, ignore, promote, write
+
 			if (extractionMode == ExtractionMode.Promote)
 			{
 				if (_logger.IsDebugEnabled) _logger.DebugFormat("Promoting property {0} with value {1} into context.", propertyName, value);

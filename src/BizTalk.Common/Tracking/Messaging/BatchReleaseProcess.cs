@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Bam.EventObservation;
@@ -29,6 +30,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 	/// <summary>
 	/// Allows to track activity of a batch release process at the messaging level.
 	/// </summary>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	internal class BatchReleaseProcess : Process
 	{
 		// internal because cannot prevent NullReferenceException should pipelineContext be null when calling .GetEventStream()

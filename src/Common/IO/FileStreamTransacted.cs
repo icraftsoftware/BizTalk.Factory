@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,8 +73,8 @@ namespace Be.Stateless.IO
 		/// <param name="disposing"></param>
 		protected override void Dispose(bool disposing)
 		{
-			// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
-			// <seealso href="http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P"/>
+			// <see also href="http://msdn.microsoft.com/en-us/magazine/cc163392.aspx"/>
+			// <see also href="http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P"/>
 
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("FileStreamTransacted is {0}.", disposing ? "disposing" : "finalizing");
 

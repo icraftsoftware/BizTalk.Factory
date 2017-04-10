@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Schema
 		Type EnvelopingMap { get; }
 
 		/// <summary>
-		/// Collection of <see cref="PropertyExtractor"/>-derived extractors to be used to extract values of context
+		/// Collection of <see cref="PropertyExtractor"/>-derived extractors to be used to manipulate values of context
 		/// properties from an <see cref="IBaseMessagePart"/>'s payload while being processed through the pipelines.
 		/// </summary>
 		PropertyExtractorCollection Extractors { get; }

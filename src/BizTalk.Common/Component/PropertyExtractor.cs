@@ -17,11 +17,13 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Component
 {
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class PropertyExtractor : IEquatable<PropertyExtractor>
 	{
 		#region Operators

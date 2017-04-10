@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -34,6 +35,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// <summary>
 	/// Helper class that allows for an orchestration to easily use an <see cref="XslCompiledTransform"/>.
 	/// </summary>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public static class XlangTransformHelper
 	{
 		/// <summary>
@@ -42,7 +44,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// to the resulting message.
 		/// </summary>
 		/// <remarks>
-		/// This method assumes only the first part of a multipart <paramref name="message"/> message has to be
+		/// This method assumes only the first part of a multi-part <paramref name="message"/> message has to be
 		/// transformed and creates an output message with a single part named "Main".
 		/// </remarks>
 		/// <param name="message">
@@ -70,7 +72,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// to the resulting message.
 		/// </summary>
 		/// <remarks>
-		/// This method assumes only the first part of any multipart <paramref name="messages"/> message has to be
+		/// This method assumes only the first part of any multi-part <paramref name="messages"/> message has to be
 		/// transformed and creates an output message with a single part named "Main".
 		/// </remarks>
 		/// <param name="messages">
@@ -124,7 +126,6 @@ namespace Be.Stateless.BizTalk.Transform
 
 		private const int DEFAULT_BUFFER_SIZE = 10 * 1024; //10 KB
 		private const int DEFAULT_THRESHOLD_SIZE = 1024 * 1024; //1 MB
-
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(XlangTransformHelper));
 	}
 }

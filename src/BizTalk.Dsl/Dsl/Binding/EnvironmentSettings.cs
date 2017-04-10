@@ -52,8 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					var filePath = Path.Combine(BindingGenerationContext.EnvironmentSettingRootPath, SettingsFileName + ".xml");
 					if (File.Exists(filePath)) _environmentSettingOverrides = new EnvironmentSettingOverrides(filePath);
 				}
-				if (_environmentSettingOverrides == null) _environmentSettingOverrides = this;
-				return _environmentSettingOverrides;
+				return _environmentSettingOverrides ?? (_environmentSettingOverrides = this);
 			}
 		}
 

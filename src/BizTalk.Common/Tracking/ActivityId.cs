@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace Be.Stateless.BizTalk.Tracking
 		}
 
 		/// <summary>
-		/// Normalize the string activity id to have a homogenous <see cref="Guid"/> format accross all BAM tracking
+		/// Normalize the string activity id to have a homogenous <see cref="Guid"/> format across all BAM tracking
 		/// activities.
 		/// </summary>
 		/// <param name="id">The string <see cref="Guid"/> to normalize.</param>

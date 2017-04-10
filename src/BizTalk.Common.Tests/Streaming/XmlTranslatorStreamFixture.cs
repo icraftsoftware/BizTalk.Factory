@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
-		public void RemoveVersionFromWcfLobNamepaces()
+		public void RemoveVersionFromWcfLobNamespaces()
 		{
 			const string input = @"<Receive xmlns='http://Microsoft.LobServices.Sap/2007/03/Idoc/3/ANY_IDOC//701/Receive'>
 	<idocData>
@@ -234,7 +234,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
-		public void RestoreVersionInWcfLobNamepaces()
+		public void RestoreVersionInWcfLobNamespaces()
 		{
 			const string input = @"<Send xmlns='http://Microsoft.LobServices.Sap/2007/03/Idoc/ANY_IDOC/Send'>
 	<idocData>
@@ -273,7 +273,7 @@ namespace Be.Stateless.BizTalk.Streaming
 			// ReSharper restore AssignNullToNotNullAttribute
 			namespaces
 				.Select(namespaceWithPrefix => namespaceWithPrefix.Split('='))
-				.Each(splittedString => nsr.AddNamespace(splittedString[0], splittedString[1]));
+				.Each(splitString => nsr.AddNamespace(splitString[0], splitString[1]));
 			return navigator.Select(xpath, nsr);
 		}
 	}

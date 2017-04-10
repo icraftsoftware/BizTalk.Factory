@@ -45,7 +45,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			var assembly = btxServiceType
 				.CompileToDynamicAssembly();
 
-			var orchestrationBinding = assembly.CreateInstance(btxServiceType.FullName + BtxServiceTypeExtensions.ORCHESTRATIONBINDING_SUFFIX);
+			var orchestrationBinding = assembly.CreateInstance(btxServiceType.FullName + BtxServiceTypeExtensions.ORCHESTRATION_BINDING_SUFFIX);
 			Assert.That(orchestrationBinding, Is.Not.Null);
 			Assert.That(orchestrationBinding, Is.InstanceOf<OrchestrationBindingBase<Process>>());
 		}

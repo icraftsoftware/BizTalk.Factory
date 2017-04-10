@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Be.Stateless.Extensions;
@@ -82,6 +83,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 			return Regex.IsMatch(filePath, _pattern);
 		}
 
+		[SuppressMessage("ReSharper", "UseFormatSpecifierInFormatString")]
 		internal static string NewNameForState(this string filePath, string stateToken)
 		{
 			return string.Format(

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			var processName = ResolveProperty(TrackingProperties.ProcessName);
 			if (processName.IsNullOrEmpty())
 			{
-				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that'd
+				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that would
 				// be overkill just to get back constant default process name; besides what if policy execution fails
 				processName = Default.Processes.Unidentified;
 			}

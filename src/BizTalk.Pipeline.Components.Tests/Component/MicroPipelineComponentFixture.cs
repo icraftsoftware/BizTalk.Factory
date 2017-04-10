@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Unit.Component;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -125,6 +126,7 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			#region IEquatable<MicroPipelineComponentDummyOne> Members
 
+			[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 			public bool Equals(MicroPipelineComponentDummyOne other)
 			{
 				return GetType() == other.GetType();
@@ -163,6 +165,7 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			#region IEquatable<MicroPipelineComponentDummyTwo> Members
 
+			[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 			public bool Equals(MicroPipelineComponentDummyTwo other)
 			{
 				return GetType() == other.GetType();

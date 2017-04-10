@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Be.Stateless.Extensions;
@@ -35,6 +36,7 @@ namespace Be.Stateless.BizTalk.Streaming
 	/// </remarks>
 	/// <seealso href="http://github.com/icsharpcode/SharpZipLib/wiki/Zip-Samples">SharpZipLib Samples</seealso>
 	/// <seealso href="http://my.safaribooksonline.com/book/operating-systems-and-server-administration/microsoft-biztalk/9780470046425/pipelines/121"></seealso>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class ZipOutputStream : Stream
 	{
 		#region Nested Type: BufferStream

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 {
 	[TestFixture]
-	public class ResolvedProcessNameRuleFixture : PolicyFixture<ResolvedProcessNameRuleFixture.ResolvedProcessNameRuleet>
+	public class ResolvedProcessNameRuleFixture : PolicyFixture<ResolvedProcessNameRuleFixture.ResolvedProcessNameRuleset>
 	{
 		[Test]
 		public void QualifiedFieldResolution()
@@ -65,9 +65,9 @@ namespace Be.Stateless.BizTalk.Dsl.RuleEngine
 			Facts.Verify(Context.Property(TrackingProperties.ProcessName).WithValue(Dummy.Processes.Four).HasBeenWritten());
 		}
 
-		public class ResolvedProcessNameRuleet : RuleSet
+		public class ResolvedProcessNameRuleset : RuleSet
 		{
-			public ResolvedProcessNameRuleet()
+			public ResolvedProcessNameRuleset()
 			{
 				Name = GetType().Name;
 

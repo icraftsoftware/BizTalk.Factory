@@ -18,6 +18,7 @@
 
 namespace Be.Stateless.BizTalk.Component
 {
+#pragma warning disable 1574,1584,1711,1572,1581,1580
 	/// <summary>
 	/// Determines how to merge two <see cref="PropertyExtractorCollection"/> instances.
 	/// </summary>
@@ -36,9 +37,9 @@ namespace Be.Stateless.BizTalk.Component
 	/// via XML schema annotations is possible but pointless.
 	/// </para>
 	/// </remarks>
-#pragma warning disable 1584,1711,1572,1581,1580
+	/// <seealso cref="PropertyExtractorCollection.Union"/>
 	/// <seealso cref="Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent"/>
-#pragma warning restore 1584,1711,1572,1581,1580
+#pragma warning restore 1574,1584,1711,1572,1581,1580
 	public enum ExtractorPrecedence
 	{
 		/// <summary>

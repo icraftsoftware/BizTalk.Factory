@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.MicroPipelines
 	{
 		public XmlReceive()
 		{
-			Description = "XML receive micropipeline.";
+			Description = "XML receive micro-pipeline.";
 			Version = new Version(1, 0);
 			VersionDependentGuid = new Guid("b4235590-184d-4ccf-90cd-b33de4a7ea9e");
 			Stages.Decode

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -41,10 +42,10 @@ namespace Be.Stateless.BizTalk.Tracking
 {
 	/// <summary>
 	/// Central file store where message body's payloads are claimed, or stored; that is to say where message body's
-	/// payloads are written to disk instead of flowing throught the database, like the BAM monitoring database or the
+	/// payloads are written to disk instead of flowing through the database, like the BAM monitoring database or the
 	/// <c>BizTalkMsgBoxDb</c>.
 	/// </summary>
-	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	internal class ClaimStore
 	{
 		public static ClaimStore Instance
@@ -277,8 +278,8 @@ namespace Be.Stateless.BizTalk.Tracking
 			// where there will be a subfolder for each date that some payload has been saved/tracked to disk. To ease the
 			// job of the TrackingAgent the subfolder is not created locally (but the current date is however kept in the
 			// name). When not RequiresCheckInAndOut, the payloads are tracked/saved to disk at the exact same place that
-			// it will be redeemed from afterwards, that is in a subfolder corresponding to the current date (of course,
-			// one needs to ensure the folders get created).
+			// it will be redeemed from afterward, that is in a subfolder corresponding to the current date (of course, one
+			// needs to ensure the folders get created).
 
 			string filePath;
 			if (RequiresCheckInAndOut)
@@ -498,10 +499,9 @@ namespace Be.Stateless.BizTalk.Tracking
 
 		// 512 KB of data (512 * 1024), base64 encoding: 3 bytes encoded in 4 chars (3/4), each char takes 2 bytes in UTF-16 (/2)
 		private const int PAYLOAD_SIZE_THRESHOLD = 512 * 1024 * 3 / 4 / 2;
-
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ClaimStore));
-		private static ClaimStore _instance = new ClaimStore();
 		private static string _checkInDirectory;
 		private static string _checkOutDirectory;
+		private static ClaimStore _instance = new ClaimStore();
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(ClaimStore));
 	}
 }

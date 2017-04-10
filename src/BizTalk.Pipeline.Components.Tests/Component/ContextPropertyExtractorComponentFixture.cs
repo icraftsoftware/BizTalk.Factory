@@ -41,14 +41,12 @@ namespace Be.Stateless.BizTalk.Component
 			{
 				case "Extractors":
 					return new PropertyExtractorCollection(
-						new[] {
-							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-							new XPathExtractor(BizTalkFactoryProperties.ReceiverName.QName, "/letter/*/to", ExtractionMode.Promote),
-							new XPathExtractor(TrackingProperties.ProcessName.QName, "/letter/*/subject", ExtractionMode.Write),
-							new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write),
-							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
-							new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/signature", ExtractionMode.Write),
-						});
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+						new XPathExtractor(BizTalkFactoryProperties.ReceiverName.QName, "/letter/*/to", ExtractionMode.Promote),
+						new XPathExtractor(TrackingProperties.ProcessName.QName, "/letter/*/subject", ExtractionMode.Write),
+						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write),
+						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
+						new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/signature", ExtractionMode.Write));
 				default:
 					return base.GetValueForProperty(name);
 			}

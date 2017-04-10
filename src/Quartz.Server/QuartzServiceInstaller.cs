@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace Quartz.Server
 			{
 				// clearing Installers collection similarly to what is being done in Uninstall() does not work as base class
 				// will commit the state anyway, which will be corrupted if the installers are skipped/have been cleared...
-				Console.WriteLine("\r\nPerforming reinstallation of '{0}' service.", _serviceInstaller.ServiceName);
+				Console.WriteLine("\r\nPerforming anew installation of '{0}' service.", _serviceInstaller.ServiceName);
 				// ReSharper disable AssignNullToNotNullAttribute
 				base.Uninstall(null);
 				// ReSharper restore AssignNullToNotNullAttribute

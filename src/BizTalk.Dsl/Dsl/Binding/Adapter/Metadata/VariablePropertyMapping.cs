@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Wcf.Metadata;
@@ -26,6 +27,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter.Metadata
 	/// <summary>
 	/// Describes one BizTalk Server variable mapping declared through HTTP Method and URL mapping operations.
 	/// </summary>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class VariablePropertyMapping : BtsVariablePropertyMappingVariable
 	{
 		public VariablePropertyMapping(string name, IMessageContextProperty property)

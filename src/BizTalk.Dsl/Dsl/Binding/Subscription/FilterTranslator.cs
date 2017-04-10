@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -100,9 +100,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 
 		private static FilterGroup BuildFilterGroup(IEnumerable<FilterStatement> statements)
 		{
-			var @group = new FilterGroup();
-			statements.Each(s => @group.Statements.Add(s));
-			return @group;
+			var group = new FilterGroup();
+			statements.Each(s => group.Statements.Add(s));
+			return group;
 		}
 
 		private static IEnumerable<FilterStatement> TranslateFilterStatement(Expression expression)

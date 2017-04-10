@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Streaming
 #if !DEBUG
 		[Ignore("Only to be run in DEBUG configuration.")]
 #endif
-		public void CheckItemsUnivoquenessThrowsWhenConflictingReplacementPatterns()
+		public void CheckItemsUniquenessThrowsWhenConflictingReplacementPatterns()
 		{
 			Assert.That(
 				() => new XmlTranslationSet {
@@ -42,28 +42,6 @@ namespace Be.Stateless.BizTalk.Streaming
 				Throws.ArgumentException.With.Message.EqualTo(
 					"[sourceUrnA], [sourceUrnB] matchingPatterns have respectively the following conflicting replacementPatterns: " +
 						"[targetUrnA1, targetUrnA2], [targetUrnB1, targetUrnB2]."));
-		}
-
-		[Test]
-		public void UnionWithOverride()
-		{
-			var contextReplacementSet = new XmlTranslationSet {
-				Override = true,
-				Items = new[] { new XmlNamespaceTranslation("contextSourceUrn", "contextTargetUrn") }
-			};
-			var pipelineReplacementSet = new XmlTranslationSet {
-				Items = new[] { new XmlNamespaceTranslation("pipelineSourceUrn", "pipelineTargetUrn") }
-			};
-
-			Assert.That(
-				contextReplacementSet.Union(pipelineReplacementSet),
-				Is.EqualTo(
-					new XmlTranslationSet {
-						Override = true,
-						Items = new[] {
-							new XmlNamespaceTranslation("contextSourceUrn", "contextTargetUrn")
-						}
-					}));
 		}
 
 		[Test]
@@ -92,6 +70,28 @@ namespace Be.Stateless.BizTalk.Streaming
 							new XmlNamespaceTranslation("contextSourceUrn", "contextTargetUrn"),
 							new XmlNamespaceTranslation("commonSourceUrn", "commonTargetUrn"),
 							new XmlNamespaceTranslation("pipelineSourceUrn", "pipelineTargetUrn")
+						}
+					}));
+		}
+
+		[Test]
+		public void UnionWithOverride()
+		{
+			var contextReplacementSet = new XmlTranslationSet {
+				Override = true,
+				Items = new[] { new XmlNamespaceTranslation("contextSourceUrn", "contextTargetUrn") }
+			};
+			var pipelineReplacementSet = new XmlTranslationSet {
+				Items = new[] { new XmlNamespaceTranslation("pipelineSourceUrn", "pipelineTargetUrn") }
+			};
+
+			Assert.That(
+				contextReplacementSet.Union(pipelineReplacementSet),
+				Is.EqualTo(
+					new XmlTranslationSet {
+						Override = true,
+						Items = new[] {
+							new XmlNamespaceTranslation("contextSourceUrn", "contextTargetUrn")
 						}
 					}));
 		}

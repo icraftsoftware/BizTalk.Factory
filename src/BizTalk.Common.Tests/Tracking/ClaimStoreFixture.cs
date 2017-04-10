@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			MessageMock = new Unit.Message.Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
 			ResourceTrackerMock = new Mock<IResourceTracker>();
 
-			_ssoSettingsReaderinstance = SsoSettingsReader.Instance;
+			_ssoSettingsReaderInstance = SsoSettingsReader.Instance;
 			SsoSettingsReaderMock = new Mock<ISsoSettingsReader>();
 			SsoSettingsReader.Instance = SsoSettingsReaderMock.Object;
 		}
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Tracking
 		[TearDown]
 		public void TearDown()
 		{
-			SsoSettingsReader.Instance = _ssoSettingsReaderinstance;
+			SsoSettingsReader.Instance = _ssoSettingsReaderInstance;
 
 			File.Delete(Path.Combine(Path.GetTempPath(), "cca95baa39ab4e25a3c54971ea170911"));
 			Directory.GetFiles(Path.GetTempPath(), "*.chk").Each(File.Delete);
@@ -264,7 +264,7 @@ namespace Be.Stateless.BizTalk.Tracking
 			// setup a mock's callback to ensure that, even if the BizTalk.Factory SSO store is deployed, the call will look for an SSO store that does not exist
 			SsoSettingsReaderMock
 				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
-				.Callback(() => _ssoSettingsReaderinstance.ReadString("NONEXISTENT_APPLICATION", BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Callback(() => _ssoSettingsReaderInstance.ReadString("NONEXISTENT_APPLICATION", BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 
 			var trackingStreamMock = new Mock<TrackingStream>(FakeTextStream.Create(1024 * 1024)) { CallBase = true };
@@ -528,6 +528,6 @@ namespace Be.Stateless.BizTalk.Tracking
 
 		private Mock<ISsoSettingsReader> SsoSettingsReaderMock { get; set; }
 
-		private ISsoSettingsReader _ssoSettingsReaderinstance;
+		private ISsoSettingsReader _ssoSettingsReaderInstance;
 	}
 }

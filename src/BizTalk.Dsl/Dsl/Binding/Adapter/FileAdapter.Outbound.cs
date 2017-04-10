@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			protected override void Validate()
 			{
-				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination folder.");
-				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbond file adapter has no destination file name.");
-				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbond file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
+				if (DestinationFolder.IsNullOrEmpty()) throw new BindingException("Outbound file adapter has no destination folder.");
+				if (FileName.IsNullOrEmpty()) throw new BindingException("Outbound file adapter has no destination file name.");
+				if (UseTempFileOnWrite && Mode != CopyMode.CreateNew) throw new BindingException("Outbound file adapter cannot use a temporary file when it is meant to append or overwrite an existing file.");
 				if (!Path.IsNetworkPath(DestinationFolder) && !NetworkCredentials.UserName.IsNullOrEmpty()) throw new BindingException("Alternate credentials to access the file folder cannot be supplied while accessing local drive or a mapped network drive.");
 			}
 

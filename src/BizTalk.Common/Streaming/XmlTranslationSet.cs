@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ namespace Be.Stateless.BizTalk.Streaming
 	[XmlRoot(ElementName = "XmlTranslations", Namespace = NAMESPACE)]
 	public class XmlTranslationSet : IEquatable<XmlTranslationSet>
 	{
+		#region Operators
+
 		public static bool operator ==(XmlTranslationSet left, XmlTranslationSet right)
 		{
 			return Equals(left, right);
@@ -38,6 +40,8 @@ namespace Be.Stateless.BizTalk.Streaming
 		{
 			return !Equals(left, right);
 		}
+
+		#endregion
 
 		#region IEquatable<XmlTranslationSet> Members
 
@@ -71,19 +75,19 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		#endregion
 
-		[XmlAttribute("override")]
-		public bool Override { get; set; }
-
 		[XmlElement("NamespaceTranslation")]
 		public XmlNamespaceTranslation[] Items
 		{
 			get { return _items; }
 			set
 			{
-				CheckItemsUnivoqueness(value);
+				CheckItemsUniqueness(value);
 				_items = value;
 			}
 		}
+
+		[XmlAttribute("override")]
+		public bool Override { get; set; }
 
 		public XmlTranslationSet Union(XmlTranslationSet second)
 		{
@@ -92,10 +96,8 @@ namespace Be.Stateless.BizTalk.Streaming
 				: new XmlTranslationSet { Items = Items.Union(second.Items).ToArray() };
 		}
 
-		#region Helpers
-
 		[Conditional("DEBUG")]
-		internal static void CheckItemsUnivoqueness(IEnumerable<XmlNamespaceTranslation> items)
+		private void CheckItemsUniqueness(IEnumerable<XmlNamespaceTranslation> items)
 		{
 			var conflictingReplacements = items
 				// find MatchingPatterns declared multiple times
@@ -112,10 +114,7 @@ namespace Be.Stateless.BizTalk.Streaming
 						string.Join("], [", conflictingReplacements.Select(g => string.Join(", ", g.Select(nr => nr.ReplacementPattern).ToArray())).ToArray())));
 		}
 
-		#endregion
-
 		public const string NAMESPACE = "urn:schemas.stateless.be:biztalk:translations:2013:07";
-
 		public static readonly XmlTranslationSet Empty = new XmlTranslationSet { Items = new XmlNamespaceTranslation[] { } };
 		private XmlNamespaceTranslation[] _items;
 	}

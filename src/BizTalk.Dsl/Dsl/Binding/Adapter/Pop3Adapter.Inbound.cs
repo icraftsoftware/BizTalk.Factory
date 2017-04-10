@@ -34,7 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <remarks>
 		/// The POP3 receive adapter retrieves e-mail from a specified mailbox on a specified POP3 server. By default, the
 		/// POP3 receive adapter applies MIME processing to the e-mail messages that it downloads and submits these
-		/// messages to BizTalk Server as multipart BizTalk messages. The POP3 receive adapter can receive and process
+		/// messages to BizTalk Server as multi-part BizTalk messages. The POP3 receive adapter can receive and process
 		/// e-mail in the following formats:
 		/// <list type="bullet">
 		/// <item>Plain text</item>
@@ -89,7 +89,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			/// <summary>
 			/// Specify whether to apply MIME decoding to messages received by the POP3 adapter. MIME decoding is used to
-			/// parse the incoming message and any attachments into a multipart BizTalk message.
+			/// parse the incoming message and any attachments into a multi-part BizTalk message.
 			/// </summary>
 			/// <remarks>
 			/// <para>

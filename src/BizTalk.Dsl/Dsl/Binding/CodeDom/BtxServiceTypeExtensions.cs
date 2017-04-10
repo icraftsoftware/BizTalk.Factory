@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			@namespace.Imports.Add(new CodeNamespaceImport(typeof(GeneratedCodeAttribute).Namespace));
 			@namespace.Imports.Add(new CodeNamespaceImport(typeof(OrchestrationBindingBase<>).Namespace));
 			@namespace.Imports.Add(new CodeNamespaceImport(type.Namespace));
-			var @class = new CodeTypeDeclaration(type.Name + ORCHESTRATIONBINDING_SUFFIX) {
+			var @class = new CodeTypeDeclaration(type.Name + ORCHESTRATION_BINDING_SUFFIX) {
 				IsClass = true,
 				IsPartial = true,
 				TypeAttributes = TypeAttributes.NotPublic
@@ -120,7 +120,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			}
 		}
 
-		internal const string ORCHESTRATIONBINDING_SUFFIX = "OrchestrationBinding";
+		internal const string ORCHESTRATION_BINDING_SUFFIX = "OrchestrationBinding";
 		private static readonly AssemblyName _assemblyName = Assembly.GetExecutingAssembly().GetName();
 
 		private static readonly string[] _referencedAssemblyNames = {

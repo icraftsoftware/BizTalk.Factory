@@ -77,7 +77,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		}
 
 		[Test]
-		public void HonoursMessageContextExtensionRequirements()
+		public void HonorsMessageContextExtensionRequirements()
 		{
 			var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root></root>");
 			var contextMock = new Mock<IBaseMessageContext>();
@@ -110,7 +110,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		}
 
 		[Test]
-		public void ThrowIfCannotHonourMessageContextExtensionRequirements()
+		public void ThrowIfCannotHonorMessageContextExtensionRequirements()
 		{
 			var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root></root>");
 			var transform = typeof(AnyToAddPart);

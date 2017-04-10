@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -34,6 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Interop
 	/// Provides an object with a property bag in which the object can save its properties persistently.
 	/// </summary>
 	/// <seealso href="Microsoft.BizTalk.Internal.BTMPropertyBag" />
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class PropertyBag : IPropertyBag, Microsoft.BizTalk.ExplorerOM.IPropertyBag, IXmlSerializable
 	{
 		internal PropertyBag()
@@ -179,7 +181,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Interop
 				case TypeCode.String:
 					return VarEnum.VT_BSTR;
 				default:
-					throw new ArgumentException("Type not supported.", "type");
+					throw new ArgumentException(string.Format("Type not supported [TypeCode:{0}].", Type.GetTypeCode(type)), "type");
 			}
 		}
 

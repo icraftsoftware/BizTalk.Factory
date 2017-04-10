@@ -52,9 +52,9 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <summary>
 		/// Applies an XSL transformation to the specified <paramref name="sourceMessage"/>. The XSL transformation to be
 		/// applied is specified in <paramref name="mapType"/>. The supplied <paramref name="trackingContext"/> is
-		/// propagated to the resulting message. This method does by default "the right thing" with multipart messages: it
-		/// takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single part
-		/// named "Main".
+		/// propagated to the resulting message. This method does by default "the right thing" with multi-part messages:
+		/// it takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single
+		/// part named "Main".
 		/// </summary>
 		/// <param name="sourceMessage">The <see cref="XLANGMessage"/> to be transformed.</param>
 		/// <param name="mapType">The type of the BizTalk map class containing the transform to apply.</param>
@@ -70,9 +70,9 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <summary>
 		/// Applies an XSL transformation to the specified <paramref name="sourceMessage"/>. The XSL transformation to be
 		/// applied is specified in <paramref name="mapType"/>. The supplied <paramref name="trackingContext"/> is
-		/// propagated to the resulting message. This method does by default "the right thing" with multipart messages: it
-		/// takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single part
-		/// named "Main".
+		/// propagated to the resulting message. This method does by default "the right thing" with multi-part messages:
+		/// it takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single
+		/// part named "Main".
 		/// </summary>
 		/// <param name="trackingContext">The <see cref="TrackingContext"/> to be copied in the context of the output message.</param>
 		/// <param name="mapType">The type of the BizTalk map class containing the transform to apply.</param>
@@ -232,7 +232,7 @@ namespace Be.Stateless.BizTalk.Transform
 				using (var stream = (Stream) sourceMessage[0].RetrieveAs(typeof(Stream)))
 				using (var xmlReader = new XmlTextReader(stream))
 				{
-					Stream response = Transform(xmlReader, mapType, Encoding.UTF8, DEFAULT_BUFFER_SIZE, DEFAULT_THRESHOLD_SIZE, null);
+					var response = Transform(xmlReader, mapType, Encoding.UTF8, DEFAULT_BUFFER_SIZE, DEFAULT_THRESHOLD_SIZE, null);
 					destinationMessage.AddPart(string.Empty, destinationPartName);
 					destinationMessage[destinationPartName].LoadFrom(response);
 				}
@@ -246,9 +246,9 @@ namespace Be.Stateless.BizTalk.Transform
 		/// <summary>
 		/// Applies an XSL transformation to the specified <paramref name="sourceMessage"/>. The XSL transformation to be
 		/// applied is specified in <paramref name="mapType"/>. The supplied <paramref name="trackingContext"/> is
-		/// propagated to the resulting message. This method does by default "the right thing" with multipart messages: it
-		/// takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single part
-		/// named "Main".
+		/// propagated to the resulting message. This method does by default "the right thing" with multi-part messages:
+		/// it takes the first part of the <paramref name="sourceMessage"/> and creates an output message with a single
+		/// part named "Main".
 		/// </summary>
 		/// <param name="sourceMessage">
 		/// The <see cref="XLANGMessage"/> to be transformed.

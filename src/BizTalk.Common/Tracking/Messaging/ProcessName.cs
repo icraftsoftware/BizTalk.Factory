@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -67,6 +68,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 	internal static class ProcessNamesExtensions
 	{
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException", Justification = "Preceeded by a call to IsProcessNameClass in client's code.")]
 		public static IEnumerable<string> GetProcessNames(this Type type)
 		{
 			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public;

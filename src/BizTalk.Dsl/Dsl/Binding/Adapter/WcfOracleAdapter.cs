@@ -225,7 +225,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region Binding Tab - Buffer Management Settings
 
 		/// <summary>
-		/// Specifies the amount of data in bytes that ODP.NET fetches from the result set in one server roundtrip.
+		/// Specifies the amount of data in bytes that ODP.NET fetches from the result set in one server round-trip.
 		/// </summary>
 		/// <remarks>
 		/// <para>

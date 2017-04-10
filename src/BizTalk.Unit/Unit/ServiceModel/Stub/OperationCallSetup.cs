@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
 using Be.Stateless.BizTalk.Unit.ServiceModel.Stub.Language;
@@ -72,6 +73,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel.Stub
 		#endregion
 	}
 
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	internal class OperationCallSetup<TContract, TResult> : OperationCallSetup, IOperationCallSetup<TContract, TResult>
 		where TContract : class
 	{

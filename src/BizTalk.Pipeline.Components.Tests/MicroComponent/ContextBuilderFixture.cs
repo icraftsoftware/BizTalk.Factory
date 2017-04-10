@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void ContextBuilderPluginExecutionIsDeferred()
 		{
-			using (var inputStram = new MemoryStream(Encoding.Unicode.GetBytes(new string('A', 512))))
+			using (var inputStream = new MemoryStream(Encoding.Unicode.GetBytes(new string('A', 512))))
 			{
-				MessageMock.Object.BodyPart.Data = inputStram;
+				MessageMock.Object.BodyPart.Data = inputStream;
 
 				var sut = new ContextBuilder {
 					BuilderType = typeof(DummyBuilder),
@@ -62,9 +62,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void ContextBuilderPluginExecutionIsImmediate()
 		{
-			using (var inputStram = new MemoryStream(Encoding.Unicode.GetBytes(new string('A', 512))))
+			using (var inputStream = new MemoryStream(Encoding.Unicode.GetBytes(new string('A', 512))))
 			{
-				MessageMock.Object.BodyPart.Data = inputStram;
+				MessageMock.Object.BodyPart.Data = inputStream;
 
 				var sut = new ContextBuilder {
 					BuilderType = typeof(DummyBuilder),

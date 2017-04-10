@@ -103,10 +103,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				var annotationsMock = new Mock<ISchemaAnnotations>();
 				annotationsMock.Setup(am => am.Extractors).Returns(
 					new PropertyExtractorCollection(
-						new[] {
-							new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
-							new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")
-						}));
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
+						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")));
 				SchemaMetadataMock.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
 
 				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);

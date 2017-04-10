@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,25 +44,25 @@ namespace Be.Stateless.BizTalk.Dsl
 	public interface IFluentInterface
 	{
 		/// <summary>
-		/// Redeclaration that hides the <see cref="object.Equals(object)"/> method from IntelliSense.
+		/// Redeclaration that hides the <see cref="object.Equals(object)"/> method from Intellisense.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		bool Equals(object other);
 
 		/// <summary>
-		/// Redeclaration that hides the <see cref="object.GetHashCode()"/> method from IntelliSense.
+		/// Redeclaration that hides the <see cref="object.GetHashCode()"/> method from Intellisense.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		int GetHashCode();
 
 		/// <summary>
-		/// Redeclaration that hides the <see cref="object.GetType()"/> method from IntelliSense.
+		/// Redeclaration that hides the <see cref="object.GetType()"/> method from Intellisense.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		Type GetType();
 
 		/// <summary>
-		/// Redeclaration that hides the <see cref="object.ToString()"/> method from IntelliSense.
+		/// Redeclaration that hides the <see cref="object.ToString()"/> method from Intellisense.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		string ToString();

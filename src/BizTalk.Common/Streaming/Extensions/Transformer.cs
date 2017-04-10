@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 	/// Provides map/transform extensions to XML streams.
 	/// </summary>
 	/// <seealso cref="StreamExtensions.Transform(System.IO.Stream)"/>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	internal class Transformer : ITransformStream
 	{
 		public Transformer(Stream[] streams)
@@ -91,7 +93,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 
 		#region Helpers
 
-		private static XslCompiledTransformDescriptor LookupTransformDescriptor(Type transform)
+		private XslCompiledTransformDescriptor LookupTransformDescriptor(Type transform)
 		{
 			return XsltCache.Instance[transform];
 		}

@@ -32,7 +32,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 	/// Binding DSL base class for all WCF-based BizTalk Server Adapters.
 	/// </summary>
 	/// <typeparam name="TAddress">
-	/// The address configuration type to which the actual adpater will be connected to. It typically is either <see
+	/// The address configuration type to which the actual adapter will be connected to. It typically is either <see
 	/// cref="EndpointAddress"/> or derived from <see cref="ConnectionUri"/>.
 	/// </typeparam>
 	/// <typeparam name="TBinding">

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,11 +34,6 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 	// ReSharper disable UnusedAutoPropertyAccessor.Global
 	public class MessageBody
 	{
-		public string EncodedBody { get; set; }
-		public string EncodedBodyType { get; set; }
-		public MessagingStep MessagingStep { get; set; }
-		public string MessagingStepActivityID { get; set; }
-
 		public string Body
 		{
 			get
@@ -55,6 +50,20 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
+		public bool ClaimAvailable
+		{
+			get { return HasBeenClaimed && File.Exists(Path.Combine(MonitoringConfigurationSection.Current.ClaimStoreDirectory, EncodedBody)); }
+		}
+
+		public string EncodedBody { get; set; }
+
+		public string EncodedBodyType { get; set; }
+
+		public bool HasBeenClaimed
+		{
+			get { return EncodedBodyType.IfNotNull(value => value == MessageBodyCaptureMode.Claimed.ToString()); }
+		}
+
 		public bool HasContent
 		{
 			get
@@ -65,15 +74,9 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
-		public bool HasBeenClaimed
-		{
-			get { return EncodedBodyType.IfNotNull(value => value == MessageBodyCaptureMode.Claimed.ToString()); }
-		}
+		public MessagingStep MessagingStep { get; set; }
 
-		public bool ClaimAvailabe
-		{
-			get { return HasBeenClaimed && File.Exists(Path.Combine(MonitoringConfigurationSection.Current.ClaimStoreDirectory, EncodedBody)); }
-		}
+		public string MessagingStepActivityID { get; set; }
 
 		public string MimeType
 		{
@@ -123,7 +126,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		{
 			get
 			{
-				return ClaimAvailabe
+				return ClaimAvailable
 					? (Stream) File.OpenRead(Path.Combine(MonitoringConfigurationSection.Current.ClaimStoreDirectory, EncodedBody))
 					: new StringStream(string.Format("The captured payload entry '{0}' is not yet available in the central store.", EncodedBody));
 			}

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 	/// either a real <see cref="System.Runtime.Caching.MemoryCache"/> for .NET 4.0 (from System.runtime.Caching
 	/// assembly) and onwards or a simple substitute for it otherwise (from this assembly).
 	/// </remarks>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public abstract class Cache<TKey, TItem>
 	{
 		/// <summary>

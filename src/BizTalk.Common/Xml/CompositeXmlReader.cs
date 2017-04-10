@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -57,6 +58,7 @@ namespace Be.Stateless.BizTalk.Xml
 	/// </para>
 	/// </remarks>
 	/// <seealso cref="Microsoft.XLANGs.Core.Service.CompositeStreamReader"/>
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public class CompositeXmlReader : XmlReaderWrapper
 	{
 		#region Nested Type: CompoundXmlReader
@@ -113,7 +115,7 @@ namespace Be.Stateless.BizTalk.Xml
 			var enumerable = readers as XmlReader[] ?? readers.ToArray(); // checks that streams is not null as well
 			if (!enumerable.Any()) throw new ArgumentException("List of compound XmlReaders is empty.", "readers");
 
-			// ensuring all compound XmlReaders share the same XmlNameTable requires to turn them into streams that'll be
+			// ensuring all compound XmlReaders share the same XmlNameTable requires to turn them into streams that will be
 			// wrapped again into other new XmlReaders that, this time, offer explicit control on the XmlNameTable. At
 			// least this is necessary for System.Xml.XmlTextReaderImpl ---a common default XmlReader implementation
 			// returned by XmlReader.Create(),--- as it does not honor the virtual NameTable property getter when accessing
