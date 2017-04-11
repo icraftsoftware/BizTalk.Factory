@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
@@ -30,8 +29,7 @@ using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.XPath;
 using Be.Stateless.Extensions;
-using Be.Stateless.Linq;
-using Be.Stateless.Logging;
+using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.Streaming;
@@ -134,7 +132,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	{
 		public ContextPropertyExtractor()
 		{
-			Extractors = new PropertyExtractorCollection();
+			Extractors = PropertyExtractorCollection.Empty;
 		}
 
 		#region IMicroPipelineComponent Members
@@ -142,17 +140,21 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		public IBaseMessage Execute(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			var extractors = BuildExtractorCollection(pipelineContext, message);
-			if (extractors.Any())
+			var extractors = BuildPropertyExtractorCollection(pipelineContext, message);
+			var xpathExtractors = extractors.OfType<XPathExtractor>().ToArray();
+			var otherExtractors = extractors.Except(xpathExtractors).ToArray();
+			if (otherExtractors.Any())
 			{
-				// TODO handle simple PropertyExtractor and ConstantExtractor
-				// TODO handle clear, demote, ignore, promote, write
+				otherExtractors.Each(pe => pe.Execute(message.Context));
+			}
+			if (xpathExtractors.Any())
+			{
 				// setup a stream that will invoke our callback whenever an XPathExtractor's XPath expression is matched
 				message.BodyPart.WrapOriginalDataStream(
 					originalStream => XPathMutatorStreamFactory.Create(
 						originalStream,
-						extractors.OfType<XPathExtractor>(),
-						(propertyName, value, extractionMode) => OnMatch(message.Context, propertyName, value, extractionMode)),
+						xpathExtractors,
+						() => message.Context),
 					pipelineContext.ResourceTracker);
 			}
 			return message;
@@ -173,7 +175,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
-		internal IEnumerable<PropertyExtractor> BuildExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
+		internal IEnumerable<PropertyExtractor> BuildPropertyExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
 		{
 			var messageType = message.GetProperty(BtsProperties.MessageType);
 			if (messageType.IsNullOrEmpty())
@@ -183,37 +185,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 					pipelineContext.ResourceTracker);
 				messageType = message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
 			}
-			if (messageType.IsNullOrEmpty()) return Extractors;
-
 			var schemaMetadata = pipelineContext.GetSchemaMetadataByType(messageType, false);
-			var schemaAnnotations = schemaMetadata.Annotations.Extractors;
-
-			// TODO take extractorPrecedence into account, right now precedence is always given to schema annotations if they exist
-
-			return schemaAnnotations.Any()
-				// merge configured and schema-annotated extractors so as to give precedence to schema annotations.
-				// Union enumerates first and second in that order and yields each element that has not already been
-				// yielded, see http://msdn.microsoft.com/en-us/library/bb358407(v=VS.90)
-				? schemaAnnotations.Union(Extractors).Union(Extractors, new LambdaComparer<PropertyExtractor>((le, re) => le.PropertyName == re.PropertyName))
-				: Extractors;
+			var schemaExtractors = schemaMetadata.Annotations.Extractors;
+			return schemaExtractors.Union(Extractors);
 		}
-
-		private void OnMatch(IBaseMessageContext messageContext, XmlQualifiedName propertyName, string value, ExtractionMode extractionMode)
-		{
-			// TODO handle clear, demote, ignore, promote, write
-
-			if (extractionMode == ExtractionMode.Promote)
-			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Promoting property {0} with value {1} into context.", propertyName, value);
-				messageContext.Promote(propertyName.Name, propertyName.Namespace, value);
-			}
-			else
-			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Writing property {0} with value {1} into context.", propertyName, value);
-				messageContext.Write(propertyName.Name, propertyName.Namespace, value);
-			}
-		}
-
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(ContextPropertyExtractor));
 	}
 }

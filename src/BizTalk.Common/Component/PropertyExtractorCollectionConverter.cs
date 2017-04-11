@@ -49,10 +49,10 @@ namespace Be.Stateless.BizTalk.Component
 		/// <seealso cref="Serialize"/>
 		public static PropertyExtractorCollection Deserialize(string xml)
 		{
-			var collection = new PropertyExtractorCollection();
-			if (xml.IsNullOrEmpty()) return collection;
+			if (xml.IsNullOrEmpty()) return PropertyExtractorCollection.Empty;
 			using (var reader = XmlReader.Create(new StringReader(xml), new XmlReaderSettings { IgnoreWhitespace = true, IgnoreComments = true }))
 			{
+				var collection = new PropertyExtractorCollection();
 				collection.ReadXml(reader);
 				return collection;
 			}

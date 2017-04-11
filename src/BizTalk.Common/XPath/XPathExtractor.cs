@@ -17,9 +17,11 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.Logging;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.XPath;
 
@@ -30,6 +32,7 @@ namespace Be.Stateless.BizTalk.XPath
 	/// being processed by the <c>Be.Stateless.BizTalk.Component.ContextPropertyExtractorComponent</c> pipeline
 	/// component.
 	/// </summary>
+	[SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global", Justification = "Necessary for mocking purposes.")]
 	public class XPathExtractor : PropertyExtractor, IEquatable<XPathExtractor>
 	{
 		#region Operators
@@ -98,5 +101,30 @@ namespace Be.Stateless.BizTalk.XPath
 		#endregion
 
 		public XPathExpression XPathExpression { get; private set; }
+
+		public virtual void Execute(IBaseMessageContext messageContext, string originalValue, ref string newValue)
+		{
+			if (ExtractionMode == ExtractionMode.Write)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Writing property {0} with value {1} to context.", PropertyName, originalValue);
+				messageContext.Write(PropertyName.Name, PropertyName.Namespace, originalValue);
+			}
+			else if (ExtractionMode == ExtractionMode.Promote)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Promoting property {0} with value {1} to context.", PropertyName, originalValue);
+				messageContext.Promote(PropertyName.Name, PropertyName.Namespace, originalValue);
+			}
+			else if (ExtractionMode == ExtractionMode.Demote)
+			{
+				newValue = messageContext.Read(PropertyName.Name, PropertyName.Namespace).ToString();
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Demoting property {0} with value {1} from context.", PropertyName, newValue);
+			}
+			else
+			{
+				base.Execute(messageContext);
+			}
+		}
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(XPathExtractor));
 	}
 }

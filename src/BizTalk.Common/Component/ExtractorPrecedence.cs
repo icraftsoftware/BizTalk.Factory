@@ -26,8 +26,7 @@ namespace Be.Stateless.BizTalk.Component
 	/// <para>
 	/// <see cref="PropertyExtractorCollection"/> can only be declared at 2 places, via XML schema annotations or via
 	/// pipeline configuration. By default, precedence will be given to the <see cref="PropertyExtractorCollection"/>
-	/// being declared closest to the runtime execution point; hence the default <see cref="ExtractorPrecedence"/>: <see
-	/// cref="Pipeline"/>.
+	/// being declared by XML schema annotations.
 	/// </para>
 	/// <para>
 	/// Should conflicting <see cref="ExtractorPrecedence"/>s be declared by XML schema annotations and pipeline
@@ -43,27 +42,27 @@ namespace Be.Stateless.BizTalk.Component
 	public enum ExtractorPrecedence
 	{
 		/// <summary>
-		/// <see cref="PropertyExtractorCollection"/> declared by pipeline configuration have precedence over the one
-		/// declared by XML schema annotations.
-		/// </summary>
-		Pipeline = 0,
-
-		/// <summary>
 		/// <see cref="PropertyExtractorCollection"/> declared by XML schema annotations have precedence over the one
 		/// declared by pipeline configuration.
 		/// </summary>
-		Schema,
-
-		/// <summary>
-		/// Only the <see cref="PropertyExtractorCollection"/> declared by pipeline configuration is taken into account
-		/// and the one declared by XML schema annotations is ignored.
-		/// </summary>
-		PipelineOnly,
+		Schema = 0,
 
 		/// <summary>
 		/// Only <see cref="PropertyExtractorCollection"/> declared by XML schema annotations is taken into account and
 		/// the one declared by pipeline configuration is ignored.
 		/// </summary>
-		SchemaOnly
+		SchemaOnly,
+
+		/// <summary>
+		/// <see cref="PropertyExtractorCollection"/> declared by pipeline configuration have precedence over the one
+		/// declared by XML schema annotations.
+		/// </summary>
+		Pipeline,
+
+		/// <summary>
+		/// Only the <see cref="PropertyExtractorCollection"/> declared by pipeline configuration is taken into account
+		/// and the one declared by XML schema annotations is ignored.
+		/// </summary>
+		PipelineOnly
 	}
 }

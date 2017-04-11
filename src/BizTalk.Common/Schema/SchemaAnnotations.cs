@@ -88,7 +88,7 @@ namespace Be.Stateless.BizTalk.Schema
 
 			public PropertyExtractorCollection Extractors
 			{
-				get { return new PropertyExtractorCollection(); }
+				get { return PropertyExtractorCollection.Empty; }
 			}
 
 			#endregion
@@ -121,7 +121,7 @@ namespace Be.Stateless.BizTalk.Schema
 						extractorCollection.ReadXml(p.CreateReader());
 						return extractorCollection;
 					})
-				?? new PropertyExtractorCollection();
+				?? PropertyExtractorCollection.Empty;
 
 			return new SchemaAnnotations {
 				EnvelopingMap = envelopeMap,

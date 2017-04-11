@@ -16,13 +16,16 @@
 
 #endregion
 
+using System;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.XPath;
+using Microsoft.BizTalk.XPath;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Component
@@ -31,6 +34,23 @@ namespace Be.Stateless.BizTalk.Component
 	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class PropertyExtractorCollectionFixture
 	{
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[SuppressMessage("ReSharper", "AccessToModifiedClosure")]
+		public void PropertyExtractorCollectionEmptyIsImmutable()
+		{
+			var sut = PropertyExtractorCollection.Empty;
+			Assert.That(sut.Any(), Is.False);
+			Assert.That(sut, Is.SameAs(PropertyExtractorCollection.Empty));
+			using (var reader = XmlReader.Create(new StringReader("")))
+			{
+				Assert.That(() => sut.ReadXml(reader), Throws.TypeOf<NotSupportedException>());
+			}
+
+			sut = new PropertyExtractor[] { new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write) };
+			Assert.That(sut, Is.Not.SameAs(PropertyExtractorCollection.Empty));
+		}
+
 		[Test]
 		public void ReadXml()
 		{
@@ -294,7 +314,7 @@ namespace Be.Stateless.BizTalk.Component
 				Assert.That(
 					() => sut.ReadXml(reader),
 					Throws.TypeOf<ConfigurationErrorsException>()
-						.With.InnerException.TypeOf<Microsoft.BizTalk.XPath.XPathException>()
+						.With.InnerException.TypeOf<XPathException>()
 						// ReSharper disable once StringLiteralTypo
 						.With.InnerException.Message.StartsWith("Bad Query string encoundered in XPath:"));
 			}
@@ -460,6 +480,339 @@ namespace Be.Stateless.BizTalk.Component
 		}
 
 		[Test]
+		public void UnionWithPipelineOnlyPrecedenceOfEmptySchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = PropertyExtractorCollection.Empty;
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.PipelineOnly,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(pipelineExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelineOnlyPrecedenceOfSchemaAndEmptyPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(ExtractorPrecedence.PipelineOnly);
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(schemaExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelineOnlyPrecedenceOfSchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.PipelineOnly,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(pipelineExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelinePrecedenceOfEmptySchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = PropertyExtractorCollection.Empty;
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Pipeline,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(pipelineExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelinePrecedenceOfSchemaAndEmptyPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(ExtractorPrecedence.Pipeline);
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(schemaExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelinePrecedenceOfSchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Pipeline,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = pipelineExtractors.Concat(
+				new PropertyExtractor[] {
+					new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+					new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write)
+				});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelinePrecedenceOfSchemaAndPipelineExtractorsHavingPipelinePropertyExtractorsToBeIgnored()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Clear),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Clear),
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Pipeline,
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Ignore),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Ignore),
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = pipelineExtractors
+				.Where(pe => pe.ExtractionMode != ExtractionMode.Ignore)
+				.Concat(
+					new PropertyExtractor[] {
+						new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+						new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write)
+					});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithPipelinePrecedenceOfSchemaAndPipelineExtractorsHavingSchemaPropertyExtractorsToBeIgnored()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Ignore),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Ignore),
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Pipeline,
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Clear),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Clear),
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = pipelineExtractors.Concat(
+				new PropertyExtractor[] {
+					new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+					new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write)
+				});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaOnlyPrecedenceOfEmptySchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = PropertyExtractorCollection.Empty;
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.SchemaOnly,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(pipelineExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaOnlyPrecedenceOfSchemaAndEmptyPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(ExtractorPrecedence.SchemaOnly);
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(schemaExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaOnlyPrecedenceOfSchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.SchemaOnly,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(schemaExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaPrecedenceOfEmptySchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = PropertyExtractorCollection.Empty;
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Schema,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(pipelineExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaPrecedenceOfSchemaAndEmptyPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(ExtractorPrecedence.Schema);
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(schemaExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaPrecedenceOfSchemaAndPipelineExtractors()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Schema,
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = schemaExtractors.Concat(
+				new PropertyExtractor[] {
+					new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+					new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote)
+				});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaPrecedenceOfSchemaAndPipelineExtractorsHavingPipelinePropertyExtractorsToBeIgnored()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Clear),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Clear),
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Schema,
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Ignore),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Ignore),
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = schemaExtractors.Concat(
+				new PropertyExtractor[] {
+					new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+					new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote)
+				});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithSchemaPrecedenceOfSchemaAndPipelineExtractorsHavingSchemaPropertyExtractorsToBeIgnored()
+		{
+			var schemaExtractors = new PropertyExtractorCollection(
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Ignore),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Ignore),
+				new ConstantExtractor(new XmlQualifiedName("cso-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("xso-prop", "urn"), "*/other-node", ExtractionMode.Write),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Write));
+
+			var pipelineExtractors = new PropertyExtractorCollection(
+				ExtractorPrecedence.Schema,
+				new PropertyExtractor(new XmlQualifiedName("prop1", "urn"), ExtractionMode.Clear),
+				new PropertyExtractor(new XmlQualifiedName("prop2", "urn"), ExtractionMode.Clear),
+				new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote),
+				new ConstantExtractor(new XmlQualifiedName("c-prop", "urn"), "constant", ExtractionMode.Promote),
+				new XPathExtractor(new XmlQualifiedName("x-prop", "urn"), "*/other-node", ExtractionMode.Promote));
+
+			var expectedExtractors = schemaExtractors
+				.Where(pe => pe.ExtractionMode != ExtractionMode.Ignore)
+				.Concat(
+					new PropertyExtractor[] {
+						new ConstantExtractor(new XmlQualifiedName("cpo-prop", "urn"), "constant", ExtractionMode.Promote),
+						new XPathExtractor(new XmlQualifiedName("xpo-prop", "urn"), "*/other-node", ExtractionMode.Promote)
+					});
+
+			Assert.That(schemaExtractors.Union(pipelineExtractors), Is.EqualTo(expectedExtractors));
+		}
+
+		[Test]
+		public void UnionWithWhateverPrecedenceOfEmptySchemaAndEmptyPipelineExtractors()
+		{
+			Assert.That(PropertyExtractorCollection.Empty.Union(new PropertyExtractorCollection(ExtractorPrecedence.PipelineOnly)), Is.Empty);
+			Assert.That(PropertyExtractorCollection.Empty.Union(new PropertyExtractorCollection(ExtractorPrecedence.Pipeline)), Is.Empty);
+			Assert.That(PropertyExtractorCollection.Empty.Union(new PropertyExtractorCollection(ExtractorPrecedence.SchemaOnly)), Is.Empty);
+			Assert.That(PropertyExtractorCollection.Empty.Union(new PropertyExtractorCollection(ExtractorPrecedence.Schema)), Is.Empty);
+		}
+
+		[Test]
 		public void WriteXml()
 		{
 			var xml = string.Format(
@@ -475,12 +828,10 @@ namespace Be.Stateless.BizTalk.Component
 			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
 				var sut = new PropertyExtractorCollection(
-					new[] {
-						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
-						new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote),
-						new ConstantExtractor(new XmlQualifiedName("Property3", "urn"), "constant", ExtractionMode.Promote),
-						new PropertyExtractor(new XmlQualifiedName("Property4", "urn"), ExtractionMode.Clear),
-					});
+					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+					new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote),
+					new ConstantExtractor(new XmlQualifiedName("Property3", "urn"), "constant", ExtractionMode.Promote),
+					new PropertyExtractor(new XmlQualifiedName("Property4", "urn"), ExtractionMode.Clear));
 				sut.WriteXml(writer);
 			}
 
@@ -500,11 +851,8 @@ namespace Be.Stateless.BizTalk.Component
 			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
 				var sut = new PropertyExtractorCollection(
-					new[] {
-						new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write)
-					}) {
-						Precedence = ExtractorPrecedence.PipelineOnly
-					};
+					ExtractorPrecedence.PipelineOnly,
+					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write));
 				sut.WriteXml(writer);
 			}
 

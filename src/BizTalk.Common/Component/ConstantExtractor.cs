@@ -20,6 +20,8 @@ using System;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.Extensions;
+using Be.Stateless.Logging;
+using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Component
 {
@@ -78,6 +80,24 @@ namespace Be.Stateless.BizTalk.Component
 			return Equals((ConstantExtractor) other);
 		}
 
+		public override void Execute(IBaseMessageContext messageContext)
+		{
+			if (ExtractionMode == ExtractionMode.Write)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Writing property {0} with value {1} to context.", PropertyName, Value);
+				messageContext.Write(PropertyName.Name, PropertyName.Namespace, Value);
+			}
+			else if (ExtractionMode == ExtractionMode.Promote)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Promoting property {0} with value {1} to context.", PropertyName, Value);
+				messageContext.Promote(PropertyName.Name, PropertyName.Namespace, Value);
+			}
+			else
+			{
+				base.Execute(messageContext);
+			}
+		}
+
 		public override int GetHashCode()
 		{
 			unchecked
@@ -100,5 +120,7 @@ namespace Be.Stateless.BizTalk.Component
 		#endregion
 
 		public string Value { get; private set; }
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(ConstantExtractor));
 	}
 }

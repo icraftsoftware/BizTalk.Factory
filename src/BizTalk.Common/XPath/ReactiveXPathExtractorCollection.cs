@@ -20,18 +20,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml;
-using Be.Stateless.BizTalk.Component;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
+using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.Streaming;
 using Microsoft.BizTalk.XPath;
 
 namespace Be.Stateless.BizTalk.XPath
 {
 	/// <summary>
-	/// Essentially an <see cref="XPathCollection"/> but natively supports and handles <see cref="XPathMutatorStream"/>'s
-	/// <see cref="XPathMutatorStream.Mutator"/> callbacks.
+	/// Essentially an <see cref="XPathCollection"/>, which moreover supports and handles <see
+	/// cref="XPathMutatorStream"/>'s <see cref="XPathMutatorStream.Mutator"/> callbacks.
 	/// </summary>
 	internal class ReactiveXPathExtractorCollection : XPathCollection
 	{
@@ -46,10 +45,10 @@ namespace Be.Stateless.BizTalk.XPath
 
 		#endregion
 
-		internal ReactiveXPathExtractorCollection(IEnumerable<XPathExtractor> xpathExtractors, Action<XmlQualifiedName, string, ExtractionMode> extractionDelegate)
+		internal ReactiveXPathExtractorCollection(IEnumerable<XPathExtractor> xpathExtractors, Func<IBaseMessageContext> messageContextAccessor)
 		{
 			if (xpathExtractors == null) throw new ArgumentNullException("xpathExtractors");
-			if (extractionDelegate == null) throw new ArgumentNullException("extractionDelegate");
+			if (messageContextAccessor == null) throw new ArgumentNullException("messageContextAccessor");
 
 			xpathExtractors.GroupBy(e => e.XPathExpression.XPath)
 				.Each(
@@ -62,7 +61,7 @@ namespace Be.Stateless.BizTalk.XPath
 						var index = Add(extractorGroup.Key);
 						_xpathMatches.Insert(index, new XPathMatch { Extractors = extractorGroup });
 					});
-			_extractionDelegate = extractionDelegate;
+			_messageContextAccessor = messageContextAccessor;
 		}
 
 		internal void OnMatch(int xpathCollectionIndex, XPathExpression xpathExpression, string originalValue, ref string newValue)
@@ -75,13 +74,16 @@ namespace Be.Stateless.BizTalk.XPath
 			// only the first match is taken into account so far
 			if (++xpathMatch.Count != 1) return;
 
+			var messageContext = _messageContextAccessor();
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("Matching occurrence {0} of XPath {1}.", xpathMatch.Count, xpathExpression.XPath);
-			xpathMatch.Extractors
-				.Each(xpe => _extractionDelegate(xpe.PropertyName, originalValue, xpe.ExtractionMode));
+			foreach (var xpe in xpathMatch.Extractors)
+			{
+				xpe.Execute(messageContext, originalValue, ref newValue);
+			}
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ReactiveXPathExtractorCollection));
-		private readonly Action<XmlQualifiedName, string, ExtractionMode> _extractionDelegate;
+		private readonly Func<IBaseMessageContext> _messageContextAccessor;
 		private readonly IList<XPathMatch> _xpathMatches = new List<XPathMatch>();
 	}
 }

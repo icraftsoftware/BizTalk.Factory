@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Tracking.Messaging;
+using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 
@@ -28,6 +29,16 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 {
 	public static class PipelineContextExtensions
 	{
+		#region Mock's Factory Hook Point
+
+		internal static Func<IPipelineContext, IActivityFactory> ActivityFactoryFactory
+		{
+			get { return _activityFactoryFactory; }
+			set { _activityFactoryFactory = value; }
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Tracking-activity factory for messaging-only activities.
 		/// </summary>
@@ -91,7 +102,8 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		public static ISchemaMetadata GetSchemaMetadataByType(this IPipelineContext pipelineContext, string docType, bool throwOnError)
 		{
 			if (throwOnError) return pipelineContext.GetSchemaMetadataByType(docType);
-
+			// avoid costly and useless try/catch when no docType
+			if (docType.IsNullOrEmpty()) return SchemaMetadata.Unknown;
 			try
 			{
 				return pipelineContext.GetSchemaMetadataByType(docType);
@@ -107,16 +119,6 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		{
 			return (IKernelTransaction) ((IPipelineContextEx) pipelineContext).GetTransaction();
 		}
-
-		#region Mock's Factory Hook Point
-
-		internal static Func<IPipelineContext, IActivityFactory> ActivityFactoryFactory
-		{
-			get { return _activityFactoryFactory; }
-			set { _activityFactoryFactory = value; }
-		}
-
-		#endregion
 
 		private static Func<IPipelineContext, IActivityFactory> _activityFactoryFactory = pipelineContext => new ActivityFactory(pipelineContext);
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(PipelineContextExtensions));

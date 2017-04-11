@@ -16,15 +16,16 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml;
+using System.IO;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Streaming;
+using Be.Stateless.BizTalk.Unit;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.IO.Extensions;
+using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.XPath
@@ -38,7 +39,7 @@ namespace Be.Stateless.BizTalk.XPath
 		[SetUp]
 		public void TestSetup()
 		{
-			_matches = new List<Tuple<XmlQualifiedName, string, ExtractionMode>>();
+			MessageContextMock = new MessageContextMock();
 		}
 
 		#endregion
@@ -52,27 +53,48 @@ namespace Be.Stateless.BizTalk.XPath
 				new XPathExtractor(TrackingProperties.ProcessName.QName, "/letter/*/subject", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations", ExtractionMode.Write),
-				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/signature", ExtractionMode.Write),
+				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/signature", ExtractionMode.Write)
 			};
 
 			var stream = XPathMutatorStreamFactory.Create(
 				ResourceManager.Load("Data.UnqualifiedLetter.xml"),
 				extractors,
-				(propertyName, value, extractionMode) => _matches.Add(Tuple.Create(propertyName, value, extractionMode)));
+				() => MessageContextMock.Object);
 
 			stream.Drain();
 
-			Assert.That(
-				_matches,
-				Is.EqualTo(
-					new[] {
-						Tuple.Create(TrackingProperties.ProcessName.QName, "inquiry", ExtractionMode.Write),
-						Tuple.Create(BizTalkFactoryProperties.SenderName.QName, "info@world.com", ExtractionMode.Promote),
-						Tuple.Create(BizTalkFactoryProperties.ReceiverName.QName, "francois.chabot@gmail.com", ExtractionMode.Promote),
-						Tuple.Create(TrackingProperties.Value1.QName, "paragraph-one", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value2.QName, "King regards,", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value3.QName, "John Doe", ExtractionMode.Write)
-					}));
+			MessageContextMock.Verify(c => c.Promote(BizTalkFactoryProperties.SenderName, "info@world.com"));
+			MessageContextMock.Verify(c => c.Promote(BizTalkFactoryProperties.ReceiverName, "francois.chabot@gmail.com"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.ProcessName, "inquiry"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value1, "paragraph-one"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value2, "King regards,"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value3, "John Doe"));
+		}
+
+		[Test]
+		public void MatchAndDemote()
+		{
+			var extractors = new[] {
+				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph[1]", ExtractionMode.Demote),
+				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph[2]", ExtractionMode.Demote),
+				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph[3]", ExtractionMode.Demote)
+			};
+
+			using (var stream = XPathMutatorStreamFactory.Create(ResourceManager.Load("Data.UnqualifiedLetter.xml"), extractors, () => MessageContextMock.Object))
+			using (var reader = new StreamReader(stream))
+			{
+				MessageContextMock.Setup(c => c.GetProperty(TrackingProperties.Value1)).Returns("same-paragraph");
+				Assert.That(
+					reader.ReadToEnd(),
+					Is.EqualTo(
+						ResourceManager
+							.LoadString("Data.UnqualifiedLetter.xml")
+							.Substring(38) // skip xml declaration
+							.Replace("paragraph-one", "same-paragraph")
+							.Replace("paragraph-two", "same-paragraph")
+							.Replace("paragraph-six", "same-paragraph")
+						));
+			}
 		}
 
 		[Test]
@@ -81,24 +103,19 @@ namespace Be.Stateless.BizTalk.XPath
 			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/paragraph", ExtractionMode.Write),
-				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph", ExtractionMode.Write),
+				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph", ExtractionMode.Write)
 			};
 
 			var stream = XPathMutatorStreamFactory.Create(
 				ResourceManager.Load("Data.UnqualifiedLetter.xml"),
 				extractors,
-				(propertyName, value, extractionMode) => _matches.Add(Tuple.Create(propertyName, value, extractionMode)));
+				() => MessageContextMock.Object);
 
 			stream.Drain();
 
-			Assert.That(
-				_matches,
-				Is.EqualTo(
-					new[] {
-						Tuple.Create(TrackingProperties.Value1.QName, "paragraph-one", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value2.QName, "paragraph-one", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value3.QName, "paragraph-one", ExtractionMode.Write)
-					}));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value1, "paragraph-one"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value2, "paragraph-one"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value3, "paragraph-one"));
 		}
 
 		[Test]
@@ -107,24 +124,19 @@ namespace Be.Stateless.BizTalk.XPath
 			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.ProcessName.QName, "/*[local-name()='letter']/*/*[local-name()='subject']", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value1.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph']", ExtractionMode.Write),
-				new XPathExtractor(TrackingProperties.Value3.QName, "/*[local-name()='letter']/*/*[local-name()='signature']", ExtractionMode.Write),
+				new XPathExtractor(TrackingProperties.Value3.QName, "/*[local-name()='letter']/*/*[local-name()='signature']", ExtractionMode.Write)
 			};
 
 			var stream = XPathMutatorStreamFactory.Create(
 				ResourceManager.Load("Data.QualifiedLetter.xml"),
 				extractors,
-				(propertyName, value, extractionMode) => _matches.Add(Tuple.Create(propertyName, value, extractionMode)));
+				() => MessageContextMock.Object);
 
 			stream.Drain();
 
-			Assert.That(
-				_matches,
-				Is.EqualTo(
-					new[] {
-						Tuple.Create(TrackingProperties.ProcessName.QName, "inquiry", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value1.QName, "paragraph-one", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value3.QName, "John Doe", ExtractionMode.Write)
-					}));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.ProcessName, "inquiry"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value1, "paragraph-one"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value3, "John Doe"));
 		}
 
 		[Test]
@@ -139,12 +151,13 @@ namespace Be.Stateless.BizTalk.XPath
 			var stream = XPathMutatorStreamFactory.Create(
 				ResourceManager.Load("Data.QualifiedLetter.xml"),
 				extractors,
-				(propertyName, value, extractionMode) => _matches.Add(Tuple.Create(propertyName, value, extractionMode)));
+				() => MessageContextMock.Object);
 
 			stream.Drain();
 
 			// !!IMPORTANT!! XPathMutatorStream does not support such expressions and henceforth does not perform any succeeding match
-			Assert.That(_matches.Count, Is.EqualTo(0));
+			MessageContextMock.Verify(c => c.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			MessageContextMock.Verify(c => c.Write(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
 		}
 
 		[Test]
@@ -153,26 +166,21 @@ namespace Be.Stateless.BizTalk.XPath
 			var extractors = new[] {
 				new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph[1]", ExtractionMode.Write),
 				new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/paragraph[2]", ExtractionMode.Write),
-				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph[3]", ExtractionMode.Write),
+				new XPathExtractor(TrackingProperties.Value3.QName, "/letter/*/paragraph[3]", ExtractionMode.Write)
 			};
 
 			var stream = XPathMutatorStreamFactory.Create(
 				ResourceManager.Load("Data.UnqualifiedLetter.xml"),
 				extractors,
-				(propertyName, value, extractionMode) => _matches.Add(Tuple.Create(propertyName, value, extractionMode)));
+				() => MessageContextMock.Object);
 
 			stream.Drain();
 
-			Assert.That(
-				_matches,
-				Is.EqualTo(
-					new[] {
-						Tuple.Create(TrackingProperties.Value1.QName, "paragraph-one", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value2.QName, "paragraph-two", ExtractionMode.Write),
-						Tuple.Create(TrackingProperties.Value3.QName, "paragraph-six", ExtractionMode.Write)
-					}));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value1, "paragraph-one"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value2, "paragraph-two"));
+			MessageContextMock.Verify(c => c.SetProperty(TrackingProperties.Value3, "paragraph-six"));
 		}
 
-		private List<Tuple<XmlQualifiedName, string, ExtractionMode>> _matches;
+		private MessageContextMock MessageContextMock { get; set; }
 	}
 }

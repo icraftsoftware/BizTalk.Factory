@@ -20,6 +20,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.Extensions;
+using Be.Stateless.Logging;
+using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Component
 {
@@ -93,5 +95,28 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			if (ExtractionMode != default(ExtractionMode)) writer.WriteAttributeString("mode", ExtractionMode.ToString().ToCamelCase());
 		}
+
+		public virtual void Execute(IBaseMessageContext messageContext)
+		{
+			if (ExtractionMode == ExtractionMode.Clear)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Clearing property {0} from context.", PropertyName);
+				if (messageContext.IsPromoted(PropertyName.Name, PropertyName.Namespace))
+				{
+					messageContext.Promote(PropertyName.Name, PropertyName.Namespace, null);
+				}
+				messageContext.Write(PropertyName.Name, PropertyName.Namespace, null);
+			}
+			else if (ExtractionMode == ExtractionMode.Ignore)
+			{
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Ignoring property {0} from context.", PropertyName);
+			}
+			else
+			{
+				throw new InvalidOperationException(string.Format("Unexpected ExtractionMode '{0}'.", ExtractionMode));
+			}
+		}
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(PropertyExtractor));
 	}
 }

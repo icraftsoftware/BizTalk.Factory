@@ -89,11 +89,8 @@ namespace Be.Stateless.BizTalk.Component
 
 			var sut = new PropertyExtractorCollectionConverter();
 			var extractorCollection = new PropertyExtractorCollection(
-				new[] {
-					new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
-					new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote)
-				});
-
+				new XPathExtractor(new XmlQualifiedName("Property1", "urn"), "*/some-node", ExtractionMode.Write),
+				new XPathExtractor(new XmlQualifiedName("Property2", "urn"), "*/other-node", ExtractionMode.Promote));
 			Assert.That(
 				sut.ConvertTo(extractorCollection, typeof(string)),
 				Is.EqualTo(xml));

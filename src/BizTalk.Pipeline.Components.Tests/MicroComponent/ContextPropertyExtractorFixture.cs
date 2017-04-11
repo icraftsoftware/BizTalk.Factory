@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -63,51 +64,29 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		#endregion
 
 		[Test]
-		public void BuildExtractorCollectionDoesNothing()
+		public void BuildPropertyExtractorCollectionGivesPrecedenceToSchemaExtractorsOverPipelineExtractors()
 		{
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
-				MessageMock.Object.BodyPart.Data = inputStream;
-				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
-
-				var sut = new ContextPropertyExtractor {
-					Extractors = new[] {
-						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
-					}
-				};
-				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
-
-				Assert.That(extractors, Is.SameAs(sut.Extractors));
-			}
-		}
-
-		[Test]
-		public void BuildExtractorCollectionGivesPrecedenceToSchemaExtractorsOverPipelineExtractors()
-		{
-			SchemaMetadataMock = new Mock<ISchemaMetadata>();
-			SchemaBaseExtensions.SchemaMetadataFactory = type => SchemaMetadataMock.Object;
-
-			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
-			{
-				MessageMock.Object.BodyPart.Data = inputStream;
-				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
-
-				var sut = new ContextPropertyExtractor {
-					Extractors = new[] {
-						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
-					}
-				};
-
 				var annotationsMock = new Mock<ISchemaAnnotations>();
 				annotationsMock.Setup(am => am.Extractors).Returns(
 					new PropertyExtractorCollection(
 						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/to", ExtractionMode.Demote),
 						new XPathExtractor(TrackingProperties.Value2.QName, "/letter/*/salutations")));
+				SchemaMetadataMock = new Mock<ISchemaMetadata>();
 				SchemaMetadataMock.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
+				SchemaBaseExtensions.SchemaMetadataFactory = type => SchemaMetadataMock.Object;
 
-				var extractors = sut.BuildExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
+
+				var sut = new ContextPropertyExtractor {
+					Extractors = new[] {
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
+					}
+				};
+				var extractors = sut.BuildPropertyExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
 
 				Assert.That(
 					extractors,
@@ -121,6 +100,27 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[Test]
+		public void BuildPropertyExtractorCollectionYieldsPipelineExtractorsWhenNoSchemaExtractors()
+		{
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
+
+				var sut = new ContextPropertyExtractor {
+					Extractors = new[] {
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
+						new XPathExtractor(TrackingProperties.Value1.QName, "/letter/*/paragraph")
+					}
+				};
+				var extractors = sut.BuildPropertyExtractorCollection(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(extractors, Is.EqualTo(sut.Extractors));
+			}
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void Deserialize()
 		{
 			var microPipelineComponentType = typeof(ContextPropertyExtractor);
@@ -129,13 +129,12 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				microPipelineComponentType.AssemblyQualifiedName);
 			using (var reader = XmlReader.Create(new StringStream(xml)))
 			{
-				// ReSharper disable once AccessToDisposedClosure
 				Assert.That(() => reader.DeserializeMicroPipelineComponent(), Throws.Nothing);
 			}
 		}
 
 		[Test]
-		public void DoesNothingWhenCannotFindDocumentSpecification()
+		public void DoesNothingWhenNoSchemaNorPipelineExtractors()
 		{
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<unknown></unknown>")))
 			{
@@ -146,8 +145,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
-				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
 
 				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
 				MessageMock.Verify(m => m.Context.Write(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
@@ -155,22 +154,97 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[Test]
-		public void DoesNothingWhenNoXPathExtractors()
+		public void MessageContextManipulationsAreDelegatedToPropertyExtractors()
+		{
+			const string content = "<s1:letter xmlns:s1=\"urn-one\">"
+				+ "<s1:headers><s1:subject>inquiry</s1:subject></s1:headers>"
+				+ "<s1:body>"
+				+ "<s1:paragraph>paragraph-one</s1:paragraph>"
+				+ "<s1:footer>trail</s1:footer>"
+				+ "</s1:body>" +
+				"</s1:letter>";
+
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(content)))
+			{
+				var propertyExtractorMock = new Mock<PropertyExtractor>(BizTalkFactoryProperties.SenderName.QName, ExtractionMode.Clear) { CallBase = true };
+				var constantExtractorMock = new Mock<ConstantExtractor>(TrackingProperties.Value2.QName, "value2", ExtractionMode.Write) { CallBase = true };
+				var xpathExtractorMock = new Mock<XPathExtractor>(TrackingProperties.Value1.QName, "/*[local-name()='letter']/*/*[local-name()='paragraph']", ExtractionMode.Write) {
+					CallBase = true
+				};
+
+				var annotationsMock = new Mock<ISchemaAnnotations>();
+				annotationsMock.Setup(am => am.Extractors).Returns(
+					new PropertyExtractorCollection(
+						propertyExtractorMock.Object,
+						constantExtractorMock.Object
+						));
+				SchemaMetadataMock = new Mock<ISchemaMetadata>();
+				SchemaMetadataMock.Setup(sm => sm.Annotations).Returns(annotationsMock.Object);
+				SchemaBaseExtensions.SchemaMetadataFactory = type => SchemaMetadataMock.Object;
+
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn-one#letter");
+
+				var sut = new ContextPropertyExtractor {
+					Extractors = new[] {
+						new XPathExtractor(TrackingProperties.ProcessName.QName, "/*[local-name()='letter']/*/*[local-name()='subject']", ExtractionMode.Promote),
+						xpathExtractorMock.Object,
+						new XPathExtractor(TrackingProperties.Value3.QName, "/*[local-name()='letter']/*/*[local-name()='footer']")
+					}
+				};
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+				MessageMock.Object.BodyPart.Data.Drain();
+
+				propertyExtractorMock.Verify(pe => pe.Execute(MessageMock.Object.Context));
+				constantExtractorMock.Verify(pe => pe.Execute(MessageMock.Object.Context));
+				//var newValue = "paragraph-one";
+				// TODO not supported by moq xpathExtractorMock.Verify(pe => pe.Execute(MessageMock.Object.Context, "paragraph-one", ref newValue));
+
+				MessageMock.Verify(m => m.SetProperty(BizTalkFactoryProperties.SenderName, null));
+				MessageMock.Verify(m => m.SetProperty(TrackingProperties.Value1, "paragraph-one"));
+				MessageMock.Verify(m => m.SetProperty(TrackingProperties.Value2, "value2"));
+				MessageMock.Verify(m => m.SetProperty(TrackingProperties.Value3, "trail"));
+				MessageMock.Verify(m => m.Promote(TrackingProperties.ProcessName, "inquiry"));
+			}
+		}
+
+		[Test]
+		public void OriginalDataStreamIsNotWrappedWhenThereIsNoXPathExtractors()
 		{
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
 			{
 				MessageMock.Object.BodyPart.Data = inputStream;
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
 
-				var sut = new ContextPropertyExtractor();
+				var sut = new ContextPropertyExtractor {
+					Extractors = new[] {
+						new ConstantExtractor(TrackingProperties.ProcessName.QName, "process.name")
+					}
+				};
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
-				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
+			}
+		}
 
-				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
-				MessageMock.Verify(m => m.Context.Write(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+		[Test]
+		public void OriginalDataStreamIsWrappedInXPathMutatorStreamWhenThereIsXPathExtractors()
+		{
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+
+				var sut = new ContextPropertyExtractor {
+					Extractors = new[] {
+						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote)
+					}
+				};
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(MessageMock.Object.BodyPart.Data, Is.TypeOf<XPathMutatorStream>());
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.AtLeastOnce);
 			}
 		}
 
@@ -189,48 +263,6 @@ namespace Be.Stateless.BizTalk.MicroComponent
 					string.Format(
 						"<mComponent name=\"{0}\"><Extractors /></mComponent>",
 						component.GetType().AssemblyQualifiedName)));
-		}
-
-		[Test]
-		public void UpdateMessageContext()
-		{
-			const string content = "<s1:letter xmlns:s1='urn-one'>" +
-				"<s1:headers><s1:subject>inquiry</s1:subject></s1:headers>" +
-				"<s1:body><s1:paragraph>paragraph-one</s1:paragraph></s1:body>" +
-				"</s1:letter>";
-			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(content)))
-			{
-				MessageMock.Object.BodyPart.Data = inputStream;
-
-				var sut = new ContextPropertyExtractor {
-					Extractors = new[] {
-						new XPathExtractor(TrackingProperties.ProcessName.QName, "/*[local-name()='letter']/*/*[local-name()='subject']", ExtractionMode.Promote),
-					}
-				};
-				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-				MessageMock.Object.BodyPart.Data.Drain();
-
-				MessageMock.Verify(m => m.Promote(TrackingProperties.ProcessName, "inquiry"));
-			}
-		}
-
-		[Test]
-		public void WrapsOriginalDataStreamInXPathMutatorStream()
-		{
-			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
-			{
-				MessageMock.Object.BodyPart.Data = inputStream;
-
-				var sut = new ContextPropertyExtractor {
-					Extractors = new[] {
-						new XPathExtractor(BizTalkFactoryProperties.SenderName.QName, "/letter/*/from", ExtractionMode.Promote),
-					}
-				};
-				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-				Assert.That(MessageMock.Object.BodyPart.Data, Is.TypeOf<XPathMutatorStream>());
-			}
 		}
 
 		private Mock<ISchemaMetadata> SchemaMetadataMock { get; set; }
