@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<EnvelopeSpecName, string> EnvelopeSpecName
 			= new MessageContextProperty<EnvelopeSpecName, string>();
+
+		public static readonly MessageContextProperty<EnvironmentTag, string> EnvironmentTag
+			= new MessageContextProperty<EnvironmentTag, string>();
 
 		public static readonly MessageContextProperty<MapTypeName, string> MapTypeName
 			= new MessageContextProperty<MapTypeName, string>();
