@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			{
 				yield return "<ns0:Any xmlns:ns0='urn:schemas.stateless.be:biztalk:any:2012:12'>";
 				yield return "<CorrelationToken>embedded-correlation-token</CorrelationToken>";
+				yield return "<EnvironmentTag>embedded-environment-tag</EnvironmentTag>";
 				yield return "<OutboundTransportLocation>outbound-transport-location</OutboundTransportLocation>";
 				yield return "<ReceiverName>embedded-receiver-name</ReceiverName>";
 				yield return "<SenderName>embedded-sender-name</SenderName>";

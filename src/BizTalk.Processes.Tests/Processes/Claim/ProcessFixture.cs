@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 		{
 			const string tokenUrl = "payload-data-file";
 			const string correlationToken = "correlation-token-2";
+			const string environmentTag = "environment-tag-2";
 			const string receiverName = "receiver-name-2";
 			const string senderName = "sender-name-2";
 			const string extraContent = "<extra-content>"
@@ -74,7 +75,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 				+ "<record><field1>value1</field1><field2>value2</field2><field3>value3</field3></record>"
 				+ "</extra-content>"
 				+ "<optional-content><node>value</node></optional-content>";
-			InsertToken(tokenUrl, correlationToken, "text-message-type-2", receiverName, senderName, extraContent);
+			InsertToken(tokenUrl, correlationToken, environmentTag, "text-message-type-2", receiverName, senderName, extraContent);
 			new StringStream("This payload has been claimed to disk.").DropToFolder(CheckOutFolder, tokenUrl);
 			ReleaseTokenFromDatabase(tokenUrl);
 
@@ -155,6 +156,7 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// claim-specific context properties are captured
 			Assert.That(tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.CorrelationToken).Value, Is.EqualTo("embedded-correlation-token"));
+			Assert.That(tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.EnvironmentTag).Value, Is.EqualTo("embedded-environment-tag"));
 			Assert.That(tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.ReceiverName).Value, Is.EqualTo("embedded-receiver-name"));
 			Assert.That(tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.SenderName).Value, Is.EqualTo("embedded-sender-name"));
 
@@ -194,6 +196,9 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 			Assert.That(
 				tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.CorrelationToken),
 				Has.Property("Value").EqualTo("embedded-correlation-token").And.Property("IsPromoted").True);
+			Assert.That(
+				tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.EnvironmentTag),
+				Has.Property("Value").EqualTo("embedded-environment-tag").And.Property("IsPromoted").True);
 			Assert.That(
 				tokenMessagingStep.Context.GetProperty(BizTalkFactoryProperties.ReceiverName),
 				Has.Property("Value").EqualTo("embedded-receiver-name").And.Property("IsPromoted").True);

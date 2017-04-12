@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,8 +49,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 		[Test]
 		public void AsMessageBodyCaptureDescriptorThrowsWhenInvalidClaimTokenMessage()
 		{
-			//var originalStream = new StringStream("<root>text</root>");
-			var originalStream = new StringStream("<ns0:CheckOut xmlns:ns0='urn:schemas.stateless.be:biztalk:claim:2013:04'></ns0:CheckOut>");
+			var originalStream = new StringStream("<ns0:CheckOut xmlns:ns0='urn:schemas.stateless.be:biztalk:claim:2017:04'></ns0:CheckOut>");
 			var part = new Mock<IBaseMessagePart>();
 			part.Setup(p => p.GetOriginalDataStream())
 				.Returns(originalStream);

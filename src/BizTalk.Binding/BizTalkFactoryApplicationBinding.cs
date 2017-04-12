@@ -158,7 +158,7 @@ namespace Be.Stateless.BizTalk
 						sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 						sp.Filter = new Filter(() => ErrorReportProperties.ErrorType == "FailedMessage");
 					})
-			);
+				);
 			ReceivePorts.Add(
 				_batchReceivePort = ReceivePort(
 					rp => {
@@ -250,7 +250,7 @@ namespace Be.Stateless.BizTalk
 									rl.Transport.Host = CommonSettings.ReceiveHost;
 								}));
 					})
-			);
+				);
 		}
 
 		#region Base Class Member Overrides
@@ -306,7 +306,7 @@ namespace Be.Stateless.BizTalk
 							sp.Transport.RetryPolicy = RetryPolicy.RealTime;
 							sp.Filter = new Filter(() => BtsProperties.ReceivePortName == _batchReceivePort.Name);
 						})
-				);
+					);
 
 				ReceivePorts.Add(
 					ReceivePort(
@@ -370,6 +370,7 @@ namespace Be.Stateless.BizTalk
 															new ContextPropertyExtractor {
 																Extractors = new[] {
 																	new XPathExtractor(BizTalkFactoryProperties.CorrelationToken, "/*[local-name()='Any']/*[local-name()='CorrelationToken']"),
+																	new XPathExtractor(BizTalkFactoryProperties.EnvironmentTag, "/*[local-name()='Any']/*[local-name()='EnvironmentTag']"),
 																	new XPathExtractor(BizTalkFactoryProperties.OutboundTransportLocation, "/*[local-name()='Any']/*[local-name()='OutboundTransportLocation']"),
 																	new XPathExtractor(BizTalkFactoryProperties.ReceiverName, "/*[local-name()='Any']/*[local-name()='ReceiverName']"),
 																	new XPathExtractor(BizTalkFactoryProperties.SenderName, "/*[local-name()='Any']/*[local-name()='SenderName']"),
@@ -409,7 +410,7 @@ namespace Be.Stateless.BizTalk
 											});
 										rl.Transport.Host = CommonSettings.ReceiveHost;
 									})
-							);
+								);
 						}));
 			}
 		}

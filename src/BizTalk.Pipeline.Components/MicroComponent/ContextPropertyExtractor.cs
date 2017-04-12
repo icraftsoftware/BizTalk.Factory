@@ -94,12 +94,12 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// <para>
 	/// If the configured XPath expressions lead to multiple matches in the message, only the first match value is taken
 	/// into account for extraction (i.e. write or promote) and other matches are discarded. The component can possibly
-	/// be slightly enhanced to take a specific match index into account, by modifying the <see cref="OnMatch"/> method.
-	/// Given the limitations of the component, it could be necessary to change its implementation in the future if it
-	/// cannot meet the new requirements that may arise. The current implementation uses a full streaming approach, and
-	/// the alternate way to do it is using an <see cref="System.Xml.XPath.XPathNavigator"/> in combination with a <see
-	/// cref="VirtualStream"/>. That would allow almost all XPath queries of arbitrary complexity, at the cost of some
-	/// performance loss.
+	/// be slightly enhanced to take a specific match index into account, by modifying the <see
+	/// cref="ReactiveXPathExtractorCollection.OnMatch"/> method. Given the limitations of the component, it could be
+	/// necessary to change its implementation in the future if it cannot meet the new requirements that may arise. The
+	/// current implementation uses a full streaming approach, and the alternate way to do it is using an <see
+	/// cref="System.Xml.XPath.XPathNavigator"/> in combination with a <see cref="VirtualStream"/>. That would allow
+	/// almost all XPath queries of arbitrary complexity, at the cost of some performance loss.
 	/// </para>
 	/// </remarks>
 	/// <example>
@@ -118,9 +118,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// ]]></code>
 	/// </para>
 	/// <para>
-	/// Notice that the <c>san:extractorPrecedence</c> attribute is relevant only when configured at the
-	/// pipeline level and can only have one of the following values: <c>pipeline</c>, <c>pipelineOnly</c>,
-	/// <c>schema</c>, or <c>schemaOnly</c>.
+	/// Notice that the <c>san:extractorPrecedence</c> attribute is relevant only when configured at the pipeline level
+	/// and can only have one of the following values: <c>pipeline</c>, <c>pipelineOnly</c>, <c>schema</c>, or
+	/// <c>schemaOnly</c>.
 	/// </para>
 	/// </example>
 	/// <seealso cref="PropertyExtractorCollection"/>

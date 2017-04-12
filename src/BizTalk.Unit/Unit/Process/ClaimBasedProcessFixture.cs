@@ -42,6 +42,8 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 			public string CorrelationToken { get; set; }
 
+			public string EnvironmentTag { get; set; }
+
 			public string MessageType { get; set; }
 
 			public string OutboundTransportLocation { get; set; }
@@ -121,6 +123,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 						r => new ClaimToken {
 							Url = r["Url"].ToString(),
 							CorrelationToken = r["CorrelationToken"].ToString(),
+							EnvironmentTag = r["EnvironmentTag"].ToString(),
 							MessageType = r["MessageType"].ToString(),
 							OutboundTransportLocation = r["OutboundTransportLocation"].ToString(),
 							ProcessActivityId = r["ProcessActivityId"].ToString(),
@@ -132,15 +135,23 @@ namespace Be.Stateless.BizTalk.Unit.Process
 			}
 		}
 
-		internal void InsertToken(string tokenUrl, string correlationToken, string messageType = null, string receiverName = null, string senderName = null, string any = null)
+		internal void InsertToken(
+			string tokenUrl,
+			string correlationToken,
+			string environmentTag = null,
+			string messageType = null,
+			string receiverName = null,
+			string senderName = null,
+			string any = null)
 		{
-			const string cmdText = "INSERT claim_Tokens (Url, CorrelationToken, MessageType, ReceiverName, SenderName, [Any])"
-				+ " VALUES(@url, @correlationToken, @messageType, @receiverName, @senderName, @any)";
+			const string cmdText = "INSERT claim_Tokens (Url, CorrelationToken, EnvironmentTag, MessageType, ReceiverName, SenderName, [Any])"
+				+ " VALUES(@url, @correlationToken, @environmentTag, @messageType, @receiverName, @senderName, @any)";
 			using (var cnx = Connection)
 			using (var cmd = new SqlCommand(cmdText, cnx))
 			{
 				cmd.Parameters.AddWithValue("@url", tokenUrl);
 				cmd.Parameters.AddWithValue("@correlationToken", correlationToken.IsNullOrEmpty() ? (object) DBNull.Value : correlationToken);
+				cmd.Parameters.AddWithValue("@environmentTag", environmentTag.IsNullOrEmpty() ? (object) DBNull.Value : environmentTag);
 				cmd.Parameters.AddWithValue("@messageType", messageType.IsNullOrEmpty() ? (object) DBNull.Value : messageType);
 				cmd.Parameters.AddWithValue("@receiverName", receiverName.IsNullOrEmpty() ? (object) DBNull.Value : receiverName);
 				cmd.Parameters.AddWithValue("@senderName", senderName.IsNullOrEmpty() ? (object) DBNull.Value : senderName);

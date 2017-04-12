@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2012 - 2013 François Chabot, Yves Dierick
+Copyright © 2012 - 2017 François Chabot, Yves Dierick
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -848,7 +848,7 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[claim_Tokens]') AND type in (N'U'))
 DROP TABLE [dbo].[claim_Tokens]
 GO
-/****** Object:  Table [dbo].[claim_Tokens]    Script Date: 10/11/2013 15:39:40 ******/
+/****** Object:  Table [dbo].[claim_Tokens]    Script Date: 12/04/2017 09:44:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -859,6 +859,7 @@ CREATE TABLE [dbo].[claim_Tokens](
    [Url] [nvarchar](50) NOT NULL,
    [Available] [bit] NOT NULL,
    [CorrelationToken] [nvarchar](256) NULL,
+   [EnvironmentTag] [nvarchar](256) NULL,
    [MessageType] [nvarchar](256) NULL,
    [OutboundTransportLocation] [nvarchar](256) NULL,
    [ProcessActivityId] [nvarchar](32) NULL,
@@ -914,7 +915,7 @@ AS
    WHERE Available = 1
 GO
 
-/****** Object:  StoredProcedure [dbo].[usp_claim_CheckIn]    Script Date: 04/22/2013 13:20:42 ******/
+/****** Object:  StoredProcedure [dbo].[usp_claim_CheckIn]    Script Date: 04/12/2017 09:44:42 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_claim_CheckIn]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_claim_CheckIn]
 GO
@@ -924,11 +925,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =================================================================================================
 -- Author:      François Chabot
--- Create date: 22/04/2013
+-- Create date: 12/04/2017
 -- Description: Check in a new claim token.
 -- =================================================================================================
 CREATE PROCEDURE [dbo].[usp_claim_CheckIn] 
    @correlationToken nvarchar(256) = NULL,
+   @environmentTag nvarchar(256) = NULL,
    @messageType nvarchar(256) = NULL,
    @outboundTransportLocation nvarchar(256) = NULL,
    @processActivityId nvarchar(32) = NULL,
@@ -941,14 +943,14 @@ BEGIN
    -- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
    SET NOCOUNT ON;
 
-   INSERT INTO claim_Tokens (Url, CorrelationToken, MessageType, OutboundTransportLocation, ProcessActivityId, ReceiverName, SenderName, [Any])
-      VALUES (@url, @correlationToken, @messageType, @outboundTransportLocation, @processActivityId, @receiverName, @senderName, @any);
+   INSERT INTO claim_Tokens (Url, CorrelationToken, EnvironmentTag, MessageType, OutboundTransportLocation, ProcessActivityId, ReceiverName, SenderName, [Any])
+      VALUES (@url, @correlationToken, @environmentTag, @messageType, @outboundTransportLocation, @processActivityId, @receiverName, @senderName, @any);
 END
 GO
 GRANT EXECUTE ON [dbo].[usp_claim_CheckIn] TO [BTS_USERS] AS [dbo]
 GO
 
-/****** Object:  StoredProcedure [dbo].[usp_claim_Release]    Script Date: 04/22/2013 13:20:42 ******/
+/****** Object:  StoredProcedure [dbo].[usp_claim_Release]    Script Date: 04/12/2013 13:20:42 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_claim_Release]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_claim_Release]
 GO
@@ -977,7 +979,7 @@ GO
 GRANT EXECUTE ON [dbo].[usp_claim_Release] TO [BTS_USERS] AS [dbo]
 GO
 
-/****** Object:  StoredProcedure [dbo].[usp_claim_CheckOut]    Script Date: 04/22/2013 13:20:42 ******/
+/****** Object:  StoredProcedure [dbo].[usp_claim_CheckOut]    Script Date: 04/12/2017 09:44:42 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usp_claim_CheckOut]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[usp_claim_CheckOut]
 GO
@@ -987,13 +989,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =================================================================================================
 -- Author:      François Chabot
--- Create date: 07/07/2013
+-- Create date: 12/04/2017
 -- Description: Check out available claim tokens.
 --              The output, which has to match the Be.Stateless.BizTalk.Schemas.Xml.Claim.Tokens
 --              schema, will be as follows:
---              <env:Envelope xmlns:env="urn:schemas.stateless.be:biztalk:envelope:2013:07" xmlns:clm="urn:schemas.stateless.be:biztalk:claim:2013:04">
+--              <env:Envelope xmlns:env="urn:schemas.stateless.be:biztalk:envelope:2013:07" xmlns:clm="urn:schemas.stateless.be:biztalk:claim:2017:04">
 --                <clm:CheckOut>
 --                  <clm:CorrelationToken>...</clm:CorrelationToken>
+--                  <clm:EnvironmentTag>...</clm:EnvironmentTag>
 --                  <clm:MessageType>...</clm:MessageType>
 --                  <clm:OutboundTransportLocation>...</clm:OutboundTransportLocation>
 --                  <clm:ProcessActivityId>...</clm:ProcessActivityId>
@@ -1028,9 +1031,10 @@ BEGIN
 
    WITH XMLNAMESPACES (
       'urn:schemas.stateless.be:biztalk:envelope:2013:07' AS env,
-      'urn:schemas.stateless.be:biztalk:claim:2013:04' AS clm
+      'urn:schemas.stateless.be:biztalk:claim:2017:04' AS clm
    )
    SELECT CT.[CorrelationToken] AS 'clm:CorrelationToken',
+      CT.[EnvironmentTag] AS 'clm:EnvironmentTag',
       CT.[MessageType] AS 'clm:MessageType',
       CT.[OutboundTransportLocation] AS 'clm:OutboundTransportLocation',
       CT.[ProcessActivityId] AS 'clm:ProcessActivityId',

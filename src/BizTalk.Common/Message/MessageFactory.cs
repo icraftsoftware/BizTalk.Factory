@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,11 @@ namespace Be.Stateless.BizTalk.Message
 		public static XmlDocument CreateClaimCheck(string url)
 		{
 			if (url.IsNullOrEmpty()) throw new ArgumentNullException("url");
-			const string template = "<clm:Check xmlns:clm='urn:schemas.stateless.be:biztalk:claim:2013:04'><clm:Url>{0}</clm:Url></clm:Check>";
-			var message = CreateMessage<Claim.Check>(string.Format(template, url));
+			var message = CreateMessage<Claim.Check>(
+				string.Format(
+					"<clm:Check xmlns:clm='{0}'><clm:Url>{1}</clm:Url></clm:Check>",
+					_claimSchemaTargetNamespace,
+					url));
 			return message;
 		}
 
@@ -64,9 +67,12 @@ namespace Be.Stateless.BizTalk.Message
 		{
 			if (url.IsNullOrEmpty()) throw new ArgumentNullException("url");
 			if (messageType.IsNullOrEmpty()) return CreateClaimCheck(url);
-			const string template =
-				"<clm:Check xmlns:clm='urn:schemas.stateless.be:biztalk:claim:2013:04'><clm:MessageType>{0}</clm:MessageType><clm:Url>{1}</clm:Url></clm:Check>";
-			var message = CreateMessage<Claim.Check>(string.Format(template, messageType, url));
+			var message = CreateMessage<Claim.Check>(
+				string.Format(
+					"<clm:Check xmlns:clm='{0}'><clm:MessageType>{1}</clm:MessageType><clm:Url>{2}</clm:Url></clm:Check>",
+					_claimSchemaTargetNamespace,
+					messageType,
+					url));
 			return message;
 		}
 
@@ -82,8 +88,11 @@ namespace Be.Stateless.BizTalk.Message
 		public static XmlDocument CreateClaimCheckIn(string url)
 		{
 			if (url.IsNullOrEmpty()) throw new ArgumentNullException("url");
-			const string template = "<clm:CheckIn xmlns:clm='urn:schemas.stateless.be:biztalk:claim:2013:04'><clm:Url>{0}</clm:Url></clm:CheckIn>";
-			var message = CreateMessage<Claim.CheckIn>(string.Format(template, url));
+			var message = CreateMessage<Claim.CheckIn>(
+				string.Format(
+					"<clm:CheckIn xmlns:clm='{0}'><clm:Url>{1}</clm:Url></clm:CheckIn>",
+					_claimSchemaTargetNamespace,
+					url));
 			return message;
 		}
 
@@ -104,9 +113,12 @@ namespace Be.Stateless.BizTalk.Message
 		{
 			if (url.IsNullOrEmpty()) throw new ArgumentNullException("url");
 			if (messageType.IsNullOrEmpty()) return CreateClaimCheckIn(url);
-			const string template =
-				"<clm:CheckIn xmlns:clm='urn:schemas.stateless.be:biztalk:claim:2013:04'><clm:MessageType>{0}</clm:MessageType><clm:Url>{1}</clm:Url></clm:CheckIn>";
-			var message = CreateMessage<Claim.CheckIn>(string.Format(template, messageType, url));
+			var message = CreateMessage<Claim.CheckIn>(
+				string.Format(
+					"<clm:CheckIn xmlns:clm='{0}'><clm:MessageType>{1}</clm:MessageType><clm:Url>{2}</clm:Url></clm:CheckIn>",
+					_claimSchemaTargetNamespace,
+					messageType,
+					url));
 			return message;
 		}
 
@@ -122,8 +134,11 @@ namespace Be.Stateless.BizTalk.Message
 		public static XmlDocument CreateClaimCheckOut(string url)
 		{
 			if (url.IsNullOrEmpty()) throw new ArgumentNullException("url");
-			const string template = "<clm:CheckOut xmlns:clm='urn:schemas.stateless.be:biztalk:claim:2013:04'><clm:Url>{0}</clm:Url></clm:CheckOut>";
-			var message = CreateMessage<Claim.CheckOut>(string.Format(template, url));
+			var message = CreateMessage<Claim.CheckOut>(
+				string.Format(
+					"<clm:CheckOut xmlns:clm='{0}'><clm:Url>{1}</clm:Url></clm:CheckOut>",
+					_claimSchemaTargetNamespace,
+					url));
 			return message;
 		}
 
@@ -258,7 +273,9 @@ namespace Be.Stateless.BizTalk.Message
 			if (!schema.IsSchema())
 				throw new ArgumentException(
 					string.Format(
-						"{0} does not derive from {1}.", schema.FullName, typeof(SchemaBase).FullName),
+						"{0} does not derive from {1}.",
+						schema.FullName,
+						typeof(SchemaBase).FullName),
 					"schema");
 			return CreateMessage(schema.GetMetadata().DocumentSpec);
 		}
@@ -291,5 +308,7 @@ namespace Be.Stateless.BizTalk.Message
 				return document;
 			}
 		}
+
+		private static readonly string _claimSchemaTargetNamespace = typeof(Claim.Check).GetMetadata().TargetNamespace;
 	}
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright © 2012 - 2013 François Chabot, Yves Dierick
+  Copyright © 2012 - 2017 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-                xmlns:clm="urn:schemas.stateless.be:biztalk:claim:2013:04"
+                xmlns:clm="urn:schemas.stateless.be:biztalk:claim:2017:04"
                 xmlns:usp="http://schemas.microsoft.com/Sql/2008/05/TypedProcedures/dbo"
                 xmlns:msxsl="urn:schemas-microsoft-com:xslt"
                 xmlns:ctxt="urn:extensions.stateless.be:biztalk:message:context:2012:12"
@@ -27,8 +27,9 @@
 
   <xsl:template match="clm:CheckIn">
     <usp:usp_claim_CheckIn>
-      <!-- for the following 4 properties, take the value that is either embedded in the token or in the context, but give precedence to the embedded value -->
+      <!-- for the following properties, take the value that is either embedded in the token or in the context, but give precedence to the embedded value -->
       <xsl:apply-templates select="." mode="correlationToken" />
+      <xsl:apply-templates select="." mode="environmentTag" />
       <xsl:apply-templates select="." mode="messageType" />
       <xsl:apply-templates select="." mode="outboundTransportLocation" />
       <xsl:apply-templates select="." mode="processActivityId" />
@@ -53,6 +54,20 @@
     <usp:correlationToken>
       <xsl:value-of select="clm:CorrelationToken/text()" />
     </usp:correlationToken>
+  </xsl:template>
+
+  <!-- environmentTag -->
+  <xsl:template match="clm:CheckIn" mode="environmentTag">
+    <xsl:if test="ctxt:Read('bf:EnvironmentTag')">
+      <usp:environmentTag>
+        <xsl:value-of select="ctxt:Read('bf:EnvironmentTag')" />
+      </usp:environmentTag>
+    </xsl:if>
+  </xsl:template>
+  <xsl:template match="clm:CheckIn[clm:EnvironmentTag/text()]" mode="environmentTag">
+    <usp:environmentTag>
+      <xsl:value-of select="clm:EnvironmentTag/text()" />
+    </usp:environmentTag>
   </xsl:template>
 
   <!-- messageType -->
@@ -137,7 +152,7 @@
   <!-- this is somehow the identity transform but swallows unwanted xml namespaces -->
   <xsl:template match="*" mode="any">
     <xsl:element name="{name(.)}" namespace="{namespace-uri(.)}">
-      <xsl:copy-of select="namespace::*[. != 'urn:schemas.stateless.be:biztalk:claim:2013:04']" />
+      <xsl:copy-of select="namespace::*[. != 'urn:schemas.stateless.be:biztalk:claim:2017:04']" />
       <xsl:apply-templates select="@* | node()" mode="any" />
     </xsl:element>
   </xsl:template>
