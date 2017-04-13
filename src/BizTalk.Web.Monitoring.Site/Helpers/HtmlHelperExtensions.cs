@@ -71,7 +71,7 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
 			return message == null || !message.HasContent
 				? helper.Raw(Resource.NoData)
 				: message.HasBeenClaimed
-					? message.ClaimAvailabe
+					? message.ClaimAvailable
 						? helper.Raw(
 							string.Format(
 								"<pre>{0} character preview of large message body.<br/><br/>{1}</pre>",
