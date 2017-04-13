@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-# Copyright © 2012 - 2016 François Chabot, Yves Dierick
+# Copyright © 2012 - 2017 François Chabot, Yves Dierick
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,8 +30,12 @@ param(
    $Targets = 'Build'
 )
 
+Clear-Project -Path .\src -Recurse -Packages
+
 src\.nuget\NuGet.exe restore src\BizTalk.Factory.sln
+if (-not $?) { exit $LASTEXITCODE }
 src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln
+if (-not $?) { exit $LASTEXITCODE }
 
 Invoke-MSBuild -Project .\build.proj -Targets $Targets
 
@@ -40,6 +44,7 @@ Invoke-MSBuild -Project .\build.proj -Targets $Targets
 $version = (Get-Item .\src\Common\bin\release\Be.Stateless.Common.dll).VersionInfo
 $packageVersion = "$($version.ProductMajorPart).$($version.ProductMinorPart).$($version.ProductBuildPart)"
 src\.nuget\NuGet.exe pack src\BizTalk.Factory.nuspec -Version $packageVersion -NonInteractive -NoPackageAnalysis -NoDefaultExcludes
+if (-not $?) { exit $LASTEXITCODE }
 
 # Build the MSI installation packages for both configurations
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Debug

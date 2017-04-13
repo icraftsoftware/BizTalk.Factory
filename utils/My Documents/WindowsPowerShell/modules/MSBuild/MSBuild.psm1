@@ -1,6 +1,6 @@
 #region Copyright & License
 
-# Copyright © 2012 - 2015 François Chabot, Yves Dierick
+# Copyright © 2012 - 2017 François Chabot, Yves Dierick
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,38 +37,39 @@ Set-StrictMode -Version Latest
 .EXAMPLE
     (gi .\BizTalk.Dsl), (gi .\BizTalk.Dsl.Tests) | Clear-Project -WhatIf
 .NOTES
-    © 2013 be.stateless.
+    © 2017 be.stateless.
 #>
 function Clear-Project
 {
     [CmdletBinding(DefaultParametersetName='Single',SupportsShouldProcess=$true)]
     Param(
-        [Parameter(Mandatory=$true,ParameterSetName='Single',ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
+        [Parameter(Mandatory=$false,ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
         [psobject[]]
         $Path,
 
-        [Parameter(Mandatory=$true,ParameterSetName='Packages')]
-        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
         $Packages,
 
-        [Parameter(Mandatory=$true,ParameterSetName='Recurse')]
         [switch]
         $Recurse
 
         #TODO switch to also clean .user, .dotsettings.user, etc... files
     )
 
-    #begin { }
-    process {
-        if ($PsCmdlet.ParameterSetName -eq 'Recurse') {
-            if ($Recurse) {
-                $Path = Get-ChildItem -Path . -Directory
-            } else {
-                $Path = Get-Item -Path .
-            }
+    begin {
+        if ($Path -eq $null) {
+            $Path = Get-Item -Path .
         }
-        foreach ($p in $Path) {
+        if ($Recurse) {
+            $projectPaths = Get-ChildItem -Path $Path -Directory
+        }
+        else {
+            $projectPaths = $Path
+        }
+    }
+    process {
+        foreach ($p in $projectPaths) {
+            $p = Resolve-Path -Path $p.FullName -Relative
             Write-Verbose "Clearing $p..."
             if (-not(Test-Path -Path $p\web.config) -and (Test-Path -LiteralPath $p\bin)) {
                 Remove-Item -LiteralPath $p\bin -Confirm:$false -Force -Recurse
@@ -81,7 +82,12 @@ function Clear-Project
             Get-ChildItem -Path $p -Filter *.xsd.cs -Recurse | Remove-Item -Confirm:$false
         }
         if ($Packages) {
-            Get-ChildItem -Path .\packages\ -Directory | Remove-Item -Recurse -Force -Confirm:$false
+            $packagesPath = Join-Path -Path $Path .\packages
+            if (Test-Path -Path $packagesPath) {
+                $packagesPath = Resolve-Path -Path $packagesPath -Relative
+                Write-Verbose "Cleaning NuGet packages under $packagesPath..."
+                Get-ChildItem -Path $packagesPath -Directory | Remove-Item -Recurse -Force -Confirm:$false
+            }
         }
     }
     #end { }
@@ -349,6 +355,7 @@ function Invoke-MSBuildCore
         Assert-VisualStudioEnvironment $VisualStudioVersion
         Write-Verbose $command
         Invoke-Expression -Command $command
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     } else {
         Write-Verbose $command
     }
