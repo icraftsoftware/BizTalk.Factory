@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,12 @@ namespace Be.Stateless.BizTalk.Monitoring.Extensions
 		public void ToFriendlyProcessName(string processName, string expected)
 		{
 			Assert.That(processName.ToFriendlyProcessName(), Is.EqualTo(expected));
+		}
+
+		[Test]
+		public void ToFriendlyProcessNameDoesNotReturnEmpty()
+		{
+			Assert.That("Be.Stateless.BizTalk.Process.Archiving.Upload".ToFriendlyProcessName(), Is.Not.Empty);
 		}
 
 		private static readonly object[] _cases = {
