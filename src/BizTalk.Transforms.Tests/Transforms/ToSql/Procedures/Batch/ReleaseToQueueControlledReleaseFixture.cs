@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,6 +42,18 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
 				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
+			}
+		}
+
+		[Test]
+		public void ValidateTransformWithEnvironmentTag()
+		{
+			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchEnvironmentTag.xml"));
+			using (var stream = new StringStream(instance.OuterXml))
+			{
+				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
+				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
+				Assert.That(result.Single("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
 			}
 		}
 

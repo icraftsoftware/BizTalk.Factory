@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright © 2012 - 2013 François Chabot, Yves Dierick
+  Copyright © 2012 - 2017 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -35,6 +35,12 @@
           <xsl:value-of select="$partition" />
         </usp:partition>
       </xsl:if>
+      <xsl:variable name="environmentTag" select="ctxt:Read('bf:EnvironmentTag')" />
+      <xsl:if test="$environmentTag">
+        <usp:environmentTag>
+          <xsl:value-of select="$environmentTag" />
+        </usp:environmentTag>
+      </xsl:if>
       <xsl:variable name="messagingStepActivityId" select="ctxt:Read('tp:MessagingStepActivityId')" />
       <xsl:if test="$messagingStepActivityId">
         <usp:messagingStepActivityId>
@@ -54,4 +60,5 @@
       <xsl:apply-templates select="@* | node()" />
     </xsl:copy>
   </xsl:template>
+
 </xsl:stylesheet>

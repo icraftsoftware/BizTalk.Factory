@@ -165,6 +165,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ba
 BEGIN
 CREATE TABLE [dbo].[batch_ReleasePolicyDefinitions](
    [EnvelopeId] [int] NOT NULL,
+   [EnvironmentTag] [nvarchar](256) NULL,
    [Partition] [nvarchar](128) NOT NULL,
    [Enabled] [bit] NOT NULL,
    [ReleaseOnElapsedTimeOut] [int] NULL,
@@ -200,6 +201,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ba
 BEGIN
 CREATE TABLE [dbo].[batch_QueuedControlledReleases](
    [EnvelopeId] [int] NOT NULL,
+   [EnvironmentTag] [nvarchar](256) NULL,
    [Partition] [nvarchar](128) NOT NULL,
    [ProcessActivityId] [nvarchar](32) NULL,
    [Timestamp] [datetime2](7) NOT NULL,
@@ -221,6 +223,7 @@ BEGIN
 CREATE TABLE [dbo].[batch_Parts](
    [Id] [int] IDENTITY(1,1) NOT NULL,
    [EnvelopeId] [int] NOT NULL,
+   [EnvironmentTag] [nvarchar](256) NULL,
    [MessagingStepActivityId] [nvarchar](32) NULL,
    [Partition] [nvarchar](128) NOT NULL,
    [Data] [nvarchar](max) NOT NULL,
@@ -502,6 +505,7 @@ GO
 -- =================================================================================================
 CREATE PROCEDURE [dbo].[usp_batch_Register] 
    @envelopeSpecName nvarchar(256),
+   @environmentTag nvarchar(256) = NULL,
    @partition nvarchar(128) = '0',
    @enabled bit,
    @releaseOnElapsedTimeOut int = null,
@@ -578,6 +582,7 @@ GO
 -- =================================================================================================
 CREATE PROCEDURE [dbo].[usp_batch_Unregister] 
    @envelopeSpecName nvarchar(256),
+   @environmentTag nvarchar(256) = NULL,
    @partition nvarchar(128) = '0'
 AS
 BEGIN
@@ -613,6 +618,7 @@ GO
 -- =================================================================================================
 CREATE PROCEDURE [dbo].[usp_batch_AddPart] 
    @envelopeSpecName nvarchar(256), 
+   @environmentTag nvarchar(256) = NULL,
    @partition nvarchar(128) = '0',
    @messagingStepActivityId nvarchar(32) = null,
    @data nvarchar(max)
@@ -662,6 +668,7 @@ GO
 -- =================================================================================================
 CREATE PROCEDURE [dbo].[usp_batch_QueueControlledRelease] 
    @envelopeSpecName nvarchar(256),
+   @environmentTag nvarchar(256) = NULL,
    @partition nvarchar(128) = '0',
    @processActivityId nvarchar(32) = null
 AS
