@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ using Winterdom.BizTalk.PipelineTesting;
 namespace Be.Stateless.BizTalk.Pipelines
 {
 	[TestFixture]
-	public class ZipPassThruReceiveFixture
+	public class ReceivePipelineFixture
 	{
 		[Test]
 		public void DeferredPluginIsAlwaysExecuted()
 		{
-			using (var stream = ResourceManager.Load("Data.METERING_REQUEST_20150531.zip"))
+			using (var stream = ResourceManager.Load("Data.Content.zip"))
 			{
 				var pipeline = PipelineFactory.CreateReceivePipeline(typeof(ReceivePipelineInterpreter<ZipPassThruReceive>));
 				var pluginComponent = (ContextBuilderComponent) pipeline.GetComponent(PipelineStage.Decode, 0);

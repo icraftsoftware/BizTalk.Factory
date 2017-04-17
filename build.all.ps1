@@ -17,10 +17,10 @@
 #endregion
 
 <#
- First, we get all the sources from version control, and generate a build version number for
- this build. , the MSBuild project will build the BizTalk.Factory.sln solution, for both the
- Debug and Release configurations, and BizTalk.Monitoring.sln, for the Release configuration
- only. Finally, a label is created in TFS with the generated version number.
+First, we get all the sources from version control, and generate a build version number for
+this build. , the MSBuild project will build the BizTalk.Factory.sln solution, for both the
+Debug and Release configurations, and BizTalk.Monitoring.sln, for the Release configuration
+only. Finally, a label is created in TFS with the generated version number.
 #>
 
 [CmdletBinding()]
