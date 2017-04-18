@@ -38,6 +38,7 @@ src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln
 if (-not $?) { exit $LASTEXITCODE }
 
 Invoke-MSBuild -Project .\build.proj -Targets $Targets
+if (-not $?) { exit $LASTEXITCODE }
 
 # Build the NuGet package containing the release version of all assemblies
 # Construct NuGet package version from assembly file version
@@ -48,7 +49,9 @@ if (-not $?) { exit $LASTEXITCODE }
 
 # Build the MSI installation packages for both configurations
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Debug
+if (-not $?) { exit $LASTEXITCODE }
 Invoke-MSBuild -Project .\src\Deployment\BizTalk.Factory.Deployment.btdfproj -Targets Installer -Configuration Release
+if (-not $?) { exit $LASTEXITCODE }
 
 # Now we copy the interesting build outputs to our dedicated directory structure
 

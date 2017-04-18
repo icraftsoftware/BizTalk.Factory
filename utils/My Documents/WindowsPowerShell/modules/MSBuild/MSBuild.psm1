@@ -236,6 +236,8 @@ function Invoke-MSBuild
 # To invoke this 'private' function from another module, see either of the following references
 # http://powershell.com/cs/blogs/tips/archive/2009/09/18/accessing-hidden-module-members.aspx
 # http://stackoverflow.com/questions/9382362/view-nested-private-function-definitions-in-powershell
+# https://github.com/ligershark/psbuild/blob/master/src/psbuild.psm1
+# https://github.com/deadlydog/Invoke-MsBuild
 function Invoke-MSBuildCore
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
@@ -354,8 +356,8 @@ function Invoke-MSBuildCore
         }
         Assert-VisualStudioEnvironment $VisualStudioVersion
         Write-Verbose $command
-        Invoke-Expression -Command $command
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        $scriptBlock = [scriptblock]::Create($command)
+        Invoke-Command -ScriptBlock $scriptBlock
     } else {
         Write-Verbose $command
     }
