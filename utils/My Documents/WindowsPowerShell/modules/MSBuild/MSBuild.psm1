@@ -43,31 +43,32 @@ function Clear-Project
 {
     [CmdletBinding(DefaultParametersetName='Single',SupportsShouldProcess=$true)]
     Param(
-        [Parameter(Mandatory=$false,ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName='Path',ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
         [psobject[]]
         $Path,
 
+        [Parameter(Mandatory=$false,ParameterSetName='Path')]
+        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
         $Packages,
 
+        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
         $Recurse
 
         #TODO switch to also clean .user, .dotsettings.user, etc... files
     )
 
-    begin {
-        if ($Path -eq $null) {
+    # begin { }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'Recurse' -and $Path -eq $null) {
             $Path = Get-Item -Path .
         }
         if ($Recurse) {
             $projectPaths = Get-ChildItem -Path $Path -Directory
-        }
-        else {
+        } else {
             $projectPaths = $Path
         }
-    }
-    process {
         foreach ($p in $projectPaths) {
             $p = Resolve-Path -Path $p.FullName -Relative
             Write-Verbose "Clearing $p..."
