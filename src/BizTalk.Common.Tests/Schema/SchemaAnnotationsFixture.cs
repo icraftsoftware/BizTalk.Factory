@@ -60,13 +60,15 @@ namespace Be.Stateless.BizTalk.Schema
 
 			Assert.That(annotations, Is.Not.TypeOf<SchemaAnnotations.EmptySchemaAnnotations>());
 			Assert.That(annotations.EnvelopingMap, Is.Null);
-			Assert.That(annotations.Extractors.Count(), Is.EqualTo(2));
+			Assert.That(annotations.Extractors.Count(), Is.EqualTo(4));
 			Assert.That(
 				annotations.Extractors,
 				Is.EquivalentTo(
 					new[] {
+						new XPathExtractor(BizTalkFactoryProperties.EnvironmentTag.QName, "/*/*[local-name()='EnvironmentTag']", ExtractionMode.Promote),
 						new XPathExtractor(TrackingProperties.Value1.QName, "/*/*[local-name()='EnvelopeSpecName']", ExtractionMode.Write),
-						new XPathExtractor(TrackingProperties.Value2.QName, "/*/*[local-name()='Partition']", ExtractionMode.Write)
+						new XPathExtractor(TrackingProperties.Value2.QName, "/*/*[local-name()='EnvironmentTag']", ExtractionMode.Write),
+						new XPathExtractor(TrackingProperties.Value3.QName, "/*/*[local-name()='Partition']", ExtractionMode.Write)
 					}));
 		}
 

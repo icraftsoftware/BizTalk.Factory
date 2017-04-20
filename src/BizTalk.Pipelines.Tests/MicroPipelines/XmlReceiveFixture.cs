@@ -91,5 +91,40 @@ namespace Be.Stateless.BizTalk.MicroPipelines
 				}
 			}
 		}
+
+		[Test]
+		public void ContextPropertyExtractorPromotesConstant()
+		{
+			const string content = "<ns0:Any xmlns:ns0=\"urn:schemas.stateless.be:biztalk:any:2012:12\"><message>content</message></ns0:Any>";
+			using (var stream = new StringStream(content))
+			{
+				var pipeline = PipelineFactory.CreateReceivePipeline(typeof(ReceivePipelineInterpreter<XmlReceive>));
+				pipeline.AddDocSpec(typeof(Any));
+				var microPipeline = (MicroPipelineComponent) pipeline.GetComponent(PipelineStage.Decode, 1);
+				microPipeline.Components = new[] {
+					new ContextPropertyExtractor {
+						Extractors = new[] {
+							new ConstantExtractor(BizTalkFactoryProperties.EnvironmentTag.QName, "tag", ExtractionMode.Promote)
+						}
+					}
+				};
+
+				var inputMessage = MessageHelper.CreateFromStream(stream);
+				Assert.That(inputMessage.GetProperty(BizTalkFactoryProperties.EnvironmentTag), Is.Null);
+				Assert.That(inputMessage.IsPromoted(BizTalkFactoryProperties.EnvironmentTag), Is.False);
+
+				var outputMessages = pipeline.Execute(inputMessage);
+
+				Assert.That(outputMessages[0].GetProperty(BizTalkFactoryProperties.EnvironmentTag), Is.EqualTo("tag"));
+				Assert.That(outputMessages[0].IsPromoted(BizTalkFactoryProperties.EnvironmentTag), Is.True);
+				using (var reader = new StreamReader(outputMessages[0].BodyPart.Data))
+				{
+					var readOuterXml = reader.ReadToEnd();
+					Assert.That(readOuterXml, Is.EqualTo(content));
+				}
+				Assert.That(outputMessages[0].GetProperty(BizTalkFactoryProperties.EnvironmentTag), Is.EqualTo("tag"));
+				Assert.That(outputMessages[0].IsPromoted(BizTalkFactoryProperties.EnvironmentTag), Is.True);
+			}
+		}
 	}
 }
