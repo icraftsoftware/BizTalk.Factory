@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Component
 	{
 		public PropertyExtractorCollectionSerializerSurrogate() { }
 
-		public PropertyExtractorCollectionSerializerSurrogate(PropertyExtractorCollection extractors) : base(extractors) { }
+		public PropertyExtractorCollectionSerializerSurrogate(PropertyExtractorCollection extractors) : base(extractors.Precedence, extractors) { }
 
 		#region Base Class Member Overrides
 

@@ -68,6 +68,8 @@ namespace Be.Stateless.BizTalk.Component
 
 		internal class EmptyPropertyExtractorCollection : PropertyExtractorCollection
 		{
+			private EmptyPropertyExtractorCollection() { }
+
 			#region Base Class Member Overrides
 
 			public override void ReadXml(XmlReader reader)
@@ -76,6 +78,8 @@ namespace Be.Stateless.BizTalk.Component
 			}
 
 			#endregion
+
+			internal static readonly EmptyPropertyExtractorCollection Instance = new EmptyPropertyExtractorCollection();
 		}
 
 		#endregion
@@ -91,7 +95,7 @@ namespace Be.Stateless.BizTalk.Component
 
 		public static PropertyExtractorCollection Empty
 		{
-			get { return _emptyExtractorCollection; }
+			get { return EmptyPropertyExtractorCollection.Instance; }
 		}
 
 		public PropertyExtractorCollection() : this(default(ExtractorPrecedence)) { }
@@ -387,7 +391,6 @@ namespace Be.Stateless.BizTalk.Component
   <s1:Property5 mode='clear|ignore' />
 </san:Properties>";
 
-		private static readonly PropertyExtractorCollection _emptyExtractorCollection = new EmptyPropertyExtractorCollection();
 		private static readonly IEqualityComparer<PropertyExtractor> _lambdaComparer = new LambdaComparer<PropertyExtractor>((le, re) => le.PropertyName == re.PropertyName);
 	}
 }

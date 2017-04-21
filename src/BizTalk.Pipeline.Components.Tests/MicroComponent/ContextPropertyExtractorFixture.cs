@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -120,16 +119,25 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[Test]
-		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void Deserialize()
 		{
 			var microPipelineComponentType = typeof(ContextPropertyExtractor);
 			var xml = string.Format(
-				"<mComponent name=\"{0}\"><Extractors /></mComponent>",
-				microPipelineComponentType.AssemblyQualifiedName);
+				"<mComponent name=\"{0}\"><Extractors>"
+					+ "<s0:Properties precedence=\"pipeline\" xmlns:s0=\"{1}\" xmlns:s1=\"{2}\">"
+					+ "<s1:EnvironmentTag value=\"environment-tag\" />"
+					+ "</s0:Properties>"
+					+ "</Extractors></mComponent>",
+				microPipelineComponentType.AssemblyQualifiedName,
+				SchemaAnnotations.NAMESPACE,
+				BizTalkFactoryProperties.EnvironmentTag.Namespace);
 			using (var reader = XmlReader.Create(new StringStream(xml)))
 			{
-				Assert.That(() => reader.DeserializeMicroPipelineComponent(), Throws.Nothing);
+				var propertyExtractor = (ContextPropertyExtractor) reader.DeserializeMicroPipelineComponent();
+				Assert.That(propertyExtractor.Extractors.Precedence, Is.EqualTo(ExtractorPrecedence.Pipeline));
+				Assert.That(
+					propertyExtractor.Extractors,
+					Is.EqualTo(new[] { new ConstantExtractor(BizTalkFactoryProperties.EnvironmentTag, "environment-tag") }));
 			}
 		}
 
@@ -251,18 +259,26 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[Test]
 		public void Serialize()
 		{
-			var component = new ContextPropertyExtractor();
+			var microPipelineComponentType = typeof(ContextPropertyExtractor);
+			var xml = string.Format(
+				"<mComponent name=\"{0}\"><Extractors>"
+					+ "<s0:Properties precedence=\"pipeline\" xmlns:s0=\"{1}\" xmlns:s1=\"{2}\">"
+					+ "<s1:EnvironmentTag value=\"environment-tag\" />"
+					+ "</s0:Properties>"
+					+ "</Extractors></mComponent>",
+				microPipelineComponentType.AssemblyQualifiedName,
+				SchemaAnnotations.NAMESPACE,
+				BizTalkFactoryProperties.EnvironmentTag.Namespace);
+
 			var builder = new StringBuilder();
 			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
 			{
+				var component = new ContextPropertyExtractor {
+					Extractors = new PropertyExtractorCollection(ExtractorPrecedence.Pipeline, new ConstantExtractor(BizTalkFactoryProperties.EnvironmentTag, "environment-tag"))
+				};
 				component.Serialize(writer);
 			}
-			Assert.That(
-				builder.ToString(),
-				Is.EqualTo(
-					string.Format(
-						"<mComponent name=\"{0}\"><Extractors /></mComponent>",
-						component.GetType().AssemblyQualifiedName)));
+			Assert.That(builder.ToString(), Is.EqualTo(xml));
 		}
 
 		private Mock<ISchemaMetadata> SchemaMetadataMock { get; set; }

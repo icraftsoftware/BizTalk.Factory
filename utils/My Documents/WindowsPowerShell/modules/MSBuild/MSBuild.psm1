@@ -43,26 +43,40 @@ function Clear-Project
 {
     [CmdletBinding(DefaultParametersetName='Single',SupportsShouldProcess=$true)]
     Param(
-        [Parameter(Mandatory=$true,ParameterSetName='Path',ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
+        [Parameter(ValueFromPipeline=$true,ValueFromPipelinebyPropertyName=$true)]
         [psobject[]]
         $Path,
 
-        [Parameter(Mandatory=$false,ParameterSetName='Path')]
-        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
         $Packages,
 
-        [Parameter(Mandatory=$false,ParameterSetName='Recurse')]
         [switch]
         $Recurse
 
         #TODO switch to also clean .user, .dotsettings.user, etc... files
     )
 
+    # TODO test commands vis Pester
+    # https://www.simple-talk.com/sysadmin/powershell/practical-powershell-unit-testing-getting-started/
+    # Clear-Project -Path .\src -Verbose -WhatIf
+    # Clear-Project -Path .\src -Packages -Verbose -WhatIf
+    # Clear-Project -Path .\src -Recurse -Verbose -WhatIf
+    # Clear-Project -Path .\src -Recurse -Packages -Verbose -WhatIf
+    # Clear-Project -Packages -Verbose -WhatIf
+    # Clear-Project -Recurse -Verbose -WhatIf
+    # Clear-Project -Recurse -Packages -Verbose -WhatIf
+    # (gi .\BizTalk.Dsl), (gi .\BizTalk.Dsl.Tests) | Clear-Project -Verbose -WhatIf
+    # (gi .\BizTalk.Dsl), (gi .\BizTalk.Dsl.Tests) | Clear-Project -Packages -Verbose -WhatIf
+    # (gi .\BizTalk.Dsl), (gi .\BizTalk.Dsl.Tests) | Clear-Project -Recurse -Verbose -WhatIf
+    # (gi .\BizTalk.Dsl), (gi .\BizTalk.Dsl.Tests) | Clear-Project -Recurse -Packages -Verbose -WhatIf
+    # (gi .\src\BizTalk.Dsl), (gi .\src\BizTalk.Dsl.Tests) | Clear-Project -Verbose -WhatIf
+
     # begin { }
     process {
-        if ($PsCmdlet.ParameterSetName -eq 'Recurse' -and $Path -eq $null) {
+        if ($Path -eq $null) {
             $Path = Get-Item -Path .
+        } else {
+            $Path = Get-Item -Path $Path
         }
         if ($Recurse) {
             $projectPaths = Get-ChildItem -Path $Path -Directory

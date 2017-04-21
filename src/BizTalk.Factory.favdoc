@@ -41,6 +41,24 @@
             <lineHash>X/+gkejUe0tnd3ypA63gxwdUtxki+b5PsCgSmPEGQpU=</lineHash>
           </position>
         </Favorite>
+        <Favorite>
+          <name>BTSNTSvc.exe.config</name>
+          <absolutePath>C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\BTSNTSvc.exe.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>ixBdMNatuaanwyzIrPuKpaSuT3HFEHSL4Ws5UlHP7OM=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>BTSNTSvc64.exe.config</name>
+          <absolutePath>C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\BTSNTSvc64.exe.config</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>ixBdMNatuaanwyzIrPuKpaSuT3HFEHSL4Ws5UlHP7OM=</lineHash>
+          </position>
+        </Favorite>
       </favorites>
     </Folder>
     <Folder>
