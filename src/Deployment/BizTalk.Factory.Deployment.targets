@@ -105,6 +105,17 @@
   </Target>
   <Target Name="PatchDeploy" DependsOnTargets="SetPatchDeployProperties;LoadPropsFromEnvSettingsThenExecute" />
 
+  <Target Name="SetUpdateFluentApplicationBindingsProperties">
+    <PropertyGroup>
+      <TargetsAfterLoadPropsFromEnvSettings>
+        _PreprocessBindings;
+        DeployFluentApplicationBindings;
+        _BounceBizTalk
+      </TargetsAfterLoadPropsFromEnvSettings>
+    </PropertyGroup>
+  </Target>
+  <Target Name="UpdateFluentApplicationBindings" DependsOnTargets="SetUpdateFluentApplicationBindingsProperties;LoadPropsFromEnvSettingsThenExecute" />
+
   <PropertyGroup>
     <!-- CustomPostInitialize is not called when preprocessing and importing bindings, and there is no need to have service config files being preprocessed again in that case -->
     <CustomPostInitializeDependsOn>
