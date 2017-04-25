@@ -350,10 +350,10 @@
    <Row>
     <Cell ss:StyleID="s66"><Data ss:Type="String">LogLevel</Data></Cell>
     <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">DEBUG</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">DEBUG</Data></Cell>
     <Cell ss:StyleID="s67"><Data ss:Type="String">INFO</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">INFO</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">WARN</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">WARN</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">WARN</Data></Cell>
    </Row>
    <Row>
     <Cell ss:StyleID="s66"/>
