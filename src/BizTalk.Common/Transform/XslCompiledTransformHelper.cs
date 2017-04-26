@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,9 +44,68 @@ namespace Be.Stateless.BizTalk.Transform
 	/// href="http://blogs.msdn.com/b/paolos/archive/2010/01/29/how-to-boost-message-transformations-using-the-xslcompiledtransform-class.aspx"/>.
 	/// </remarks>
 #pragma warning restore 612,618
-	// TODO to be deprecated
+	[Obsolete("Consider using Be.Stateless.BizTalk.Transform.XlangTransformHelper instead.")]
 	public static class XslCompiledTransformHelper
 	{
+		private static XmlWriter CreateXmlWriter(Stream outputStream, Encoding outputEncoding, XmlWriterSettings outputSettings)
+		{
+			// ensure we have a modifiable copy of the settings from the transform (ReadOnly = false)
+			var settings = outputSettings.Clone();
+			settings.Encoding = outputEncoding;
+			// so we are sure the underlying stream will stay open!!
+			settings.CloseOutput = false;
+			return XmlWriter.Create(outputStream, settings);
+		}
+
+		private static Stream Transform(
+			XmlReader xmlReader,
+			Type mapType,
+			Encoding outputEncoding,
+			int bufferSize,
+			int thresholdSize,
+			object[] transformArguments)
+		{
+			if (_logger.IsDebugEnabled) _logger.DebugFormat("About to execute transform {0} on an input stream.", mapType.AssemblyQualifiedName);
+			var transformDescriptor = XsltCache.Instance[mapType];
+			using (xmlReader)
+			{
+				var outputStream = new VirtualStream(bufferSize, thresholdSize);
+				using (var writer = CreateXmlWriter(outputStream, outputEncoding, transformDescriptor.XslCompiledTransform.OutputSettings))
+				{
+					transformDescriptor.XslCompiledTransform.Transform(xmlReader, BuildTransformArguments(transformDescriptor.Arguments.Clone(), transformArguments), writer);
+				}
+				outputStream.Seek(0, SeekOrigin.Begin);
+				return outputStream;
+			}
+		}
+
+		/// <summary>
+		/// This method will add custom transform arguments to the base transform arguments. For BizTalk maps, the base
+		/// transform arguments essentially contain the necessary references to the extension objects used if any.
+		/// </summary>
+		/// <param name="arguments"></param>
+		/// <param name="transformArguments"></param>
+		/// <returns></returns>
+		private static XsltArgumentList BuildTransformArguments(XsltArgumentList arguments, object[] transformArguments)
+		{
+			if (transformArguments != null && transformArguments.Length != 0)
+			{
+				for (var i = 0; i < transformArguments.Length; i += 3)
+				{
+					arguments.AddParam((string) transformArguments[i], (string) transformArguments[i + 1], transformArguments[i + 2]);
+				}
+			}
+			return arguments;
+		}
+
+		private const int DEFAULT_BUFFER_SIZE = 10240; //10 KB
+
+		private const string DEFAULT_MESSAGE_NAME = "transformedMessage";
+		private const string DEFAULT_PART_NAME = "Main";
+		private const int DEFAULT_THRESHOLD_SIZE = 1048576; //1 MB
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(XslCompiledTransformHelper));
+
 		#region XLANGMessage based tranforms
 
 		/// <summary>
@@ -358,63 +417,5 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		#endregion
-
-		private static Stream Transform(
-			XmlReader xmlReader,
-			Type mapType,
-			Encoding outputEncoding,
-			int bufferSize,
-			int thresholdSize,
-			object[] transformArguments)
-		{
-			if (_logger.IsDebugEnabled) _logger.DebugFormat("About to execute transform {0} on an input stream.", mapType.AssemblyQualifiedName);
-			var transformDescriptor = XsltCache.Instance[mapType];
-			using (xmlReader)
-			{
-				var outputStream = new VirtualStream(bufferSize, thresholdSize);
-				using (var writer = CreateXmlWriter(outputStream, outputEncoding, transformDescriptor.XslCompiledTransform.OutputSettings))
-				{
-					transformDescriptor.XslCompiledTransform.Transform(xmlReader, BuildTransformArguments(transformDescriptor.Arguments.Clone(), transformArguments), writer);
-				}
-				outputStream.Seek(0, SeekOrigin.Begin);
-				return outputStream;
-			}
-		}
-
-		/// <summary>
-		/// This method will add custom transform arguments to the base transform arguments. For BizTalk maps, the base
-		/// transform arguments essentially contain the necessary references to the extension objects used if any.
-		/// </summary>
-		/// <param name="arguments"></param>
-		/// <param name="transformArguments"></param>
-		/// <returns></returns>
-		private static XsltArgumentList BuildTransformArguments(XsltArgumentList arguments, object[] transformArguments)
-		{
-			if (transformArguments != null && transformArguments.Length != 0)
-			{
-				for (var i = 0; i < transformArguments.Length; i += 3)
-				{
-					arguments.AddParam((string) transformArguments[i], (string) transformArguments[i + 1], transformArguments[i + 2]);
-				}
-			}
-			return arguments;
-		}
-
-		private static XmlWriter CreateXmlWriter(Stream outputStream, Encoding outputEncoding, XmlWriterSettings outputSettings)
-		{
-			// ensure we have a modifiable copy of the settings from the transform (ReadOnly = false)
-			var settings = outputSettings.Clone();
-			settings.Encoding = outputEncoding;
-			// so we are sure the underlying stream will stay open!!
-			settings.CloseOutput = false;
-			return XmlWriter.Create(outputStream, settings);
-		}
-
-		private const string DEFAULT_MESSAGE_NAME = "transformedMessage";
-		private const string DEFAULT_PART_NAME = "Main";
-		private const int DEFAULT_BUFFER_SIZE = 10240; //10 KB
-		private const int DEFAULT_THRESHOLD_SIZE = 1048576; //1 MB
-
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(XslCompiledTransformHelper));
 	}
 }
