@@ -119,7 +119,7 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 
 		public static string LogLevel 
 		{
-			get { return _instance.ValueForTargetEnvironment(new string[] { null, "DEBUG", "DEBUG", "INFO", "INFO" }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "INFO", "WARN", "WARN", "WARN" }); }
 		}
 
 		protected override string SettingsFileName

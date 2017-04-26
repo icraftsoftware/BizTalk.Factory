@@ -53,6 +53,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 					|| p.GetGetMethod().IsStatic);
 			if (unsupportedProperties.Any()) throw new ArgumentException(message);
 
+			_isCreatingSingletonInstance = true;
 			_processes = new T();
 			var prefix = typeof(T).FullName + ".";
 			properties.Each(p => Reflector.SetProperty(_processes, p.Name, prefix + p.Name));
@@ -62,6 +63,19 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 		{
 			get { return _processes; }
 		}
+
+		protected ProcessName()
+		{
+			if (!_isCreatingSingletonInstance)
+				throw new InvalidOperationException(
+					string.Format(
+						"Type '{0}' is a singleton meant to be accessed via its Processes member property and is not intended to be instantiated directly.",
+						typeof(T).FullName));
+			_isCreatingSingletonInstance = false;
+		}
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static bool _isCreatingSingletonInstance;
 
 		private static readonly T _processes;
 	}

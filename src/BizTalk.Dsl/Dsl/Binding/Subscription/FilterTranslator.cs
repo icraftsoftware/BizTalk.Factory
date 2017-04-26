@@ -130,39 +130,39 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 					yield break;
 				case ExpressionType.Equal:
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						FilterOperator.Equals,
-						TranslateFilterExpression(expression.Right));
+						TranslateValueExpression(expression.Right));
 					yield break;
 				case ExpressionType.GreaterThan:
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						FilterOperator.GreaterThan,
-						TranslateFilterExpression(expression.Right));
+						TranslateValueExpression(expression.Right));
 					yield break;
 				case ExpressionType.GreaterThanOrEqual:
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						FilterOperator.GreaterThanOrEquals,
-						TranslateFilterExpression(expression.Right));
+						TranslateValueExpression(expression.Right));
 					yield break;
 				case ExpressionType.LessThan:
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						FilterOperator.LessThan,
-						TranslateFilterExpression(expression.Right));
+						TranslateValueExpression(expression.Right));
 					yield break;
 				case ExpressionType.LessThanOrEqual:
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						FilterOperator.LessThanOrEquals,
-						TranslateFilterExpression(expression.Right));
+						TranslateValueExpression(expression.Right));
 					yield break;
 				case ExpressionType.NotEqual:
 					// != null is rewritten as Exists operator
-					var value = TranslateFilterExpression(expression.Right);
+					var value = TranslateValueExpression(expression.Right);
 					yield return new FilterStatement(
-						TranslateFilterExpression(expression.Left),
+						TranslatePropertyExpression(expression.Left),
 						value == null ? FilterOperator.Exists : FilterOperator.NotEqual,
 						value);
 					yield break;
@@ -175,25 +175,46 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			}
 		}
 
-		private static string TranslateFilterExpression(Expression expression)
+		private static string TranslatePropertyExpression(Expression expression)
 		{
-			var constantExpression = expression as ConstantExpression;
-			if (constantExpression != null) return TranslateFilterExpression(constantExpression);
-
 			var memberExpression = expression as MemberExpression;
-			if (memberExpression != null) return TranslateFilterExpression(memberExpression);
-
-			var unaryExpression = expression as UnaryExpression;
-			if (unaryExpression != null) return TranslateFilterExpression(unaryExpression);
+			// handle MessageContextProperty<T, TR>
+			if (memberExpression != null && memberExpression.Type.IsSubclassOfOpenGenericType(typeof(MessageContextProperty<,>)))
+			{
+				var property = Expression.Lambda(expression).Compile().DynamicInvoke() as IMessageContextProperty;
+				if (property == null)
+					throw new NotSupportedException(
+						string.Format(
+							"Cannot translate property Expression \"{0}\" because it evaluates to null.",
+							expression));
+				return property.Type.FullName;
+			}
 
 			throw new NotSupportedException(
 				string.Format(
-					"Cannot translate FilterExpression \"{0}\" because {1} node is not supported.",
+					"Cannot translate property Expression \"{0}\" because only MessageContextProperty<T, TR>-derived type's member access expressions are supported.",
+					expression));
+		}
+
+		private static string TranslateValueExpression(Expression expression)
+		{
+			var constantExpression = expression as ConstantExpression;
+			if (constantExpression != null) return TranslateValueExpression(constantExpression);
+
+			var memberExpression = expression as MemberExpression;
+			if (memberExpression != null) return TranslateValueExpression(memberExpression);
+
+			var unaryExpression = expression as UnaryExpression;
+			if (unaryExpression != null) return TranslateValueExpression(unaryExpression);
+
+			throw new NotSupportedException(
+				string.Format(
+					"Cannot translate value Expression \"{0}\" because {1} node is not supported.",
 					expression,
 					expression.NodeType));
 		}
 
-		private static string TranslateFilterExpression(ConstantExpression expression)
+		private static string TranslateValueExpression(ConstantExpression expression)
 		{
 			if (expression.Type.IsEnum || expression.Type.IsPrimitive || expression.Type == typeof(string))
 			{
@@ -207,23 +228,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 					expression.Type));
 		}
 
-		private static string TranslateFilterExpression(MemberExpression expression)
+		private static string TranslateValueExpression(MemberExpression expression)
 		{
-			// handle MessageContextProperty<T, TR>
-			var type = expression.Type;
-			if (type.IsSubclassOfOpenGenericType(typeof(MessageContextProperty<,>)))
-			{
-				var property = Expression.Lambda(expression).Compile().DynamicInvoke() as IMessageContextProperty;
-				if (property == null)
-					throw new NotSupportedException(
-						string.Format(
-							"Cannot translate MemberExpression \"{0}\" because it evaluates to null.",
-							expression));
-				return property.Type.FullName;
-			}
-
 			// handle Schema<T>
-			type = expression.Member.ReflectedType;
+			var type = expression.Member.ReflectedType;
 			if (type != null && type.IsSubclassOfOpenGenericType(typeof(Schema<>)))
 			{
 				var value = Expression.Lambda(expression).Compile().DynamicInvoke();
@@ -238,6 +246,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				return port.Name;
 			}
 
+			// handle string value
+			type = expression.Type;
+			if (type == typeof(string))
+			{
+				var value = (string) Expression.Lambda(expression).Compile().DynamicInvoke();
+				return value;
+			}
+
 			throw new NotSupportedException(
 				string.Format(
 					"Cannot translate MemberExpression \"{0}\" because {1} node is not supported.",
@@ -245,7 +261,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 					expression.NodeType));
 		}
 
-		private static string TranslateFilterExpression(UnaryExpression expression)
+		private static string TranslateValueExpression(UnaryExpression expression)
 		{
 			if (expression.NodeType == ExpressionType.Convert)
 			{
@@ -254,7 +270,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				if (declaringType != null && declaringType.IsSubclassOfOpenGenericType(typeof(INamingConvention<>)))
 				{
 					var memberExpression = expression.Operand as MemberExpression;
-					if (memberExpression != null) return TranslateFilterExpression(memberExpression);
+					if (memberExpression != null) return TranslateValueExpression(memberExpression);
 				}
 			}
 

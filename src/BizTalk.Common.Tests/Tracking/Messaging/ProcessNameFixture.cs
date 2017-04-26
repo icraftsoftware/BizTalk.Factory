@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,24 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 	[TestFixture]
 	public class ProcessNameFixture
 	{
+		[Test]
+		public void CannotDirectlyInstantiateProcessNameDerivedClass()
+		{
+			Assert.That(
+				() => new DiscoverableArea(),
+				Throws.InvalidOperationException.With.Message.EqualTo(
+					string.Format(
+						"Type '{0}' is a singleton meant to be accessed via its Processes member property and is not intended to be instantiated directly.",
+						typeof(DiscoverableArea).FullName)));
+
+			Assert.That(
+				() => new SampleArea(),
+				Throws.InvalidOperationException.With.Message.EqualTo(
+					string.Format(
+						"Type '{0}' is a singleton meant to be accessed via its Processes member property and is not intended to be instantiated directly.",
+						typeof(SampleArea).FullName)));
+		}
+
 		[Test]
 		public void InstanceStringPropertyValuesAreComputed()
 		{
@@ -60,6 +78,12 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 		private class DiscoverableArea : ProcessName<DiscoverableArea>
+		{
+			public string ProcessOne { get; private set; }
+		}
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+		private class SampleArea : ProcessName<SampleArea>
 		{
 			public string ProcessOne { get; private set; }
 		}

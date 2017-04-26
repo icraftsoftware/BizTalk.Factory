@@ -110,8 +110,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				Is.EqualTo(
 					string.Format(
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group>" +
-						"<Group><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" />" +
-						"<Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /></Group></Filter>",
+							"<Group><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" />" +
+							"<Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /></Group></Filter>",
 						BizTalkFactoryProperties.SenderName.Type.FullName,
 						(int) FilterOperator.Equals,
 						token1,
@@ -202,6 +202,38 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						BtsProperties.SendPortName.Type.FullName,
 						(int) FilterOperator.Equals,
 						((ISupportNamingConvention) sendPort).Name)));
+		}
+
+		[Test]
+		public void EqualToStringMember()
+		{
+			var filter = new Filter(() => BizTalkFactoryProperties.CorrelationToken == Factory.Areas.Default.Processes.Unidentified);
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BizTalkFactoryProperties.CorrelationToken.Type.FullName,
+						(int) FilterOperator.Equals,
+						Factory.Areas.Default.Processes.Unidentified)));
+		}
+
+		[Test]
+		public void EqualToStringMember2()
+		{
+			var sampleApplicationBinding = new SampleApplicationBinding();
+
+			var filter = new Filter(() => BizTalkFactoryProperties.CorrelationToken == sampleApplicationBinding.Name);
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BizTalkFactoryProperties.CorrelationToken.Type.FullName,
+						(int) FilterOperator.Equals,
+						sampleApplicationBinding.Name)));
 		}
 
 		[Test]
@@ -327,7 +359,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				() => filter.ToString(),
 				Throws.TypeOf<NotSupportedException>()
 					.With.Message.EqualTo(
-						"Cannot translate MemberExpression \"value(Be.Stateless.BizTalk.Dsl.Binding.Subscription.FilterFixture).GetType().Name\" because MemberAccess node is not supported."));
+						"Cannot translate property Expression \"value(Be.Stateless.BizTalk.Dsl.Binding.Subscription.FilterFixture).GetType().Name\" because only MessageContextProperty<T, TR>-derived type's member access expressions are supported."));
 		}
 
 		[Test]
