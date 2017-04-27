@@ -176,26 +176,14 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessageContextExtensions))
 			{
+				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
+				var rewrittenExpression = RewriteExpression(methodCallExpression);
 				var mock = Get(Object);
-				var qname = GetContextPropertyXmlQualifiedName(methodCallExpression);
-				switch (methodCallExpression.Method.Name)
-				{
-					case "DeleteProperty":
-						mock.Verify(c => c.Write(qname.Name, qname.Namespace, null), times, failMessage);
-						break;
-					case "SetProperty":
-						var writtenValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						mock.Verify(c => c.Write(qname.Name, qname.Namespace, writtenValue), times, failMessage);
-						break;
-					case "Promote":
-						var promotedValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						mock.Verify(c => c.Promote(qname.Name, qname.Namespace, promotedValue), times, failMessage);
-						break;
-				}
+				mock.Verify(rewrittenExpression, times, failMessage);
 			}
 			else
 			{
-				// let base class handle all other Verify calls
+				// let base Moq class handle all other Verify calls
 				Verify((Expression<Action<T>>) (Expression) expression, times, failMessage);
 			}
 		}
@@ -208,5 +196,42 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			var qualifiedName = new XmlQualifiedName(contextProperty.Name, contextProperty.Namespace);
 			return qualifiedName;
 		}
+
+		internal Expression<Action<T>> RewriteExpression(MethodCallExpression methodCallExpression)
+		{
+			var qname = GetContextPropertyXmlQualifiedName(methodCallExpression);
+			switch (methodCallExpression.Method.Name)
+			{
+				case "DeleteProperty":
+					return RewriteExpression(_writeExpressionTemplate, qname, Expression.Constant(null));
+				case "GetProperty":
+					return c => c.Read(qname.Name, qname.Namespace);
+					//return RewriteExpression(_writeExpressionTemplate, qname, methodCallExpression.Arguments[2]);
+				case "SetProperty":
+					return RewriteExpression(_writeExpressionTemplate, qname, methodCallExpression.Arguments[2]);
+				case "Promote":
+					return RewriteExpression(_promoteExpressionTemplate, qname, methodCallExpression.Arguments[2]);
+				default:
+					throw new NotSupportedException(string.Format("Unexpected call of extension method: '{0}'.", methodCallExpression.Method.Name));
+			}
+		}
+
+		private Expression<Action<T>> RewriteExpression(Expression<Action<T>> expressionTemplate, XmlQualifiedName qname, Expression valueExpression)
+		{
+			var mce = (MethodCallExpression) expressionTemplate.Body;
+			var ec = Expression.Call(
+				mce.Object,
+				mce.Method,
+				Expression.Constant(qname.Name),
+				Expression.Constant(qname.Namespace),
+				Expression.Convert(valueExpression, typeof(object)));
+			return Expression.Lambda<Action<T>>(ec, expressionTemplate.Parameters);
+		}
+
+		private static readonly Expression<Action<T>> _promoteExpressionTemplate =
+			c => c.Promote(BizTalkFactoryProperties.EnvironmentTag.Name, BizTalkFactoryProperties.EnvironmentTag.Namespace, null);
+
+		private static readonly Expression<Action<T>> _writeExpressionTemplate =
+			c => c.Write(BizTalkFactoryProperties.EnvironmentTag.Name, BizTalkFactoryProperties.EnvironmentTag.Namespace, null);
 	}
 }

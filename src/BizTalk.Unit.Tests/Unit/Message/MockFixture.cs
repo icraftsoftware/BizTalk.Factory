@@ -65,6 +65,8 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			Assert.That(msg.Object.Context.Read(inboundTransportLocation.Name, inboundTransportLocation.Namespace), Is.EqualTo("inbound-transport-location"));
 			Assert.That(msg.Object.GetProperty(inboundTransportLocation), Is.EqualTo("inbound-transport-location"));
 
+			msg.Verify(m => m.GetProperty(errorType));
+			Mock.Get(msg.Object.Context).Verify(c => c.Read(inboundTransportLocation.Name, inboundTransportLocation.Namespace));
 			msg.Verify(m => m.GetProperty(inboundTransportLocation));
 
 			Assert.That(Mock.Get(msg.Object.Context).DefaultValue, Is.EqualTo(DefaultValue.Empty));
@@ -248,6 +250,46 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			message.Verify(m => m.SetProperty(BtsProperties.AckRequired, true), Times.Once);
 			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
 			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyWithExpressionOfIBaseMessagePromoteExtensionMethod()
+		{
+			var message = new Mock<IBaseMessage>();
+
+			message.Object.Context.Promote(BtsProperties.ActualRetryCount.Name, BtsProperties.ActualRetryCount.Namespace, 10);
+			message.Object.Context.Promote(BtsProperties.AckRequired.Name, BtsProperties.AckRequired.Namespace, true);
+			message.Object.Context.Promote(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
+
+			message.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.IsAny<int>()));
+			message.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)));
+			message.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)), Times.Once);
+			message.Verify(m => m.Promote(BtsProperties.AckRequired, It.IsAny<bool>()));
+			message.Verify(m => m.Promote(BtsProperties.AckRequired, It.Is<bool>(b => b)));
+			message.Verify(m => m.Promote(BtsProperties.AckRequired, It.Is<bool>(b => b)), Times.Once);
+			message.Verify(m => m.Promote(BtsProperties.SendPortName, It.IsAny<string>()));
+			message.Verify(m => m.Promote(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")));
+			message.Verify(m => m.Promote(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyWithExpressionOfIBaseMessageSetPropertyExtensionMethod()
+		{
+			var message = new Mock<IBaseMessage>();
+
+			message.Object.Context.Write(BtsProperties.ActualRetryCount.Name, BtsProperties.ActualRetryCount.Namespace, 10);
+			message.Object.Context.Write(BtsProperties.AckRequired.Name, BtsProperties.AckRequired.Namespace, true);
+			message.Object.Context.Write(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
+
+			message.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.IsAny<int>()));
+			message.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)));
+			message.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)), Times.Once);
+			message.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.IsAny<bool>()));
+			message.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.Is<bool>(b => b)));
+			message.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.Is<bool>(b => b)), Times.Once);
+			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.IsAny<string>()));
+			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")));
+			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")), Times.Once);
 		}
 	}
 }

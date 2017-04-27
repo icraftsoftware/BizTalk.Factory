@@ -196,22 +196,9 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			var methodCallExpression = expression.Body as MethodCallExpression;
 			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
 			{
-				var qname = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				var mock = Get(Object.Context);
-				switch (methodCallExpression.Method.Name)
-				{
-					case "DeleteProperty":
-						mock.Verify(c => c.Write(qname.Name, qname.Namespace, null), times, failMessage);
-						break;
-					case "SetProperty":
-						var writtenValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						mock.Verify(c => c.Write(qname.Name, qname.Namespace, writtenValue), times, failMessage);
-						break;
-					case "Promote":
-						var promotedValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						mock.Verify(c => c.Promote(qname.Name, qname.Namespace, promotedValue), times, failMessage);
-						break;
-				}
+				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
+				var rewrittenExpression = _contextMock.RewriteExpression(methodCallExpression);
+				_contextMock.Verify(rewrittenExpression, times, failMessage);
 			}
 			else
 			{

@@ -158,5 +158,45 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
 			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"), Times.Once);
 		}
+
+		[Test]
+		public void MockSupportsVerifyWithExpressionOfIBaseMessageContextPromoteExtensionMethod()
+		{
+			var context = new Mock<IBaseMessageContext>();
+
+			context.Object.Promote(BtsProperties.ActualRetryCount.Name, BtsProperties.ActualRetryCount.Namespace, 10);
+			context.Object.Promote(BtsProperties.AckRequired.Name, BtsProperties.AckRequired.Namespace, true);
+			context.Object.Promote(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
+
+			context.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)));
+			context.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)), Times.Once);
+			context.Verify(m => m.Promote(BtsProperties.ActualRetryCount, It.IsAny<int>()));
+			context.Verify(m => m.Promote(BtsProperties.AckRequired, It.IsAny<bool>()));
+			context.Verify(m => m.Promote(BtsProperties.AckRequired, It.Is<bool>(b => b)));
+			context.Verify(m => m.Promote(BtsProperties.AckRequired, It.Is<bool>(b => b)), Times.Once);
+			context.Verify(m => m.Promote(BtsProperties.SendPortName, It.IsAny<string>()));
+			context.Verify(m => m.Promote(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")));
+			context.Verify(m => m.Promote(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyWithExpressionOfIBaseMessageContextSetPropertyExtensionMethod()
+		{
+			var context = new Mock<IBaseMessageContext>();
+
+			context.Object.Write(BtsProperties.ActualRetryCount.Name, BtsProperties.ActualRetryCount.Namespace, 10);
+			context.Object.Write(BtsProperties.AckRequired.Name, BtsProperties.AckRequired.Namespace, true);
+			context.Object.Write(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name");
+
+			context.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.IsAny<int>()));
+			context.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)));
+			context.Verify(m => m.SetProperty(BtsProperties.ActualRetryCount, It.Is<int>(i => i == 10)), Times.Once);
+			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.IsAny<bool>()));
+			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.Is<bool>(b => b)));
+			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, It.Is<bool>(b => b)), Times.Once);
+			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.IsAny<string>()));
+			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")));
+			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, It.Is<string>(s => s == "send-port-name")), Times.Once);
+		}
 	}
 }
