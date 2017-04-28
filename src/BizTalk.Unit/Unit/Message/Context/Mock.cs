@@ -205,8 +205,16 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 				case "DeleteProperty":
 					return RewriteExpression(_writeExpressionTemplate, qname, Expression.Constant(null));
 				case "GetProperty":
+					//private static readonly Expression<Action<T>> _readExpressionTemplate =
+					//	c => c.Read(BizTalkFactoryProperties.EnvironmentTag.Name, BizTalkFactoryProperties.EnvironmentTag.Namespace);
+					//var mce = (MethodCallExpression)_readExpressionTemplate.Body;
+					//var ec = Expression.Call(
+					//	mce.Object,
+					//	mce.Method,
+					//	Expression.Constant(qname.Name),
+					//	Expression.Constant(qname.Namespace));
+					//return Expression.Lambda<Action<T>>(ec, _readExpressionTemplate.Parameters);
 					return c => c.Read(qname.Name, qname.Namespace);
-					//return RewriteExpression(_writeExpressionTemplate, qname, methodCallExpression.Arguments[2]);
 				case "SetProperty":
 					return RewriteExpression(_writeExpressionTemplate, qname, methodCallExpression.Arguments[2]);
 				case "Promote":

@@ -59,20 +59,11 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			var context = new Mock<IBaseMessageContext>();
 			context
-				.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10))
-				.Verifiable();
+				.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10));
 			context
-				.Setup(m => m.Promote(BtsProperties.AckRequired, true))
-				.Verifiable();
+				.Setup(m => m.Promote(BtsProperties.AckRequired, true));
 			context
-				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
-				.Verifiable();
-
-			context.Object.Promote(BtsProperties.ActualRetryCount, 10);
-			context.Object.Promote(BtsProperties.AckRequired, true);
-			context.Object.Promote(BtsProperties.SendPortName, "send-port-name");
-
-			context.Verify();
+				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"));
 
 			// IsPromoted returns true as well because actual values have been promoted
 			Assert.That(context.Object.IsPromoted(BtsProperties.ActualRetryCount), Is.True);
@@ -81,7 +72,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		}
 
 		[Test]
-		public void MockSupportsSetupOfIBaseMessageContextSetPropertyExtensionMethod()
+		public void MockSupportsVerifiableSetupOfIBaseMessageContextSetPropertyExtensionMethod()
 		{
 			var context = new Mock<IBaseMessageContext>();
 			context
@@ -102,27 +93,23 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		}
 
 		[Test]
-		public void MockSupportsVerifiableSetupOnContext()
+		public void MockSupportsVerifyOfIBaseMessageContextExtensionMethods()
 		{
-			var context = new Mock<IBaseMessageContext>(MockBehavior.Strict);
-			context
-				.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId))
-				.Returns(It.IsAny<string>())
-				.Verifiable();
-			context
-				.Setup(m => m.GetProperty(TrackingProperties.ProcessingStepActivityId))
-				.Returns(It.IsAny<string>())
-				.Verifiable();
+			var context = new Mock<IBaseMessageContext>();
 
-			context.Object.GetProperty(TrackingProperties.ProcessActivityId);
+			context.Object.DeleteProperty(BtsProperties.InboundTransportLocation);
+			context.Object.GetProperty(BtsProperties.SendPortName);
+			context.Object.SetProperty(BtsProperties.SendPortName, "send-port-name");
+			context.Object.Promote(BtsProperties.ReceivePortName, "receive-port-name");
 
-			Assert.That(
-				() => context.Verify(),
-				Throws.InstanceOf<MockException>().With.Message.EqualTo(
-					string.Format(
-						"The following setups were not matched:\n" + "IBaseMessageContext ctxt => ctxt.Read(\"{0}\", \"{1}\")\r\n",
-						TrackingProperties.ProcessingStepActivityId.Name,
-						TrackingProperties.ProcessingStepActivityId.Namespace)));
+			context.Verify(c => c.DeleteProperty(BtsProperties.InboundTransportLocation));
+			context.Verify(c => c.Write(BtsProperties.InboundTransportLocation.Name, BtsProperties.InboundTransportLocation.Namespace, null));
+			context.Verify(c => c.GetProperty(BtsProperties.SendPortName));
+			context.Verify(c => c.Read(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace));
+			context.Verify(c => c.SetProperty(BtsProperties.SendPortName, "send-port-name"));
+			context.Verify(c => c.Write(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name"));
+			context.Verify(c => c.Promote(BtsProperties.ReceivePortName, "receive-port-name"));
+			context.Verify(c => c.Promote(BtsProperties.ReceivePortName.Name, BtsProperties.ReceivePortName.Namespace, "receive-port-name"));
 		}
 
 		[Test]
@@ -157,6 +144,34 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 			context.Verify(m => m.SetProperty(BtsProperties.AckRequired, true), Times.Once);
 			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
 			context.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyOfVerifiableSetupOnContext()
+		{
+			var context = new Mock<IBaseMessageContext>(MockBehavior.Strict);
+			context
+				.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId))
+				.Returns(It.IsAny<string>())
+				.Verifiable();
+			context
+				.Setup(m => m.GetProperty(TrackingProperties.ProcessingStepActivityId))
+				.Returns(It.IsAny<string>())
+				.Verifiable();
+			context
+				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
+				.Verifiable();
+
+			context.Object.GetProperty(TrackingProperties.ProcessActivityId);
+			context.Object.Promote(BtsProperties.SendPortName, "send-port-name");
+
+			Assert.That(
+				() => context.Verify(),
+				Throws.InstanceOf<MockException>().With.Message.EqualTo(
+					string.Format(
+						"The following setups were not matched:\n" + "IBaseMessageContext ctxt => ctxt.Read(\"{0}\", \"{1}\")\r\n",
+						TrackingProperties.ProcessingStepActivityId.Name,
+						TrackingProperties.ProcessingStepActivityId.Namespace)));
 		}
 
 		[Test]

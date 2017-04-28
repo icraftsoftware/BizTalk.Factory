@@ -46,12 +46,21 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		}
 
 		[Test]
+		public void MockDoesNotRequireSetupOfIBaseMessageGetPropertyExtensionMethod()
+		{
+			var message = new Mock<IBaseMessage>();
+
+			Assert.That(message.Object.GetProperty(ErrorReportProperties.ErrorType), Is.Null);
+			Assert.That(message.Object.HasFailed(), Is.False);
+		}
+
+		[Test]
 		public void MockEnforcesDefaultValueEmptyForNestedContextMock()
 		{
 			var errorType = ErrorReportProperties.ErrorType;
 			var inboundTransportLocation = BtsProperties.InboundTransportLocation;
 
-			var msg = new Mock<IBaseMessage> { DefaultValue = DefaultValue.Mock };
+			var msg = new Mock<IBaseMessage>();
 
 			Assert.That(Mock.Get(msg.Object.Context).DefaultValue, Is.EqualTo(DefaultValue.Empty));
 			Assert.That(msg.Object.Context.Read(errorType.Name, errorType.Namespace), Is.Null);
@@ -65,6 +74,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			Assert.That(msg.Object.Context.Read(inboundTransportLocation.Name, inboundTransportLocation.Namespace), Is.EqualTo("inbound-transport-location"));
 			Assert.That(msg.Object.GetProperty(inboundTransportLocation), Is.EqualTo("inbound-transport-location"));
 
+			Mock.Get(msg.Object.Context).Verify(c => c.Read(errorType.Name, errorType.Namespace));
 			msg.Verify(m => m.GetProperty(errorType));
 			Mock.Get(msg.Object.Context).Verify(c => c.Read(inboundTransportLocation.Name, inboundTransportLocation.Namespace));
 			msg.Verify(m => m.GetProperty(inboundTransportLocation));
@@ -89,10 +99,14 @@ namespace Be.Stateless.BizTalk.Unit.Message
 				.Returns(true)
 				.Verifiable();
 
-			// IsPromoted returns false unless actual values have been promoted, see also MockSupportsSetupOfIBaseMessagePromoteExtensionMethod
+			// IsPromoted returns false unless actual value has been promoted, see also MockSupportsSetupOfIBaseMessagePromoteExtensionMethod
 			Assert.That(message.Object.IsPromoted(BtsProperties.ActualRetryCount), Is.False);
 			Assert.That(message.Object.IsPromoted(BtsProperties.AckRequired), Is.False);
 			Assert.That(message.Object.IsPromoted(BtsProperties.SendPortName), Is.False);
+
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.ActualRetryCount), Is.False);
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.AckRequired), Is.False);
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.SendPortName), Is.False);
 
 			var contextMock = Mock.Get(message.Object.Context);
 			Assert.That(contextMock.Object.IsPromoted(BtsProperties.ActualRetryCount.Name, BtsProperties.ActualRetryCount.Namespace), Is.True);
@@ -103,12 +117,13 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		}
 
 		[Test]
-		public void MockSupportsMissingSetupOfIBaseMessageGetPropertyExtensionMethod()
+		public void MockSupportsIBaseMessageExtensionMethodsCallAndVerify()
 		{
 			var message = new Mock<IBaseMessage>();
 
-			Assert.That(message.Object.GetProperty(ErrorReportProperties.ErrorType), Is.Null);
-			Assert.That(message.Object.HasFailed(), Is.False);
+			message.Object.SetProperty(BizTalkFactoryProperties.OutboundTransportLocation, "location");
+
+			message.Verify(m => m.SetProperty(BizTalkFactoryProperties.OutboundTransportLocation, "location"));
 		}
 
 		[Test]
@@ -128,34 +143,33 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			Assert.That(message.Object.GetProperty(BtsProperties.ActualRetryCount), Is.EqualTo(10));
 			Assert.That(message.Object.GetProperty(BtsProperties.AckRequired), Is.EqualTo(true));
 			Assert.That(message.Object.GetProperty(BtsProperties.SendPortName), Is.EqualTo("send-port-name"));
-
 			Assert.That(message.Object.GetProperty(ErrorReportProperties.ErrorType), Is.Null);
+
+			Assert.That(message.Object.Context.GetProperty(BtsProperties.ActualRetryCount), Is.EqualTo(10));
+			Assert.That(message.Object.Context.GetProperty(BtsProperties.AckRequired), Is.EqualTo(true));
+			Assert.That(message.Object.Context.GetProperty(BtsProperties.SendPortName), Is.EqualTo("send-port-name"));
+			Assert.That(message.Object.Context.GetProperty(ErrorReportProperties.ErrorType), Is.Null);
 		}
 
 		[Test]
 		public void MockSupportsSetupOfIBaseMessagePromoteExtensionMethod()
 		{
 			var message = new Mock<IBaseMessage>();
-			message
-				.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10))
-				.Verifiable();
-			message
-				.Setup(m => m.Promote(BtsProperties.AckRequired, true))
-				.Verifiable();
-			message
-				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
-				.Verifiable();
+			message.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10));
+			message.Setup(m => m.Promote(BtsProperties.AckRequired, true));
+			message.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"));
 
-			message.Object.Promote(BtsProperties.ActualRetryCount, 10);
-			message.Object.Promote(BtsProperties.AckRequired, true);
-			message.Object.Promote(BtsProperties.SendPortName, "send-port-name");
+			Assert.That(message.Object.GetProperty(BtsProperties.ActualRetryCount), Is.EqualTo(10));
+			Assert.That(message.Object.GetProperty(BtsProperties.AckRequired), Is.EqualTo(true));
+			Assert.That(message.Object.GetProperty(BtsProperties.SendPortName), Is.EqualTo("send-port-name"));
 
-			message.Verify();
-
-			// IsPromoted returns true as well because actual values have been promoted, see also MockPartiallySupportsSetupOfIBaseMessageIsPromotedExtensionMethod
 			Assert.That(message.Object.IsPromoted(BtsProperties.ActualRetryCount), Is.True);
 			Assert.That(message.Object.IsPromoted(BtsProperties.AckRequired), Is.True);
 			Assert.That(message.Object.IsPromoted(BtsProperties.SendPortName), Is.True);
+
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.ActualRetryCount), Is.True);
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.AckRequired), Is.True);
+			Assert.That(message.Object.Context.IsPromoted(BtsProperties.SendPortName), Is.True);
 		}
 
 		[Test]
@@ -174,7 +188,49 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		}
 
 		[Test]
-		public void MockSupportsSetupOfIBaseMessageSetPropertyExtensionMethod()
+		public void MockSupportsVerifiableSetupOfIBaseMessageContextPromoteExtensionMethodToBeCalledAgainstMessage()
+		{
+			var message = new Mock<IBaseMessage>();
+			message
+				.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10))
+				.Verifiable();
+			message
+				.Setup(m => m.Promote(BtsProperties.AckRequired, true))
+				.Verifiable();
+			message
+				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
+				.Verifiable();
+
+			message.Object.Promote(BtsProperties.ActualRetryCount, 10);
+			message.Object.Promote(BtsProperties.AckRequired, true);
+			message.Object.Promote(BtsProperties.SendPortName, "send-port-name");
+
+			message.Verify();
+		}
+
+		[Test]
+		public void MockSupportsVerifiableSetupOfIBaseMessageContextPromoteExtensionMethodToBeCalledAgainstMessageContext()
+		{
+			var message = new Mock<IBaseMessage>();
+			message
+				.Setup(m => m.Promote(BtsProperties.ActualRetryCount, 10))
+				.Verifiable();
+			message
+				.Setup(m => m.Promote(BtsProperties.AckRequired, true))
+				.Verifiable();
+			message
+				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
+				.Verifiable();
+
+			message.Object.Context.Promote(BtsProperties.ActualRetryCount, 10);
+			message.Object.Context.Promote(BtsProperties.AckRequired, true);
+			message.Object.Context.Promote(BtsProperties.SendPortName, "send-port-name");
+
+			message.Verify();
+		}
+
+		[Test]
+		public void MockSupportsVerifiableSetupOfIBaseMessageContextSetPropertyExtensionMethodToBeCalledAgainstMessage()
 		{
 			var message = new Mock<IBaseMessage>();
 			message
@@ -195,31 +251,28 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		}
 
 		[Test]
-		public void MockSupportsVerifiableSetupOnContext()
+		public void MockSupportsVerifiableSetupOfIBaseMessageContextSetPropertyExtensionMethodToBeCalledAgainstMessageContext()
 		{
-			var message = new Mock<IBaseMessage>(MockBehavior.Strict);
+			var message = new Mock<IBaseMessage>();
 			message
-				.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId))
-				.Returns(It.IsAny<string>())
+				.Setup(m => m.SetProperty(BtsProperties.ActualRetryCount, 10))
 				.Verifiable();
 			message
-				.Setup(m => m.GetProperty(TrackingProperties.ProcessingStepActivityId))
-				.Returns(It.IsAny<string>())
+				.Setup(m => m.SetProperty(BtsProperties.AckRequired, true))
+				.Verifiable();
+			message
+				.Setup(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"))
 				.Verifiable();
 
-			message.Object.GetProperty(TrackingProperties.ProcessActivityId);
+			message.Object.Context.SetProperty(BtsProperties.ActualRetryCount, 10);
+			message.Object.Context.SetProperty(BtsProperties.AckRequired, true);
+			message.Object.Context.SetProperty(BtsProperties.SendPortName, "send-port-name");
 
-			Assert.That(
-				() => message.Verify(),
-				Throws.InstanceOf<MockException>().With.Message.EqualTo(
-					string.Format(
-						"The following setups were not matched:\n" + "IBaseMessage m => m.Context.Read(\"{0}\", \"{1}\")\r\n",
-						TrackingProperties.ProcessingStepActivityId.Name,
-						TrackingProperties.ProcessingStepActivityId.Namespace)));
+			message.Verify();
 		}
 
 		[Test]
-		public void MockSupportsVerifyOfIBaseMessagePromoteExtensionMethod()
+		public void MockSupportsVerifyOfIBaseMessageContextPromoteExtensionMethod()
 		{
 			var message = new Mock<IBaseMessage>();
 
@@ -236,7 +289,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		}
 
 		[Test]
-		public void MockSupportsVerifyOfIBaseMessageSetPropertyExtensionMethod()
+		public void MockSupportsVerifyOfIBaseMessageContextSetPropertyExtensionMethod()
 		{
 			var message = new Mock<IBaseMessage>();
 
@@ -250,6 +303,75 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			message.Verify(m => m.SetProperty(BtsProperties.AckRequired, true), Times.Once);
 			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
 			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyOfIBaseMessageExtensionMethods()
+		{
+			var message = new Mock<IBaseMessage>();
+
+			message.Object.DeleteProperty(BtsProperties.InboundTransportLocation);
+			message.Object.GetProperty(BtsProperties.SendPortName);
+			message.Object.SetProperty(BtsProperties.SendPortName, "send-port-name");
+			message.Object.Promote(BtsProperties.ReceivePortName, "receive-port-name");
+
+			message.Verify(m => m.DeleteProperty(BtsProperties.InboundTransportLocation));
+			message.Verify(m => m.Context.DeleteProperty(BtsProperties.InboundTransportLocation));
+			message.Verify(m => m.Context.Write(BtsProperties.InboundTransportLocation.Name, BtsProperties.InboundTransportLocation.Namespace, null));
+			message.Verify(m => m.GetProperty(BtsProperties.SendPortName));
+			message.Verify(m => m.Context.GetProperty(BtsProperties.SendPortName));
+			message.Verify(m => m.Context.Read(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace));
+			message.Verify(m => m.SetProperty(BtsProperties.SendPortName, "send-port-name"));
+			message.Verify(m => m.Context.SetProperty(BtsProperties.SendPortName, "send-port-name"));
+			message.Verify(m => m.Context.Write(BtsProperties.SendPortName.Name, BtsProperties.SendPortName.Namespace, "send-port-name"));
+			message.Verify(m => m.Promote(BtsProperties.ReceivePortName, "receive-port-name"));
+			message.Verify(m => m.Context.Promote(BtsProperties.ReceivePortName, "receive-port-name"));
+			message.Verify(m => m.Context.Promote(BtsProperties.ReceivePortName.Name, BtsProperties.ReceivePortName.Namespace, "receive-port-name"));
+		}
+
+		[Test]
+		public void MockSupportsVerifyOfIBaseMessagePromoteExtensionMethod()
+		{
+			var message = new Mock<IBaseMessage>();
+
+			message.Object.Promote(BtsProperties.ActualRetryCount, 10);
+			message.Object.Promote(BtsProperties.AckRequired, true);
+			message.Object.Promote(BtsProperties.SendPortName, "send-port-name");
+
+			message.Verify(m => m.Promote(BtsProperties.ActualRetryCount, 10));
+			message.Verify(m => m.Promote(BtsProperties.ActualRetryCount, 10), Times.Once);
+			message.Verify(m => m.Promote(BtsProperties.AckRequired, true));
+			message.Verify(m => m.Promote(BtsProperties.AckRequired, true), Times.Once);
+			message.Verify(m => m.Promote(BtsProperties.SendPortName, "send-port-name"));
+			message.Verify(m => m.Promote(BtsProperties.SendPortName, "send-port-name"), Times.Once);
+		}
+
+		[Test]
+		public void MockSupportsVerifyOfVerifiableSetupOnContext()
+		{
+			var message = new Mock<IBaseMessage>(MockBehavior.Strict);
+			message
+				.Setup(m => m.GetProperty(TrackingProperties.ProcessActivityId))
+				.Returns(It.IsAny<string>())
+				.Verifiable();
+			message
+				.Setup(m => m.GetProperty(TrackingProperties.ProcessingStepActivityId))
+				.Returns(It.IsAny<string>())
+				.Verifiable();
+			message
+				.Setup(m => m.Promote(BtsProperties.SendPortName, "send-port-name"))
+				.Verifiable();
+
+			message.Object.GetProperty(TrackingProperties.ProcessActivityId);
+			message.Object.Promote(BtsProperties.SendPortName, "send-port-name");
+
+			Assert.That(
+				() => message.Verify(),
+				Throws.InstanceOf<MockException>().With.Message.EqualTo(
+					string.Format(
+						"The following setups were not matched:\n" + "IBaseMessage m => m.Context.Read(\"{0}\", \"{1}\")\r\n",
+						TrackingProperties.ProcessingStepActivityId.Name,
+						TrackingProperties.ProcessingStepActivityId.Namespace)));
 		}
 
 		[Test]

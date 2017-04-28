@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
 using Moq.Language.Flow;
@@ -70,16 +71,18 @@ namespace Be.Stateless.BizTalk.Unit.Message
 				switch (methodCallExpression.Method.Name)
 				{
 					case "DeleteProperty":
-						return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, null));
+						return base.Setup(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, null));
+					//return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, null));
 					case "SetProperty":
 						var writtenValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, writtenValue));
+						return base.Setup(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, writtenValue));
+					//return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, writtenValue));
 					case "Promote":
 						var promotedValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
 						// setup IsPromoted as well, but to mock how a promoted property actually behaves it must also have a value to be read
-						SetupContext(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace)).Returns(promotedValue);
-						SetupContext(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace)).Returns(true);
-						return SetupContext(m => m.Context.Promote(qualifiedName.Name, qualifiedName.Namespace, promotedValue));
+						base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace)).Returns(promotedValue);
+						base.Setup(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace)).Returns(true);
+						return base.Setup(m => m.Context.Promote(qualifiedName.Name, qualifiedName.Namespace, promotedValue));
 					default:
 						throw new NotSupportedException(string.Format("Unexpected IBaseMessage extension method: '{0}'.", methodCallExpression.Method.Name));
 				}
@@ -97,7 +100,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			{
 				// rewrite Setups
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return SetupContext(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
+				return base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
 			// let base class handle all other Setups
@@ -112,7 +115,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			{
 				// rewrite Setups
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return SetupContext(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace));
+				return base.Setup(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
 			// let base class handle all other Setups
@@ -127,7 +130,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			{
 				// rewrite Setups
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return SetupContext(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
+				return base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
 			}
 
 			// let base class handle all other Setups
@@ -158,6 +161,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// TODO var c = Object.Context; <-- can't have this setup to be verified
 #pragma warning disable 168
+			// TODO ? why thise line ?
 			// ReSharper disable once UnusedVariable
 			var p = Object.BodyPart;
 #pragma warning restore 168
@@ -194,61 +198,23 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept and rewrite IBaseMessage Verify calls against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IfNotNull(t => t == typeof(BaseMessage) || t == typeof(BaseMessageContextExtensions)))
 			{
 				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
 				var rewrittenExpression = _contextMock.RewriteExpression(methodCallExpression);
+				_contextMock.Verify(rewrittenExpression, times, failMessage);
+			}
+			else if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(IBaseMessageContext))
+			{
+				var parameter = Expression.Parameter(typeof(IBaseMessageContext), "c");
+				var ec = Expression.Call(parameter, methodCallExpression.Method, methodCallExpression.Arguments);
+				var rewrittenExpression = Expression.Lambda<Action<IBaseMessageContext>>(ec, parameter);
 				_contextMock.Verify(rewrittenExpression, times, failMessage);
 			}
 			else
 			{
 				// let base class handle all other Verify calls
 				Verify((Expression<Action<T>>) (Expression) expression, times, failMessage);
-			}
-		}
-
-		private ISetup<T> SetupContext(Expression<Action<T>> expression)
-		{
-			// ensures nested Context mock keeps its DefaultValue.Empty
-			var backup = DefaultValue;
-			try
-			{
-				DefaultValue = DefaultValue.Empty;
-				return Setup(expression);
-			}
-			finally
-			{
-				DefaultValue = backup;
-			}
-		}
-
-		private ISetup<T, TResult> SetupContext<TResult>(Expression<Func<T, TResult>> expression) where TResult : struct
-		{
-			// ensures nested Context mock keeps its DefaultValue.Empty
-			var backup = DefaultValue;
-			try
-			{
-				DefaultValue = DefaultValue.Empty;
-				return Setup(expression);
-			}
-			finally
-			{
-				DefaultValue = backup;
-			}
-		}
-
-		private ISetup<T, object> SetupContext(Expression<Func<T, object>> expression)
-		{
-			// ensures nested Context mock keeps its DefaultValue.Empty
-			var backup = DefaultValue;
-			try
-			{
-				DefaultValue = DefaultValue.Empty;
-				return Setup(expression);
-			}
-			finally
-			{
-				DefaultValue = backup;
 			}
 		}
 
