@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Unit.Message.Language.Flow;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
@@ -32,7 +33,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 	/// <see cref="Moq.Mock"/> overloads to support the direct setup of the <see cref="BaseMessage"/>'s extension methods
 	/// to read, write and promote <see cref="IBaseMessageContext"/> properties in a shorter and <b>type-safe</b> way.
 	/// </summary>
-	/// <typeparam name="T">
+	/// <typeparam name="TMock">
 	/// Type to mock, which can be an interface or a class; in this case, <see cref="IBaseMessage"/>.
 	/// </typeparam>
 	/// <seealso cref="BaseMessage.GetProperty{T}(IBaseMessage,MessageContextProperty{T,string})"/>
@@ -41,114 +42,104 @@ namespace Be.Stateless.BizTalk.Unit.Message
 	/// <seealso cref="BaseMessage.SetProperty{T,TV}(IBaseMessage,ContextProperties.MessageContextProperty{T,TV},TV)"/>
 	/// <seealso cref="BaseMessage.Promote{T}(IBaseMessage,ContextProperties.MessageContextProperty{T,string},string)"/>
 	/// <seealso cref="BaseMessage.Promote{T,TV}(IBaseMessage,ContextProperties.MessageContextProperty{T,TV},TV)"/>
+	[SuppressMessage("ReSharper", "IdentifierTypo")]
 	[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-	public class Mock<T> : Moq.Mock<T> where T : class, IBaseMessage
+	public class Mock<TMock> : Moq.Mock<TMock> where TMock : class, IBaseMessage
 	{
 		public Mock() : this(MockBehavior.Default) { }
 
-		public Mock(MockBehavior behavior) : this(behavior, new object[0]) { }
-
-		public Mock(params object[] args) : this(MockBehavior.Default, args) { }
-
-		public Mock(MockBehavior behavior, params object[] args) : base(behavior, args)
+		public Mock(MockBehavior behavior) : base(behavior)
 		{
-			// avoid NullReferenceException when calling .GetProperty() extension on IBaseMessage mock and no property setup has been performed
-			_contextMock = new Context.Mock<IBaseMessageContext>(behavior);
-			Setup(m => m.Context).Returns(_contextMock.Object);
+			// setup a default context so that .GetProperty() extension on IBaseMessage mock can be called for property without setup
+
+			// HACK Don't setup a new Context.Mock<> of our own as it would be overwritten by Moq recursive mocking
+			// feature. Hence we perform a mock setup that will kick the recursive mocking to instantiate a context mock
+			// that will be wrapped and delegated to by our own Context.Mock<>. This must be considered as a bug in Moq.
+			base.Setup(msg => msg.Context.AddPredicate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()));
+			// ReSharper disable once VirtualMemberCallInConstructor
+			_contextMock = new Context.Mock<IBaseMessageContext>(behavior, Get(Object.Context));
+
+			// the following two lines should have been used instead
+			//_contextMock = new Context.Mock<IBaseMessageContext>(behavior);
+			//base.Setup(msg => msg.Context).Returns(_contextMock.Object);
 
 			// hook GetOriginalDataStream() onto BodyPart.Data, so that it does not fail when BodyPart has a Data stream
-			Setup(m => m.BodyPart.GetOriginalDataStream()).Returns(() => Object.BodyPart.Data);
+			base.Setup(msg => msg.BodyPart.GetOriginalDataStream()).Returns(() => Object.BodyPart.Data);
 		}
 
-		public ISetup<T> Setup(Expression<Action<IBaseMessage>> expression)
+		public ISetup<TMock> Setup(Expression<Action<IBaseMessage>> expression)
 		{
-			// intercept Setups
+			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
 			{
-				// rewrite Setups
-				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				switch (methodCallExpression.Method.Name)
-				{
-					case "DeleteProperty":
-						return base.Setup(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, null));
-					//return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, null));
-					case "SetProperty":
-						var writtenValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						return base.Setup(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, writtenValue));
-					//return SetupContext(m => m.Context.Write(qualifiedName.Name, qualifiedName.Namespace, writtenValue));
-					case "Promote":
-						var promotedValue = Expression.Lambda(methodCallExpression.Arguments[2]).Compile().DynamicInvoke();
-						// setup IsPromoted as well, but to mock how a promoted property actually behaves it must also have a value to be read
-						base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace)).Returns(promotedValue);
-						base.Setup(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace)).Returns(true);
-						return base.Setup(m => m.Context.Promote(qualifiedName.Name, qualifiedName.Namespace, promotedValue));
-					default:
-						throw new NotSupportedException(string.Format("Unexpected IBaseMessage extension method: '{0}'.", methodCallExpression.Method.Name));
-				}
+				return new ContextMethodCallSetup<TMock>(_contextMock.SetupCoreMethodCallExpression(methodCallExpression));
 			}
 
-			// let base class handle all other Setups
-			return Setup((Expression<Action<T>>) (Expression) expression);
+			// let base class handle all other setup
+			return base.Setup((Expression<Action<TMock>>) (Expression) expression);
 		}
 
-		public ISetup<T, object> Setup(Expression<Func<IBaseMessage, string>> expression)
+		public ISetup<TMock, object> Setup(Expression<Func<IBaseMessage, string>> expression)
 		{
-			// intercept Setups
+			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "GetProperty")
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+				&& methodCallExpression.Method.Name == "GetProperty")
 			{
-				// rewrite Setups
+				// rewrite setup to delegate it to context mock
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
+				return new ContextFunctionCallSetup<TMock, object>(_contextMock.Setup(ctxt => ctxt.Read(qualifiedName.Name, qualifiedName.Namespace)));
 			}
 
-			// let base class handle all other Setups
-			return Setup((Expression<Func<T, object>>) (Expression) expression);
+			// let base class handle all other setup
+			return base.Setup((Expression<Func<TMock, object>>) (Expression) expression);
 		}
 
-		public ISetup<T, bool> Setup(Expression<Func<IBaseMessage, bool>> expression)
+		public ISetup<TMock, bool> Setup(Expression<Func<IBaseMessage, bool>> expression)
 		{
-			// intercept Setups
+			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "IsPromoted")
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+				&& methodCallExpression.Method.Name == "IsPromoted")
 			{
-				// rewrite Setups
+				// rewrite setup to delegate it to context mock
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return base.Setup(m => m.Context.IsPromoted(qualifiedName.Name, qualifiedName.Namespace));
+				return new ContextFunctionCallSetup<TMock, bool>(_contextMock.Setup(ctxt => ctxt.IsPromoted(qualifiedName.Name, qualifiedName.Namespace)));
 			}
 
-			// let base class handle all other Setups
-			return Setup((Expression<Func<T, bool>>) (Expression) expression);
+			// let base class handle all other setup
+			return base.Setup((Expression<Func<TMock, bool>>) (Expression) expression);
 		}
 
-		public ISetup<T, object> Setup<TResult>(Expression<Func<IBaseMessage, TResult?>> expression) where TResult : struct
+		public ISetup<TMock, object> Setup<TResult>(Expression<Func<IBaseMessage, TResult?>> expression) where TResult : struct
 		{
-			// intercept and rewrite IBaseMessage Setups against IBaseMessageContext
+			// intercept and rewrite IBaseMessage setup against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage) && methodCallExpression.Method.Name == "GetProperty")
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+				&& methodCallExpression.Method.Name == "GetProperty")
 			{
-				// rewrite Setups
+				// rewrite setup to delegate it to context mock
 				var qualifiedName = _contextMock.GetContextPropertyXmlQualifiedName(methodCallExpression);
-				return base.Setup(m => m.Context.Read(qualifiedName.Name, qualifiedName.Namespace));
+				return new ContextFunctionCallSetup<TMock, object>(_contextMock.Setup(ctxt => ctxt.Read(qualifiedName.Name, qualifiedName.Namespace)));
 			}
 
-			// let base class handle all other Setups
-			return Setup((Expression<Func<T, object>>) (Expression) expression);
+			// let base class handle all other setup
+			return base.Setup((Expression<Func<TMock, object>>) (Expression) expression);
 		}
 
-		public ISetup<T, TResult> Setup<TResult>(Expression<Func<IBaseMessage, TResult>> expression)
+		public ISetup<TMock, TResult> Setup<TResult>(Expression<Func<IBaseMessage, TResult>> expression)
 		{
-			// intercept Setups
+			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(BaseMessage))
-				throw new NotSupportedException(
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
+				throw new InvalidOperationException(
 					string.Format(
-						"Unexpected IBaseMessage extension method: '{0}'.",
+						"Unexpected call of extension method: '{0}'.",
 						methodCallExpression.Method.Name));
 
-			// let base class handle all other Setups
-			return Setup((Expression<Func<T, TResult>>) (Expression) expression);
+			// let base class handle all other setup
+			return base.Setup((Expression<Func<TMock, TResult>>) (Expression) expression);
 		}
 
 		public new void Verify()
@@ -159,12 +150,6 @@ namespace Be.Stateless.BizTalk.Unit.Message
 
 		public new void VerifyAll()
 		{
-			// TODO var c = Object.Context; <-- can't have this setup to be verified
-#pragma warning disable 168
-			// TODO ? why thise line ?
-			// ReSharper disable once UnusedVariable
-			var p = Object.BodyPart;
-#pragma warning restore 168
 			_contextMock.VerifyAll();
 			base.VerifyAll();
 		}
@@ -198,15 +183,15 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept and rewrite IBaseMessage Verify calls against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IfNotNull(t => t == typeof(BaseMessage) || t == typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
 			{
 				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
 				var rewrittenExpression = _contextMock.RewriteExpression(methodCallExpression);
 				_contextMock.Verify(rewrittenExpression, times, failMessage);
 			}
-			else if (methodCallExpression != null && methodCallExpression.Method.DeclaringType == typeof(IBaseMessageContext))
+			else if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf<IBaseMessageContext>())
 			{
-				var parameter = Expression.Parameter(typeof(IBaseMessageContext), "c");
+				var parameter = Expression.Parameter(typeof(IBaseMessageContext), "ctxt");
 				var ec = Expression.Call(parameter, methodCallExpression.Method, methodCallExpression.Arguments);
 				var rewrittenExpression = Expression.Lambda<Action<IBaseMessageContext>>(ec, parameter);
 				_contextMock.Verify(rewrittenExpression, times, failMessage);
@@ -214,7 +199,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 			else
 			{
 				// let base class handle all other Verify calls
-				Verify((Expression<Action<T>>) (Expression) expression, times, failMessage);
+				Verify((Expression<Action<TMock>>) (Expression) expression, times, failMessage);
 			}
 		}
 

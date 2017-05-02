@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,36 @@ namespace Be.Stateless.Extensions
 {
 	public static class TypeExtensions
 	{
+		public static bool IsTypeOf<T>(this Type type)
+		{
+			return type == typeof(T);
+		}
+
+		public static bool IsTypeOf(this Type type, Type expectedType)
+		{
+			return type == expectedType;
+		}
+
+		public static bool IsTypeOf<T1, T2>(this Type type)
+		{
+			return type == typeof(T1) || type == typeof(T2);
+		}
+
+		public static bool IsTypeOf(this Type type, Type expectedType1, Type expectedType2)
+		{
+			return type == expectedType1 || type == expectedType2;
+		}
+
+		public static bool IsTypeOf<T1, T2, T3>(this Type type)
+		{
+			return type == typeof(T1) || type == typeof(T2) || type == typeof(T3);
+		}
+
+		public static bool IsTypeOf(this Type type, Type expectedType1, Type expectedType2, Type expectedType3)
+		{
+			return type == expectedType1 || type == expectedType2 || type == expectedType3;
+		}
+
 		public static bool IsSubclassOfOpenGenericType(this Type type, Type baseType)
 		{
 			// http://stackoverflow.com/questions/457676/check-if-a-class-is-derived-from-a-generic-class
