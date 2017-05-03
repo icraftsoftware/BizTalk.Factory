@@ -22,7 +22,7 @@ using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Tracking.Messaging
 {
-	internal class ActivityFactory : IActivityFactory, IBatchProcessActivityFactory
+	public class ActivityFactory : IActivityFactory, IBatchProcessActivityFactory
 	{
 		public ActivityFactory(IPipelineContext pipelineContext)
 		{
