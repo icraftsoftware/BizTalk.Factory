@@ -150,7 +150,6 @@
     <None Include="..\be.stateless.public.snk">
       <Link>be.stateless.public.snk</Link>
     </None>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
