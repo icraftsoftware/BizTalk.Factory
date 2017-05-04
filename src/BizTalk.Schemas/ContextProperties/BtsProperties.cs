@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using BTS;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
-	// ReSharper disable InconsistentNaming
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public static class BtsProperties
 	{
 		public static readonly MessageContextProperty<AckRequired, bool> AckRequired
@@ -59,6 +60,8 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<Operation, string> Operation
 			= new MessageContextProperty<Operation, string>();
 
+		[SuppressMessage("ReSharper", "IdentifierTypo")]
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		public static readonly MessageContextProperty<OutboundTransportCLSID, string> OutboundTransportCLSID
 			= new MessageContextProperty<OutboundTransportCLSID, string>();
 

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2014 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,15 +16,20 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using EdiOverride;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
-	// ReSharper disable InconsistentNaming
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public static class OverridableEdiProperties
 	{
 		public static readonly MessageContextProperty<OverrideEDIHeader, bool> Enabled
 			= new MessageContextProperty<OverrideEDIHeader, bool>();
+
+		public static readonly MessageContextProperty<UNB11, string> UNB11
+			= new MessageContextProperty<UNB11, string>();
 
 		public static readonly MessageContextProperty<UNB2_1, string> UNB2_1
 			= new MessageContextProperty<UNB2_1, string>();
@@ -40,8 +45,5 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<UNB9, string> UNB9
 			= new MessageContextProperty<UNB9, string>();
-
-		public static readonly MessageContextProperty<UNB11, string> UNB11
-			= new MessageContextProperty<UNB11, string>();
 	}
 }

@@ -30,19 +30,19 @@ using Moq.Language.Flow;
 namespace Be.Stateless.BizTalk.Unit.Message.Context
 {
 	/// <summary>
-	/// <see cref="Moq.Mock"/> overloads to support the direct setup of the <see cref="BaseMessageContextExtensions"/>'s
-	/// extension methods to read, write and promote <see cref="IBaseMessageContext"/> properties in a shorter and
-	/// <b>type-safe</b> way.
+	/// <see cref="Moq.Mock"/> overloads to support the direct setup of the <see cref="BaseMessageContext"/>'s extension
+	/// methods to read, write and promote <see cref="IBaseMessageContext"/> properties in a shorter and <b>type-safe</b>
+	/// way.
 	/// </summary>
 	/// <typeparam name="TMock">
 	/// Type to mock, which can be an interface or a class; in this case, <see cref="IBaseMessageContext"/>.
 	/// </typeparam>
-	/// <seealso cref="BaseMessageContextExtensions.GetProperty{T}(IBaseMessageContext,MessageContextProperty{T,string})"/>
-	/// <seealso cref="BaseMessageContextExtensions.GetProperty{T,TResult}(IBaseMessageContext,MessageContextProperty{T,TResult})"/>
-	/// <seealso cref="BaseMessageContextExtensions.SetProperty{T}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,string},string)"/>
-	/// <seealso cref="BaseMessageContextExtensions.SetProperty{T,TV}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,TV},TV)"/>
-	/// <seealso cref="BaseMessageContextExtensions.Promote{T}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,string},string)"/>
-	/// <seealso cref="BaseMessageContextExtensions.Promote{T,TV}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,TV},TV)"/>
+	/// <seealso cref="BaseMessageContext.GetProperty{T}(IBaseMessageContext,MessageContextProperty{T,string})"/>
+	/// <seealso cref="BaseMessageContext.GetProperty{T,TResult}(IBaseMessageContext,MessageContextProperty{T,TResult})"/>
+	/// <seealso cref="BaseMessageContext.SetProperty{T}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,string},string)"/>
+	/// <seealso cref="BaseMessageContext.SetProperty{T,TV}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,TV},TV)"/>
+	/// <seealso cref="BaseMessageContext.Promote{T}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,string},string)"/>
+	/// <seealso cref="BaseMessageContext.Promote{T,TV}(IBaseMessageContext,ContextProperties.MessageContextProperty{T,TV},TV)"/>
 	[SuppressMessage("ReSharper", "IdentifierTypo")]
 	[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 	public class Mock<TMock> : Moq.Mock<TMock> where TMock : class, IBaseMessageContext
@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext)))
 			{
 				return SetupCoreMethodCallExpression(methodCallExpression);
 			}
@@ -104,7 +104,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "GetProperty")
 			{
 				// rewrite setup
@@ -120,7 +120,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "IsPromoted")
 			{
 				// rewrite setup
@@ -136,7 +136,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "GetProperty")
 			{
 				// rewrite setup
@@ -152,7 +152,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext)))
 				throw new InvalidOperationException(
 					string.Format(
 						"Unexpected call of extension method: '{0}'.",
@@ -191,7 +191,7 @@ namespace Be.Stateless.BizTalk.Unit.Message.Context
 		{
 			// intercept and rewrite IBaseMessage Verify calls against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessageContext)))
 			{
 				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
 				var rewrittenExpression = RewriteExpression(methodCallExpression);

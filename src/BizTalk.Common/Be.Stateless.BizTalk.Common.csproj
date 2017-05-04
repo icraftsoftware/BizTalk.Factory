@@ -130,8 +130,8 @@
     </Compile>
     <Compile Include="Logging\Appender\TracingAppender.cs" />
     <Compile Include="Message\Base64StringMessageContent.cs" />
-    <Compile Include="Message\Extensions\BaseMessageEx.cs" />
-    <Compile Include="Message\Extensions\BaseMessageContext.cs" />
+    <Compile Include="Message\Extensions\BaseMessageExtensions.cs" />
+    <Compile Include="Message\Extensions\BaseMessageContextExtensions.cs" />
     <Compile Include="Message\Extensions\BaseMessagePart.cs" />
     <Compile Include="Message\Extensions\MessageDirectionExtensions.cs" />
     <Compile Include="Message\Extensions\PortTypeExtensions.cs" />

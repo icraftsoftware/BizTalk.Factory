@@ -64,6 +64,9 @@
     <Compile Include="ContextProperties\BtsProperties.cs" />
     <Compile Include="ContextProperties\EdiProperties.cs" />
     <Compile Include="ContextProperties\ErrorReportProperties.cs" />
+    <Compile Include="ContextProperties\Extensions\BizTalkFactoryPropertiesExtensions.cs" />
+    <Compile Include="ContextProperties\Extensions\ErrorReportPropertiesExtensions.cs" />
+    <Compile Include="ContextProperties\Extensions\TrackingPropertiesExtensions.cs" />
     <Compile Include="ContextProperties\FileProperties.cs" />
     <Compile Include="ContextProperties\IMessageContextProperty.cs" />
     <Compile Include="ContextProperties\MessageContextProperty.cs" />
@@ -73,7 +76,7 @@
     <Compile Include="ContextProperties\TrackingProperties.cs" />
     <Compile Include="ContextProperties\WcfProperties.cs" />
     <Compile Include="Message\Extensions\BaseMessage.cs" />
-    <Compile Include="Message\Extensions\BaseMessageContextExtensions.cs" />
+    <Compile Include="Message\Extensions\BaseMessageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

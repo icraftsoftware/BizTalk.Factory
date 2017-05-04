@@ -344,7 +344,8 @@ namespace Be.Stateless.BizTalk
 																	new XPathExtractor(BizTalkFactoryProperties.EnvelopeSpecName, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']", ExtractionMode.Promote),
 																	new XPathExtractor(BizTalkFactoryProperties.EnvelopePartition, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']"),
 																	new XPathExtractor(TrackingProperties.Value1, "/*[local-name()='Any']/*[local-name()='EnvelopeSpecName']"),
-																	new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
+																	new XPathExtractor(TrackingProperties.Value2, "/*[local-name()='Any']/*[local-name()='EnvironmentTag']"),
+																	new XPathExtractor(TrackingProperties.Value3, "/*[local-name()='Any']/*[local-name()='EnvelopePartition']")
 																}
 															},
 															new ActivityTracker()

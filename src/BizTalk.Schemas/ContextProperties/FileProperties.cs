@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,23 +17,24 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using FILE;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
-	// ReSharper disable InconsistentNaming
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public static class FileProperties
 	{
-		public static readonly MessageContextProperty<Password, string> Password
-			= new MessageContextProperty<Password, string>();
-
-		public static readonly MessageContextProperty<Username, string> Username
-			= new MessageContextProperty<Username, string>();
-
 		public static readonly MessageContextProperty<FileCreationTime, DateTime> FileCreationTime
 			= new MessageContextProperty<FileCreationTime, DateTime>();
 
+		public static readonly MessageContextProperty<Password, string> Password
+			= new MessageContextProperty<Password, string>();
+
 		public static readonly MessageContextProperty<ReceivedFileName, string> ReceivedFileName
 			= new MessageContextProperty<ReceivedFileName, string>();
+
+		public static readonly MessageContextProperty<Username, string> Username
+			= new MessageContextProperty<Username, string>();
 	}
 }

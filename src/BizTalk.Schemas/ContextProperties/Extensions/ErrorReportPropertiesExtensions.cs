@@ -17,20 +17,26 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
-using POP3;
+using Be.Stateless.BizTalk.Message.Extensions;
+using Microsoft.BizTalk.Message.Interop;
 
-namespace Be.Stateless.BizTalk.ContextProperties
+namespace Be.Stateless.BizTalk.ContextProperties.Extensions
 {
+	/// <summary>
+	/// Fluent-syntax <see cref="IBaseMessage"/> and <see cref="IBaseMessageContext"/> helpers for <see
+	/// cref="ErrorReportProperties"/> context properties.
+	/// </summary>
 	[SuppressMessage("ReSharper", "UnusedMember.Global")]
-	public static class Pop3Properties
+	public static class ErrorReportPropertiesExtensions
 	{
-		public static readonly MessageContextProperty<Date, string> Date
-			= new MessageContextProperty<Date, string>();
+		public static bool HasFailed(this IBaseMessage message)
+		{
+			return message.GetProperty(ErrorReportProperties.ErrorType) != null;
+		}
 
-		public static readonly MessageContextProperty<From, string> From
-			= new MessageContextProperty<From, string>();
-
-		public static readonly MessageContextProperty<Subject, string> Subject
-			= new MessageContextProperty<Subject, string>();
+		public static bool HasFailed(this IBaseMessageContext messageContext)
+		{
+			return messageContext.GetProperty(ErrorReportProperties.ErrorType) != null;
+		}
 	}
 }

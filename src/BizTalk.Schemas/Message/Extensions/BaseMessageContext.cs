@@ -23,7 +23,7 @@ using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Message.Extensions
 {
-	public static class BaseMessageContextExtensions
+	public static class BaseMessageContext
 	{
 		#region message's context property deletion
 

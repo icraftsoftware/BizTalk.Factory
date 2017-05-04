@@ -82,8 +82,6 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 		#endregion
 
-		// TODO troubleshoot deadlock AddPart and ReleaseBatch
-
 		[Test]
 		public void ControlReleaseAllEnvelopesAndAllPartitions()
 		{
@@ -105,19 +103,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& p.Value1 == "*"
-					&& p.Value2 == "*");
+					&& p.Value3 == "*");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
-					&& s.Value2 == "*");
+					&& s.Value3 == "*");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "*"
-					&& s.Value2 == "*");
+					&& s.Value3 == "*");
 
 			var queuedControlledReleases = BatchAdapter.QueuedControlledReleases.ToArray();
 			Assert.That(
@@ -152,19 +150,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& p.Value1 == "*"
-					&& p.Value2 == "p-one");
+					&& p.Value3 == "p-one");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
-					&& s.Value2 == "p-one");
+					&& s.Value3 == "p-one");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "*"
-					&& s.Value2 == "p-one");
+					&& s.Value3 == "p-one");
 
 			var queuedControlledReleases = BatchAdapter.QueuedControlledReleases.ToArray();
 			Assert.That(
@@ -200,19 +198,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Status == TrackingStatus.Completed
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "*");
+					&& p.Value3 == "*");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "*");
+					&& s.Value3 == "*");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "*");
+					&& s.Value3 == "*");
 
 			var queuedControlledReleases = BatchAdapter.QueuedControlledReleases.ToArray();
 			Assert.That(
@@ -258,7 +256,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == null); // partition 0 did not leak out of the database
+					&& p.Value3 == null); // partition 0 did not leak out of the database
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
@@ -268,7 +266,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == null); // partition 0 did not leak out of the database
+					&& s.Value3 == null); // partition 0 did not leak out of the database
 
 			Assert.That(
 				envelopeMessagingStep.Message.Body,
@@ -287,19 +285,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			Assert.That(BatchAdapter.QueuedControlledReleases.Count(), Is.EqualTo(1));
 			BatchReleasePort.Enable();
@@ -310,7 +308,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
@@ -320,7 +318,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			Assert.That(
 				envelopeMessagingStep.Message.Body,
@@ -403,19 +401,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "one");
+					&& p.Value3 == "one");
 			TrackingRepository.SingleProcess(
 				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "two");
+					&& p.Value3 == "two");
 			TrackingRepository.SingleProcess(
 				p => p.Name == Default.Processes.Unidentified
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "six");
+					&& p.Value3 == "six");
 		}
 
 		[Test]
@@ -435,7 +433,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "p-count-limit");
+					&& p.Value3 == "p-count-limit");
 
 			// 2 processes have been tracked as more items than twice the item count limit have been accumulated
 			// ReSharper disable PossibleMultipleEnumeration
@@ -453,14 +451,14 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "p-count-limit");
+					&& s.Value3 == "p-count-limit");
 			Assert.That(Regex.Matches(envelopeMessage1.Message.Body, @"<data>count-limit-value-\d</data>").Count, Is.EqualTo(3));
 			var envelopeMessage2 = processes[1].MessagingSteps.Single(
 				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "p-count-limit");
+					&& s.Value3 == "p-count-limit");
 			Assert.That(Regex.Matches(envelopeMessage2.Message.Body, @"<data>count-limit-value-\d</data>").Count, Is.EqualTo(3));
 
 			// 2 parts have been left in the database
@@ -479,7 +477,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
@@ -491,7 +489,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			BatchAdapter.CreateReleaseMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "release_batch.xml");
 			BatchReleasePort.Enable();
@@ -502,20 +500,20 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			// control message
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// 1st part
 			process.SingleMessagingStep(
 				s => s.ActivityID == addPartMessage1.ActivityID
@@ -523,7 +521,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// 2nd part
 			process.SingleMessagingStep(
 				s => s.ActivityID == addPartMessage2.ActivityID
@@ -531,7 +529,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// batch content
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
@@ -544,7 +542,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			var handlingProcessBatchMessagingStep = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
@@ -575,7 +573,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
@@ -587,7 +585,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			BatchAdapter.CreatePartMessage(_envelopeSpecName, "partition-z").DropToFolder(DropFolders.INPUT_FOLDER, "part.xml.part");
 			process = TrackingRepository.SingleProcess(
@@ -599,7 +597,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			BatchReleasePort.Enable();
 
@@ -615,7 +613,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// 2nd part
 			process.SingleMessagingStep(
 				s => s.ActivityID == addPartMessage2.ActivityID
@@ -623,7 +621,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// 3rd part
 			process.SingleMessagingStep(
 				s => s.ActivityID == addPartMessage3.ActivityID
@@ -631,7 +629,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			// batch content
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
@@ -644,7 +642,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			var handlingProcessBatchMessagingStep = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
@@ -678,7 +676,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1)
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
@@ -688,7 +686,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			// no batch release process has been created as no parts provide a MessagingStepActivityId that could be used to link a part to its batch
 			Assert.That(releaseProcessBatchMessagingStep.Processes.Count(p => p.Name == Factory.Areas.Batch.Processes.Release && p.BeginTime > StartTime), Is.EqualTo(0));

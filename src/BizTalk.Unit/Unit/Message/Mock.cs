@@ -71,7 +71,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext)))
 			{
 				return new ContextMethodCallSetup<TMock>(_contextMock.SetupCoreMethodCallExpression(methodCallExpression));
 			}
@@ -84,7 +84,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "GetProperty")
 			{
 				// rewrite setup to delegate it to context mock
@@ -100,7 +100,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "IsPromoted")
 			{
 				// rewrite setup to delegate it to context mock
@@ -116,7 +116,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept and rewrite IBaseMessage setup against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext))
 				&& methodCallExpression.Method.Name == "GetProperty")
 			{
 				// rewrite setup to delegate it to context mock
@@ -132,7 +132,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept setup
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext)))
 				throw new InvalidOperationException(
 					string.Format(
 						"Unexpected call of extension method: '{0}'.",
@@ -183,7 +183,7 @@ namespace Be.Stateless.BizTalk.Unit.Message
 		{
 			// intercept and rewrite IBaseMessage Verify calls against IBaseMessageContext
 			var methodCallExpression = expression.Body as MethodCallExpression;
-			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContextExtensions)))
+			if (methodCallExpression != null && methodCallExpression.Method.DeclaringType.IsTypeOf(typeof(BaseMessage), typeof(BaseMessageContext)))
 			{
 				// rewrite expression to let base Moq class handle It.Is<> and It.IsAny<> expressions should there be any
 				var rewrittenExpression = _contextMock.RewriteExpression(methodCallExpression);

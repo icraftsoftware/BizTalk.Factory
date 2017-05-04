@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,13 +62,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
-					&& s.Value2 == null);
+					&& s.Value3 == null);
 			var addPartMessage = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
-					&& s.Value2 == null);
+					&& s.Value3 == null);
 
 			var part = BatchAdapter.Parts.Single();
 			Assert.That(part.MessagingStepActivityId, Is.EqualTo(addPartMessage.ActivityID));
@@ -83,19 +83,19 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			var process = TrackingRepository.SingleProcess(
 				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime
-					&& p.Value2 == "partition-z");
+					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Batch.AddPart.FILE.XML"
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 			var addPartMessage = process.SingleMessagingStep(
 				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
-					&& s.Value2 == "partition-z");
+					&& s.Value3 == "partition-z");
 
 			var part = BatchAdapter.Parts.Single();
 			Assert.That(part.MessagingStepActivityId, Is.EqualTo(addPartMessage.ActivityID));

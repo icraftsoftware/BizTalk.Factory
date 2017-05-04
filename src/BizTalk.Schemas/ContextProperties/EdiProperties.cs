@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,24 +16,17 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using EDI;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
-	// ReSharper disable InconsistentNaming
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public static class EdiProperties
 	{
 		public static readonly MessageContextProperty<BGM1_1, string> BGM1_1
 			= new MessageContextProperty<BGM1_1, string>();
-
-		public static readonly MessageContextProperty<MKS1, string> MKS1
-			= new MessageContextProperty<MKS1, string>();
-
-		public static readonly MessageContextProperty<Unb21, string> UNB2_1
-			= new MessageContextProperty<Unb21, string>();
-
-		public static readonly MessageContextProperty<Unb31, string> UNB3_1
-			= new MessageContextProperty<Unb31, string>();
 
 		public static readonly MessageContextProperty<DestinationPartyReceiverIdentifier, string> DestinationPartyReceiverIdentifier
 			= new MessageContextProperty<DestinationPartyReceiverIdentifier, string>();
@@ -46,5 +39,14 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<DestinationPartySenderQualifier, string> DestinationPartySenderQualifier
 			= new MessageContextProperty<DestinationPartySenderQualifier, string>();
+
+		public static readonly MessageContextProperty<MKS1, string> MKS1
+			= new MessageContextProperty<MKS1, string>();
+
+		public static readonly MessageContextProperty<Unb21, string> UNB2_1
+			= new MessageContextProperty<Unb21, string>();
+
+		public static readonly MessageContextProperty<Unb31, string> UNB3_1
+			= new MessageContextProperty<Unb31, string>();
 	}
 }

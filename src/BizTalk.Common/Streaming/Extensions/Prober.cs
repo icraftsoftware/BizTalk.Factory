@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.Extensions;
+using Be.Stateless.Xml.Extensions;
 using Microsoft.BizTalk.Streaming;
 
 namespace Be.Stateless.BizTalk.Streaming.Extensions
@@ -61,9 +62,15 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 						// ReadElementString() calls MoveToContent() to find the next content node and then parses its
 						// value as a simple string if the element LocalName and NamespaceURI match the given arguments.
 						batchDescriptor.EnvelopeSpecName = xmlReader.ReadElementString(BizTalkFactoryProperties.EnvelopeSpecName.Name, schemaMetadata.TargetNamespace);
+						if (xmlReader.IsStartElement("EnvironmentTag", schemaMetadata.TargetNamespace))
+						{
+							batchDescriptor.EnvironmentTag = xmlReader.ReadString();
+							xmlReader.ReadEndElement("EnvironmentTag", schemaMetadata.TargetNamespace);
+						}
 						if (xmlReader.IsStartElement("Partition", schemaMetadata.TargetNamespace))
 						{
 							batchDescriptor.Partition = xmlReader.ReadString();
+							xmlReader.ReadEndElement("Partition", schemaMetadata.TargetNamespace);
 						}
 						return batchDescriptor;
 					}

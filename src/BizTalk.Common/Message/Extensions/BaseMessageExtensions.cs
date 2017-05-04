@@ -35,13 +35,8 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 	/// setters, and promoters.
 	/// </para>
 	/// </remarks>
-	public static class BaseMessageEx
+	public static class BaseMessageExtensions
 	{
-		public static bool HasFailed(this IBaseMessage message)
-		{
-			return message.GetProperty(ErrorReportProperties.ErrorType) != null;
-		}
-
 		public static Stream AsStream(this XLANGMessage message)
 		{
 			return message[0].AsStream();
@@ -95,7 +90,21 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 
 		#endregion
 
-		#region message's tracking context accessor
+		#region message's tracking context helpers
+
+		/// <summary>
+		/// Clear the <see cref="TrackingContext"/> associated to the <paramref name="message"/>.
+		/// </summary>
+		/// <param name="message">
+		/// Message whose associated <see cref="TrackingContext"/> will be cleared.
+		/// </param>
+		public static void ClearTrackingContext(this IBaseMessage message)
+		{
+			if (message == null) throw new ArgumentNullException("message");
+			message.DeleteProperty(TrackingProperties.ProcessActivityId);
+			message.DeleteProperty(TrackingProperties.ProcessingStepActivityId);
+			message.DeleteProperty(TrackingProperties.MessagingStepActivityId);
+		}
 
 		/// <summary>
 		/// Returns the <see cref="TrackingContext"/> associated to the <paramref name="message"/>.

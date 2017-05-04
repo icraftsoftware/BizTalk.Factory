@@ -19,6 +19,7 @@
 using System.IO;
 using System.Text;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.ContextProperties.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Message.Interop;

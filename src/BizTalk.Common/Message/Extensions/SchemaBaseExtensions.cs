@@ -18,8 +18,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Schema;
+using Microsoft.BizTalk.Message.Interop;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Message.Extensions
@@ -27,6 +29,31 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public static class SchemaBaseExtensions
 	{
+		#region Mock's Factory Hook Point
+
+		internal static Func<Type, ISchemaMetadata> SchemaMetadataFactory
+		{
+			get { return _schemaMetadataFactory; }
+			set { _schemaMetadataFactory = value; }
+		}
+
+		#endregion
+
+		public static bool IsAbout<T>(this IBaseMessage message) where T : SchemaBase
+		{
+			return message.GetProperty(BtsProperties.MessageType).IsOfType<T>();
+		}
+
+		public static bool IsAbout<T>(this IBaseMessageContext context) where T : SchemaBase
+		{
+			return context.GetProperty(BtsProperties.MessageType).IsOfType<T>();
+		}
+
+		public static bool IsOfType<T>(this string messageType) where T : SchemaBase
+		{
+			return messageType == typeof(T).GetMetadata().MessageType;
+		}
+
 		/// <summary>
 		/// Returns whether the <paramref name="type"/> is a <see cref="SchemaBase"/>-derived schema type.
 		/// </summary>
@@ -62,16 +89,6 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 			if (!type.IsSchema()) throw new ArgumentException("Type is not a SchemaBase derived Type instance.", "type");
 			return _schemaMetadataFactory(type);
 		}
-
-		#region Mock's Factory Hook Point
-
-		internal static Func<Type, ISchemaMetadata> SchemaMetadataFactory
-		{
-			get { return _schemaMetadataFactory; }
-			set { _schemaMetadataFactory = value; }
-		}
-
-		#endregion
 
 		private static Func<Type, ISchemaMetadata> _schemaMetadataFactory = type => SchemaMetadataCache.Instance[type];
 	}

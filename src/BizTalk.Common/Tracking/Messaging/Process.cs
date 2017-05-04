@@ -19,6 +19,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.ContextProperties.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Bam.EventObservation;

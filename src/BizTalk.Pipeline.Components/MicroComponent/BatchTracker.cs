@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				BatchReleaseProcessActivityTracker.Create(pipelineContext, message).TrackActivity(batchTrackingContext);
 
 				message.SetProperty(TrackingProperties.Value1, batchDescriptor.EnvelopeSpecName);
-				message.SetProperty(TrackingProperties.Value2, batchDescriptor.Partition);
+				message.SetProperty(TrackingProperties.Value2, batchDescriptor.EnvironmentTag);
+				message.SetProperty(TrackingProperties.Value3, batchDescriptor.Partition);
 			}
 			else
 			{

@@ -39,6 +39,42 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		}
 
 		[Test]
+		public void BatchDescriptorHasEnvironmentTag()
+		{
+			const string batchContent = @"<ns:BatchContent xmlns:ns=""urn:schemas.stateless.be:biztalk:batch:2012:12"">
+  <ns:EnvelopeSpecName>envelope-spec-name</ns:EnvelopeSpecName>
+  <ns:EnvironmentTag>environment-tag</ns:EnvironmentTag>
+  <ns:MessagingStepActivityIds>013684EE620E4A0BB6D6F7355B26D21B</ns:MessagingStepActivityIds>
+  <ns:Parts />
+</BatchContent>";
+			using (var stream = new StringStream(batchContent).AsMarkable())
+			{
+				var batchDescriptor = ((IProbeBatchContentStream) stream.Probe()).BatchDescriptor;
+				Assert.That(batchDescriptor.EnvelopeSpecName, Is.EqualTo("envelope-spec-name"));
+				Assert.That(batchDescriptor.EnvironmentTag, Is.EqualTo("environment-tag"));
+			}
+		}
+
+		[Test]
+		public void BatchDescriptorHasEnvironmentTagAndPartition()
+		{
+			const string batchContent = @"<ns:BatchContent xmlns:ns=""urn:schemas.stateless.be:biztalk:batch:2012:12"">
+  <ns:EnvelopeSpecName>envelope-spec-name</ns:EnvelopeSpecName>
+  <ns:EnvironmentTag>environment-tag</ns:EnvironmentTag>
+  <ns:Partition>p-one</ns:Partition>
+  <ns:MessagingStepActivityIds>013684EE620E4A0BB6D6F7355B26D21B</ns:MessagingStepActivityIds>
+  <ns:Parts />
+</BatchContent>";
+			using (var stream = new StringStream(batchContent).AsMarkable())
+			{
+				var batchDescriptor = ((IProbeBatchContentStream) stream.Probe()).BatchDescriptor;
+				Assert.That(batchDescriptor.EnvelopeSpecName, Is.EqualTo("envelope-spec-name"));
+				Assert.That(batchDescriptor.EnvironmentTag, Is.EqualTo("environment-tag"));
+				Assert.That(batchDescriptor.Partition, Is.EqualTo("p-one"));
+			}
+		}
+
+		[Test]
 		public void BatchDescriptorHasPartition()
 		{
 			const string batchContent = @"<ns:BatchContent xmlns:ns=""urn:schemas.stateless.be:biztalk:batch:2012:12"">

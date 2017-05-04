@@ -25,6 +25,7 @@ namespace Be.Stateless.BizTalk.Explorer
 	public class SendPortFixture
 	{
 		[Test]
+		[Explicit("BizTalk.Factory has to be deployed.")]
 		public void Unenlist()
 		{
 			var application = BizTalkServerGroup.Applications["BizTalk.Factory"];
