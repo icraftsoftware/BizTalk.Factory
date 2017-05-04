@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2015 François Chabot, Yves Dierick
+  Copyright © 2012 - 2017 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@
       <LocationPath>..\packages\log4net.2.0.8\lib\net40-full</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Quartz.dll">
-      <LocationPath>..\packages\Quartz.2.3.3\lib\net40</LocationPath>
+      <LocationPath>..\packages\Quartz.2.5.0\lib\net40</LocationPath>
     </ExternalAssemblies>
     <ExternalAssemblies Include="Be.Stateless.Extensions.dll">
       <LocationPath>..\Extensions\bin\$(Configuration)</LocationPath>
