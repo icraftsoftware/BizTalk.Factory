@@ -24,6 +24,7 @@ using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
+using Be.Stateless.BizTalk.Tracking.Extensions;
 using Be.Stateless.BizTalk.Tracking.Messaging;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Logging;

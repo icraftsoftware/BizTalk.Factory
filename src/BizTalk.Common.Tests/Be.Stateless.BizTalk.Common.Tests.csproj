@@ -114,7 +114,7 @@
     <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogateFixture.cs" />
     <Compile Include="Component\PropertyExtractorFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessageContextFixture.cs" />
-    <Compile Include="Message\Extensions\BaseMessageExFixture.cs" />
+    <Compile Include="Tracking\Extensions\TrackingContextFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessagePartFixture.cs" />
     <Compile Include="Message\Extensions\SchemaBaseExtensionsFixture.cs" />
     <Compile Include="Message\MessageFactoryFixture.cs" />

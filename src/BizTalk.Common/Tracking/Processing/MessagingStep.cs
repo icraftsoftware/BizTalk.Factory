@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Tracking.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 

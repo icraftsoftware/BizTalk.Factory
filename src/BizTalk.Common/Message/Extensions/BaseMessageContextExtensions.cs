@@ -21,16 +21,12 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Tracking;
 using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.Message.Extensions
 {
 	public static class BaseMessageContextExtensions
 	{
-		#region message context xml serialization
-
 		public static string ToXml(this IBaseMessageContext context)
 		{
 			// cache xmlns while constructing xml infoset...
@@ -62,62 +58,5 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 
 			return xdoc.ToString(SaveOptions.DisableFormatting);
 		}
-
-		#endregion
-
-		#region tracking context helpers
-
-		/// <summary>
-		/// Clear the <see cref="TrackingContext"/> stored into the <paramref name="messageContext"/>.
-		/// </summary>
-		/// <param name="messageContext">
-		/// Message context to clear the <see cref="TrackingContext"/> from.
-		/// </param>
-		public static void ClearTrackingContext(this IBaseMessageContext messageContext)
-		{
-			if (messageContext == null) throw new ArgumentNullException("messageContext");
-			messageContext.DeleteProperty(TrackingProperties.ProcessActivityId);
-			messageContext.DeleteProperty(TrackingProperties.ProcessingStepActivityId);
-			messageContext.DeleteProperty(TrackingProperties.MessagingStepActivityId);
-		}
-
-		/// <summary>
-		/// Returns the <see cref="TrackingContext"/> stored into the <paramref name="messageContext"/>.
-		/// </summary>
-		/// <param name="messageContext">
-		/// Message context that stores the <see cref="TrackingContext"/> to be returned.
-		/// </param>
-		/// <returns>
-		/// The <see cref="TrackingContext"/> stored into the <paramref name="messageContext"/>.
-		/// </returns>
-		public static TrackingContext GetTrackingContext(this IBaseMessageContext messageContext)
-		{
-			if (messageContext == null) throw new ArgumentNullException("messageContext");
-			return new TrackingContext {
-				ProcessActivityId = messageContext.GetProperty(TrackingProperties.ProcessActivityId),
-				ProcessingStepActivityId = messageContext.GetProperty(TrackingProperties.ProcessingStepActivityId),
-				MessagingStepActivityId = messageContext.GetProperty(TrackingProperties.MessagingStepActivityId)
-			};
-		}
-
-		/// <summary>
-		/// Store the given <see cref="TrackingContext"/> into the <paramref name="messageContext"/>.
-		/// </summary>
-		/// <param name="messageContext">
-		/// Message context to store the <paramref name="trackingContext"/> into.
-		/// </param>
-		/// <param name="trackingContext">
-		/// The <see cref="TrackingContext"/> to be stored into the <paramref name="messageContext"/>.
-		/// </param>
-		public static TrackingContext SetTrackingContext(this IBaseMessageContext messageContext, TrackingContext trackingContext)
-		{
-			if (messageContext == null) throw new ArgumentNullException("messageContext");
-			messageContext.SetProperty(TrackingProperties.ProcessActivityId, trackingContext.ProcessActivityId);
-			messageContext.SetProperty(TrackingProperties.ProcessingStepActivityId, trackingContext.ProcessingStepActivityId);
-			messageContext.SetProperty(TrackingProperties.MessagingStepActivityId, trackingContext.MessagingStepActivityId);
-			return trackingContext;
-		}
-
-		#endregion
 	}
 }

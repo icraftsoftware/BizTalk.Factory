@@ -107,6 +107,7 @@
     <Compile Include="ProcessInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Tracking\Extensions\TrackingContextExtensions.cs" />
     <Compile Include="Tracking\Messaging\ProcessName.cs" />
     <Compile Include="Transform\XlangMessageCollection.cs" />
     <Compile Include="Transform\XlangTransformHelper.cs" />
@@ -261,6 +262,7 @@
     <None Include="Tracking\ActivityModel\ActivityModel.xml" />
     <None Include="Tracking\ActivityModel\ActivityModelToTypedApi.xslt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTypedBamApi" Inputs="$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModel.xml;$(MSBuildThisFileDirectory)Tracking\ActivityModel\ActivityModelToTypedApi.xslt" Outputs="$(MSBuildThisFileDirectory)Tracking\Messaging\Tracking.Designer.cs;$(MSBuildThisFileDirectory)Tracking\Processing\Tracking.Designer.cs">
     <Message Text="Generating Tracking\Messaging\Tracking.Designer.cs" />
