@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[XmlElement("TrackingResolutionPolicy", typeof(PolicyNameXmlSerializer))]
 		public PolicyName TrackingResolutionPolicyName { get; set; }
 
-		private void CacheTrackingContext(IBaseMessage message)
+		protected void CacheTrackingContext(IBaseMessage message)
 		{
 			var duration = (int) TrackingContextCacheDuration.TotalSeconds;
 			// if propagation of TrackingContext is not disabled, cache the current TrackingContext
@@ -137,7 +137,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			}
 		}
 
-		private void RestoreCachedTrackingContext(IBaseMessage message)
+		protected void RestoreCachedTrackingContext(IBaseMessage message)
 		{
 			var duration = (int) TrackingContextCacheDuration.TotalSeconds;
 			// if propagation of TrackingContext is not disabled, restore a previously cached TrackingContext
