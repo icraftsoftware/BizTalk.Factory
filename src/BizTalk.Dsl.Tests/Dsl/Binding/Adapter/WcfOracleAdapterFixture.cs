@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		{
 			var mock = new Mock<WcfOracleAdapter<CustomRLConfig>> { CallBase = true };
 			var wsa = mock.Object as IAdapter;
-			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-OracleDB"));
+			Assert.That(wsa.ProtocolType.Name, Is.EqualTo("WCF-OracleDB").Or.EqualTo("WCF-Oracle"));
 			Assert.That(wsa.ProtocolType.Capabilities, Is.EqualTo(779));
 			Assert.That(wsa.ProtocolType.ConfigurationClsid, Is.EqualTo("d7127586-e851-412e-8a8a-2428aeddc219"));
 		}

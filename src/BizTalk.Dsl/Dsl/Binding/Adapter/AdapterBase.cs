@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,30 +18,31 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Management;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Adapter.Sftp;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Deployment.Binding;
-using Microsoft.Win32;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class AdapterBase : IAdapter, IAdapterBindingSerializerFactory
 	{
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		protected static ProtocolType GetProtocolTypeFromConfigurationClassId(Guid configurationClassId)
 		{
-			// [HKCR\Wow6432Node\CLSID\<configurationClassId>\BizTalk]
-			using (var classes32 = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry32))
-			using (var btsKey = classes32.SafeOpenSubKey(string.Format(@"CLSID\{0:B}\BizTalk", configurationClassId)))
-			{
-				var capabilities = (int) btsKey.GetValue("Constraints");
-				var name = (string) btsKey.GetValue("TransportType");
-				return new ProtocolType {
-					Capabilities = capabilities,
-					ConfigurationClsid = configurationClassId.ToString(),
-					Name = name
-				};
-			}
+			var scope = new ManagementScope(@"\\.\root\MicrosoftBizTalkServer");
+			var query = new SelectQuery(
+				"MSBTS_AdapterSetting",
+				string.Format("MgmtCLSID='{0:B}'", configurationClassId),
+				new[] { "Name", "Constraints" });
+			var mo = new ManagementObjectSearcher(scope, query).Get().Cast<ManagementObject>().Single();
+			return new ProtocolType {
+				Capabilities = (int) (uint) mo["Constraints"],
+				ConfigurationClsid = configurationClassId.ToString(),
+				Name = (string) mo["Name"]
+			};
 		}
 
 		protected AdapterBase(ProtocolType protocolType)
