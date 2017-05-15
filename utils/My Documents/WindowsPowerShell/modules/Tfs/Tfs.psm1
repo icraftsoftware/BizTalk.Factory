@@ -148,12 +148,12 @@ function Get-Workspaces
     )
 
     $tfs = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($Uri)
-    $versionControl = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
+    $vcs = $tfs.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
 
     # the intuitive call can't be performed directly, $null cannot be passed, see
     # https://connect.microsoft.com/feedback/ViewFeedback.aspx?SiteID=99&FeedbackID=307821
-    # $workspaces = $versionControl.QueryWorkspaces($null, '.', $env:COMPUTERNAME)
-    $workspaces = Invoke-Method -InputObject $versionControl `
+    # $workspaces = $vcs.QueryWorkspaces($null, '.', $env:COMPUTERNAME)
+    $workspaces = Invoke-Method -InputObject $vcs `
         -MethodName 'QueryWorkspaces' `
         -Arguments $null, '.', $env:COMPUTERNAME
 

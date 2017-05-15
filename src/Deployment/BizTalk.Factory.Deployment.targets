@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2016 François Chabot, Yves Dierick
+  Copyright © 2012 - 2017 François Chabot, Yves Dierick
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -352,12 +352,11 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CopyCertificatesToRedist" Condition=" '$(IncludeCertificates)' == 'true' ">
+  <Target Name="CopyCertificatesToRedist" Condition=" '@(Certificates)' != '' ">
     <Message Text="Copying certificates to redist folder..." />
 
     <Copy DestinationFolder="$(RedistDir)"
-          SourceFiles="@(Certificates -> '%(LocationPath)\%(Identity)')"
-          Condition=" '@(Certificates)' != '' " />
+          SourceFiles="@(Certificates -> '%(LocationPath)\%(Identity)')" />
 
     <Message Text="Copied certificates to redist folder." />
   </Target>
@@ -688,7 +687,7 @@
     <Message Text="Torn down BizTalk backup for custom database '%(CustomDatabases.Identity)'." Condition=" '%(CustomDatabases.BackupWithBizTalk)' == 'true' " />
   </Target>
 
-  <Target Name="CopyDatabaseDeploymentScriptsToRedist" Condition=" '$(IncludeDatabases)' == 'true' ">
+  <Target Name="CopyDatabaseDeploymentScriptsToRedist">
     <Message Text="Copying database deployment script files to redist folder..." />
 
     <Copy DestinationFolder="$(RedistDir)"
@@ -890,10 +889,11 @@
     <Message Text="Activated rule engine's static support." />
   </Target>
 
-  <Target Name="CopyPoliciesToRedist" Condition=" '$(IncludePolicies)' == 'true' and '@(Policies)' != '' ">
+  <Target Name="CopyPoliciesToRedist" Condition=" '@(Policies)' != '' ">
     <Message Text="Copying DSL-based policy assemblies to redist folder..." />
 
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(PoliciesQualified)" Condition=" '@(Policies)' != '' " />
+    <Copy DestinationFolder="$(RedistDir)"
+          SourceFiles="@(PoliciesQualified)" />
 
     <Message Text="Copied DSL-based policy assemblies to redist folder." />
   </Target>
@@ -997,10 +997,10 @@
     <Message Text="Undeployed fluent file adapters' physical paths." />
   </Target>
 
-  <Target Name="CopyApplicationBindingsToRedist" Condition=" '$(IncludeFluentApplicationBindings)' == 'true' and '@(ApplicationBindings)' != '' ">
+  <Target Name="CopyApplicationBindingsToRedist" Condition=" '@(ApplicationBindings)' != '' ">
     <Message Text="Copying fluent DSL-based binding assemblies to redist folder..." />
 
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ApplicationBindingsQualified)" Condition=" '@(ApplicationBindings)' != '' " />
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ApplicationBindingsQualified)" />
     <Copy SourceFiles="@(ApplicationBindings -> '%(LocationPath)\%(Filename).pdb')"
           DestinationFiles="@(ApplicationBindings -> '$(RedistDir)\%(Filename).pdb')"
           Condition="Exists('%(LocationPath)\%(Filename).pdb')"
@@ -1350,7 +1350,7 @@
                                        Condition=" '$(_CoincidingHosts)' != '' "/>
   </Target>
 
-  <Target Name="CopyQuartzJobsFilesToRedist" Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' ">
+  <Target Name="CopyQuartzJobsFilesToRedist" Condition=" '@(QuartzJobsFiles)' != '' ">
     <Message Text="Copying Quartz jobs files to redist folder..." />
 
     <Copy DestinationFolder="$(RedistDir)"
