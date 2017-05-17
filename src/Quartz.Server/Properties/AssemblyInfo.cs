@@ -19,11 +19,11 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyProduct("Quarz.NET Server 2.3.3")]
+[assembly: AssemblyProduct("Quarz.NET Server 2.5.0")]
 [assembly: AssemblyDescription("Quartz Scheduling Server for .NET")]
 [assembly: AssemblyCompany("http://quartznet.sourceforge.net/")]
 [assembly: AssemblyCopyright("Copyright 2001-2009 James House and partially Marko Lahma")]
 [assembly: AssemblyTrademark("Apache License, Version 2.0")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("2.3.3.0")]
+[assembly: AssemblyVersion("2.5.0.0")]

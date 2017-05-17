@@ -124,6 +124,12 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logging\Be.Stateless.Logging.csproj">
+      <Project>{8f890272-22e8-4668-9f0e-c12dd48474d2}</Project>
+      <Name>Be.Stateless.Logging</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
