@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -33,6 +34,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// </summary>
 	/// <seealso cref="XlangTransformHelper.Transform(Microsoft.XLANGs.BaseTypes.XLANGMessage,System.Type,Be.Stateless.BizTalk.Tracking.TrackingContext)"/>
 	[Serializable]
+	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public sealed class XlangMessageCollection : LinkedList<XLANGMessage>, IDisposable
 	{
 		#region Operators
@@ -49,7 +51,130 @@ namespace Be.Stateless.BizTalk.Transform
 
 		public XlangMessageCollection() { }
 
-		public XlangMessageCollection(IEnumerable<XLANGMessage> collection) : base(collection) { }
+		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+		public XlangMessageCollection(IEnumerable<XLANGMessage> messages) : base(messages)
+		{
+			if (messages == null) throw new ArgumentNullException("messages");
+			if (messages.Any(m => m == null)) throw new ArgumentException("Collection cannot contain a null message.", "messages");
+		}
+
+		// NOTICE This ctor, though callable in a XLANG expression shape of a BTS orchestration, does not behave as
+		// expected and entails weird NullReferenceException upon Dispose(); hence the following 9 constructors.
+		// public XlangMessageCollection(params XLANGMessage[] messages) : base(messages) { }
+
+		public XlangMessageCollection(XLANGMessage message1)
+			: base(new[] { message1 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+		}
+
+		public XlangMessageCollection(XLANGMessage message1, XLANGMessage message2)
+			: base(new[] { message1, message2 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+		}
+
+		public XlangMessageCollection(XLANGMessage message1, XLANGMessage message2, XLANGMessage message3)
+			: base(new[] { message1, message2, message3 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+		}
+
+		public XlangMessageCollection(XLANGMessage message1, XLANGMessage message2, XLANGMessage message3, XLANGMessage message4)
+			: base(new[] { message1, message2, message3, message4 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+		}
+
+		public XlangMessageCollection(XLANGMessage message1, XLANGMessage message2, XLANGMessage message3, XLANGMessage message4, XLANGMessage message5)
+			: base(new[] { message1, message2, message3, message4, message5 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+			if (message5 == null) throw new ArgumentNullException("message5");
+		}
+
+		public XlangMessageCollection(XLANGMessage message1, XLANGMessage message2, XLANGMessage message3, XLANGMessage message4, XLANGMessage message5, XLANGMessage message6)
+			: base(new[] { message1, message2, message3, message4, message5, message6 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+			if (message5 == null) throw new ArgumentNullException("message5");
+			if (message6 == null) throw new ArgumentNullException("message6");
+		}
+
+		public XlangMessageCollection(
+			XLANGMessage message1,
+			XLANGMessage message2,
+			XLANGMessage message3,
+			XLANGMessage message4,
+			XLANGMessage message5,
+			XLANGMessage message6,
+			XLANGMessage message7)
+			: base(new[] { message1, message2, message3, message4, message5, message6, message7 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+			if (message5 == null) throw new ArgumentNullException("message5");
+			if (message6 == null) throw new ArgumentNullException("message6");
+			if (message7 == null) throw new ArgumentNullException("message7");
+		}
+
+		public XlangMessageCollection(
+			XLANGMessage message1,
+			XLANGMessage message2,
+			XLANGMessage message3,
+			XLANGMessage message4,
+			XLANGMessage message5,
+			XLANGMessage message6,
+			XLANGMessage message7,
+			XLANGMessage message8)
+			: base(new[] { message1, message2, message3, message4, message5, message6, message7, message8 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+			if (message5 == null) throw new ArgumentNullException("message5");
+			if (message6 == null) throw new ArgumentNullException("message6");
+			if (message7 == null) throw new ArgumentNullException("message7");
+			if (message8 == null) throw new ArgumentNullException("message8");
+		}
+
+		public XlangMessageCollection(
+			XLANGMessage message1,
+			XLANGMessage message2,
+			XLANGMessage message3,
+			XLANGMessage message4,
+			XLANGMessage message5,
+			XLANGMessage message6,
+			XLANGMessage message7,
+			XLANGMessage message8,
+			XLANGMessage message9)
+			: base(new[] { message1, message2, message3, message4, message5, message6, message7, message8, message9 })
+		{
+			if (message1 == null) throw new ArgumentNullException("message1");
+			if (message2 == null) throw new ArgumentNullException("message2");
+			if (message3 == null) throw new ArgumentNullException("message3");
+			if (message4 == null) throw new ArgumentNullException("message4");
+			if (message5 == null) throw new ArgumentNullException("message5");
+			if (message6 == null) throw new ArgumentNullException("message6");
+			if (message7 == null) throw new ArgumentNullException("message7");
+			if (message8 == null) throw new ArgumentNullException("message8");
+			if (message9 == null) throw new ArgumentNullException("message9");
+		}
 
 		private XlangMessageCollection(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
