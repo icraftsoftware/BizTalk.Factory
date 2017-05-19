@@ -54,15 +54,8 @@ namespace Be.Stateless.BizTalk.Transform
 
 		public XlangMessageCollection() { }
 
-		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-		public XlangMessageCollection(IEnumerable<XLANGMessage> messages) : base(messages)
-		{
-			if (messages == null) throw new ArgumentNullException("messages");
-			if (messages.Any(m => m == null)) throw new ArgumentException("Collection cannot contain a null message.", "messages");
-		}
-
-		// NOTICE This ctor, though callable in a XLANG expression shape of a BTS orchestration, does not behave as
-		// expected and entails weird NullReferenceException upon Dispose(); hence the following 9 constructors.
+		// NOTICE ctor with params XLANGMessage[], though callable in a XLANG expression shape of a BTS orchestration,
+		// does not behave as expected and entails weird NullReferenceException upon Dispose(); hence the other 9 ctors
 		// public XlangMessageCollection(params XLANGMessage[] messages) : base(messages) { }
 
 		public XlangMessageCollection(XLANGMessage message1)
