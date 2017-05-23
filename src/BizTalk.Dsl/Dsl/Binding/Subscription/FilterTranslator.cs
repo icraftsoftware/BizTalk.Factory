@@ -204,6 +204,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 			var memberExpression = expression as MemberExpression;
 			if (memberExpression != null) return TranslateValueExpression(memberExpression);
 
+			var methodCallExpression = expression as MethodCallExpression;
+			if (methodCallExpression != null) return TranslateValueExpression(methodCallExpression);
+
 			var unaryExpression = expression as UnaryExpression;
 			if (unaryExpression != null) return TranslateValueExpression(unaryExpression);
 
@@ -253,6 +256,18 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 				var value = (string) Expression.Lambda(expression).Compile().DynamicInvoke();
 				return value;
 			}
+
+			throw new NotSupportedException(
+				string.Format(
+					"Cannot translate MemberExpression \"{0}\" because {1} node is not supported.",
+					expression,
+					expression.NodeType));
+		}
+
+		private static string TranslateValueExpression(MethodCallExpression expression)
+		{
+			var constantExpression = expression.Object as ConstantExpression;
+			if (constantExpression != null) return TranslateValueExpression(constantExpression);
 
 			throw new NotSupportedException(
 				string.Format(

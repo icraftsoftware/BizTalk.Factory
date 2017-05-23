@@ -237,6 +237,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		}
 
 		[Test]
+		public void FilterOnEnumValue()
+		{
+			var filter = new Filter(() => BizTalkFactoryProperties.SenderName == FtpAdapter.FtpsConnectionMode.Explicit.ToString());
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BizTalkFactoryProperties.SenderName.Type.FullName,
+						(int) FilterOperator.Equals,
+						FtpAdapter.FtpsConnectionMode.Explicit)));
+		}
+
+		[Test]
 		public void GreaterThanBasedFilter()
 		{
 			const int retryCountToken = 3;
