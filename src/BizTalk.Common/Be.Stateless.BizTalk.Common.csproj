@@ -211,7 +211,6 @@
     <Compile Include="Transform\OperatorFunctions.cs" />
     <Compile Include="Transform\RegexFunctions.cs" />
     <Compile Include="Streaming\Extensions\Transformer.cs" />
-    <Compile Include="Transform\XslCompiledTransformHelper.cs" />
     <Compile Include="Xml\CompositeXmlReader.cs" />
     <Compile Include="Xml\ValidatingXmlReader.cs" />
     <Compile Include="Xml\ValidatingXmlReaderSettings.cs" />
