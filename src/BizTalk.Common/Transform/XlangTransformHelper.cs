@@ -27,9 +27,11 @@ using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.Logging;
 using Be.Stateless.Xml.Extensions;
+using Be.Stateless.Xml.Xsl;
 using Microsoft.BizTalk.Streaming;
 using Microsoft.XLANGs.BaseTypes;
 using Microsoft.XLANGs.Core;
+using XsltArgumentList = Be.Stateless.Xml.Xsl.XsltArgumentList;
 
 namespace Be.Stateless.BizTalk.Transform
 {
@@ -104,6 +106,35 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		/// <summary>
+		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref name="message"/> and
+		/// propagates the <paramref name="trackingContext"/> to the resulting message.
+		/// </summary>
+		/// <remarks>
+		/// This method assumes only the first part of a multi-part <paramref name="message"/> message has to be transformed and
+		/// creates an output message with a single part named "Main".
+		/// </remarks>
+		/// <param name="message">
+		/// The <see cref="XLANGMessage"/> to be transformed.
+		/// </param>
+		/// <param name="map">
+		/// The type of the BizTalk map class containing the transform to apply.
+		/// </param>
+		/// <param name="trackingContext">
+		/// The <see cref="TrackingContext"/> to be copied in the context of the output message.
+		/// </param>
+		/// <param name="arguments">
+		/// The arguments to pass to the XSL transformation.
+		/// </param>
+		/// <returns>
+		/// The transformed message with the result in the first part (at index 0).
+		/// </returns>
+		public static XLANGMessage Transform(XLANGMessage message, Type map, TrackingContext trackingContext, params XsltArgument[] arguments)
+		{
+			if (message == null) throw new ArgumentNullException("message");
+			return Transform(new XlangMessageCollection { message }, map, trackingContext, arguments);
+		}
+
+		/// <summary>
 		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref
 		/// name="messages"/> collection and propagates the <paramref name="trackingContext"/> to the resulting message.
 		/// </summary>
@@ -125,16 +156,7 @@ namespace Be.Stateless.BizTalk.Transform
 		/// </returns>
 		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext)
 		{
-			if (messages == null) throw new ArgumentNullException("messages");
-			if (messages.Count == 0) throw new ArgumentException("XLangMessageCollection is empty.", "messages");
-			if (map == null) throw new ArgumentNullException("map");
-			using (messages)
-			{
-				var resultContent = Transform(messages, map, null);
-				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, resultContent);
-				trackingContext.Apply(resultMessage);
-				return resultMessage;
-			}
+			return Transform(messages, map, trackingContext, new XsltArgumentList());
 		}
 
 		/// <summary>
@@ -160,19 +182,31 @@ namespace Be.Stateless.BizTalk.Transform
 		/// </returns>
 		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext, params object[] splatteredXsltArguments)
 		{
-			if (messages == null) throw new ArgumentNullException("messages");
-			if (messages.Count == 0) throw new ArgumentException("XLangMessageCollection is empty.", "messages");
-			if (map == null) throw new ArgumentNullException("map");
-			if (splatteredXsltArguments == null) throw new ArgumentNullException("splatteredXsltArguments");
-			if (splatteredXsltArguments.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", "splatteredXsltArguments");
-			if (splatteredXsltArguments.Length % 3 != 0) throw new ArgumentException("Value must be a collection containing a number of items that is multiple of 3.", "splatteredXsltArguments");
-			using (messages)
-			{
-				var resultContent = Transform(messages, map, splatteredXsltArguments);
-				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, resultContent);
-				trackingContext.Apply(resultMessage);
-				return resultMessage;
-			}
+			return Transform(messages, map, trackingContext, new XsltArgumentList(splatteredXsltArguments));
+		}
+
+		/// <summary>
+		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref
+		/// name="messages"/> collection and propagates the <paramref name="trackingContext"/> to the resulting message.
+		/// </summary>
+		/// <param name="messages">
+		/// The <see cref="XlangMessageCollection"/> to be transformed.
+		/// </param>
+		/// <param name="map">
+		/// The type of the BizTalk map class containing the transform to apply.
+		/// </param>
+		/// <param name="trackingContext">
+		/// The <see cref="TrackingContext"/> to be copied in the context of the output message.
+		/// </param>
+		/// <param name="arguments">
+		/// The arguments to pass to the XSL transformation.
+		/// </param>
+		/// <returns>
+		/// The transformed message with the result in the first part (at index 0).
+		/// </returns>
+		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext, params XsltArgument[] arguments)
+		{
+			return Transform(messages, map, trackingContext, new XsltArgumentList(arguments));
 		}
 
 		/// <summary>
@@ -213,7 +247,21 @@ namespace Be.Stateless.BizTalk.Transform
 			}
 		}
 
-		private static Stream Transform(XmlReader reader, Type map, object[] splatteredXsltArguments)
+		private static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext, System.Xml.Xsl.XsltArgumentList arguments)
+		{
+			if (messages == null) throw new ArgumentNullException("messages");
+			if (messages.Count == 0) throw new ArgumentException("XLangMessageCollection is empty.", "messages");
+			if (map == null) throw new ArgumentNullException("map");
+			using (messages)
+			{
+				var resultContent = Transform(messages, map, arguments);
+				var resultMessage = XlangMessage.Create(Service.RootService.XlangStore.OwningContext, resultContent);
+				trackingContext.Apply(resultMessage);
+				return resultMessage;
+			}
+		}
+
+		private static Stream Transform(XmlReader reader, Type map, System.Xml.Xsl.XsltArgumentList arguments)
 		{
 			if (_logger.IsDebugEnabled) _logger.DebugFormat("About to execute transform '{0}'.", map.AssemblyQualifiedName);
 			var transformDescriptor = XsltCache.Instance[map];
@@ -228,7 +276,7 @@ namespace Be.Stateless.BizTalk.Transform
 				using (var writer = XmlWriter.Create(outputStream, writerSettings))
 				{
 					if (_logger.IsFineEnabled) _logger.FineFormat("Executing transform '{0}'.", map.AssemblyQualifiedName);
-					var xsltArguments = transformDescriptor.Arguments.Union(splatteredXsltArguments);
+					var xsltArguments = transformDescriptor.Arguments.Union(arguments);
 					transformDescriptor.XslCompiledTransform.Transform(reader, xsltArguments, writer);
 				}
 				outputStream.Seek(0, SeekOrigin.Begin);

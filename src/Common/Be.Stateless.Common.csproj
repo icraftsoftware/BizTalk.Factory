@@ -97,6 +97,7 @@
     <Compile Include="Xml\Extensions\XmlDocumentExtensions.cs" />
     <Compile Include="Xml\Extensions\XmlReaderExtensions.cs" />
     <Compile Include="Xml\Builder\XmlTextBuilder.cs" />
+    <Compile Include="Xml\Xsl\XsltArgument.cs" />
     <Compile Include="Xml\Xsl\XsltArgumentList.cs" />
   </ItemGroup>
   <ItemGroup>

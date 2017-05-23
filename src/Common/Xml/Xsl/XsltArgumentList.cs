@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Xml;
+using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Reflection;
 
 namespace Be.Stateless.Xml.Xsl
@@ -48,9 +49,50 @@ namespace Be.Stateless.Xml.Xsl
 
 		public XsltArgumentList() { }
 
+		/// <summary>
+		/// Copy constructor that instantiates a new <see cref="XsltArgumentList"/>.
+		/// </summary>
+		/// <param name="arguments">
+		/// The <see cref="System.Xml.Xsl.XsltArgumentList"/> to copy.
+		/// </param>
 		public XsltArgumentList(System.Xml.Xsl.XsltArgumentList arguments)
 		{
 			Copy(arguments, this);
+		}
+
+		/// <summary>
+		/// Instantiate a new <see cref="XsltArgumentList"/>.
+		/// </summary>
+		/// <param name="splatteredArguments">
+		/// The arguments to store in the list. The array must contain a number of items that is a multiple of 3. Each
+		/// series of 3 items contains, in that order, an XSL parameter name, the namespace URI of the parameter, and its
+		/// value.
+		/// </param>
+		public XsltArgumentList(params object[] splatteredArguments)
+		{
+			if (splatteredArguments == null) throw new ArgumentNullException("splatteredArguments");
+			if (splatteredArguments.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", "splatteredArguments");
+			if (splatteredArguments.Length % 3 != 0) throw new ArgumentException("Value must be a collection containing a number of items that is multiple of 3.", "splatteredArguments");
+			for (var i = 0; i < splatteredArguments.Length; i += 3)
+			{
+				AddParam(
+					name: (string) splatteredArguments[i],
+					namespaceUri: (string) splatteredArguments[i + 1],
+					parameter: splatteredArguments[i + 2]);
+			}
+		}
+
+		/// <summary>
+		/// Instantiate a new <see cref="XsltArgumentList"/>.
+		/// </summary>
+		/// <param name="arguments">
+		/// The <see cref="XsltArgument"/> arguments to store in the list.
+		/// </param>
+		public XsltArgumentList(params XsltArgument[] arguments)
+		{
+			if (arguments == null) throw new ArgumentNullException("arguments");
+			if (arguments.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", "arguments");
+			arguments.Each(a => AddParam(a.Name, a.NamespaceUri, a.Value));
 		}
 
 		#region ICloneable Members
@@ -69,15 +111,29 @@ namespace Be.Stateless.Xml.Xsl
 			return target;
 		}
 
+		public System.Xml.Xsl.XsltArgumentList Add(XsltArgument argument)
+		{
+			AddParam(argument.Name, argument.NamespaceUri, argument.Value);
+			return this;
+		}
+
 		/// <summary>
 		/// Adds custom transform arguments to the transform argument list.
 		/// </summary>
-		/// <param name="splatteredArguments"></param>
-		/// <returns></returns>
+		/// <param name="splatteredArguments">
+		/// The arguments to add to the list. The array must contain a number of items that is a multiple of 3. Each
+		/// series of 3 items contains, in that order, an XSL parameter name, the namespace URI of the parameter, and its
+		/// value.
+		/// </param>
+		/// <returns>
+		/// A new list being the result of the union.
+		/// </returns>
 		public System.Xml.Xsl.XsltArgumentList Union(object[] splatteredArguments)
 		{
+			if (splatteredArguments == null) throw new ArgumentNullException("splatteredArguments");
+			if (splatteredArguments.Length % 3 != 0) throw new ArgumentException("Value must be a collection containing a number of items that is multiple of 3.", "splatteredArguments");
+
 			var union = Clone();
-			if (splatteredArguments == null) return union;
 			for (var i = 0; i < splatteredArguments.Length; i += 3)
 			{
 				union.AddParam(
@@ -91,8 +147,28 @@ namespace Be.Stateless.Xml.Xsl
 		/// <summary>
 		/// Adds custom transform arguments to the transform argument list.
 		/// </summary>
+		/// <param name="arguments">
+		/// The arguments to add to the list.
+		/// </param>
+		/// <returns>
+		/// A new list being the result of the union.
+		/// </returns>
+		public System.Xml.Xsl.XsltArgumentList Union(params XsltArgument[] arguments)
+		{
+			if (arguments == null) throw new ArgumentNullException("arguments");
+
+			var union = Clone();
+			arguments.Each(a => union.AddParam(a.Name, a.NamespaceUri, a.Value));
+			return union;
+		}
+
+		/// <summary>
+		/// Adds custom transform arguments to the transform argument list.
+		/// </summary>
 		/// <param name="arguments"></param>
-		/// <returns></returns>
+		/// <returns>
+		/// A new list being the result of the union.
+		/// </returns>
 		public System.Xml.Xsl.XsltArgumentList Union(System.Xml.Xsl.XsltArgumentList arguments)
 		{
 			var union = Clone();
