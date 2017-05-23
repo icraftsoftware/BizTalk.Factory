@@ -75,37 +75,6 @@ namespace Be.Stateless.BizTalk.Transform
 		}
 
 		/// <summary>
-		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref name="message"/>
-		/// and propagates the <paramref name="trackingContext"/> to the resulting message.
-		/// </summary>
-		/// <remarks>
-		/// This method assumes only the first part of a multi-part <paramref name="message"/> message has to be
-		/// transformed and creates an output message with a single part named "Main".
-		/// </remarks>
-		/// <param name="message">
-		/// The <see cref="XLANGMessage"/> to be transformed.
-		/// </param>
-		/// <param name="map">
-		/// The type of the BizTalk map class containing the transform to apply.
-		/// </param>
-		/// <param name="trackingContext">
-		/// The <see cref="TrackingContext"/> to be copied in the context of the output message.
-		/// </param>
-		/// <param name="splatteredXsltArguments">
-		/// The arguments to pass to the XSL transformation. The array must contain a number of items that is a multiple
-		/// of 3. Each series of 3 items contains, in that order, an XSL parameter name, the namespace URI of the
-		/// parameter, and its value.
-		/// </param>
-		/// <returns>
-		/// The transformed message with the result in the first part (at index 0).
-		/// </returns>
-		public static XLANGMessage Transform(XLANGMessage message, Type map, TrackingContext trackingContext, params object[] splatteredXsltArguments)
-		{
-			if (message == null) throw new ArgumentNullException("message");
-			return Transform(new XlangMessageCollection { message }, map, trackingContext, splatteredXsltArguments);
-		}
-
-		/// <summary>
 		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref name="message"/> and
 		/// propagates the <paramref name="trackingContext"/> to the resulting message.
 		/// </summary>
@@ -157,32 +126,6 @@ namespace Be.Stateless.BizTalk.Transform
 		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext)
 		{
 			return Transform(messages, map, trackingContext, new XsltArgumentList());
-		}
-
-		/// <summary>
-		/// Applies the XSL transformation specified by <paramref name="map"/> to the specified <paramref
-		/// name="messages"/> collection and propagates the <paramref name="trackingContext"/> to the resulting message.
-		/// </summary>
-		/// <param name="messages">
-		/// The <see cref="XlangMessageCollection"/> to be transformed.
-		/// </param>
-		/// <param name="map">
-		/// The type of the BizTalk map class containing the transform to apply.
-		/// </param>
-		/// <param name="trackingContext">
-		/// The <see cref="TrackingContext"/> to be copied in the context of the output message.
-		/// </param>
-		/// <param name="splatteredXsltArguments">
-		/// The arguments to pass to the XSL transformation. The array must contain a number of items that is a multiple
-		/// of 3. Each series of 3 items contains, in that order, an XSL parameter name, the namespace URI of the
-		/// parameter, and its value.
-		/// </param>
-		/// <returns>
-		/// The transformed message with the result in the first part (at index 0).
-		/// </returns>
-		public static XLANGMessage Transform(XlangMessageCollection messages, Type map, TrackingContext trackingContext, params object[] splatteredXsltArguments)
-		{
-			return Transform(messages, map, trackingContext, new XsltArgumentList(splatteredXsltArguments));
 		}
 
 		/// <summary>
