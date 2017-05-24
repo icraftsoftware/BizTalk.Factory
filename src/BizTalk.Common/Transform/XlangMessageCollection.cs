@@ -26,6 +26,7 @@ using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Linq.Extensions;
+using Be.Stateless.Xml.Xsl;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Transform
@@ -35,7 +36,7 @@ namespace Be.Stateless.BizTalk.Transform
 	/// cref="XlangTransformHelper"/> with several messages from within an orchestration.
 	/// </summary>
 	/// <seealso cref="XlangTransformHelper.Transform(XlangMessageCollection,Type,TrackingContext)"/>
-	/// <seealso cref="XlangTransformHelper.Transform(XlangMessageCollection,Type,TrackingContext,object[])"/>
+	/// <seealso cref="XlangTransformHelper.Transform(XlangMessageCollection,Type,TrackingContext,XsltArgument[])"/>
 	[Serializable]
 	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public sealed class XlangMessageCollection : LinkedList<XLANGMessage>, IDisposable
