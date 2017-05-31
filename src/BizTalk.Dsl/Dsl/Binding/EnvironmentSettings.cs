@@ -60,10 +60,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			get
 			{
-				if (_targetEnvironmentsIndex < 0)
-				{
-					_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.TargetEnvironment);
-				}
+				_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.TargetEnvironment);
 				if (_targetEnvironmentsIndex < 0)
 					throw new InvalidOperationException(
 						string.Format(
