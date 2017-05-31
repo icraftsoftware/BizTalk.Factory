@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,33 +20,34 @@ using System.Xml;
 using Be.Stateless.Area.Income;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 using Be.Stateless.BizTalk.Pipelines;
 
 namespace Be.Stateless.Area
 {
-	internal class SampleApplicationWithArea : ApplicationBindingSingleton<SampleApplicationWithArea>
+	internal class SampleApplicationWithArea : ApplicationBinding<NamingConvention>
 	{
 		public SampleApplicationWithArea()
 		{
-			ReceivePorts.Add(Invoice.TaxAgencyReceivePort.Instance);
-			SendPorts.Add(BankSendPort.Instance);
+			ReceivePorts.Add(new Invoice.TaxAgencyReceivePort());
+			SendPorts.Add(new BankSendPort());
 			Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local);
 		}
 	}
 
 	namespace Invoice
 	{
-		internal class TaxAgencyReceivePort : ReceivePortSingleton<TaxAgencyReceivePort>
+		internal class TaxAgencyReceivePort : ReceivePort<NamingConvention>
 		{
 			public TaxAgencyReceivePort()
 			{
 				Name = ReceivePortName.Offwards("Job");
-				ReceiveLocations.Add(TaxAgencyReceiveLocation.Instance);
+				ReceiveLocations.Add(new TaxAgencyReceiveLocation());
 			}
 		}
 
-		internal class TaxAgencyReceiveLocation : ReceiveLocationSingleton<TaxAgencyReceiveLocation>
+		internal class TaxAgencyReceiveLocation : ReceiveLocation<NamingConvention>
 		{
 			public TaxAgencyReceiveLocation()
 			{
@@ -60,7 +61,7 @@ namespace Be.Stateless.Area
 
 	namespace Income
 	{
-		internal class BankSendPort : SendPortSingleton<BankSendPort>
+		internal class BankSendPort : SendPort<NamingConvention>
 		{
 			public BankSendPort()
 			{
@@ -71,7 +72,7 @@ namespace Be.Stateless.Area
 			}
 		}
 
-		internal class BankReceiveLocation : ReceiveLocationSingleton<BankReceiveLocation>
+		internal class BankReceiveLocation : ReceiveLocation<NamingConvention>
 		{
 			public BankReceiveLocation()
 			{
@@ -86,15 +87,15 @@ namespace Be.Stateless.Area
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 {
-	internal class SampleApplication : ApplicationBindingSingleton<SampleApplication>
+	internal class SampleApplication : ApplicationBinding<NamingConvention>
 	{
 		public SampleApplication()
 		{
 			Name = ApplicationName.Is("Simple.SampleApplication");
 			SendPorts.Add(UnitTestSendPort);
-			SendPorts.Add(StandaloneSendPort.Instance);
+			SendPorts.Add(new StandaloneSendPort());
 			ReceivePorts.Add(BatchReceivePort);
-			ReceivePorts.Add(StandaloneReceivePort.Instance);
+			ReceivePorts.Add(new StandaloneReceivePort());
 			Timestamp = XmlConvert.ToDateTime("2015-02-17T22:51:04+01:00", XmlDateTimeSerializationMode.Local);
 		}
 
@@ -136,16 +137,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		private ISendPort<NamingConvention> _sendPort;
 	}
 
-	internal class StandaloneReceivePort : ReceivePortSingleton<StandaloneReceivePort>
+	internal class StandaloneReceivePort : ReceivePort<NamingConvention>
 	{
 		public StandaloneReceivePort()
 		{
 			Name = ReceivePortName.Offwards("Job");
-			ReceiveLocations.Add(StandaloneReceiveLocation.Instance);
+			ReceiveLocations.Add(new StandaloneReceiveLocation());
 		}
 	}
 
-	internal class StandaloneReceiveLocation : ReceiveLocationSingleton<StandaloneReceiveLocation>
+	internal class StandaloneReceiveLocation : ReceiveLocation<NamingConvention>
 	{
 		public StandaloneReceiveLocation()
 		{
@@ -156,7 +157,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		}
 	}
 
-	internal class StandaloneSendPort : SendPortSingleton<StandaloneSendPort>
+	internal class StandaloneSendPort : SendPort<NamingConvention>
 	{
 		public StandaloneSendPort()
 		{

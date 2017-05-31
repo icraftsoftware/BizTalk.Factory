@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		/// <param name="address">
 		/// The address of the endpoint to be added and started.
 		/// </param>
-		void Open(Binding binding, Uri address);
+		void Open(System.ServiceModel.Channels.Binding binding, Uri address);
 
 		/// <summary>
 		/// Shuts down the <see cref="SimpleServiceHost{TService,TChannel}"/>.

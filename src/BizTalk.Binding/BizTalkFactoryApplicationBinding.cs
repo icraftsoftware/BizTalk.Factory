@@ -44,7 +44,7 @@ using RetryPolicy = Be.Stateless.BizTalk.Dsl.Binding.Convention.RetryPolicy;
 namespace Be.Stateless.BizTalk
 {
 	[SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
-	public class BizTalkFactoryApplicationBinding : ApplicationBindingSingleton<BizTalkFactoryApplicationBinding>
+	public class BizTalkFactoryApplicationBinding : Dsl.Binding.Convention.ApplicationBinding<NamingConvention>
 	{
 		public BizTalkFactoryApplicationBinding()
 		{

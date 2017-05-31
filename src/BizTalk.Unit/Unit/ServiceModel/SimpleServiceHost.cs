@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
@@ -70,7 +71,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			Close();
 		}
 
-		public void Open(Binding binding, Uri address)
+		public void Open(System.ServiceModel.Channels.Binding binding, Uri address)
 		{
 			if (binding == null) throw new ArgumentNullException("binding");
 			if (address == null) throw new ArgumentNullException("address");
@@ -110,7 +111,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			_host.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, CreateMexBindingForScheme(scheme), "mex");
 		}
 
-		private static Binding CreateMexBindingForScheme(string scheme)
+		private static System.ServiceModel.Channels.Binding CreateMexBindingForScheme(string scheme)
 		{
 			if (scheme == null) throw new ArgumentNullException("scheme");
 			if (string.Compare(scheme, "http", StringComparison.OrdinalIgnoreCase) == 0) return MetadataExchangeBindings.CreateMexHttpBinding();
@@ -122,8 +123,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 
 		#endregion
 
-		// ReSharper disable StaticFieldInGenericType
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static ServiceHost _host;
-		// ReSharper restore StaticFieldInGenericType
 	}
 }

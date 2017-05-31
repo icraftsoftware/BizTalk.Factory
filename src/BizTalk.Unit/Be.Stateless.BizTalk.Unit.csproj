@@ -103,6 +103,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Operations\Extensions\BizTalkOperationsExtensions.cs" />
+    <Compile Include="Unit\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Unit\Component\BaggableProperty.cs" />
     <Compile Include="Unit\Component\PipelineComponentFixture.cs" />
     <Compile Include="Unit\Component\PropertyBag.cs" />

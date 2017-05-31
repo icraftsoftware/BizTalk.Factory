@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,11 +65,11 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		/// <returns>
 		/// The <typeparamref name="TChannel"/> channel to be used to connect to the service.
 		/// </returns>
-		public static TChannel Create(Binding binding, EndpointAddress address)
+		public static TChannel Create(System.ServiceModel.Channels.Binding binding, EndpointAddress address)
 		{
 			return new Client<TChannel>(binding, address).Channel;
 		}
 
-		protected Client(Binding binding, EndpointAddress address) : base(binding, address) { }
+		protected Client(System.ServiceModel.Channels.Binding binding, EndpointAddress address) : base(binding, address) { }
 	}
 }

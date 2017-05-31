@@ -48,7 +48,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingSupportsBindingGeneration()
 		{
-			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplication.Instance).GetBindingSerializer();
+			var applicationBindingSerializer = ((IBindingSerializerFactory) new SampleApplication()).GetBindingSerializer();
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalApplicationBindingWithAreaSupportsBindingGeneration()
 		{
-			var applicationBindingSerializer = ((IBindingSerializerFactory) SampleApplicationWithArea.Instance).GetBindingSerializer();
+			var applicationBindingSerializer = ((IBindingSerializerFactory) new SampleApplicationWithArea()).GetBindingSerializer();
 
 			var binding = applicationBindingSerializer.Serialize();
 
@@ -68,7 +68,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = SampleApplication.Instance.BatchReceivePort;
+			var receivePort = new SampleApplication().BatchReceivePort;
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(
@@ -84,7 +84,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalSendPortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var sendPort = SampleApplication.Instance.UnitTestSendPort;
+			var sendPort = new SampleApplication().UnitTestSendPort;
 			var filter = new Filter(() => BtsProperties.SendPortName == sendPort.Name);
 
 			Assert.That(
@@ -100,7 +100,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple
 		[Test]
 		public void ConventionalStandaloneReceivePortNameCanBeReferencedInSubscriptionFilter()
 		{
-			var receivePort = SampleApplication.Instance.ReceivePorts.Find<StandaloneReceivePort>();
+			var receivePort = new SampleApplication().ReceivePorts.Find<StandaloneReceivePort>();
 			var filter = new Filter(() => BtsProperties.ReceivePortName == receivePort.Name);
 
 			Assert.That(

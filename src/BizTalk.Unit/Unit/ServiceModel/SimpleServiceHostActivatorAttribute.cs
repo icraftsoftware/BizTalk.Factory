@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 			if (binding == null) throw new ArgumentNullException("binding");
 			if (address == null) throw new ArgumentNullException("address");
 			_host = (ISimpleServiceHost) Activator.CreateInstance(service);
-			_binding = (Binding) Activator.CreateInstance(binding);
+			_binding = (System.ServiceModel.Channels.Binding) Activator.CreateInstance(binding);
 			_uri = new Uri(address);
 		}
 
@@ -91,8 +91,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 		/// <code><![CDATA[netsh http add urlacl url=http://+:8001/calculator user=$env:USERDOMAIN\$env:USERNAME]]>!</code>
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/library/ms733768.aspx"/>
-		public SimpleServiceHostActivatorAttribute(Type service, Type binding, string address, int sendTimeout)
-			: this(service, binding, address)
+		public SimpleServiceHostActivatorAttribute(Type service, Type binding, string address, int sendTimeout) : this(service, binding, address)
 		{
 			_binding.SendTimeout = TimeSpan.FromSeconds(sendTimeout);
 		}
@@ -116,7 +115,7 @@ namespace Be.Stateless.BizTalk.Unit.ServiceModel
 
 		#endregion
 
-		private readonly Binding _binding;
+		private readonly System.ServiceModel.Channels.Binding _binding;
 		private readonly ISimpleServiceHost _host;
 		private readonly Uri _uri;
 	}
