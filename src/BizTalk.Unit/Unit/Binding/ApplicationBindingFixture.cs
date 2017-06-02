@@ -36,13 +36,13 @@ namespace Be.Stateless.BizTalk.Unit.Binding
 			get { return null; }
 		}
 
-		protected void GenerateApplicationBindingForTargetEnvironment(string targetEnvironment)
+		protected string GenerateApplicationBindingForTargetEnvironment(string targetEnvironment)
 		{
 			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			BindingGenerationContext.TargetEnvironment = targetEnvironment;
 			if (!EnvironmentSettingOverridesRootPath.IsNullOrEmpty()) BindingGenerationContext.EnvironmentSettingRootPath = EnvironmentSettingOverridesRootPath;
 			var bindingSerializerFactory = new T();
-			bindingSerializerFactory.GetBindingSerializer().Serialize();
+			return bindingSerializerFactory.GetBindingSerializer().Serialize();
 		}
 	}
 }
