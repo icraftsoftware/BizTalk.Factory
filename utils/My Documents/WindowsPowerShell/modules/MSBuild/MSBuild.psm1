@@ -56,7 +56,7 @@ function Clear-Project
         #TODO switch to also clean .user, .dotsettings.user, etc... files
     )
 
-    # TODO test commands vis Pester
+    # TODO test commands via Pester
     # https://www.simple-talk.com/sysadmin/powershell/practical-powershell-unit-testing-getting-started/
     # Clear-Project -Path .\src -Verbose -WhatIf
     # Clear-Project -Path .\src -Packages -Verbose -WhatIf
