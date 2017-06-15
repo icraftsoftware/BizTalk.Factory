@@ -22,6 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Be.Stateless.BizTalk.Management;
 using Be.Stateless.BizTalk.Operations.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Logging;
@@ -35,6 +36,11 @@ namespace Be.Stateless.BizTalk.Unit.Process
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 	public abstract class ProcessFixture
 	{
+		protected internal virtual IEnumerable<Type> AllDependantOrchestrationTypes
+		{
+			get { return Enumerable.Empty<Type>(); }
+		}
+
 		/// <summary>
 		/// Input system (e.g. Claim Check) folders where input files are dropped.
 		/// </summary>
@@ -190,6 +196,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 						Directory.CreateDirectory(d);
 					}
 				});
+			AllDependantOrchestrationTypes.Each(ot => { new Orchestration(ot).EnsureStarted(); });
 		}
 
 		[SetUp]
@@ -210,6 +217,13 @@ namespace Be.Stateless.BizTalk.Unit.Process
 
 			_logger.Debug("Emptying input folders.");
 			CleanFolders(AllInputFolders);
+		}
+
+		[OneTimeTearDown]
+		public void BizTalkFactoryOrchestrationFixtureOneTimeTearDown()
+		{
+			// reverse the list to stop the dependant orchestrations
+			AllDependantOrchestrationTypes.Reverse().Each(ot => { new Orchestration(ot).EnsureUnenlisted(); });
 		}
 
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(ProcessFixture));

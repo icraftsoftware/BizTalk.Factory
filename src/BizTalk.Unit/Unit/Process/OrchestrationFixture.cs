@@ -19,37 +19,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Be.Stateless.BizTalk.Management;
-using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
-using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Unit.Process
 {
 	public abstract class OrchestrationFixture<T> : CompletedProcessFixture
 		where T : BTXService
 	{
+		#region Base Class Member Overrides
+
+		protected internal override IEnumerable<Type> AllDependantOrchestrationTypes
+		{
+			get { return DependantOrchestrationTypes.Concat(Enumerable.Repeat(typeof(T), 1)); }
+		}
+
+		#endregion
+
 		protected virtual IEnumerable<Type> DependantOrchestrationTypes
 		{
 			get { return Enumerable.Empty<Type>(); }
-		}
-
-		[OneTimeSetUp]
-		public void BizTalkFactoryOrchestrationFixtureOneTimeSetUp()
-		{
-			DependantOrchestrationTypes.Each(
-				ot => { new Orchestration(ot).EnsureStarted(); }
-			);
-			new Orchestration<T>().EnsureStarted();
-		}
-
-		[OneTimeTearDown]
-		public void BizTalkFactoryOrchestrationFixtureOneTimeTearDown()
-		{
-			new Orchestration<T>().EnsureUnenlisted();
-			DependantOrchestrationTypes.Each(
-				ot => { new Orchestration(ot).EnsureUnenlisted(); }
-			);
 		}
 	}
 }
