@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,16 +17,19 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using Be.Stateless.Quartz.Server.Core;
 using Common.Logging;
+using Quartz;
 using Quartz.Impl;
-using Quartz.Server.Core;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz.Server
 {
 	/// <summary>
 	/// The main server logic.
 	/// </summary>
+	[SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
 	public class QuartzServer : IQuartzServer
 	{
 		/// <summary>
@@ -62,13 +65,11 @@ namespace Quartz.Server
 		public virtual void Start()
 		{
 			_scheduler.Start();
-
 			try
 			{
 				Thread.Sleep(3000);
 			}
 			catch (ThreadInterruptedException) { }
-
 			_logger.Info("Scheduler started successfully");
 		}
 
@@ -92,8 +93,8 @@ namespace Quartz.Server
 		#endregion
 
 		/// <summary>
-		/// Returns the current scheduler instance (usually created in <see cref="Initialize" />
-		/// using the <see cref="GetScheduler" /> method).
+		/// Returns the current scheduler instance (usually created in <see cref="Initialize" /> using the <see
+		/// cref="GetScheduler" /> method).
 		/// </summary>
 		protected virtual IScheduler Scheduler
 		{

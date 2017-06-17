@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@
 
 using System.Collections.Specialized;
 using System.Configuration;
+using Be.Stateless.Extensions;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz.Server
 {
 	/// <summary>
 	/// Configuration for the Quartz server.
@@ -31,43 +32,42 @@ namespace Quartz.Server
 		/// </summary>
 		static Configuration()
 		{
-			_configuration = (NameValueCollection) ConfigurationManager.GetSection("quartz");
+			var section = ConfigurationManager.GetSection("quartz");
+			_configuration = (NameValueCollection) section;
 		}
 
 		/// <summary>
 		/// Gets the type name of the server implementation.
 		/// </summary>
-		/// <value>The type of the server implementation.</value>
+		/// <value>
+		/// The type of the server implementation.
+		/// </value>
 		public static string ServerImplementationType
 		{
-			get { return GetConfigurationOrDefault(KEY_SERVER_IMPLEMENTATION_TYPE, _defaultServerImplementationType); }
+			get { return GetConfiguredOrDefaultValue(SERVER_IMPLEMENTATION_TYPE_KEY, _defaultServerImplementationType); }
 		}
 
 		/// <summary>
-		/// Returns configuration value with given key. If configuration
-		/// for the does not exists, return the default value.
+		/// Returns configuration value with given key. If configuration for the does not exists, return the default
+		/// value.
 		/// </summary>
-		/// <param name="configurationKey">Key to read configuration with.</param>
-		/// <param name="defaultValue">Default value to return if configuration is not found</param>
-		/// <returns>The configuration value.</returns>
-		private static string GetConfigurationOrDefault(string configurationKey, string defaultValue)
+		/// <param name="configurationKey">
+		/// Key to read configuration with.
+		/// </param>
+		/// <param name="defaultValue">
+		/// Default value to return if configuration is not found.
+		/// </param>
+		/// <returns>
+		/// The configuration value.
+		/// </returns>
+		private static string GetConfiguredOrDefaultValue(string configurationKey, string defaultValue)
 		{
-			string retValue = null;
-			if (_configuration != null)
-			{
-				retValue = _configuration[configurationKey];
-			}
-
-			if (retValue == null || retValue.Trim().Length == 0)
-			{
-				retValue = defaultValue;
-			}
-			return retValue;
+			var value = _configuration.IfNotNull(c => c[configurationKey]);
+			return value.IsNullOrWhiteSpace() ? defaultValue : value;
 		}
 
-		private const string KEY_SERVER_IMPLEMENTATION_TYPE = PREFIX_SERVER_CONFIGURATION + ".type";
-		private const string PREFIX_SERVER_CONFIGURATION = "quartz.server";
-
+		private const string SERVER_CONFIGURATION_PREFIX = "quartz.server";
+		private const string SERVER_IMPLEMENTATION_TYPE_KEY = SERVER_CONFIGURATION_PREFIX + ".type";
 		private static readonly NameValueCollection _configuration;
 		private static readonly string _defaultServerImplementationType = typeof(QuartzServer).AssemblyQualifiedName;
 	}

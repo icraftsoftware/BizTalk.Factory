@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,17 +17,19 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz
 {
 	/// <summary>
 	/// This class allows storing the fully qualified name of Quartz job classes in the configuration database. This is
 	/// necessary to allow Quartz to load those classes when they are in an assembly deployed in the GAC.
 	/// </summary>
-	public class SqlServerDelegate : Impl.AdoJobStore.SqlServerDelegate
+	public class SqlServerDelegate : global::Quartz.Impl.AdoJobStore.SqlServerDelegate
 	{
 		#region Base Class Member Overrides
 
+		[SuppressMessage("ReSharper", "IdentifierTypo")]
 		protected override string GetStorableJobTypeName(Type jobType)
 		{
 			return jobType.AssemblyQualifiedName;

@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 #endregion
 
 using System;
+using Be.Stateless.Quartz.Server.Core;
 using Common.Logging;
-using Quartz.Server.Core;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz.Server
 {
 	/// <summary>
 	/// Factory class to create Quartz server implementations from.

@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,8 +20,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
+using Be.Stateless.Quartz;
+using Be.Stateless.Quartz.Server;
 
-namespace Quartz.Server
+namespace Be.Stateless
 {
 	/// <summary>
 	/// Summary description for Program.
@@ -35,11 +37,9 @@ namespace Quartz.Server
 		{
 			// change from service account's dir to more logical one
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
 			if (Debugger.IsAttached)
 			{
 				var server = QuartzServerFactory.CreateServer();
-
 				server.Initialize();
 				server.Start();
 				Console.WriteLine("Server started. Press <ENTER> to stop.");
@@ -49,7 +49,6 @@ namespace Quartz.Server
 			else
 			{
 				var servicesToRun = new ServiceBase[] { new QuartzService() };
-
 				ServiceBase.Run(servicesToRun);
 			}
 		}

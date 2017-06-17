@@ -22,7 +22,7 @@ using System.Configuration.Install;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz
 {
 	/// <summary>
 	/// Service installer for the Quartz server.

@@ -17,10 +17,11 @@
 #endregion
 
 using System.ServiceProcess;
+using Be.Stateless.Quartz.Server;
+using Be.Stateless.Quartz.Server.Core;
 using Common.Logging;
-using Quartz.Server.Core;
 
-namespace Quartz.Server
+namespace Be.Stateless.Quartz
 {
 	/// <summary>
 	/// Main windows service to delegate calls to <see cref="IQuartzServer" />.

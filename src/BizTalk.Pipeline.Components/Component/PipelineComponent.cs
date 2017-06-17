@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Resources;
@@ -117,6 +118,7 @@ namespace Be.Stateless.BizTalk.Component
 		/// Component icon to use in BizTalk Editor
 		/// </summary>
 		[Browsable(false)]
+		[SuppressMessage("ReSharper", "ResourceItemNotResolved")]
 		public virtual IntPtr Icon
 		{
 			get

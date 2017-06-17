@@ -1,6 +1,6 @@
-#region Copyright & License
+ï»¿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright Â© 2012 - 2017 FranÃ§ois Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,11 +19,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Quartz.Server")]
-[assembly: AssemblyProduct("Quarz.NET Server 2.5.0")]
-[assembly: AssemblyDescription("be.stateless Quartz Scheduling Server for .NET")]
-[assembly: AssemblyCompany("http://quartznet.sourceforge.net/")]
-[assembly: AssemblyCopyright("Copyright 2001-2009 James House and partially Marko Lahma")]
-[assembly: AssemblyTrademark("Apache License, Version 2.0")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle("Be.Stateless.Quartz")]
+[assembly: AssemblyDescription("be.stateless BizTalk Factory's Quartz.NET Server Class Library.")]
 [assembly: ComVisible(false)]

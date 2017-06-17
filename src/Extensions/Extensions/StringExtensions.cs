@@ -69,12 +69,27 @@ namespace Be.Stateless.Extensions
 		/// The string to test.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if the <paramref name="string"/> argument is null or an empty string (""); otherwise,
+		/// <c>true</c> if the <paramref name="string"/> argument is null or an <see cref="string.Empty"/>; otherwise,
 		/// <c>false</c>.
 		/// </returns>
 		public static bool IsNullOrEmpty(this string @string)
 		{
 			return string.IsNullOrEmpty(@string);
+		}
+
+		/// <summary>
+		/// Indicates whether a specified string is null, empty, or consists only of white-space characters.
+		/// </summary>
+		/// <param name="string">
+		/// The string to test.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the <paramref name="string"/> argument is null or an <see cref="string.Empty"/>, or if it
+		/// consists exclusively of white-space characters; otherwise <c>false</c>.
+		/// </returns>
+		public static bool IsNullOrWhiteSpace(this string @string)
+		{
+			return string.IsNullOrWhiteSpace(@string);
 		}
 
 		/// <summary>

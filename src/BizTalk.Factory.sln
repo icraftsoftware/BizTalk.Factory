@@ -143,9 +143,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Dsl.Bi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Binding.Tests", "BizTalk.Binding.Tests\Be.Stateless.BizTalk.Binding.Tests.csproj", "{2D540E4A-5451-4578-9CA4-A799686522FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Quartz", "Quartz\Be.Stateless.Quartz.csproj", "{7ECB9A32-BF7C-4804-883B-CC64F931117B}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 41
+		SccNumberOfProjects = 42
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs14
 		SccLocalPath0 = .
@@ -269,6 +271,9 @@ Global
 		SccProjectUniqueName40 = BizTalk.Binding.Tests\\Be.Stateless.BizTalk.Binding.Tests.csproj
 		SccProjectName40 = BizTalk.Binding.Tests
 		SccLocalPath40 = BizTalk.Binding.Tests
+		SccProjectUniqueName41 = Quartz\\Be.Stateless.Quartz.csproj
+		SccProjectName41 = Quartz
+		SccLocalPath41 = Quartz
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -517,6 +522,12 @@ Global
 		{2D540E4A-5451-4578-9CA4-A799686522FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D540E4A-5451-4578-9CA4-A799686522FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D540E4A-5451-4578-9CA4-A799686522FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

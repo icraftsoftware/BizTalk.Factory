@@ -404,6 +404,7 @@
       <ServiceAssembly>Quartz.Server.exe</ServiceAssembly>
       <ServiceName>QuartzServer</ServiceName>
       <Redistributables>
+        Be.Stateless.Quartz;
         QuartzJobs.xml;
         Common.Logging.dll;
         Common.Logging.Core.dll;

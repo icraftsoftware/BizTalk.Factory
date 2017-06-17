@@ -56,6 +56,8 @@
     <file src="Logging\bin\Release\Be.Stateless.Logging.dll" target="assemblies\net45\Be.Stateless.Logging.dll" />
     <file src="Logging\bin\Release\Be.Stateless.Logging.pdb" target="assemblies\net45\Be.Stateless.Logging.pdb" />
     <file src="Logging\bin\Release\Be.Stateless.Logging.xml" target="assemblies\net45\Be.Stateless.Logging.xml" />
+    <file src="Quartz\bin\Release\Be.Stateless.Quartz.dll" target="assemblies\net45\Be.Stateless.Quartz.dll" />
+    <file src="Quartz\bin\Release\Be.Stateless.Quartz.pdb" target="assemblies\net45\Be.Stateless.Quartz.pdb" />
     <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.dll" target="assemblies\net45\Be.Stateless.ServiceModel.dll" />
     <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.pdb" target="assemblies\net45\Be.Stateless.ServiceModel.pdb" />
     <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.xml" target="assemblies\net45\Be.Stateless.ServiceModel.xml" />
