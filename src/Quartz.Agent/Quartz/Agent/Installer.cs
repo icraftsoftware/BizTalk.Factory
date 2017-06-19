@@ -22,19 +22,19 @@ using System.Configuration.Install;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace Be.Stateless.Quartz
+namespace Be.Stateless.Quartz.Agent
 {
 	/// <summary>
 	/// Service installer for the Quartz server.
 	/// </summary>
 	[RunInstaller(true)]
-	public class QuartzServiceInstaller : Installer
+	public class Installer : System.Configuration.Install.Installer
 	{
-		public QuartzServiceInstaller()
+		public Installer()
 		{
 			InitializeComponent();
 
-			_isServiceInstalled = ServiceController
+			_isServiceInstalled = System.ServiceProcess.ServiceController
 				.GetServices()
 				.Any(sc => sc.ServiceName == _serviceInstaller.ServiceName);
 
@@ -97,7 +97,7 @@ namespace Be.Stateless.Quartz
 			try
 			{
 				if (_serviceInstaller.StartType != ServiceStartMode.Automatic) return;
-				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
+				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
 					if (serviceController.Status == ServiceControllerStatus.Running) return;
 					if (serviceController.Status == ServiceControllerStatus.StartPending) return;
@@ -116,7 +116,7 @@ namespace Be.Stateless.Quartz
 			try
 			{
 				if (!_isServiceInstalled) return;
-				using (var serviceController = new ServiceController(_serviceInstaller.ServiceName))
+				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
 					serviceController.Stop();
 				}
@@ -135,16 +135,16 @@ namespace Be.Stateless.Quartz
 			this._serviceProcessInstaller = new System.ServiceProcess.ServiceProcessInstaller();
 			this._serviceInstaller = new System.ServiceProcess.ServiceInstaller();
 			// 
-			// serviceProcessInstaller
+			// _serviceProcessInstaller
 			// 
 			this._serviceProcessInstaller.Password = null;
 			this._serviceProcessInstaller.Username = null;
 			// 
-			// serviceInstaller
+			// _serviceInstaller
 			// 
-			this._serviceInstaller.Description = "Quartz Job Scheduling Server";
-			this._serviceInstaller.DisplayName = "Quartz Server";
-			this._serviceInstaller.ServiceName = "QuartzServer";
+			this._serviceInstaller.Description = "Quartz.NET Job Scheduling Agent";
+			this._serviceInstaller.DisplayName = "Quartz.NET Scheduler Agent";
+			this._serviceInstaller.ServiceName = "QuartzAgent";
 			this._serviceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
 			// 
 			// Installer
@@ -159,7 +159,6 @@ namespace Be.Stateless.Quartz
 		#endregion
 
 		private readonly bool _isServiceInstalled;
-
 		private ServiceInstaller _serviceInstaller;
 		private ServiceProcessInstaller _serviceProcessInstaller;
 	}

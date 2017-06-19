@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Be.Stateless</RootNamespace>
-    <AssemblyName>Quartz.Server</AssemblyName>
+    <AssemblyName>Quartz.Agent</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -79,15 +79,18 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quartz\QuartzService.cs">
+    <Compile Include="Quartz\Agent\ServiceController.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Quartz\QuartzServiceInstaller.cs">
+    <Compile Include="Quartz\Agent\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
@@ -99,7 +102,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="job_scheduling_data_2_0.xsd" />
-    <None Include="Quartz.Server.exe.template.config">
+    <None Include="Quartz.Agent.exe.template.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -107,14 +110,17 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Quartz.Server.log4net.template.config">
+    <None Include="Quartz.Agent.log4net.template.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Quartz\QuartzService.resx">
-      <DependentUpon>QuartzService.cs</DependentUpon>
+    <EmbeddedResource Include="Quartz\Agent\Installer.resx">
+      <DependentUpon>Installer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Quartz\Agent\ServiceController.resx">
+      <DependentUpon>ServiceController.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +145,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

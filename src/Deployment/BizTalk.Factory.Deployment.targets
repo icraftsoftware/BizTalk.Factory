@@ -1287,7 +1287,7 @@
     http://patorjk.com/software/taag/#p=display&h=3&v=3&f=Big&t=Register%20Quartz%20Jobs -->
 
   <PropertyGroup>
-    <QuartzDirectory Condition=" '$(QuartzDirectory)' == '' ">C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Server\</QuartzDirectory>
+    <QuartzDirectory Condition=" '$(QuartzDirectory)' == '' ">C:\Program Files (x86)\BizTalk Factory for BizTalk Server\1.0\Services\Quartz.Agent\</QuartzDirectory>
   </PropertyGroup>
 
   <Target Name="RegisterQuartzJobs"
@@ -1305,14 +1305,14 @@
     </PropertyGroup>
     <!-- read the current configuration value -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       File="$(QuartzDirectory)Quartz.Agent.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
                                        Condition=" '$(_CoincidingHosts)' != '' ">
       <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
     </MSBuild.ExtensionPack.Xml.XmlFile>
     <!-- Append the job file path to the current list of job files -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       File="$(QuartzDirectory)Quartz.Agent.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
                                        Value="$(CurrentQuartzJobsFiles),$(TempJobsFile)"
                                        Condition=" '$(_CoincidingHosts)' != '' "/>
@@ -1333,7 +1333,7 @@
     </PropertyGroup>
     <!-- read the current configuration value -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       File="$(QuartzDirectory)Quartz.Agent.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
                                        Condition=" '$(_CoincidingHosts)' != '' ">
       <Output TaskParameter="Value" PropertyName="CurrentQuartzJobsFiles" />
@@ -1344,7 +1344,7 @@
     </MSBuild.ExtensionPack.Framework.TextString>
     <!-- Update with the new list -->
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateAttribute"
-                                       File="$(QuartzDirectory)Quartz.Server.exe.config"
+                                       File="$(QuartzDirectory)Quartz.Agent.exe.config"
                                        XPath="/configuration/quartz/add[@key='quartz.plugin.xml.fileNames']/@value"
                                        Value="$(NewJobsFilesList)"
                                        Condition=" '$(_CoincidingHosts)' != '' "/>

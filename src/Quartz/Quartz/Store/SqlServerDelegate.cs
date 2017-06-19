@@ -19,7 +19,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Be.Stateless.Quartz
+namespace Be.Stateless.Quartz.Store
 {
 	/// <summary>
 	/// This class allows storing the fully qualified name of Quartz job classes in the configuration database. This is

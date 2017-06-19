@@ -19,11 +19,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Quartz.Server")]
-[assembly: AssemblyProduct("Quarz.NET Server 2.5.0")]
-[assembly: AssemblyDescription("be.stateless Quartz Scheduling Server for .NET")]
-[assembly: AssemblyCompany("http://quartznet.sourceforge.net/")]
-[assembly: AssemblyCopyright("Copyright 2001-2009 James House and partially Marko Lahma")]
-[assembly: AssemblyTrademark("Apache License, Version 2.0")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle("Quartz.Agent")]
+[assembly: AssemblyDescription("be.stateless Quartz Scheduling Agent for .NET")]
 [assembly: ComVisible(false)]

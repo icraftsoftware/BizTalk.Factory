@@ -397,11 +397,11 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(IncludeQuartzAgent)' == 'true' ">
-    <WindowsServices Include="Quartz.Server">
+    <WindowsServices Include="Quartz.Agent">
       <LocationPath Condition=" '$(Configuration)' != 'Server' ">..\%(Identity)\bin\$(Configuration)</LocationPath>
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
       <ServiceStartModeArgument>auto</ServiceStartModeArgument>
-      <ServiceAssembly>Quartz.Server.exe</ServiceAssembly>
+      <ServiceAssembly>Quartz.Agent.exe</ServiceAssembly>
       <ServiceName>QuartzServer</ServiceName>
       <Redistributables>
         Be.Stateless.Quartz;
@@ -411,8 +411,8 @@
         Common.Logging.Log4Net1213.dll;
         Quartz.dll;
         Quartz.pdb;
-        Quartz.Server.exe.template.config;
-        Quartz.Server.log4net.template.config
+        Quartz.Agent.exe.template.config;
+        Quartz.Agent.log4net.template.config
       </Redistributables>
       <TargetHosts>$(QuartzAgentTargetHosts)</TargetHosts>
     </WindowsServices>

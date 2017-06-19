@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,30 +17,29 @@
 #endregion
 
 using System.ServiceProcess;
-using Be.Stateless.Quartz.Server;
-using Be.Stateless.Quartz.Server.Core;
+using Be.Stateless.Quartz.Host;
+using Be.Stateless.Quartz.Host.Core;
 using Common.Logging;
 
-namespace Be.Stateless.Quartz
+namespace Be.Stateless.Quartz.Agent
 {
 	/// <summary>
-	/// Main windows service to delegate calls to <see cref="IQuartzServer" />.
+	/// Main windows service to delegate calls to <see cref="IQuartzSchedulerHost" />.
 	/// </summary>
-	public class QuartzService : ServiceBase
+	public class ServiceController : ServiceBase
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="QuartzService"/> class.
+		/// Initializes a new instance of the <see cref="ServiceController"/> class.
 		/// </summary>
-		public QuartzService()
+		public ServiceController()
 		{
 			_logger = LogManager.GetLogger(GetType());
 
-			_logger.Debug("Obtaining instance of an IQuartzServer");
-			_server = QuartzServerFactory.CreateServer();
-
-			_logger.Debug("Initializing server");
-			_server.Initialize();
-			_logger.Debug("Server initialized");
+			_logger.Debug("Creating IQuartzSchedulerHost instance.");
+			_host = QuartzSchedulerHostFactory.CreateHost();
+			_logger.Debug("Initializing Quartz.NET Scheduler host");
+			_host.Initialize();
+			_logger.Debug("Quartz.NET Scheduler initialized");
 		}
 
 		#region Base Class Member Overrides
@@ -53,7 +52,7 @@ namespace Be.Stateless.Quartz
 			if (disposing)
 			{
 				_logger.Debug("Disposing service");
-				_server.Dispose();
+				_host.Dispose();
 				_logger.Debug("Service disposed");
 			}
 			base.Dispose(disposing);
@@ -65,7 +64,7 @@ namespace Be.Stateless.Quartz
 		protected override void OnStart(string[] args)
 		{
 			_logger.Debug("Starting service");
-			_server.Start();
+			_host.Start();
 			_logger.Debug("Service started");
 		}
 
@@ -75,13 +74,13 @@ namespace Be.Stateless.Quartz
 		protected override void OnStop()
 		{
 			_logger.Debug("Stopping service");
-			_server.Stop();
+			_host.Stop();
 			_logger.Debug("Service stopped");
 		}
 
 		#endregion
 
+		private readonly IQuartzSchedulerHost _host;
 		private readonly ILog _logger;
-		private readonly IQuartzServer _server;
 	}
 }

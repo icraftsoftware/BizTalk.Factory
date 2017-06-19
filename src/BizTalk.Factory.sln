@@ -131,8 +131,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestAr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Binding", "BizTalk.Binding\Be.Stateless.BizTalk.Binding.csproj", "{C788BF6D-9229-4578-8E29-87143846A4F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Quartz.Server", "Quartz.Server\Be.Stateless.Quartz.Server.csproj", "{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.TestArtifacts.Binding", "BizTalk.TestArtifacts.Binding\Be.Stateless.BizTalk.TestArtifacts.Binding.csproj", "{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Explorer.Tests", "BizTalk.Explorer.Tests\Be.Stateless.BizTalk.Explorer.Tests.csproj", "{405426E7-E2C7-4AA1-974E-38B75BBBAC1A}"
@@ -144,6 +142,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.BizTalk.Binding.Tests", "BizTalk.Binding.Tests\Be.Stateless.BizTalk.Binding.Tests.csproj", "{2D540E4A-5451-4578-9CA4-A799686522FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Quartz", "Quartz\Be.Stateless.Quartz.csproj", "{7ECB9A32-BF7C-4804-883B-CC64F931117B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Be.Stateless.Quartz.Agent", "Quartz.Agent\Be.Stateless.Quartz.Agent.csproj", "{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -271,9 +271,9 @@ Global
 		SccProjectUniqueName40 = Quartz\\Be.Stateless.Quartz.csproj
 		SccProjectName40 = Quartz
 		SccLocalPath40 = Quartz
-		SccProjectUniqueName41 = Quartz.Server\\Be.Stateless.Quartz.Server.csproj
-		SccProjectName41 = Quartz.Server
-		SccLocalPath41 = Quartz.Server
+		SccProjectUniqueName41 = Quartz.Agent\\Be.Stateless.Quartz.Agent.csproj
+		SccProjectName41 = Quartz.Agent
+		SccLocalPath41 = Quartz.Agent
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -486,12 +486,6 @@ Global
 		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C788BF6D-9229-4578-8E29-87143846A4F9}.Release|x86.ActiveCfg = Release|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|x86.ActiveCfg = Release|Any CPU
 		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B13ADE-114B-4AA9-8A86-7A5305A21D2D}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -528,6 +522,12 @@ Global
 		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7ECB9A32-BF7C-4804-883B-CC64F931117B}.Release|x86.ActiveCfg = Release|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDEEDB3C-9A1A-4B16-B682-4670B72685B0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,30 +18,30 @@
 
 using System;
 using Be.Stateless.Quartz.Configuration;
-using Be.Stateless.Quartz.Server.Core;
+using Be.Stateless.Quartz.Host.Core;
 using Common.Logging;
 
-namespace Be.Stateless.Quartz.Server
+namespace Be.Stateless.Quartz.Host
 {
 	/// <summary>
 	/// Factory class to create Quartz server implementations from.
 	/// </summary>
-	public class QuartzServerFactory
+	public static class QuartzSchedulerHostFactory
 	{
 		/// <summary>
 		/// Creates a new instance of an Quartz.NET server core.
 		/// </summary>
 		/// <returns></returns>
-		public static IQuartzServer CreateServer()
+		public static IQuartzSchedulerHost CreateHost()
 		{
-			var typeName = QuartzConfigurationSection.ServerImplementationType;
-			var type = Type.GetType(typeName, true);
-			_logger.Debug("Creating new instance of server type '" + typeName + "'");
-			var retValue = (IQuartzServer) Activator.CreateInstance(type);
+			var schedulerHostTypeName = QuartzConfigurationSection.Current.SchedulerHostType;
+			var schedulerHostType = Type.GetType(schedulerHostTypeName, true);
+			_logger.Debug("Creating new instance of server type '" + schedulerHostTypeName + "'");
+			var schedulerHost = (IQuartzSchedulerHost) Activator.CreateInstance(schedulerHostType);
 			_logger.Debug("Instance successfully created");
-			return retValue;
+			return schedulerHost;
 		}
 
-		private static readonly ILog _logger = LogManager.GetLogger(typeof(QuartzServerFactory));
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(QuartzSchedulerHostFactory));
 	}
 }

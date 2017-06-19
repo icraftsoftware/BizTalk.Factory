@@ -19,31 +19,31 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Be.Stateless.Quartz.Server.Core;
+using Be.Stateless.Quartz.Host.Core;
 using Common.Logging;
 using Quartz;
 using Quartz.Impl;
 
-namespace Be.Stateless.Quartz.Server
+namespace Be.Stateless.Quartz.Host
 {
 	/// <summary>
-	/// The main server logic.
+	/// Quartz Scheduler main host logic.
 	/// </summary>
 	[SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
-	public class QuartzServer : IQuartzServer
+	public class QuartzSchedulerHost : IQuartzSchedulerHost
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="QuartzServer"/> class.
+		/// Initializes a new instance of the <see cref="QuartzSchedulerHost"/> class.
 		/// </summary>
-		public QuartzServer()
+		public QuartzSchedulerHost()
 		{
 			_logger = LogManager.GetLogger(GetType());
 		}
 
-		#region IQuartzServer Members
+		#region IQuartzSchedulerHost Members
 
 		/// <summary>
-		/// Initializes the instance of the <see cref="QuartzServer"/> class.
+		/// Initializes the instance of the <see cref="QuartzSchedulerHost"/> class.
 		/// </summary>
 		public virtual void Initialize()
 		{
@@ -54,7 +54,7 @@ namespace Be.Stateless.Quartz.Server
 			}
 			catch (Exception e)
 			{
-				_logger.Error("Server initialization failed:" + e.Message, e);
+				_logger.Error("Scheduler initialization failed:" + e.Message, e);
 				throw;
 			}
 		}
@@ -70,7 +70,7 @@ namespace Be.Stateless.Quartz.Server
 				Thread.Sleep(3000);
 			}
 			catch (ThreadInterruptedException) { }
-			_logger.Info("Scheduler started successfully");
+			_logger.Info("Scheduler started successfully.");
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace Be.Stateless.Quartz.Server
 		public virtual void Stop()
 		{
 			_scheduler.Shutdown(true);
-			_logger.Info("Scheduler shutdown complete");
+			_logger.Info("Scheduler shutdown complete.");
 		}
 
 		/// <summary>

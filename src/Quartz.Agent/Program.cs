@@ -20,8 +20,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
-using Be.Stateless.Quartz;
-using Be.Stateless.Quartz.Server;
+using Be.Stateless.Quartz.Host;
 
 namespace Be.Stateless
 {
@@ -39,16 +38,16 @@ namespace Be.Stateless
 			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 			if (Debugger.IsAttached)
 			{
-				var server = QuartzServerFactory.CreateServer();
-				server.Initialize();
-				server.Start();
-				Console.WriteLine("QuartzServer has started. Press <ENTER> to stop.");
+				var host = QuartzSchedulerHostFactory.CreateHost();
+				host.Initialize();
+				host.Start();
+				Console.WriteLine("Quartz.NET Scheduler Host has been started. Press <ENTER> to stop.");
 				Console.ReadLine();
-				server.Stop();
+				host.Stop();
 			}
 			else
 			{
-				var servicesToRun = new ServiceBase[] { new QuartzService() };
+				var servicesToRun = new ServiceBase[] { new Quartz.Agent.ServiceController() };
 				ServiceBase.Run(servicesToRun);
 			}
 		}

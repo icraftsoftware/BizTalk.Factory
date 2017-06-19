@@ -73,10 +73,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quartz\Jobs\XmlMessageHttpPostJob.cs" />
     <Compile Include="Quartz\Configuration\QuartzConfigurationSection.cs" />
-    <Compile Include="Quartz\Server\Core\IQuartzServer.cs" />
-    <Compile Include="Quartz\Server\QuartzServer.cs" />
-    <Compile Include="Quartz\Server\QuartzServerFactory.cs" />
-    <Compile Include="Quartz\SqlServerDelegate.cs" />
+    <Compile Include="Quartz\Host\Core\IQuartzSchedulerHost.cs" />
+    <Compile Include="Quartz\Host\QuartzSchedulerHost.cs" />
+    <Compile Include="Quartz\Host\QuartzSchedulerHostFactory.cs" />
+    <Compile Include="Quartz\Store\SqlServerDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\be.stateless.public.snk">

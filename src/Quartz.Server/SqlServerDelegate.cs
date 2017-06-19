@@ -1,6 +1,6 @@
-#region Copyright & License
+ï»¿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright Â© 2012 - 2016 FranÃ§ois Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,27 +18,21 @@
 
 using System;
 
-namespace Be.Stateless.Quartz.Server.Core
+namespace Quartz.Server
 {
 	/// <summary>
-	/// Service interface for core Quartz.NET server.
+	/// This class allows storing the fully qualified name of Quartz job classes in the configuration database. This is
+	/// necessary to allow Quartz to load those classes when they are in an assembly deployed in the GAC.
 	/// </summary>
-	public interface IQuartzServer : IDisposable
+	public class SqlServerDelegate : Impl.AdoJobStore.SqlServerDelegate
 	{
-		/// <summary>
-		/// Initializes the instance of <see cref="IQuartzServer"/>.
-		/// Initialization will only be called once in server's lifetime.
-		/// </summary>
-		void Initialize();
+		#region Base Class Member Overrides
 
-		/// <summary>
-		/// Starts this instance.
-		/// </summary>
-		void Start();
+		protected override string GetStorableJobTypeName(Type jobType)
+		{
+			return jobType.AssemblyQualifiedName;
+		}
 
-		/// <summary>
-		/// Stops this instance.
-		/// </summary>
-		void Stop();
+		#endregion
 	}
 }
