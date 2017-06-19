@@ -42,7 +42,7 @@ namespace Be.Stateless
 				var server = QuartzServerFactory.CreateServer();
 				server.Initialize();
 				server.Start();
-				Console.WriteLine("Server started. Press <ENTER> to stop.");
+				Console.WriteLine("QuartzServer has started. Press <ENTER> to stop.");
 				Console.ReadLine();
 				server.Stop();
 			}
