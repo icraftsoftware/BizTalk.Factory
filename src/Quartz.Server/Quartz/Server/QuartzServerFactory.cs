@@ -34,11 +34,9 @@ namespace Be.Stateless.Quartz.Server
 		public static IQuartzServer CreateServer()
 		{
 			var typeName = Configuration.ServerImplementationType;
-
-			var t = Type.GetType(typeName, true);
-
+			var type = Type.GetType(typeName, true);
 			_logger.Debug("Creating new instance of server type '" + typeName + "'");
-			var retValue = (IQuartzServer) Activator.CreateInstance(t);
+			var retValue = (IQuartzServer) Activator.CreateInstance(type);
 			_logger.Debug("Instance successfully created");
 			return retValue;
 		}
