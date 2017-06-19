@@ -18,26 +18,26 @@
 
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.Extensions;
+using Be.Stateless.Quartz.Server;
+using Be.Stateless.Quartz.Server.Core;
 
-namespace Be.Stateless.Quartz.Server
+namespace Be.Stateless.Quartz.Configuration
 {
 	/// <summary>
 	/// Configuration for the Quartz server.
 	/// </summary>
-	public static class Configuration
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used to declare section in config files.")]
+	public class QuartzConfigurationSection : ConfigurationSection
 	{
-		/// <summary>
-		/// Initializes the <see cref="Configuration"/> class.
-		/// </summary>
-		static Configuration()
+		public static NameValueCollection Current
 		{
-			var section = ConfigurationManager.GetSection("quartz");
-			_configuration = (NameValueCollection) section;
+			get { return (NameValueCollection) ConfigurationManager.GetSection(DEFAULT_SECTION_NAME); }
 		}
 
 		/// <summary>
-		/// Gets the type name of the server implementation.
+		/// Gets the type name of the <see cref="IQuartzServer"/>-derived Quartz Server implementation.
 		/// </summary>
 		/// <value>
 		/// The type of the server implementation.
@@ -62,13 +62,13 @@ namespace Be.Stateless.Quartz.Server
 		/// </returns>
 		private static string GetConfiguredOrDefaultValue(string configurationKey, string defaultValue)
 		{
-			var value = _configuration.IfNotNull(c => c[configurationKey]);
+			var value = Current.IfNotNull(values => values[configurationKey]);
 			return value.IsNullOrWhiteSpace() ? defaultValue : value;
 		}
 
+		private const string DEFAULT_SECTION_NAME = "quartz";
 		private const string SERVER_CONFIGURATION_PREFIX = "quartz.server";
 		private const string SERVER_IMPLEMENTATION_TYPE_KEY = SERVER_CONFIGURATION_PREFIX + ".type";
-		private static readonly NameValueCollection _configuration;
 		private static readonly string _defaultServerImplementationType = typeof(QuartzServer).AssemblyQualifiedName;
 	}
 }

@@ -82,12 +82,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Quartz\Server\Configuration.cs" />
-    <Compile Include="Quartz\Server\Core\IQuartzServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Quartz\Server\QuartzServer.cs" />
-    <Compile Include="Quartz\Server\QuartzServerFactory.cs" />
     <Compile Include="Quartz\QuartzService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -140,6 +136,9 @@
       <Project>{7ecb9a32-bf7c-4804-883b-cc64f931117b}</Project>
       <Name>Be.Stateless.Quartz</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Quartz\Server\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

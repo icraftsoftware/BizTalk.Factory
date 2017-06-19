@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using Be.Stateless.Quartz.Configuration;
 using Be.Stateless.Quartz.Server.Core;
 using Common.Logging;
 
@@ -33,7 +34,7 @@ namespace Be.Stateless.Quartz.Server
 		/// <returns></returns>
 		public static IQuartzServer CreateServer()
 		{
-			var typeName = Configuration.ServerImplementationType;
+			var typeName = QuartzConfigurationSection.ServerImplementationType;
 			var type = Type.GetType(typeName, true);
 			_logger.Debug("Creating new instance of server type '" + typeName + "'");
 			var retValue = (IQuartzServer) Activator.CreateInstance(type);
