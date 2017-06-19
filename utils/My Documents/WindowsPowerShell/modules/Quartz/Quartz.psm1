@@ -1,3 +1,21 @@
+#region Copyright & License
+
+# Copyright © 2012 - 2017 François Chabot
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#endregion
+
 function Get-QuartzAgentInstallationPath
 {
     [CmdletBinding()]
@@ -98,31 +116,17 @@ function GetQuartzAgentExecutableAbsolutePath
     $script:quartzAgentExecutableAbsolutePath
 }
 
-# TODO convert to actual function syntax
-$onAssemblyResolveEventHandler = [System.ResolveEventHandler] {
-    param($sender, $eventArgs)
+function LoadDependentAssemblies
+{
+    [CmdletBinding()]
+    param()
 
-    $assemblyName = New-Object -TypeName System.Reflection.AssemblyName -ArgumentList $eventArgs.Name
-    $assemblyPath = Join-Path -Path Get-QuartzAgentInstallationPath -ChildPath ($assemblyName.Name + '.dll')
-    # resource and XML serializer assemblies that are most probably nonexistent
-    if ($assemblyName.Name -match '\.resources$|\.XmlSerializers$') {
-        # Write-Verbose -Message ('Skipping resolution of assembly {0}.' -f $eventArgs.Name)
-        return $null
+    # https://stackoverflow.com/questions/7997725/the-type-initializer-for-quartz-impl-stdschedulerfactory-threw-an-exception
+    # the list is in reversed depency order
+    $assemblyNameList = @('log4net.dll', 'Common.Logging.Core.dll', 'Common.Logging.dll', 'Quartz.dll', 'Be.Stateless.Quartz.dll')
+    foreach($assemblyName in $assemblyNameList) {
+        Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath $assemblyName)
     }
-
-    Write-Verbose -Message ('Trying to resolve assembly {0}.' -f $eventArgs.Name)
-    if (Test-Path -Path $assemblyPath) {
-        Write-Verbose -Message ('Trying to load assembly {0}.' -f $assemblyPath)
-        Add-Type -Path $assemblyPath
-        $assembly = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName() -eq $assemblyName } | Select-Object -Unique
-        if ($assembly -eq $null) { throw ('Failed to load assembly {0}.' -f $assemblyPath) }
-        return $assembly
-    }
-
-    if ($eventArgs.Name -ne $null -and $eventArgs.Name.Length -gt 0) {
-        Write-Warning -Message ('Cannot resolve assembly {0}' -f $eventArgs.Name)
-    }
-    return $null
 }
 
 <#
@@ -131,23 +135,14 @@ $onAssemblyResolveEventHandler = [System.ResolveEventHandler] {
 
 # register clean up handler should the module be removed from the session
 $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove = {
-    # [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolveEventHandler)
     $script:scheduler = $null
 }
 
-# [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolveEventHandler)
-AssertQuartzAgent
 $quartzAgentExecutableAbsolutePath = $null
 $quartzAgentInstallationPath = $null
 $scheduler = $null
 
-# https://stackoverflow.com/questions/7997725/the-type-initializer-for-quartz-impl-stdschedulerfactory-threw-an-exception
-# load dependant assemblies in the reverse order of their depency
-Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath 'log4net.dll')
-Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath 'Common.Logging.Core.dll')
-Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath 'Common.Logging.dll')
-Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath 'Quartz.dll')
-Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath 'Be.Stateless.Quartz.dll')
-# $error[0].Exception.InnerException
+AssertQuartzAgent
+LoadDependentAssemblies
 
 Export-ModuleMember -Alias * -Function '*-*'
