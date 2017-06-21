@@ -404,13 +404,14 @@
       <ServiceAssembly>Quartz.Agent.exe</ServiceAssembly>
       <ServiceName>QuartzServer</ServiceName>
       <Redistributables>
-        Be.Stateless.Quartz;
         QuartzJobs.xml;
         Common.Logging.dll;
         Common.Logging.Core.dll;
         Common.Logging.Log4Net1213.dll;
         Quartz.dll;
         Quartz.pdb;
+        Be.Stateless.Quartz.dll;
+        Be.Stateless.Quartz.pdb;
         Quartz.Agent.exe.template.config;
         Quartz.Agent.log4net.template.config
       </Redistributables>

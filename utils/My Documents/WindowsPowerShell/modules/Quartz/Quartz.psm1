@@ -61,12 +61,7 @@ function Get-QuartzJobs
         $Detailed
     )
 
-    $scheduler = Get-QuartzScheduler
-	# https://stackoverflow.com/questions/11975130/generic-type-of-generic-type-in-powershell
-    $groupMatcher = [Type]('Quartz.Impl.Matchers.GroupMatcher[[{0}]]' -f [Quartz.JobKey].fullname)
-    $anyGroupMatcher = $groupMatcher::AnyGroup()
-    $jobKeys = $scheduler.GetJobKeys($anyGroupMatcher)
-
+    $jobKeys = GetQuartzJobKeys
     if ($Detailed) {
         $jobKeys | ForEach-Object { $scheduler.GetJobDetail($_) }
     }
@@ -79,15 +74,78 @@ function Get-QuartzJob
 {
     [CmdletBinding()]
     Param(
-        [Parameter(Position=0,Mandatory=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName="vector",Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+
+        [Parameter(Mandatory=$true,ParameterSetName="scalar",Position=0,ValueFromPipeline=$false)]
         [string]
         $Name,
 
-        [Parameter(Position=1,Mandatory=$false)]
+        [Parameter(Mandatory=$false,ParameterSetName="scalar",Position=1,ValueFromPipeline=$false)]
+        [string]
+        $Group = $null,
+
+        [Parameter(Mandatory=$false,ParameterSetName="vector")]
+        [Parameter(Mandatory=$false,ParameterSetName="scalar")]
+        [switch]
+        $Detailed
+    )
+
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        $scheduler = Get-QuartzScheduler
+        if ($scheduler.CheckExists($JobKey)) {
+            if ($Detailed) {
+                $scheduler.GetJobDetail($JobKey)
+            }
+            else {
+                $JobKey
+            }
+        }
+        else {
+            Write-Host ('''{0}'' job not found.' -f (GetQuartzJobDisplayName $JobKey))
+        }
+    }
+}
+
+function Remove-QuartzJobs
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    Param()
+
+    GetQuartzJobKeys | Remove-QuartzJob
+}
+
+function Remove-QuartzJob
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    Param(
+        [Parameter(Mandatory=$true,ParameterSetName="vector",Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+    
+        [Parameter(Mandatory=$true,ParameterSetName="scalar",Position=0,ValueFromPipeline=$false)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$false,ParameterSetName="scalar",Position=1,ValueFromPipeline=$false)]
         [string]
         $Group = $null
     )
 
+    process {
+        $scheduler = Get-QuartzScheduler
+        if ($scheduler.CheckExists($JobKey) -and $PsCmdlet.ShouldProcess((GetQuartzJobDisplayName $JobKey), "Delete Job")) {
+            if ($scheduler.DeleteJob($_)) {
+                Write-Verbose -Message ('''{0}'' job has been deleted.' -f (GetQuartzJobDisplayName $JobKey))
+            } else {
+                Write-Error -Message ('''{0}'' job could not be deleted.' -f (GetQuartzJobDisplayName $JobKey))
+            }
+        }
+    }
 }
 
 <#
@@ -116,7 +174,34 @@ function GetQuartzAgentExecutableAbsolutePath
     $script:quartzAgentExecutableAbsolutePath
 }
 
-function LoadDependentAssemblies
+function GetQuartzJobDisplayName
+{
+    [CmdletBinding()]
+    Param(
+        [Quartz.JobKey]
+        $JobKey
+    )
+
+    if ($JobKey.Group.Length -gt 0) {
+        ('[{0}:{1}]' -f $JobKey.Group, $JobKey.Name)
+    } else {
+        ('[{0}]' -f $JobKey.Name)
+    }
+}
+
+function GetQuartzJobKeys
+{
+    [CmdletBinding()]
+    Param()
+    
+    $scheduler = Get-QuartzScheduler
+	# https://stackoverflow.com/questions/11975130/generic-type-of-generic-type-in-powershell
+    $groupMatcher = [Type]('Quartz.Impl.Matchers.GroupMatcher[[{0}]]' -f [Quartz.JobKey].fullname)
+    $anyGroupMatcher = $groupMatcher::AnyGroup()
+    $scheduler.GetJobKeys($anyGroupMatcher)
+}
+
+function LoadQuartzDependentAssemblies
 {
     [CmdletBinding()]
     param()
@@ -143,6 +228,6 @@ $quartzAgentInstallationPath = $null
 $scheduler = $null
 
 AssertQuartzAgent
-LoadDependentAssemblies
+LoadQuartzDependentAssemblies
 
 Export-ModuleMember -Alias * -Function '*-*'
