@@ -22,7 +22,7 @@ namespace Be.Stateless.BizTalk.ContextProperties
 {
 	public class SftpProperties
 	{
-		public static readonly MessageContextProperty<TargetFileName, bool> TargetFileName
-			= new MessageContextProperty<TargetFileName, bool>();
+		public static readonly MessageContextProperty<TargetFileName, string> TargetFileName
+			= new MessageContextProperty<TargetFileName, string>();
 	}
 }
