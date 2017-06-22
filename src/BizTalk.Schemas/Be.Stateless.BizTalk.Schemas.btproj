@@ -73,6 +73,7 @@
     <Compile Include="ContextProperties\OverridableEdiProperties.cs" />
     <Compile Include="ContextProperties\Pop3Properties.cs" />
     <Compile Include="ContextProperties\BizTalkFactoryProperties.cs" />
+    <Compile Include="ContextProperties\SftpProperties.cs" />
     <Compile Include="ContextProperties\TrackingProperties.cs" />
     <Compile Include="ContextProperties\WcfProperties.cs" />
     <Compile Include="Message\Extensions\BaseMessage.cs" />
