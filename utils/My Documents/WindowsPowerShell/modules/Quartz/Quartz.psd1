@@ -26,6 +26,7 @@
     ModuleVersion         = '1.0'
     ProcessorArchitecture = 'None'
     PowerShellVersion     = '4.0'
+    RequiredAssemblies    = @('log4net.dll', 'Common.Logging.Core.dll', 'Common.Logging.dll', 'Common.Logging.Log4Net1213.dll', 'Quartz.dll', 'Be.Stateless.Quartz.dll')
     RequiredModules       = @()
 
     AliasesToExport       = @()

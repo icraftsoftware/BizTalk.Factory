@@ -22,7 +22,7 @@ function Get-QuartzAgentInstallationPath
     Param()
 
     if ($script:quartzAgentInstallationPath -eq $null) {
-        $path = GetQuartzAgentExecutableAbsolutePath
+        $path = GetQuartzAgentLocation
         $script:quartzAgentInstallationPath = Split-Path -Path $path -Parent
     }
     $script:quartzAgentInstallationPath
@@ -35,7 +35,7 @@ function Get-QuartzScheduler
 
     if ($script:scheduler -eq $null) {
         Write-Verbose -Message 'Loading Quartz scheduler settings from service host''s config file.'
-        $configuration = [System.Configuration.ConfigurationManager]::OpenExeConfiguration((GetQuartzAgentExecutableAbsolutePath))
+        $configuration = [System.Configuration.ConfigurationManager]::OpenExeConfiguration((GetQuartzAgentLocation))
         $section = $configuration.GetSection("quartz")
         # convert AppSettings into a NameValueCollection
         $settings = New-Object -TypeName System.Collections.Specialized.NameValueCollection -ArgumentList $section.Settings.Count
@@ -52,98 +52,132 @@ function Get-QuartzScheduler
     $script:scheduler
 }
 
-function Get-QuartzJobs
+function Get-QuartzJob
 {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='vector')]
     Param(
+        [Parameter(Mandatory=$false,Position=0)]
+        [string]
+        $Name = '.*',
+
+        [Parameter(Mandatory=$false,Position=1)]
+        [string]
+        $Group = '.*',
+
         [Parameter(Mandatory=$false)]
         [switch]
         $Detailed
     )
 
-    $jobKeys = GetQuartzJobKeys
-    if ($Detailed) {
-        $jobKeys | ForEach-Object { $scheduler.GetJobDetail($_) }
-    }
-    else {
-        $jobKeys
-    }
-}
-
-function Get-QuartzJob
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory=$true,ParameterSetName="vector",Position=0,ValueFromPipeline=$true)]
-        [Quartz.JobKey]
-        $JobKey,
-
-        [Parameter(Mandatory=$true,ParameterSetName="scalar",Position=0,ValueFromPipeline=$false)]
-        [string]
-        $Name,
-
-        [Parameter(Mandatory=$false,ParameterSetName="scalar",Position=1,ValueFromPipeline=$false)]
-        [string]
-        $Group = $null,
-
-        [Parameter(Mandatory=$false,ParameterSetName="vector")]
-        [Parameter(Mandatory=$false,ParameterSetName="scalar")]
-        [switch]
-        $Detailed
-    )
-
-    process {
-        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
-            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
-        }
+    begin{
         $scheduler = Get-QuartzScheduler
-        if ($scheduler.CheckExists($JobKey)) {
-            if ($Detailed) {
-                $scheduler.GetJobDetail($JobKey)
-            }
-            else {
-                $JobKey
-            }
-        }
-        else {
-            Write-Host ('''{0}'' job not found.' -f (GetQuartzJobDisplayName $JobKey))
-        }
     }
-}
-
-function Remove-QuartzJobs
-{
-    [CmdletBinding(SupportsShouldProcess=$true)]
-    Param()
-
-    GetQuartzJobKeys | Remove-QuartzJob
+    process {
+        GetQuartzJobKeys |
+            Where-Object { $_.Name -match $Name -and $_.Group -match $Group } |
+            Where-Object { Test-QuartzJob -JobKey $_ -ThrowOnError } |
+            ForEach-Object { if ($Detailed) { $scheduler.GetJobDetail($_) } else { $_ } }
+    }
 }
 
 function Remove-QuartzJob
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
     Param(
-        [Parameter(Mandatory=$true,ParameterSetName="vector",Position=0,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName='vector',Position=0,ValueFromPipeline=$true)]
         [Quartz.JobKey]
         $JobKey,
     
-        [Parameter(Mandatory=$true,ParameterSetName="scalar",Position=0,ValueFromPipeline=$false)]
+        [Parameter(Mandatory=$true,ParameterSetName='scalar',Position=0,ValueFromPipeline=$false)]
         [string]
         $Name,
 
-        [Parameter(Mandatory=$false,ParameterSetName="scalar",Position=1,ValueFromPipeline=$false)]
+        [Parameter(Mandatory=$false,ParameterSetName='scalar',Position=1,ValueFromPipeline=$false)]
         [string]
         $Group = $null
     )
 
-    process {
+    begin{
         $scheduler = Get-QuartzScheduler
-        if ($scheduler.CheckExists($JobKey) -and $PsCmdlet.ShouldProcess((GetQuartzJobDisplayName $JobKey), "Delete Job")) {
-            if ($scheduler.DeleteJob($_)) {
-                Write-Verbose -Message ('''{0}'' job has been deleted.' -f (GetQuartzJobDisplayName $JobKey))
-            } else {
-                Write-Error -Message ('''{0}'' job could not be deleted.' -f (GetQuartzJobDisplayName $JobKey))
+    }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        if (Test-QuartzJob -JobKey $JobKey -ThrowOnError) {
+            if ($PsCmdlet.ShouldProcess((GetQuartzJobDisplayName $JobKey), 'Delete Job')) {
+                if ($scheduler.DeleteJob($JobKey)) {
+                    Write-Verbose -Message ('{0} job has been deleted.' -f (GetQuartzJobDisplayName $JobKey))
+                } else {
+                    Write-Error -Message ('{0} job could not be deleted.' -f (GetQuartzJobDisplayName $JobKey))
+                }
             }
+        }
+    }
+}
+
+function Assert-QuartzJob
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,ParameterSetName='vector',Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+    
+        [Parameter(Mandatory=$true,ParameterSetName='scalar',Position=0,ValueFromPipeline=$false)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$false,ParameterSetName='scalar',Position=1,ValueFromPipeline=$false)]
+        [string]
+        $Group = $null
+    )
+
+    begin{
+        $scheduler = Get-QuartzScheduler
+    }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        if (-not $scheduler.CheckExists($JobKey)) {
+            Write-Error -Message ('{0}  job not found.' -f (GetQuartzJobDisplayName $JobKey))
+        }
+    }
+}
+
+function Test-QuartzJob
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,ParameterSetName='vector',Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+    
+        [Parameter(Mandatory=$true,ParameterSetName='scalar',Position=0,ValueFromPipeline=$false)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$false,ParameterSetName='scalar',Position=1,ValueFromPipeline=$false)]
+        [string]
+        $Group = $null,
+
+        [Parameter(DontShow,ParameterSetName='vector')]
+        [Parameter(DontShow,ParameterSetName='scalar')]
+        [switch]
+        $ThrowOnError
+    )
+
+    begin{
+        $scheduler = Get-QuartzScheduler
+    }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        $scheduler.CheckExists($JobKey)
+        if ($ThrowOnError -and -not $scheduler.CheckExists($JobKey)) {
+            Write-Error -Message ('{0}  job not found.' -f (GetQuartzJobDisplayName $JobKey))
         }
     }
 }
@@ -151,27 +185,36 @@ function Remove-QuartzJob
 <#
  # Helpers
  #>
+
+function GetQuartzAgent
+{
+    [CmdletBinding()]
+    Param()
+
+    Get-CimInstance -ClassName Win32_Service -Filter 'Name=''QuartzAgent'''
+}
+
 function AssertQuartzAgent
 {
     [CmdletBinding()]
     param()
 
-    $agent = Get-CimInstance -ClassName Win32_Service -Filter "Name='QuartzAgent'"
+    $agent = GetQuartzAgent
     if ($agent -eq $null) {
-        throw "Quart.NET Scheduler Agent is not available on this machine."
+        Write-Error 'Quart.NET Scheduler Agent is not available on this machine.'
     }
 }
 
-function GetQuartzAgentExecutableAbsolutePath
+function GetQuartzAgentLocation
 {
     [CmdletBinding()]
     Param()
 
-    if ($script:quartzAgentExecutableAbsolutePath -eq $null) {
-        $path = Get-CimInstance -ClassName Win32_Service -Filter "Name='QuartzAgent'" | Select-Object -ExpandProperty PathName
-        $script:quartzAgentExecutableAbsolutePath = $path.Trim('"')
+    if ($script:quartzAgentLocation -eq $null) {
+        $agent = GetQuartzAgent
+        $script:quartzAgentLocation = $agent.PathName.Trim('"')
     }
-    $script:quartzAgentExecutableAbsolutePath
+    $script:quartzAgentLocation
 }
 
 function GetQuartzJobDisplayName
@@ -201,19 +244,6 @@ function GetQuartzJobKeys
     $scheduler.GetJobKeys($anyGroupMatcher)
 }
 
-function LoadQuartzDependentAssemblies
-{
-    [CmdletBinding()]
-    param()
-
-    # https://stackoverflow.com/questions/7997725/the-type-initializer-for-quartz-impl-stdschedulerfactory-threw-an-exception
-    # the list is in reversed depency order
-    $assemblyNameList = @('log4net.dll', 'Common.Logging.Core.dll', 'Common.Logging.dll', 'Quartz.dll', 'Be.Stateless.Quartz.dll')
-    foreach($assemblyName in $assemblyNameList) {
-        Add-Type -Path (Join-Path -Path (Get-QuartzAgentInstallationPath) -ChildPath $assemblyName)
-    }
-}
-
 <#
  # Main
  #>
@@ -223,11 +253,10 @@ $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove = {
     $script:scheduler = $null
 }
 
-$quartzAgentExecutableAbsolutePath = $null
+$quartzAgentLocation = $null
 $quartzAgentInstallationPath = $null
 $scheduler = $null
 
 AssertQuartzAgent
-LoadQuartzDependentAssemblies
 
 Export-ModuleMember -Alias * -Function '*-*'
