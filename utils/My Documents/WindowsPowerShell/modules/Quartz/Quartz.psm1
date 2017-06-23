@@ -54,7 +54,7 @@ function Get-QuartzScheduler
 
 function Get-QuartzJob
 {
-    [CmdletBinding(DefaultParameterSetName='vector')]
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$false,Position=0)]
         [string]
@@ -316,13 +316,14 @@ function GetQuartzJobKeys
 
 # register clean up handler should the module be removed from the session
 $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove = {
+    $script:quartzAgentLocation = $null
+    $script:quartzAgentInstallationPath = $null
     $script:scheduler = $null
 }
 
 $quartzAgentLocation = $null
 $quartzAgentInstallationPath = $null
 $scheduler = $null
-
 AssertQuartzAgent
 
 Export-ModuleMember -Alias * -Function '*-*'
