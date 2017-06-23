@@ -116,6 +116,72 @@ function Remove-QuartzJob
     }
 }
 
+function Resume-QuartzJob
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    Param(
+        [Parameter(Mandatory=$true,ParameterSetName='vector',Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+    
+        [Parameter(Mandatory=$true,ParameterSetName='scalar',Position=0,ValueFromPipeline=$false)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$false,ParameterSetName='scalar',Position=1,ValueFromPipeline=$false)]
+        [string]
+        $Group = $null
+    )
+
+    begin{
+        $scheduler = Get-QuartzScheduler
+    }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        if (Test-QuartzJob -JobKey $JobKey -ThrowOnError) {
+            if ($PsCmdlet.ShouldProcess((GetQuartzJobDisplayName $JobKey), 'Resume Job')) {
+                $scheduler.ResumeJob($JobKey)
+                Write-Verbose -Message ('{0} job has been resumed.' -f (GetQuartzJobDisplayName $JobKey))
+            }
+        }
+    }
+}
+
+function Suspend-QuartzJob
+{
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    Param(
+        [Parameter(Mandatory=$true,ParameterSetName='vector',Position=0,ValueFromPipeline=$true)]
+        [Quartz.JobKey]
+        $JobKey,
+    
+        [Parameter(Mandatory=$true,ParameterSetName='scalar',Position=0,ValueFromPipeline=$false)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$false,ParameterSetName='scalar',Position=1,ValueFromPipeline=$false)]
+        [string]
+        $Group = $null
+    )
+
+    begin{
+        $scheduler = Get-QuartzScheduler
+    }
+    process {
+        if ($PsCmdlet.ParameterSetName -eq 'scalar') {
+            $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
+        }
+        if (Test-QuartzJob -JobKey $JobKey -ThrowOnError) {
+            if ($PsCmdlet.ShouldProcess((GetQuartzJobDisplayName $JobKey), 'Suspend Job')) {
+                $scheduler.PauseJob($JobKey)
+                Write-Verbose -Message ('{0} job has been paused.' -f (GetQuartzJobDisplayName $JobKey))
+            }
+        }
+    }
+}
+
 function Assert-QuartzJob
 {
     [CmdletBinding()]
