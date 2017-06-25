@@ -16,35 +16,17 @@
 
 #endregion
 
-function Get-QuartzAgentInstallationPath
-{
-    [CmdletBinding()]
-    Param()
-
-    if ($script:quartzAgentInstallationPath -eq $null) {
-        $path = GetQuartzAgentLocation
-        $script:quartzAgentInstallationPath = Split-Path -Path $path -Parent
-    }
-    $script:quartzAgentInstallationPath
-}
-
 function Get-QuartzScheduler
 {
     [CmdletBinding()]
     Param()
 
     if ($script:scheduler -eq $null) {
-        Write-Verbose -Message 'Loading Quartz scheduler settings from service host''s config file.'
-        $configuration = [System.Configuration.ConfigurationManager]::OpenExeConfiguration((GetQuartzAgentLocation))
-        $section = $configuration.GetSection("quartz")
-        # convert AppSettings into a NameValueCollection
         $settings = New-Object -TypeName System.Collections.Specialized.NameValueCollection -ArgumentList $section.Settings.Count
-        # filter out irrelevant/unnecessary settings, whose some would entail scheduler's initialization errors when performed from within PowerShell
-        $section.Settings `
-            | Where-Object { $_.Key -notmatch 'quartz\.plugin\.xml\.' } `
-            | ForEach-Object { $settings[$_.Key] = $_.Value }
-
-        Write-Verbose -Message 'Constructing Quartz scheduler instance.'
+        $settings['quartz.scheduler.instanceName'] = 'BizTalkPlatformScheduler';
+        $settings['quartz.scheduler.proxy'] = 'true';
+        $settings['quartz.scheduler.proxy.address'] = "tcp://localhost:$quartzSchedulerRemotePort/QuartzScheduler";
+        Write-Verbose -Message 'Constructing Quartz scheduler instance proxy.'
         $schedulerFactory = New-Object -TypeName Quartz.Impl.StdSchedulerFactory
         $schedulerFactory.Initialize($settings)
         $script:scheduler = $schedulerFactory.GetScheduler()
@@ -207,7 +189,7 @@ function Assert-QuartzJob
             $JobKey = New-Object -TypeName Quartz.JobKey -ArgumentList $Name, $Group
         }
         if (-not $scheduler.CheckExists($JobKey)) {
-            Write-Error -Message ('{0}  job not found.' -f (GetQuartzJobDisplayName $JobKey))
+            throw ('{0}  job not found.' -f (GetQuartzJobDisplayName $JobKey))
         }
     }
 }
@@ -252,35 +234,21 @@ function Test-QuartzJob
  # Helpers
  #>
 
-function GetQuartzAgent
-{
-    [CmdletBinding()]
-    Param()
-
-    Get-CimInstance -ClassName Win32_Service -Filter 'Name=''QuartzAgent'''
-}
-
 function AssertQuartzAgent
 {
     [CmdletBinding()]
     param()
 
-    $agent = GetQuartzAgent
+    $agent = Get-Service -Name QuartzAgent -ErrorAction SilentlyContinue
     if ($agent -eq $null) {
-        Write-Error 'Quart.NET Scheduler Agent is not available on this machine.'
+        throw 'Quart.NET Scheduler Agent is not installed on this machine.'
     }
-}
-
-function GetQuartzAgentLocation
-{
-    [CmdletBinding()]
-    Param()
-
-    if ($script:quartzAgentLocation -eq $null) {
-        $agent = GetQuartzAgent
-        $script:quartzAgentLocation = $agent.PathName.Trim('"')
+    elseif ($agent.Status -ne 'Running') {
+        throw 'Quart.NET Scheduler Agent is not running.'
+    } elseif (-not(Test-NetConnection -ComputerName localhost -Port $quartzSchedulerRemotePort -InformationLevel Quiet)) {
+        throw 'Quart.NET Scheduler Agent remoting is not enabled.'
     }
-    $script:quartzAgentLocation
+
 }
 
 function GetQuartzJobDisplayName
@@ -291,11 +259,7 @@ function GetQuartzJobDisplayName
         $JobKey
     )
 
-    if ($JobKey.Group.Length -gt 0) {
-        ('[{0}:{1}]' -f $JobKey.Group, $JobKey.Name)
-    } else {
-        ('[{0}]' -f $JobKey.Name)
-    }
+    '[{0}.{1}]' -f $JobKey.Group, $JobKey.Name
 }
 
 function GetQuartzJobKeys
@@ -316,13 +280,10 @@ function GetQuartzJobKeys
 
 # register clean up handler should the module be removed from the session
 $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove = {
-    $script:quartzAgentLocation = $null
-    $script:quartzAgentInstallationPath = $null
     $script:scheduler = $null
 }
 
-$quartzAgentLocation = $null
-$quartzAgentInstallationPath = $null
+$quartzSchedulerRemotePort = 5555
 $scheduler = $null
 AssertQuartzAgent
 
