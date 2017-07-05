@@ -19,6 +19,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceProcess;
@@ -31,6 +32,12 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 	{
 		public Installer()
 		{
+			Installers.Add(
+				new EventLogInstaller {
+					Log = "Application",
+					Source = "Claim Store Agent"
+				});
+
 			InitializeComponent();
 
 			_isServiceInstalled = System.ServiceProcess.ServiceController
@@ -39,7 +46,6 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 
 			BeforeInstall += SetupInstaller;
 			AfterInstall += StartService;
-
 			BeforeUninstall += StopService;
 		}
 
@@ -118,7 +124,7 @@ namespace Be.Stateless.BizTalk.ClaimStore.Agent
 				if (!_isServiceInstalled) return;
 				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
-					serviceController.Stop();
+					if (serviceController.CanStop) serviceController.Stop();
 				}
 			}
 			catch (Exception exception)

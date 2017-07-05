@@ -399,7 +399,7 @@
       <LocationPath Condition=" '$(Configuration)' == 'Server' ">..</LocationPath>
       <ServiceStartModeArgument>auto</ServiceStartModeArgument>
       <ServiceAssembly>Quartz.Agent.exe</ServiceAssembly>
-      <ServiceName>QuartzServer</ServiceName>
+      <ServiceName>QuartzAgent</ServiceName>
       <Redistributables>
         QuartzJobs.xml;
         Common.Logging.dll;

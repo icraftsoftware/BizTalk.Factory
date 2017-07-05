@@ -126,9 +126,6 @@
     <Compile Include="EventLogSourceInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="EventLogSourceInstaller.Designer.cs">
-      <DependentUpon>EventLogSourceInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="Logging\Appender\TracingAppender.cs" />
     <Compile Include="Message\Base64StringMessageContent.cs" />
     <Compile Include="Message\Extensions\BaseMessageExtensions.cs" />
@@ -229,11 +226,6 @@
     <Compile Include="Component\PropertyExtractorCollectionConverter.cs" />
     <Compile Include="Component\PropertyExtractorCollection.cs" />
     <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogate.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="EventLogSourceInstaller.resx">
-      <DependentUpon>EventLogSourceInstaller.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">

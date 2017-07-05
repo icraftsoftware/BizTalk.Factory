@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System.ComponentModel;
+using System.Configuration.Install;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
@@ -24,11 +25,15 @@ namespace Be.Stateless.BizTalk
 {
 	[RunInstaller(true)]
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Installer class.")]
-	public partial class EventLogSourceInstaller : EventLogInstaller
+	public class EventLogSourceInstaller : Installer
 	{
 		public EventLogSourceInstaller()
 		{
-			InitializeComponent();
+			Installers.Add(
+				new EventLogInstaller {
+					Log = "Application",
+					Source = "BizTalk Factory"
+				});
 		}
 	}
 }

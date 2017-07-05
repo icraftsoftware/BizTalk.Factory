@@ -19,6 +19,8 @@
 using System;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -28,10 +30,17 @@ namespace Be.Stateless.Quartz.Agent
 	/// Service installer for the Quartz server.
 	/// </summary>
 	[RunInstaller(true)]
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Installer class.")]
 	public class Installer : System.Configuration.Install.Installer
 	{
 		public Installer()
 		{
+			Installers.Add(
+				new EventLogInstaller {
+					Log = "Application",
+					Source = "Quartz.NET Agent"
+				});
+
 			InitializeComponent();
 
 			_isServiceInstalled = System.ServiceProcess.ServiceController
@@ -118,7 +127,7 @@ namespace Be.Stateless.Quartz.Agent
 				if (!_isServiceInstalled) return;
 				using (var serviceController = new System.ServiceProcess.ServiceController(_serviceInstaller.ServiceName))
 				{
-					serviceController.Stop();
+					if (serviceController.CanStop) serviceController.Stop();
 				}
 			}
 			catch (Exception exception)
