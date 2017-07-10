@@ -33,8 +33,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 	/// </typeparam>
 	/// <remarks>
 	/// For each derived class, <see cref="Cache{TKey,TItem}"/> creates behind the scene a named memory cache instance,
-	/// either a real <see cref="System.Runtime.Caching.MemoryCache"/> for .NET 4.0 (from System.runtime.Caching
-	/// assembly) and onwards or a simple substitute for it otherwise (from this assembly).
+	/// i.e. a <see cref="System.Runtime.Caching.MemoryCache"/>.
 	/// </remarks>
 	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public abstract class Cache<TKey, TItem>

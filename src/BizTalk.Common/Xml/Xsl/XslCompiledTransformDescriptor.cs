@@ -47,17 +47,17 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 				throw new ArgumentException(
 					string.Format("The type {0} does not derive from TransformBase.", transform.AssemblyQualifiedName),
 					"transform");
-			_transform = transform;
 
 			var transformBase = Activator.CreateInstance(transform) as TransformBase;
-			if (transformBase == null) throw new ArgumentNullException("transform", string.Format("Cannot instantiate type '{0}'.", transform.AssemblyQualifiedName));
+			if (transformBase == null) throw new ArgumentException("transform", string.Format("Cannot instantiate type '{0}'.", transform.AssemblyQualifiedName));
 
 			var navigator = CreateNavigator(transformBase.XmlContent);
 
 			Arguments = new Stateless.Xml.Xsl.XsltArgumentList(transformBase.TransformArgs);
 			ExtensionRequirements = BuildExtensionRequirements(navigator);
 			if ((ExtensionRequirements & ExtensionRequirements.MessageContext) == ExtensionRequirements.MessageContext) NamespaceResolver = BuildNamespaceResolver(navigator);
-			XslCompiledTransform = BuildXslCompiledTransform(navigator);
+			XslCompiledTransform = new XslCompiledTransform();
+			XslCompiledTransform.Load(navigator, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(transform));
 		}
 
 		/// <summary>
@@ -91,13 +91,9 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		/// The <see cref="System.Xml.Xsl.XslCompiledTransform"/> equivalent of <see cref="TransformBase"/>-derived
 		/// transform.
 		/// </summary>
-		public XslCompiledTransform XslCompiledTransform { get; private set; }
+		public XslCompiledTransform XslCompiledTransform { get; protected set; }
 
-		private readonly Type _transform;
-
-		#region Helpers
-
-		private static XPathNavigator CreateNavigator(string xmlContent)
+		private XPathNavigator CreateNavigator(string xmlContent)
 		{
 			using (var stringReader = new StringReader(xmlContent))
 			{
@@ -122,19 +118,5 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 				.Each(ns => nsm.AddNamespace(ns.Key, ns.Value));
 			return nsm;
 		}
-
-		private XslCompiledTransform BuildXslCompiledTransform(IXPathNavigable stylesheet)
-		{
-			var transform =
-#if DEBUG
-				new XslCompiledTransform(true);
-#else
-				new XslCompiledTransform();
-#endif
-			transform.Load(stylesheet, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(_transform));
-			return transform;
-		}
-
-		#endregion
 	}
 }

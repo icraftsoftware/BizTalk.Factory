@@ -91,9 +91,7 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 
 		#endregion
 
-		#region Helpers
-
-		private XslCompiledTransformDescriptor LookupTransformDescriptor(Type transform)
+		protected virtual XslCompiledTransformDescriptor LookupTransformDescriptor(Type transform)
 		{
 			return XsltCache.Instance[transform];
 		}
@@ -146,11 +144,8 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 			}
 		}
 
-		#endregion
-
 		private const int DEFAULT_BUFFER_SIZE = 1024 * 10; // 10 KB
 		private const int DEFAULT_THRESHOLD_SIZE = 1024 * 1024; // 1 MB
-
 		private readonly Stream[] _streams;
 		private IBaseMessageContext _context;
 	}
