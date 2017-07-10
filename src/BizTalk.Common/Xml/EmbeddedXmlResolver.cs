@@ -138,10 +138,10 @@ namespace Be.Stateless.BizTalk.Xml
 
 		#endregion
 
-		private const string EMBEDDED_SCHEME = "embedded";
-		private const string MAP_SCHEME = "map";
-		private const string RESOURCE_HOST = "resource";
-		private const string TYPE_HOST = "type";
+		internal const string EMBEDDED_SCHEME = "embedded";
+		internal const string MAP_SCHEME = "map";
+		internal const string RESOURCE_HOST = "resource";
+		internal const string TYPE_HOST = "type";
 
 		private readonly Type _type;
 	}

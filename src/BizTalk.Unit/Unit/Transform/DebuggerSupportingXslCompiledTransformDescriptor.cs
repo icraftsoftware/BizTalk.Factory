@@ -18,7 +18,6 @@
 
 using System;
 using System.Xml.Xsl;
-using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.Xml.Xsl;
 using Castle.Core.Internal;
 
@@ -30,7 +29,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			if (sourceXsltFilePath.IsNullOrEmpty()) throw new ArgumentNullException("sourceXsltFilePath");
 			XslCompiledTransform = new XslCompiledTransform(true);
-			XslCompiledTransform.Load(sourceXsltFilePath, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(transform));
+			XslCompiledTransform.Load(sourceXsltFilePath, XsltSettings.TrustedXslt, new DebuggerSupportingEmbeddedXmlResolver(transform));
 		}
 	}
 }
