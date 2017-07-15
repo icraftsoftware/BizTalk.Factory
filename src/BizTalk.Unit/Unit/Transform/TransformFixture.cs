@@ -230,6 +230,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			if (Debugger.IsAttached)
 			{
+				// inject map/transform extensions around XML streams that support XSLT debugging
 				StreamExtensions.StreamTransformerFactory = streams => new DebuggerSupportingTransformer(streams);
 			}
 		}

@@ -19,7 +19,8 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Dia2Lib;
+using Be.Stateless.Extensions;
+using Microsoft.Dia;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
@@ -46,7 +47,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			if (!TryResolvePdbFilePath(type, out pdbFilePath)) return false;
 
 			// Visual Studio 2013 Diagnostic Library, i.e. msdia120.dll
-			var source = (IDiaDataSource) Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3bfcea48-620f-4b6b-81f7-b9af75454c7d")));
+			var source = (IDiaDataSource) new DiaSourceClass();
 			source.loadDataFromPdb(pdbFilePath);
 
 			IDiaSession session;
@@ -62,7 +63,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			foreach (IDiaLineNumber ln in lineNumbers)
 			{
 				path = ln.sourceFile.fileName;
-				return true;
+				if (!path.IsNullOrEmpty()) return true;
 			}
 			return false;
 		}
