@@ -39,7 +39,8 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 	/// <typeparam name="T">
 	/// The type of the BizTalk transform to test.
 	/// </typeparam>
-	public abstract class TransformFixture<T> where T : TransformBase, new()
+	public abstract class TransformFixture<T> : IMapCustomXsltPathResolver
+		where T : TransformBase, new()
 	{
 		#region Nested Type: TransformResult
 
@@ -226,18 +227,14 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		#endregion
 
-		static TransformFixture()
-		{
-			if (Debugger.IsAttached)
-			{
-				// inject map/transform extensions around XML streams that support XSLT debugging
-				StreamExtensions.StreamTransformerFactory = streams => new DebuggerSupportingTransformer(streams);
-			}
-		}
-
 		protected TransformFixture()
 		{
-			// redeclares each of the namespaces declared in the XSLT with the same prefixes
+			// inject map/transform extensions around XML streams that support XSLT debugging
+			if (Debugger.IsAttached)
+			{
+				StreamExtensions.StreamTransformerFactory = streams => new DebuggerSupportingTransformer(streams, this);
+			}
+			// provision namespace manager with each of the namespaces and prefixes declared in the XSLT
 			using (var sr = new StringReader(new T().XmlContent))
 			{
 				var navigator = new XPathDocument(sr).CreateNavigator();
@@ -247,6 +244,15 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				navigator.GetNamespacesInScope(XmlNamespaceScope.All).Each(n => _namespaceManager.AddNamespace(n.Key, n.Value));
 			}
 		}
+
+		#region IMapCustomXsltPathResolver Members
+
+		public virtual bool TryResolveXsltPath(out string path)
+		{
+			return typeof(T).TryResolveXsltPath(out path);
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Adds the given namespace to the collection of namespaces that have been automatically redeclared after the

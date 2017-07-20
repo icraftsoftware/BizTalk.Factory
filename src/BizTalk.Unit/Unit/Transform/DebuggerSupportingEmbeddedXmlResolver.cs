@@ -35,7 +35,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var typeName = Uri.UnescapeDataString(uri.Segments[1]);
 				var type = Type.GetType(typeName, true);
 				string sourceXsltFilePath;
-				if (MapCustomXsltPathResolver.TryResolveXsltPath(type, out sourceXsltFilePath))
+				if (type.TryResolveXsltPath(out sourceXsltFilePath))
 				{
 					return new Uri("file://" + sourceXsltFilePath);
 				}

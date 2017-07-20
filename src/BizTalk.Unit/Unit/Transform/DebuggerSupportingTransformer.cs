@@ -20,27 +20,45 @@ using System;
 using System.IO;
 using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.Xml.Xsl;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	internal class DebuggerSupportingTransformer : Transformer
 	{
-		public DebuggerSupportingTransformer(Stream[] streams) : base(streams) { }
+		public DebuggerSupportingTransformer(Stream[] streams, IMapCustomXsltPathResolver customXsltPathResolver) : base(streams)
+		{
+			_customXsltPathResolver = customXsltPathResolver;
+		}
 
 		#region Base Class Member Overrides
 
+		/// <summary>
+		/// Returns a <see cref="XslCompiledTransformDescriptor"/>-derived instance that enable XSLT debugging if the
+		/// source XSLT file of the <see cref="TransformBase"/>-derived <paramref name="transform"/> is found. Returns a
+		/// regular <see cref="XslCompiledTransformDescriptor"/> instance otherwise.
+		/// </summary>
+		/// <param name="transform">
+		/// The <see cref="TransformBase"/>-derived type whose <see cref="XslCompiledTransformDescriptor"/> is looked up.
+		/// </param>
+		/// <returns>
+		/// A <see cref="XslCompiledTransformDescriptor"/> that enable XSLT debugging if the source XSLT file has been
+		/// found.
+		/// </returns>
 		protected override XslCompiledTransformDescriptor LookupTransformDescriptor(Type transform)
 		{
 			string sourceXsltFilePath;
-			return MapCustomXsltPathResolver.TryResolveXsltPath(transform, out sourceXsltFilePath)
-				// only hit this code if a debugger is attached (see TransformFixture<T> static ctor); it should therefore
-				// not be a performance issue to bypass the XsltCache in order to, most certainly, debug an XSLT map.
-				// besides, XsltCache would only always return an XslCompiledTransformDescriptor and not its
-				// DebuggerSupportingXslCompiledTransformDescriptor derived class.
+			return _customXsltPathResolver.TryResolveXsltPath(out sourceXsltFilePath)
+				// Only hit this code if a debugger is attached (see TransformFixture<T> ctor); it should therefore not be a
+				// performance issue to bypass the XsltCache in order to debug an XSLT map. Besides, XsltCache would only
+				// always return an XslCompiledTransformDescriptor and not a
+				// DebuggerSupportingXslCompiledTransformDescriptor derived instance.
 				? new DebuggerSupportingXslCompiledTransformDescriptor(transform, sourceXsltFilePath)
 				: base.LookupTransformDescriptor(transform);
 		}
 
 		#endregion
+
+		private readonly IMapCustomXsltPathResolver _customXsltPathResolver;
 	}
 }

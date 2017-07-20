@@ -157,6 +157,7 @@
     <Compile Include="Unit\Transform\DebuggerSupportingTransformer.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingXslCompiledTransformDescriptor.cs" />
     <Compile Include="Unit\Transform\IdentityTransform.cs" />
+    <Compile Include="Unit\Transform\IMapCustomXsltPathResolver.cs" />
     <Compile Include="Unit\Transform\MapCustomXsltPathResolver.cs" />
     <Compile Include="Unit\Transform\TransformFixture.cs" />
     <Compile Include="Unit\Transform\XPathNavigable.cs" />
