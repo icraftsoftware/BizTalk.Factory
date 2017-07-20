@@ -37,7 +37,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				string sourceXsltFilePath;
 				if (type.TryResolveXsltPath(out sourceXsltFilePath))
 				{
-					return new Uri("file://" + sourceXsltFilePath);
+					return new Uri(Uri.UriSchemeFile + "://" + sourceXsltFilePath);
 				}
 			}
 
