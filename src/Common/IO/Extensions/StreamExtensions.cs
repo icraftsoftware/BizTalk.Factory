@@ -94,8 +94,8 @@ namespace Be.Stateless.IO.Extensions
 		/// <param name="name">The file name to use to save the strem.</param>
 		/// <remarks>
 		/// <para>
-		/// The <paramref name="stream"/> is first saved to a <c>&lt;name.tmp&gt;</c> file and then moved to a
-		/// <c>&lt;name&gt;</c> file, but only after its content has been completely flushed to disk.
+		/// The <paramref name="stream"/> is first saved to a temporary file before being moved to file with the given
+		/// <paramref name="name"/>, but only after its content has been completely flushed to disk.
 		/// </para>
 		/// <para>
 		/// The target <paramref name="folder"/> is created if it does not exist.
@@ -109,7 +109,7 @@ namespace Be.Stateless.IO.Extensions
 			Directory.CreateDirectory(folder);
 			var path = System.IO.Path.Combine(folder, name);
 			File.Delete(path);
-			// save to a temporary, extensionless file with a GUID as name
+			// save to a temporary file with a GUID and no extension as name
 			var tempFileName = Guid.NewGuid().ToString("N");
 			var tempPath = System.IO.Path.Combine(folder, tempFileName);
 			stream.Save(tempPath);
@@ -175,14 +175,14 @@ namespace Be.Stateless.IO.Extensions
 		/// The threshold in bytes that the compressed stream cannot exceed. Notice that this threshold is approximate,
 		/// and can in certain cases be exceeded.
 		/// </param>
-		/// <param name="encodedCompression">
+		/// <param name="compressedBase64String">
 		/// The base64 encoding of the compressed stream if the latter's length does not exceed the compression threshold.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if the stream can be compressed without exceeding the <paramref name="threshold"/>; <c>false</c>
 		/// otherwise.
 		/// </returns>
-		public static bool TryCompressToBase64String(this Stream stream, int threshold, out string encodedCompression)
+		public static bool TryCompressToBase64String(this Stream stream, int threshold, out string compressedBase64String)
 		{
 			// 16KB compressed, should be OK for most streams having a threshold limit on compressed size
 			const int bufferSize = 16 * 1024;
@@ -208,10 +208,10 @@ namespace Be.Stateless.IO.Extensions
 			var endOfInputStreamReached = bytesRead == 0;
 			if (endOfInputStreamReached)
 			{
-				encodedCompression = Convert.ToBase64String(compressedStream.GetBuffer(), 0, (int) compressedStream.Length);
+				compressedBase64String = Convert.ToBase64String(compressedStream.GetBuffer(), 0, (int) compressedStream.Length);
 				return true;
 			}
-			encodedCompression = null;
+			compressedBase64String = null;
 			return false;
 		}
 

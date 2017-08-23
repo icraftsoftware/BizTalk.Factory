@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,31 +66,6 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 		}
 
 		/// <summary>
-		/// Loads and deserializes an <see cref="XslCompiledTransform"/> embedded in the calling assembly.
-		/// </summary>
-		/// <param name="name">
-		/// The name of the <see cref="XslCompiledTransform"/> resource.
-		/// </param>
-		/// <returns>
-		/// The deserialized <see cref="XslCompiledTransform"/>.
-		/// </returns>
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public static XslCompiledTransform LoadCompiledTransform(string name)
-		{
-			return Load(
-				Assembly.GetCallingAssembly(),
-				name,
-				stream => {
-					using (var xmlReader = XmlReader.Create(stream))
-					{
-						var compiledTransform = new XslCompiledTransform(true);
-						compiledTransform.Load(xmlReader, XsltSettings.TrustedXslt, new XmlUrlResolver());
-						return compiledTransform;
-					}
-				});
-		}
-
-		/// <summary>
 		/// Loads and deserializes an <see cref="string"/> embedded in the calling assembly.
 		/// </summary>
 		/// <param name="name">
@@ -109,6 +84,31 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 					using (var reader = new StreamReader(stream))
 					{
 						return reader.ReadToEnd();
+					}
+				});
+		}
+
+		/// <summary>
+		/// Loads and deserializes an <see cref="XslCompiledTransform"/> embedded in the calling assembly.
+		/// </summary>
+		/// <param name="name">
+		/// The name of the <see cref="XslCompiledTransform"/> resource.
+		/// </param>
+		/// <returns>
+		/// The deserialized <see cref="XslCompiledTransform"/>.
+		/// </returns>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public static XslCompiledTransform LoadTransform(string name)
+		{
+			return Load(
+				Assembly.GetCallingAssembly(),
+				name,
+				stream => {
+					using (var xmlReader = XmlReader.Create(stream))
+					{
+						var compiledTransform = new XslCompiledTransform(true);
+						compiledTransform.Load(xmlReader, XsltSettings.TrustedXslt, new XmlUrlResolver());
+						return compiledTransform;
 					}
 				});
 		}
