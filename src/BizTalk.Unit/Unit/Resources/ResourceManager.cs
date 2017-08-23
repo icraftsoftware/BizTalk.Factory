@@ -24,19 +24,22 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Xsl;
+using Be.Stateless.BizTalk.Xml;
+using Microsoft.BizTalk.Streaming;
+using XmlTranslatorStream = Be.Stateless.BizTalk.Streaming.XmlTranslatorStream;
 
 namespace Be.Stateless.BizTalk.Unit.Resources
 {
 	public static class ResourceManager
 	{
 		/// <summary>
-		/// Loads and deserializes an <see cref="Stream"/> embedded in the calling assembly.
+		/// Loads a <see cref="Stream"/> embedded in the calling assembly.
 		/// </summary>
 		/// <param name="name">
 		/// The name of the <see cref="Stream"/> resource.
 		/// </param>
 		/// <returns>
-		/// The deserialized <see cref="Stream"/>.
+		/// The resource <see cref="Stream"/>.
 		/// </returns>
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		public static Stream Load(string name)
@@ -66,7 +69,7 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 		}
 
 		/// <summary>
-		/// Loads and deserializes an <see cref="string"/> embedded in the calling assembly.
+		/// Loads and deserializes a <see cref="string"/> embedded in the calling assembly.
 		/// </summary>
 		/// <param name="name">
 		/// The name of the <see cref="string"/> resource.
@@ -137,6 +140,23 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 					xmlDocument.Load(stream);
 					return xmlDocument.OuterXml;
 				});
+		}
+
+		/// <summary>
+		/// Applies a set of <see cref="XmlNamespaceTranslation"/> translations to an XML <see cref="Stream"/>.
+		/// </summary>
+		/// <param name="stream">
+		/// The XML <see cref="Stream"/> to be translated.
+		/// </param>
+		/// <param name="translations">
+		/// The set of <see cref="XmlNamespaceTranslation"/> translations to apply.
+		/// </param>
+		/// <returns>
+		/// The translated <see cref="Stream"/>.
+		/// </returns>
+		public static Stream Translate(this Stream stream, XmlNamespaceTranslation[] translations)
+		{
+			return new ReadOnlySeekableStream(new XmlTranslatorStream(XmlReader.Create(stream), translations));
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
