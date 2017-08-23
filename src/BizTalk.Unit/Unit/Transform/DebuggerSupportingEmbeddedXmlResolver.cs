@@ -30,23 +30,19 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		public override Uri ResolveUri(Uri baseUri, string relativeUri)
 		{
 			var uri = new Uri(relativeUri, UriKind.RelativeOrAbsolute);
-			if (uri.Scheme == MAP_SCHEME && uri.Host == TYPE_HOST)
+			if (uri.Scheme == MAP_SCHEME)
 			{
-				var typeName = Uri.UnescapeDataString(uri.Segments[1]);
-				var type = Type.GetType(typeName, true);
-				string sourceXsltFilePath;
-				if (type.TryResolveXsltPath(out sourceXsltFilePath))
+				if (uri.Host == TYPE_HOST)
 				{
-					return new Uri(Uri.UriSchemeFile + "://" + sourceXsltFilePath);
+					var typeName = Uri.UnescapeDataString(uri.Segments[1]);
+					var type = Type.GetType(typeName, true);
+					string sourceXsltFilePath;
+					if (type.TryResolveCustomXsltPath(out sourceXsltFilePath))
+					{
+						return new Uri(Uri.UriSchemeFile + "://" + sourceXsltFilePath);
+					}
 				}
 			}
-
-			// TODO rewrite to file uri for embedded resource as well
-			//if (uri.Scheme == EMBEDDED_SCHEME && uri.Host == RESOURCE_HOST)
-			//{
-			//	return uri;
-			//}
-
 			return base.ResolveUri(baseUri, relativeUri);
 		}
 

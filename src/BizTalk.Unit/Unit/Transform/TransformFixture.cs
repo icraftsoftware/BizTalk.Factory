@@ -249,7 +249,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		public virtual bool TryResolveXsltPath(out string path)
 		{
-			return typeof(T).TryResolveXsltPath(out path);
+			return typeof(T).TryResolveCustomXsltPath(out path);
 		}
 
 		#endregion

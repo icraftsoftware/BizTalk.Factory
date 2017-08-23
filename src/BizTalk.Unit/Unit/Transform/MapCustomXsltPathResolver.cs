@@ -56,7 +56,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		/// name except for the <c>.btm.cs</c> extension).
 		/// </para>
 		/// </remarks>
-		public static bool TryResolveXsltPath(this Type type, out string path)
+		public static bool TryResolveCustomXsltPath(this Type type, out string path)
 		{
 			if (!type.IsTransform()) throw new ArgumentException("Type is not a TransformBase derived Type instance.", "type");
 

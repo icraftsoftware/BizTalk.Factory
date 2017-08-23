@@ -36,12 +36,12 @@ namespace Be.Stateless.BizTalk.Xml
 	/// <c>map://type/Be.Stateless.BizTalk.Unit.Transform.IdentityTransform, Be.Stateless.BizTalk.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3707daa0b119fc14</c>
 	/// </item>
 	/// <item>
-	/// <c>embedded://resource/&lt;embedded resource's full name&gt;</c>, for instance
-	/// <c>embedded://resource/Be.Stateless.BizTalk.Xml.Data.Included.xsl</c>
+	/// <c>map://resource/&lt;embedded resource's full name&gt;</c>, for instance
+	/// <c>map://resource/Be.Stateless.BizTalk.Xml.Data.Included.xsl</c>
 	/// </item>
 	/// <item>
-	/// <c>embedded://resource/&lt;embedded resource's name&gt;</c>, for instance
-	/// <c>embedded://resource/Imported.xsl</c>
+	/// <c>map://resource/&lt;embedded resource's name&gt;</c>, for instance
+	/// <c>map://resource/Imported.xsl</c>
 	/// </item>
 	/// <item>
 	/// <c>a file's absolute path without scheme</c>, for instance
@@ -77,33 +77,33 @@ namespace Be.Stateless.BizTalk.Xml
 		/// </returns>
 		public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
 		{
-			// must return one of Stream, XmlReader, or IXPathNavigable
-			if (absoluteUri.Scheme == MAP_SCHEME && absoluteUri.Host == TYPE_HOST)
+			if (absoluteUri.Scheme == MAP_SCHEME)
 			{
-				var typeName = Uri.UnescapeDataString(absoluteUri.Segments[1]);
-				var type = Type.GetType(typeName, true);
-				var transform = (TransformBase) Activator.CreateInstance(type);
-				// http://stackoverflow.com/questions/11864564/xslcompiledtransform-and-custom-xmlurlresolver-an-entry-with-the-same-key-alre
-				var baseUri = absoluteUri.GetLeftPart(UriPartial.Authority) + "/" + type.FullName;
-				using (var reader = XmlReader.Create(new StringReader(transform.XmlContent), new XmlReaderSettings(), baseUri))
+				if (absoluteUri.Host == TYPE_HOST)
 				{
-					// http://stackoverflow.com/questions/1440023/can-i-assign-a-baseuri-to-an-xdocument
-					var xDocument = XDocument.Load(reader, LoadOptions.SetBaseUri);
-					// XDocument and XPathNavigator do not implement IDisposable while XmlReader does; to avoid IDisposable
-					// issues, it is therefore simpler to return an XPathNavigator
-					return xDocument.CreateNavigator();
+					var typeName = Uri.UnescapeDataString(absoluteUri.Segments[1]);
+					var type = Type.GetType(typeName, true);
+					var transform = (TransformBase) Activator.CreateInstance(type);
+					// http://stackoverflow.com/questions/11864564/xslcompiledtransform-and-custom-xmlurlresolver-an-entry-with-the-same-key-alre
+					var baseUri = absoluteUri.GetLeftPart(UriPartial.Authority) + "/" + type.FullName;
+					using (var reader = XmlReader.Create(new StringReader(transform.XmlContent), new XmlReaderSettings(), baseUri))
+					{
+						// http://stackoverflow.com/questions/1440023/can-i-assign-a-baseuri-to-an-xdocument
+						var xDocument = XDocument.Load(reader, LoadOptions.SetBaseUri);
+						// XDocument and XPathNavigator do not implement IDisposable while XmlReader does; to avoid IDisposable
+						// issues, it is therefore simpler to return an XPathNavigator
+						return xDocument.CreateNavigator();
+					}
+				}
+				if (absoluteUri.Host == RESOURCE_HOST)
+				{
+					var assembly = ReferenceType.Assembly;
+					// first look for a resource referenced by a simple name and if not found (i.e. null) by a full name
+					var stream = assembly.GetManifestResourceStream(ReferenceType, absoluteUri.Segments[1])
+						?? assembly.GetManifestResourceStream(absoluteUri.Segments[1]);
+					return stream;
 				}
 			}
-
-			if (absoluteUri.Scheme == EMBEDDED_SCHEME && absoluteUri.Host == RESOURCE_HOST)
-			{
-				var assembly = _type.Assembly;
-				// first look for a resource referenced by a simple name and if not found (i.e. null) by a full name
-				var stream = assembly.GetManifestResourceStream(_type, absoluteUri.Segments[1])
-					?? assembly.GetManifestResourceStream(absoluteUri.Segments[1]);
-				return stream;
-			}
-
 			return base.GetEntity(absoluteUri, role, ofObjectToReturn);
 		}
 
@@ -123,26 +123,24 @@ namespace Be.Stateless.BizTalk.Xml
 		public override Uri ResolveUri(Uri baseUri, string relativeUri)
 		{
 			var uri = new Uri(relativeUri, UriKind.RelativeOrAbsolute);
-			if (uri.Scheme == MAP_SCHEME && uri.Host == TYPE_HOST)
+			if (uri.Scheme == MAP_SCHEME)
 			{
-				return uri;
+				if (uri.Host == TYPE_HOST) return uri;
+				if (uri.Host == RESOURCE_HOST) return uri;
 			}
-
-			if (uri.Scheme == EMBEDDED_SCHEME && uri.Host == RESOURCE_HOST)
-			{
-				return uri;
-			}
-
 			return base.ResolveUri(baseUri, relativeUri);
 		}
 
 		#endregion
 
-		internal const string EMBEDDED_SCHEME = "embedded";
+		protected Type ReferenceType
+		{
+			get { return _type; }
+		}
+
 		internal const string MAP_SCHEME = "map";
 		internal const string RESOURCE_HOST = "resource";
 		internal const string TYPE_HOST = "type";
-
 		private readonly Type _type;
 	}
 }
