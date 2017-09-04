@@ -155,6 +155,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Transform\RegexFunctionsFixture.cs" />
+    <Compile Include="Xml\CompositeEmbeddedTransformFixture.cs" />
     <Compile Include="Xml\CompoundMapTypeTransform11.cs" />
     <Compile Include="Xml\CompoundMapTypeTransform1.cs" />
     <Compile Include="Xml\CompositeEmbeddedTransform.cs" />

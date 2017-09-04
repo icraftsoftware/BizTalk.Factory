@@ -1,6 +1,6 @@
-#region Copyright & License
+ï»¿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright Â© 2012 - 2017 FranÃ§ois Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,10 +37,13 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 					var typeName = Uri.UnescapeDataString(uri.Segments[1]);
 					var type = Type.GetType(typeName, true);
 					string sourceXsltFilePath;
-					if (type.TryResolveCustomXsltPath(out sourceXsltFilePath))
-					{
-						return new Uri(Uri.UriSchemeFile + "://" + sourceXsltFilePath);
-					}
+					if (type.TryResolveCustomXsltPath(out sourceXsltFilePath)) relativeUri = sourceXsltFilePath;
+				}
+				else if (uri.Host == RESOURCE_HOST)
+				{
+					var resourceName = uri.Segments[1];
+					string sourceXsltFilePath;
+					if (ReferenceType.TryResolveEmbeddedXsltResourceSourceFilePath(resourceName, out sourceXsltFilePath)) relativeUri = sourceXsltFilePath;
 				}
 			}
 			return base.ResolveUri(baseUri, relativeUri);

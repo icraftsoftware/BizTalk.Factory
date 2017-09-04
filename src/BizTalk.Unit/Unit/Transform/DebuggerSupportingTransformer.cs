@@ -49,11 +49,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			string sourceXsltFilePath;
 			return _customXsltPathResolver.TryResolveXsltPath(out sourceXsltFilePath)
-				// Only hit this code if a debugger is attached (see TransformFixture<T> ctor); it should therefore not be a
-				// performance issue to bypass the XsltCache in order to debug an XSLT map. Besides, XsltCache would only
-				// always return an XslCompiledTransformDescriptor and not a
-				// DebuggerSupportingXslCompiledTransformDescriptor derived instance.
-				? new DebuggerSupportingXslCompiledTransformDescriptor(transform, sourceXsltFilePath)
+				? new XslCompiledTransformDescriptor(new DebuggerSupportingXslCompiledTransformDescriptorBuilder(transform, sourceXsltFilePath))
 				: base.LookupTransformDescriptor(transform);
 		}
 

@@ -22,7 +22,7 @@ using Microsoft.XLANGs.BaseTypes;
 namespace Be.Stateless.BizTalk.Xml
 {
 	[SchemaReference(@"Be.Stateless.BizTalk.Schemas.Xml.Any", typeof(Schemas.Xml.Any))]
-	internal class CompositeEmbeddedTransform : TransformBase
+	public class CompositeEmbeddedTransform : TransformBase
 	{
 		static CompositeEmbeddedTransform()
 		{

@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -75,6 +76,7 @@ namespace Be.Stateless.BizTalk.Xml
 		/// <returns>
 		/// One of <see cref="Stream"/>, <see cref="XmlReader"/>, or <see cref="IXPathNavigable"/>.
 		/// </returns>
+		[SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
 		public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
 		{
 			if (absoluteUri.Scheme == MAP_SCHEME)

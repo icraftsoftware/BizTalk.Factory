@@ -18,7 +18,9 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.Xml.Xsl.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.Dia;
@@ -38,7 +40,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		/// The BizTalk map for which the path to the custom XSLT should be resolved.
 		/// </param>
 		/// <param name="path">
-		/// The resolved path to the custom XSLT of the BizTalk map passed to the constructor.
+		/// The resolved path to the custom XSLT of the BizTalk map passed.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if the path to the source of the custom XSLT could be resolved; <c>false</c> otherwise.
@@ -64,16 +66,31 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			string btmSourceFilePath;
 			if (!type.TryResolveBtmClassSourceFilePath(out btmSourceFilePath)) return false;
 
-			path = Regex.Replace(btmSourceFilePath, @"\.btm\.cs", ".xsl", RegexOptions.IgnoreCase);
+			// probe for .xsl
+			path = Regex.Replace(btmSourceFilePath, @"\.(btm\.)?cs$", ".xsl", RegexOptions.IgnoreCase);
 			if (File.Exists(path)) return true;
-			// probe for .xslt as well and not only .xsl
+			// probe for .xslt as well
 			if (!File.Exists(path + 't')) return false;
 			path += 't';
 			return true;
 		}
 
-		private static bool TryResolveBtmClassSourceFilePath(this Type type, out string path)
+		/// <summary>
+		/// Resolve the path to a BizTalk map class source file, i.e. the .btm.cs compiler generated source file.
+		/// </summary>
+		/// <param name="type">
+		/// The BizTalk map type for which the path to the source file should be resolved.
+		/// </param>
+		/// <param name="path">
+		/// The resolved path to the source BizTalk map type.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the path to the source file of the BizTalk map type could be resolved; <c>false</c> otherwise.
+		/// </returns>
+		public static bool TryResolveBtmClassSourceFilePath(this Type type, out string path)
 		{
+			if (!type.IsTransform()) throw new ArgumentException("Type is not a TransformBase derived Type instance.", "type");
+
 			path = null;
 			string pdbFilePath;
 			if (!type.TryResolvePdbFilePath(out pdbFilePath)) return false;
@@ -98,6 +115,60 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				if (!path.IsNullOrEmpty()) return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// Resolve the path to an XSLT embedded in a custom BizTalk map, given this map's type to initiate probing.
+		/// </summary>
+		/// <param name="type">
+		/// The BizTalk map type to be used to initiate the probing.
+		/// </param>
+		/// <param name="resource">
+		/// The name of the resource to probe for its source XSLT file.
+		/// </param>
+		/// <param name="path">
+		/// The resolved path to the embedded XSLT.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if the path to the source of the embedded XSLT could be resolved; <c>false</c> otherwise.
+		/// </returns>
+		/// <seealso cref="EmbeddedXmlResolver"/>
+		public static bool TryResolveEmbeddedXsltResourceSourceFilePath(this Type type, string resource, out string path)
+		{
+			path = null;
+			string classPath;
+			if (!type.TryResolveBtmClassSourceFilePath(out classPath)) return false;
+
+			var manifestResourceNames = type.Assembly.GetManifestResourceNames();
+			// first, search for a namespace-qualified name match, then for non namespace-qualified name match, then fallback on actual argument's value
+			var qualifiedResourceName =
+				manifestResourceNames.SingleOrDefault(n => n.Equals(string.Format("{0}.{1}", type.Namespace, resource), StringComparison.Ordinal))
+					?? manifestResourceNames.SingleOrDefault(n => n.Equals(resource, StringComparison.Ordinal))
+						?? resource;
+			var resourceNamespace = qualifiedResourceName.RTrimToChar('.').RTrimToChar('.');
+			resource = qualifiedResourceName.Substring(resourceNamespace.Length + 1);
+
+			// ReSharper disable once PossibleNullReferenceException
+			var referenceTypeNamespace = type.FullName.Substring(0, type.FullName.Length - type.Name.Length - 1);
+			var commonPath = new[] { referenceTypeNamespace, resourceNamespace }.CommonPath(".");
+
+			var trailingTypePathSegments = referenceTypeNamespace
+				.Substring(commonPath.Length)
+				.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+			var trailingResourcePathSegments = resourceNamespace
+				.Substring(commonPath.Length)
+				.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+
+			// ReSharper disable once AssignNullToNotNullAttribute
+			var sourceXsltFilePath = Path.Combine(
+				Path.GetDirectoryName(classPath),
+				string.Join(@"\", Enumerable.Repeat("..", trailingTypePathSegments.Length)),
+				string.Join(@"\", trailingResourcePathSegments),
+				resource);
+			if (!File.Exists(sourceXsltFilePath)) return false;
+
+			path = sourceXsltFilePath;
+			return true;
 		}
 
 		private static bool TryResolvePdbFilePath(this Type type, out string path)

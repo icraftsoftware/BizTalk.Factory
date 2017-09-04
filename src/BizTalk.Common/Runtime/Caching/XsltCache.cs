@@ -58,7 +58,7 @@ namespace Be.Stateless.BizTalk.Runtime.Caching
 		protected override XslCompiledTransformDescriptor CreateItem(Type key)
 		{
 			ValidateKey(key);
-			return new XslCompiledTransformDescriptor(key);
+			return new XslCompiledTransformDescriptor(new XslCompiledTransformDescriptorBuilder(key));
 		}
 
 		#endregion

@@ -221,6 +221,7 @@
     <Compile Include="Component\ExtractionMode.cs" />
     <Compile Include="Component\ExtractorPrecedence.cs" />
     <Compile Include="Component\PropertyExtractor.cs" />
+    <Compile Include="Xml\Xsl\XslCompiledTransformDescriptorBuilder.cs" />
     <Compile Include="XPath\ReactiveXPathExtractorCollection.cs" />
     <Compile Include="XPath\XPathExtractor.cs" />
     <Compile Include="Component\PropertyExtractorCollectionConverter.cs" />

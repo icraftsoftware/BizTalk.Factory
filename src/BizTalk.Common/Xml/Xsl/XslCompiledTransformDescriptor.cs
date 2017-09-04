@@ -16,16 +16,9 @@
 
 #endregion
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Xsl;
 using Be.Stateless.BizTalk.Transform;
-using Be.Stateless.BizTalk.Xml.Xsl.Extensions;
-using Be.Stateless.Extensions;
-using Be.Stateless.Linq.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Xml.Xsl
@@ -37,27 +30,22 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 	public class XslCompiledTransformDescriptor
 	{
 		/// <summary>
-		/// Instantiate the <see cref="XslCompiledTransformDescriptor"/> wrapping the <see
+		/// Create a <see cref="XslCompiledTransformDescriptor"/> instance that wraps the <see
 		/// cref="System.Xml.Xsl.XslCompiledTransform"/> equivalent of a <see cref="TransformBase"/>-derived transform.
 		/// </summary>
-		/// <param name="transform">The <see cref="TransformBase"/>-derived transform.</param>
-		public XslCompiledTransformDescriptor(Type transform)
+		/// <param name="builder">
+		/// An <see cref="XslCompiledTransformDescriptorBuilder"/> that knows how to build the various constituents of the
+		/// <see cref="XslCompiledTransformDescriptor"/> for a given <see cref="TransformBase"/>-derived transform.
+		/// </param>
+		public XslCompiledTransformDescriptor(XslCompiledTransformDescriptorBuilder builder)
 		{
-			if (!transform.IsTransform())
-				throw new ArgumentException(
-					string.Format("The type {0} does not derive from TransformBase.", transform.AssemblyQualifiedName),
-					"transform");
-
-			var transformBase = Activator.CreateInstance(transform) as TransformBase;
-			if (transformBase == null) throw new ArgumentException("transform", string.Format("Cannot instantiate type '{0}'.", transform.AssemblyQualifiedName));
-
-			var navigator = CreateNavigator(transformBase.XmlContent);
-
-			Arguments = new Stateless.Xml.Xsl.XsltArgumentList(transformBase.TransformArgs);
-			ExtensionRequirements = BuildExtensionRequirements(navigator);
-			if ((ExtensionRequirements & ExtensionRequirements.MessageContext) == ExtensionRequirements.MessageContext) NamespaceResolver = BuildNamespaceResolver(navigator);
-			XslCompiledTransform = new XslCompiledTransform();
-			XslCompiledTransform.Load(navigator, XsltSettings.TrustedXslt, new EmbeddedXmlResolver(transform));
+			Arguments = builder.BuildXsltArgumentList();
+			ExtensionRequirements = builder.BuildExtensionRequirements();
+			if ((ExtensionRequirements & ExtensionRequirements.MessageContext) == ExtensionRequirements.MessageContext)
+			{
+				NamespaceResolver = builder.BuildNamespaceResolver();
+			}
+			XslCompiledTransform = builder.BuildXslCompiledTransform();
 		}
 
 		/// <summary>
@@ -91,32 +79,6 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		/// The <see cref="System.Xml.Xsl.XslCompiledTransform"/> equivalent of <see cref="TransformBase"/>-derived
 		/// transform.
 		/// </summary>
-		public XslCompiledTransform XslCompiledTransform { get; protected set; }
-
-		private XPathNavigator CreateNavigator(string xmlContent)
-		{
-			using (var stringReader = new StringReader(xmlContent))
-			{
-				var navigator = new XPathDocument(stringReader).CreateNavigator();
-				navigator.MoveToFollowing(XPathNodeType.Element);
-				return navigator;
-			}
-		}
-
-		private ExtensionRequirements BuildExtensionRequirements(XPathNavigator navigator)
-		{
-			return !navigator.LookupPrefix(BaseMessageContextFunctions.TARGET_NAMESPACE).IsNullOrEmpty()
-				? ExtensionRequirements.MessageContext
-				: ExtensionRequirements.None;
-		}
-
-		private IXmlNamespaceResolver BuildNamespaceResolver(XPathNavigator navigator)
-		{
-			Debug.Assert(navigator.NameTable != null, "navigator.NameTable != null");
-			var nsm = new XmlNamespaceManager(navigator.NameTable);
-			navigator.GetNamespacesInScope(XmlNamespaceScope.ExcludeXml)
-				.Each(ns => nsm.AddNamespace(ns.Key, ns.Value));
-			return nsm;
-		}
+		public XslCompiledTransform XslCompiledTransform { get; private set; }
 	}
 }

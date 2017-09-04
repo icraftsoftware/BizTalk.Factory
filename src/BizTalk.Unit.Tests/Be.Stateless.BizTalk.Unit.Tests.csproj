@@ -92,6 +92,7 @@
     <Compile Include="Unit\ServiceModel\Stub\OperationCallSetupCollectionFixture.cs" />
     <Compile Include="Unit\ServiceModel\Stub\StubServiceClient.cs" />
     <Compile Include="Unit\ServiceModel\Stub\StubServiceFixture.cs" />
+    <Compile Include="Unit\Transform\MapCustomXsltPathResolverFixture.cs" />
     <Compile Include="Unit\Transform\TransformFixtureFixture.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -29,18 +29,18 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		[Test]
 		public void ImplicitlyReliesOnEmbeddedXmlResolver()
 		{
-			Assert.That(() => new XslCompiledTransformDescriptor(typeof(CompositeEmbeddedTransform)), Throws.Nothing);
+			Assert.That(() => new XslCompiledTransformDescriptor(new XslCompiledTransformDescriptorBuilder(typeof(CompositeEmbeddedTransform))), Throws.Nothing);
 		}
 
 		[Test]
 		public void MessageContextRequirementDetection()
 		{
-			var td1 = new XslCompiledTransformDescriptor(typeof(AnyToAddPart));
+			var td1 = new XslCompiledTransformDescriptor(new XslCompiledTransformDescriptorBuilder(typeof(AnyToAddPart)));
 			Assert.That(td1.ExtensionRequirements, Is.EqualTo(ExtensionRequirements.MessageContext));
 			Assert.That(td1.NamespaceResolver.LookupNamespace("bf"), Is.EqualTo(BizTalkFactoryProperties.EnvelopeSpecName.Namespace));
 			Assert.That(td1.NamespaceResolver.LookupNamespace("tp"), Is.EqualTo(TrackingProperties.MessagingStepActivityId.Namespace));
 
-			var td2 = new XslCompiledTransformDescriptor(typeof(BatchContentToAnyEnvelope));
+			var td2 = new XslCompiledTransformDescriptor(new XslCompiledTransformDescriptorBuilder(typeof(BatchContentToAnyEnvelope)));
 			Assert.That(td2.ExtensionRequirements, Is.EqualTo(ExtensionRequirements.None));
 			Assert.That(td2.NamespaceResolver, Is.Null);
 		}

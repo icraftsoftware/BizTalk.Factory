@@ -20,21 +20,32 @@ using System;
 using System.Xml.Xsl;
 using Be.Stateless.BizTalk.Xml.Xsl;
 using Be.Stateless.Extensions;
-using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	/// <summary>
-	/// <see cref="XslCompiledTransformDescriptor"/>-derived descriptor that loads the XSLT source file instead of the
-	/// <see cref="TransformBase"/>'s embedded XSLT in order to enable XSLT debugging.
-	/// </summary>
-	internal class DebuggerSupportingXslCompiledTransformDescriptor : XslCompiledTransformDescriptor
+	///// <summary>
+	///// <see cref="XslCompiledTransformDescriptorBuilder"/>-derived descriptor that loads the XSLT source file instead of the
+	///// <see cref="TransformBase"/>'s embedded XSLT in order to enable XSLT debugging.
+	///// </summary>
+	internal class DebuggerSupportingXslCompiledTransformDescriptorBuilder : XslCompiledTransformDescriptorBuilder
 	{
-		public DebuggerSupportingXslCompiledTransformDescriptor(Type transform, string sourceXsltFilePath) : base(transform)
+		public DebuggerSupportingXslCompiledTransformDescriptorBuilder(Type transform, string sourceXsltFilePath) : base(transform)
 		{
 			if (sourceXsltFilePath.IsNullOrEmpty()) throw new ArgumentNullException("sourceXsltFilePath");
-			XslCompiledTransform = new XslCompiledTransform(true);
-			XslCompiledTransform.Load(sourceXsltFilePath, XsltSettings.TrustedXslt, new DebuggerSupportingEmbeddedXmlResolver(transform));
+			_sourceXsltFilePath = sourceXsltFilePath;
 		}
+
+		#region Base Class Member Overrides
+
+		public override XslCompiledTransform BuildXslCompiledTransform()
+		{
+			var xslCompiledTransform = new XslCompiledTransform(true);
+			xslCompiledTransform.Load(_sourceXsltFilePath, XsltSettings.TrustedXslt, new DebuggerSupportingEmbeddedXmlResolver(_transform));
+			return xslCompiledTransform;
+		}
+
+		#endregion
+
+		private readonly string _sourceXsltFilePath;
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ namespace Be.Stateless.BizTalk.Xml
 			_xslPart1 = MessageFactory.CreateEnvelope<Envelope>().OuterXml;
 			_xslPart2 = MessageFactory.CreateMessage<Batch.Content>(ResourceManager.LoadString("Data.BatchContent.xml")).OuterXml;
 
-			_xslTransformDescriptor = new XslCompiledTransformDescriptor(typeof(BatchContentToAnyEnvelope));
+			_xslTransformDescriptor = new XslCompiledTransformDescriptor(new XslCompiledTransformDescriptorBuilder(typeof(BatchContentToAnyEnvelope)));
 
 			_xslNamespaceManager = new XmlNamespaceManager(new NameTable());
 			_xslNamespaceManager.AddNamespace("env", new SchemaMetadata(typeof(Envelope)).TargetNamespace);
@@ -170,6 +170,15 @@ namespace Be.Stateless.BizTalk.Xml
 			Assert.That(xdoc.SelectNodes("/env:Envelope/tns:ReleaseBatch", _xslNamespaceManager).IfNotNull(n => n.Count), Is.EqualTo(3));
 		}
 
+		private readonly byte[] _part1 = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + PART_1);
+		private readonly byte[] _part2 = Encoding.Unicode.GetBytes("<?xml version=\"1.0\" encoding=\"utf-16\" ?>" + PART_2);
+		private readonly byte[] _part3 = Encoding.GetEncoding("iso-8859-1").GetBytes("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>" + PART_3);
+
+		private string _xslPart1;
+		private string _xslPart2;
+		private XslCompiledTransformDescriptor _xslTransformDescriptor;
+		private XmlNamespaceManager _xslNamespaceManager;
+
 		private const string PART_1 = "<part-one xmlns=\"part-one\"><child-one>one</child-one></part-one>";
 
 		private const string PART_2 = "<part-two xmlns=\"part-two\"><child-two>two</child-two></part-two>";
@@ -180,14 +189,5 @@ namespace Be.Stateless.BizTalk.Xml
 			"<agg:InputMessagePart_0>" + PART_1 + "</agg:InputMessagePart_0>" +
 			"<agg:InputMessagePart_1>" + PART_2 + "</agg:InputMessagePart_1>" +
 			"<agg:InputMessagePart_2>" + PART_3 + "</agg:InputMessagePart_2></agg:Root>";
-
-		private readonly byte[] _part1 = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + PART_1);
-		private readonly byte[] _part2 = Encoding.Unicode.GetBytes("<?xml version=\"1.0\" encoding=\"utf-16\" ?>" + PART_2);
-		private readonly byte[] _part3 = Encoding.GetEncoding("iso-8859-1").GetBytes("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>" + PART_3);
-
-		private string _xslPart1;
-		private string _xslPart2;
-		private XslCompiledTransformDescriptor _xslTransformDescriptor;
-		private XmlNamespaceManager _xslNamespaceManager;
 	}
 }
