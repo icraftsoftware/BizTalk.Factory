@@ -56,11 +56,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa561215.aspx">FTP Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa559267.aspx">What Is the FTP Adapter?</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa561032.aspx">Configuring the FTP Adapter</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa561231.aspx">FTP Adapter Configuration Properties</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa578371.aspx">FTP Commands that are Required by the FTP Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa561727.aspx">FTP Adapter Security Recommendations</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa561990.aspx">Best Practices for the FTP Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/ff629768.aspx">Enhancements to the FTP Adapter</seealso>
 		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa559095.aspx">How to Configure an FTP Receive Location</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa577610.aspx">Known Issues with the FTP Adapter</seealso>
+		/// <seealso href="https://msdn.microsoft.com/en-us/library/aa559960.aspx">How to Diagnose Problems with the FTP Adapter</seealso>
 		[XmlRoot("Config")]
 		public class Inbound : FtpAdapter, IInboundAdapter
 		{
