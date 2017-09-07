@@ -62,7 +62,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void EnvironmentOverridesAreAppliedForGivenEnvironment()
 		{
 			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-			receiveLocationMock.Object.ReceivePipeline = new ReceivePipeline<XMLReceive>();
 
 			((ISupportEnvironmentOverride) receiveLocationMock.Object).ApplyEnvironmentOverrides("ACC");
 
@@ -98,7 +97,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var sendPipelineMock = new Mock<SendPipeline<XMLTransmit>> { CallBase = true };
 
 			var receiveLocationMock = new Mock<ReceiveLocationBase<string>> { CallBase = true };
-			receiveLocationMock.Object.ReceivePipeline = new ReceivePipeline<XMLReceive>();
 			receiveLocationMock.Object.SendPipeline = sendPipelineMock.Object;
 
 			((ISupportEnvironmentOverride) receiveLocationMock.Object).ApplyEnvironmentOverrides("ACC");
@@ -114,7 +112,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			var receiveLocationMock = new Mock<ReceiveLocationBase<object>> { CallBase = true };
 			receiveLocationMock.Object.Name = "Receive Location Name";
-			receiveLocationMock.Object.ReceivePipeline = new ReceivePipeline<XMLReceive>();
 			receiveLocationMock.Object.Transport.Host = "Host";
 			receiveLocationMock.Object.Transport.Adapter = adapterMock.Object;
 

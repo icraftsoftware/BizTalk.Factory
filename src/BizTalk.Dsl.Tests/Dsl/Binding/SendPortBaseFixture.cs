@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,7 +70,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public void EnvironmentOverridesAreAppliedForGivenEnvironment()
 		{
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
-			sendPortMock.Object.SendPipeline = new SendPipeline<XMLTransmit>();
 
 			((ISupportEnvironmentOverride) sendPortMock.Object).ApplyEnvironmentOverrides("ACC");
 
@@ -95,7 +94,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
 			sendPortMock.Object.Filter = filterMock.Object;
-			sendPortMock.Object.SendPipeline = new SendPipeline<XMLTransmit>();
 
 			((ISupportEnvironmentOverride) sendPortMock.Object).ApplyEnvironmentOverrides("ACC");
 
@@ -109,7 +107,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
 			sendPortMock.Object.ReceivePipeline = receivePipelineMock.Object;
-			sendPortMock.Object.SendPipeline = new SendPipeline<XMLTransmit>();
 
 			((ISupportEnvironmentOverride) sendPortMock.Object).ApplyEnvironmentOverrides("ACC");
 
@@ -140,7 +137,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			var sendPortMock = new Mock<SendPortBase<string>> { CallBase = true };
 			sendPortMock.Object.Name = "Send Port Name";
-			sendPortMock.Object.SendPipeline = new SendPipeline<XMLTransmit>();
 			sendPortMock.Object.Transport.Host = "Host";
 			sendPortMock.Object.Transport.Adapter = adapterMock.Object;
 			sendPortMock.Object.BackupTransport.Host = "Host";
