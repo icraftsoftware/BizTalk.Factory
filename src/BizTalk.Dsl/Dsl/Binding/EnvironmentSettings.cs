@@ -61,12 +61,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			get
 			{
-				var duplicates = TargetEnvironments.GroupBy(e => e).SelectMany(g => g.Skip(1)).ToArray();
-				if (duplicates.Any())
+				if (TargetEnvironments.Count(e => e == BindingGenerationContext.TargetEnvironment) > 1)
 					throw new InvalidOperationException(
 						string.Format(
 							"'{0}' target environment has been declared multiple times in the '{1}' file.",
-							string.Join("', '", duplicates),
+							BindingGenerationContext.TargetEnvironment,
 							SettingsFileName));
 
 				_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.TargetEnvironment);

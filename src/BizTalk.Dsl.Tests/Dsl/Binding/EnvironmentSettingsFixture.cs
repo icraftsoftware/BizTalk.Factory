@@ -48,17 +48,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			try
 			{
 				_targetEnvironments[0] = "DEV";
-				_targetEnvironments[2] = "ACC";
 				var sut = new EnvironmentSettingsFixture();
 				Assert.That(
 					() => sut.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }, "BamArchiveWindowTimeLength"),
 					Throws.InvalidOperationException
-						.With.Message.EqualTo("'DEV', 'ACC' target environment have been declared multiple times in the 'BizTalk.Factory.SettingsFileGenerator' file."));
+						.With.Message.EqualTo("'DEV' target environment has been declared multiple times in the 'BizTalk.Factory.SettingsFileGenerator' file."));
 			}
 			finally
 			{
 				_targetEnvironments[0] = null;
-				_targetEnvironments[2] = "BLD";
 			}
 		}
 
