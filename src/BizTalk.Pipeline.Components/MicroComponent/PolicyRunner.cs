@@ -72,6 +72,10 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// <summary>
 		/// The Business Rule Policy to be executed.
 		/// </summary>
+		/// <remarks>
+		/// Use <c>Be.Stateless.BizTalk.Dsl.Policy&lt;T&gt;.Name</c>, where T is a
+		/// <c>Be.Stateless.BizTalk.Dsl.RuleEngine.RuleSet</c> derived type, to assign to the <see cref="PolicyName"/>.
+		/// </remarks>
 		[XmlElement("Policy", typeof(PolicyNameXmlSerializer))]
 		public PolicyName PolicyName { get; set; }
 
