@@ -31,13 +31,36 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		#region Setup/Teardown
 
 		[OneTimeSetUp]
+		[SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
 		public void TestFixtureSetUp()
 		{
-			// ReSharper disable once AssignNullToNotNullAttribute
 			_rootPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Dsl\Binding\Data");
 		}
 
 		#endregion
+
+		[Test]
+		public void FailsWhenTargetEnvironmentValuesAreDefinedMultipleTimes()
+		{
+			BindingGenerationContext.TargetEnvironment = "DEV";
+			BindingGenerationContext.EnvironmentSettingRootPath = null;
+
+			try
+			{
+				_targetEnvironments[0] = "DEV";
+				_targetEnvironments[2] = "ACC";
+				var sut = new EnvironmentSettingsFixture();
+				Assert.That(
+					() => sut.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }, "BamArchiveWindowTimeLength"),
+					Throws.InvalidOperationException
+						.With.Message.EqualTo("'DEV', 'ACC' target environment have been declared multiple times in the 'BizTalk.Factory.SettingsFileGenerator' file."));
+			}
+			finally
+			{
+				_targetEnvironments[0] = null;
+				_targetEnvironments[2] = "BLD";
+			}
+		}
 
 		[Test]
 		public void ReferenceTypeValueForTargetEnvironmentThrowsWhenValueIsNull()

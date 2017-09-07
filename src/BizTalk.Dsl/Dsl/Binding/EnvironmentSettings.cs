@@ -18,6 +18,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Be.Stateless.BizTalk.Install;
 
@@ -60,6 +61,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			get
 			{
+				var duplicates = TargetEnvironments.GroupBy(e => e).SelectMany(g => g.Skip(1)).ToArray();
+				if (duplicates.Any())
+					throw new InvalidOperationException(
+						string.Format(
+							"'{0}' target environment has been declared multiple times in the '{1}' file.",
+							string.Join("', '", duplicates),
+							SettingsFileName));
+
 				_targetEnvironmentsIndex = Array.IndexOf(TargetEnvironments, BindingGenerationContext.TargetEnvironment);
 				if (_targetEnvironmentsIndex < 0)
 					throw new InvalidOperationException(
