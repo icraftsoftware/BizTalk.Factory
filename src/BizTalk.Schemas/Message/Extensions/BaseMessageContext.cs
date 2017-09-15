@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Message.Interop;
@@ -86,7 +87,7 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 			where TR : struct
 		{
 			var value = context.Read(property.Name, property.Namespace);
-			return (TR?) value;
+			return value != null ? (TR?) Convert.ChangeType(value, typeof(TR)) : null;
 		}
 
 		#endregion
