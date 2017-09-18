@@ -16,9 +16,11 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IOrchestrationBindingCollection : IFluentInterface
+	public interface IOrchestrationBindingCollection : IFluentInterface, IEnumerable<IOrchestrationBinding>
 	{
 		IOrchestrationBindingCollection Add(IOrchestrationBinding orchestrationBinding);
 

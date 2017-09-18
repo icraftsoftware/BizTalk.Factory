@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,18 +16,16 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IReferencedApplicationBindingCollection : IFluentInterface
+	public interface IReferencedApplicationBindingCollection : IFluentInterface, IEnumerable<IApplicationBinding>
 	{
-		IReferencedApplicationBindingCollection Add<TReferencedApplicationNamingConvention>(
-			IApplicationBinding<TReferencedApplicationNamingConvention> applicationBinding)
-			where TReferencedApplicationNamingConvention : class;
+		IReferencedApplicationBindingCollection Add<T>(T applicationBinding) where T : IApplicationBinding;
 
-		IReferencedApplicationBindingCollection Add<TReferencedApplicationNamingConvention>(
-			params IApplicationBinding<TReferencedApplicationNamingConvention>[] applicationBindings)
-			where TReferencedApplicationNamingConvention : class;
+		IReferencedApplicationBindingCollection Add<T>(params T[] applicationBindings) where T : IApplicationBinding;
 
-		T Find<T>();
+		T Find<T>() where T : IApplicationBinding;
 	}
 }

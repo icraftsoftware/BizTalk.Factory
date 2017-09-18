@@ -52,7 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		public IReceivePort<TNamingConvention> Find<T>() where T : IReceivePort<TNamingConvention>
 		{
-			return this.Single(rp => rp.GetType() == typeof(T));
+			return this.OfType<T>().Single();
 		}
 
 		#endregion

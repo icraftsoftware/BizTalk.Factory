@@ -9,10 +9,10 @@ $inc = Resolve-Path -Path (Join-Path -Path $env:VS120COMNTOOLS -ChildPath '..\..
 midl.exe /tlb dia2lib.tlb /I "$inc" "$idl"
 
 # Convert TLB to Assembly
-TlbImp.exe --% dia2lib.tlb /delaysign /publickey:"..\..\src\be.stateless.public.snk" /out:net40\dialib.dll /namespace:Microsoft.Dia
+TlbImp.exe --% dia2lib.tlb /delaysign /publickey:"..\..\src\be.stateless.public.snk" /out:net40\dia2lib.dll /namespace:Microsoft.Dia
 # strongly sign assembly if private key is found
 if (Test-Path -Path ..\..\src\be.stateless.snk) {
-   sn.exe -R net40\dialib.dll "..\..\src\be.stateless.snk"
+   sn.exe -R net40\dia2lib.dll "..\..\src\be.stateless.snk"
 }
 
 # Cleanup files no longer needed

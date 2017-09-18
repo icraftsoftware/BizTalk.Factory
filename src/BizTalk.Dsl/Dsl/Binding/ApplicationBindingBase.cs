@@ -17,6 +17,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.Extensions;
 
@@ -55,6 +58,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		public IOrchestrationBindingCollection Orchestrations
 		{
 			get { return _orchestrations; }
+		}
+
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public IEnumerable<IReceiveLocation<TNamingConvention>> ReceiveLocations
+		{
+			get { return _receivePorts.Select(rpc => (List<IReceiveLocation<TNamingConvention>>) rpc.ReceiveLocations).SelectMany(rl => rl); }
 		}
 
 		public IReferencedApplicationBindingCollection ReferencedApplications

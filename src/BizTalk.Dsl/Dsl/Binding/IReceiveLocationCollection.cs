@@ -16,9 +16,11 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IReceiveLocationCollection<TNamingConvention> : IFluentInterface where TNamingConvention : class
+	public interface IReceiveLocationCollection<TNamingConvention> : IFluentInterface, IEnumerable<IReceiveLocation<TNamingConvention>> where TNamingConvention : class
 	{
 		IReceiveLocationCollection<TNamingConvention> Add(IReceiveLocation<TNamingConvention> receiveLocation);
 

@@ -40,8 +40,8 @@
     <DocumentationFile>bin\Release\Be.Stateless.BizTalk.Unit.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dialib">
-      <HintPath>..\..\lib\dia2lib\net40\dialib.dll</HintPath>
+    <Reference Include="dia2lib">
+      <HintPath>..\..\lib\dia2lib\net40\dia2lib.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">

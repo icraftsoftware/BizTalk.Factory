@@ -22,32 +22,30 @@ using Be.Stateless.Linq.Extensions;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	internal class ReferencedApplicationBindingCollection : List<IVisitable<IApplicationBindingVisitor>>,
+	internal class ReferencedApplicationBindingCollection : List<IApplicationBinding>,
 		IReferencedApplicationBindingCollection,
 		IVisitable<IApplicationBindingVisitor>
 	{
 		#region IReferencedApplicationBindingCollection Members
 
-		IReferencedApplicationBindingCollection IReferencedApplicationBindingCollection.Add<TReferencedApplicationNamingConvention>(
-			IApplicationBinding<TReferencedApplicationNamingConvention> applicationBinding)
+		public IReferencedApplicationBindingCollection Add<T>(T applicationBinding) where T : IApplicationBinding
 		{
 			return ((IReferencedApplicationBindingCollection) this).Add(new[] { applicationBinding });
 		}
 
-		IReferencedApplicationBindingCollection IReferencedApplicationBindingCollection.Add<TReferencedApplicationNamingConvention>(
-			params IApplicationBinding<TReferencedApplicationNamingConvention>[] applicationBindings)
+		public IReferencedApplicationBindingCollection Add<T>(params T[] applicationBindings) where T : IApplicationBinding
 		{
 			applicationBindings.Each(
 				applicationBinding => {
-					var visitable = (IVisitable<IApplicationBindingVisitor>) applicationBinding;
-					Add(visitable);
+					var visitable = (IApplicationBinding) applicationBinding;
+					base.Add(visitable);
 				});
 			return this;
 		}
 
-		public T Find<T>()
+		public T Find<T>() where T : IApplicationBinding
 		{
-			return (T) this.Single(ab => ab.GetType() == typeof(T));
+			return this.OfType<T>().Single();
 		}
 
 		#endregion
@@ -56,7 +54,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		void IVisitable<IApplicationBindingVisitor>.Accept(IApplicationBindingVisitor visitor)
 		{
-			this.Each(visitor.VisitReferencedApplicationBinding);
+			this.Cast<IVisitable<IApplicationBindingVisitor>>().Each(visitor.VisitReferencedApplicationBinding);
 		}
 
 		#endregion
