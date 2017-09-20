@@ -107,7 +107,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Operations\Extensions\BizTalkOperationsExtensions.cs" />
-    <Compile Include="Unit\Binding\ApplicationBindingActivator.cs" />
+    <Compile Include="Unit\Binding\ApplicationBindingArtifactLookupFactory.cs" />
     <Compile Include="Unit\Binding\ApplicationBindingFixture.cs" />
     <Compile Include="Unit\Component\BaggableProperty.cs" />
     <Compile Include="Unit\Component\PipelineComponentFixture.cs" />

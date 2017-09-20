@@ -21,7 +21,7 @@ using System.ComponentModel;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IOrchestrationBinding
+	public interface IOrchestrationBinding : IFluentInterface
 	{
 		IApplicationBinding ApplicationBinding { get; set; }
 

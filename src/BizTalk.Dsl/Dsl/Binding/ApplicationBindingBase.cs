@@ -17,8 +17,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
 using Be.Stateless.Extensions;
@@ -27,9 +25,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 {
 	public abstract class ApplicationBindingBase<TNamingConvention>
 		: IApplicationBinding<TNamingConvention>,
+			IApplicationBindingArtifactLookup,
 			IBindingSerializerFactory,
 			ISupportEnvironmentOverride,
-			ISupportNamingConvention,
 			ISupportValidation,
 			IVisitable<IApplicationBindingVisitor>
 		where TNamingConvention : class
@@ -60,12 +58,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			get { return _orchestrations; }
 		}
 
-		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-		public IEnumerable<IReceiveLocation<TNamingConvention>> ReceiveLocations
-		{
-			get { return _receivePorts.Select(rpc => (List<IReceiveLocation<TNamingConvention>>) rpc.ReceiveLocations).SelectMany(rl => rl); }
-		}
-
 		public IReferencedApplicationBindingCollection ReferencedApplications
 		{
 			get { return _referencedApplications; }
@@ -85,6 +77,30 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		#endregion
 
+		#region IApplicationBindingArtifactLookup Members
+
+		IApplicationBindingArtifactLookup IApplicationBindingArtifactLookup.ReferencedApplication<T>()
+		{
+			return ReferencedApplications.OfType<T>().Single();
+		}
+
+		ISupportNamingConvention IApplicationBindingArtifactLookup.ReceiveLocation<T>()
+		{
+			return ReceivePorts.Select(rp => rp.ReceiveLocations).SelectMany(rl => rl).OfType<T>().Single();
+		}
+
+		ISupportNamingConvention IApplicationBindingArtifactLookup.SendPort<T>()
+		{
+			return SendPorts.OfType<T>().Single();
+		}
+
+		string ISupportNamingConvention.Name
+		{
+			get { return NamingConventionThunk.ComputeApplicationName(this); }
+		}
+
+		#endregion
+
 		#region IBindingSerializerFactory Members
 
 		IDslSerializer IBindingSerializerFactory.GetBindingSerializer()
@@ -99,15 +115,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		void ISupportEnvironmentOverride.ApplyEnvironmentOverrides(string environment)
 		{
 			if (!environment.IsNullOrEmpty()) ApplyEnvironmentOverrides(environment);
-		}
-
-		#endregion
-
-		#region ISupportNamingConvention Members
-
-		string ISupportNamingConvention.Name
-		{
-			get { return NamingConventionThunk.ComputeApplicationName(this); }
 		}
 
 		#endregion

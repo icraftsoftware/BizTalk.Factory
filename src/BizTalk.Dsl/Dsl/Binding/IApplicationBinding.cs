@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
@@ -26,8 +25,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	public interface IApplicationBinding<TNamingConvention> : IApplicationBinding, IObjectBinding<TNamingConvention> where TNamingConvention : class
 	{
 		IOrchestrationBindingCollection Orchestrations { get; }
-
-		IEnumerable<IReceiveLocation<TNamingConvention>> ReceiveLocations { get; }
 
 		IReceivePortCollection<TNamingConvention> ReceivePorts { get; }
 

@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
@@ -26,10 +27,10 @@ using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Unit.Binding
 {
-	public static class ApplicationBindingActivator<TNamingConvention> where TNamingConvention : class
+	public static class ApplicationBindingArtifactLookupFactory<T>
+		where T : IApplicationBinding, IApplicationBindingArtifactLookup, IVisitable<IApplicationBindingVisitor>, new()
 	{
-		public static T Create<T>(string targetEnvironment)
-			where T : ApplicationBindingBase<TNamingConvention>, new()
+		public static IApplicationBindingArtifactLookup Create(string targetEnvironment)
 		{
 			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
 			BindingGenerationContext.TargetEnvironment = targetEnvironment;
@@ -39,24 +40,23 @@ namespace Be.Stateless.BizTalk.Unit.Binding
 				SettleApplicationBindingForBindingGenerationContext(applicationBinding);
 				_cache[targetEnvironment] = applicationBinding;
 			}
-			return (T) _cache[targetEnvironment];
+			return _cache[targetEnvironment];
 		}
 
-		public static T Create<T>(string targetEnvironment, string environmentSettingRootPath)
-			where T : ApplicationBindingBase<TNamingConvention>, new()
+		public static IApplicationBindingArtifactLookup Create(string targetEnvironment, string environmentSettingRootPath)
 		{
 			if (environmentSettingRootPath.IsNullOrEmpty()) throw new ArgumentNullException("environmentSettingRootPath");
 			BindingGenerationContext.EnvironmentSettingRootPath = environmentSettingRootPath;
-			return Create<T>(targetEnvironment);
+			return Create(targetEnvironment);
 		}
 
-		private static void SettleApplicationBindingForBindingGenerationContext<T>(T applicationBinding)
-			where T : IVisitable<IApplicationBindingVisitor>
+		private static void SettleApplicationBindingForBindingGenerationContext(T applicationBinding)
 		{
 			var applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
 			applicationBinding.Accept(applicationBindingEnvironmentSettlerVisitor);
 		}
 
-		private static readonly Dictionary<string, ApplicationBindingBase<TNamingConvention>> _cache = new Dictionary<string, ApplicationBindingBase<TNamingConvention>>();
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly Dictionary<string, IApplicationBindingArtifactLookup> _cache = new Dictionary<string, IApplicationBindingArtifactLookup>();
 	}
 }

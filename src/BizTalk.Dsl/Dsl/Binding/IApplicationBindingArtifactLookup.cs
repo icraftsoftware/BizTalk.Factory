@@ -16,17 +16,16 @@
 
 #endregion
 
+using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+
 namespace Be.Stateless.BizTalk.Dsl.Binding
 {
-	public interface IReceivePort : IFluentInterface
+	public interface IApplicationBindingArtifactLookup : ISupportNamingConvention, IFluentInterface
 	{
-		bool IsTwoWay { get; }
-	}
+		IApplicationBindingArtifactLookup ReferencedApplication<T>() where T : IApplicationBinding, IApplicationBindingArtifactLookup, ISupportNamingConvention;
 
-	public interface IReceivePort<TNamingConvention> : IReceivePort, IObjectBinding<TNamingConvention> where TNamingConvention : class
-	{
-		IApplicationBinding<TNamingConvention> ApplicationBinding { get; }
+		ISupportNamingConvention ReceiveLocation<T>() where T : IReceiveLocation, ISupportNamingConvention;
 
-		IReceiveLocationCollection<TNamingConvention> ReceiveLocations { get; }
+		ISupportNamingConvention SendPort<T>() where T : ISendPort, ISupportNamingConvention;
 	}
 }

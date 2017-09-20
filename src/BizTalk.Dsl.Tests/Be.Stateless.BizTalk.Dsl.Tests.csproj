@@ -209,6 +209,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapterFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.InboundFixture.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfWSHttpAdapter.OutboundFixture.cs" />
+    <Compile Include="Dsl\Binding\ApplicationBindingArtifactLookupFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingBaseFixture.cs" />
     <Compile Include="Dsl\Binding\ApplicationBindingSerializerFixture.cs" />
     <Compile Include="Dsl\Binding\EnvironmentSettingsFixture.cs" />
