@@ -22,11 +22,13 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
+using Be.Stateless.BizTalk.Unit.Binding;
 using Be.Stateless.BizTalk.Unit.Process;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.IO;
@@ -86,16 +88,14 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					&& p.Value2 == receiverName
 					&& p.Value3 == senderName
 					&& p.BeginTime > StartTime);
-			// ReSharper disable once ImplicitlyCapturedClosure
 			var tokenMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Claim.CheckOut.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<ClaimReceiveLocation>().Name
 					&& s.Value1 == correlationToken
 					&& s.Value2 == receiverName
 					&& s.Value3 == senderName
 					&& s.Status == TrackingStatus.Received);
-			// ReSharper disable once ImplicitlyCapturedClosure
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Claim.Redeem.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestClaimRedeemSendPort>().Name
 					&& s.Value1 == correlationToken
 					&& s.Value2 == receiverName
 					&& s.Value3 == senderName
@@ -113,11 +113,11 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 					&& p.BeginTime > StartTime,
 				TimeSpan.FromSeconds(60));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Claim.Desk.FILE"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestClaimDeskAnyReceiveLocation>().Name
 					&& s.Status == TrackingStatus.Received
 					&& s.MessageSize == ResourceManager.Load("Data.Payload.bin", stream => stream.Length));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Claim.CheckIn.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<ClaimCheckInSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Claim.CheckIn>().MessageType
 					&& s.Status == TrackingStatus.Sent);
 
@@ -140,14 +140,14 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// message check-in phase
 			var inboundMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Claim.Desk.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestClaimDeskXmlReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Claim.CheckIn>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "embedded-correlation-token"
 					&& s.Value2 == "embedded-receiver-name"
 					&& s.Value3 == "embedded-sender-name");
 			var tokenMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Claim.CheckIn.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<ClaimCheckInSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Claim.CheckIn>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "embedded-correlation-token"
@@ -175,14 +175,14 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// message check-out phase
 			tokenMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Claim.CheckOut.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<ClaimReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Claim.CheckOut>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "embedded-correlation-token"
 					&& s.Value2 == "embedded-receiver-name"
 					&& s.Value3 == "embedded-sender-name");
 			var outboundMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Claim.Redeem.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestClaimRedeemSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Claim.CheckOut>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "embedded-correlation-token"
@@ -208,6 +208,11 @@ namespace Be.Stateless.BizTalk.Processes.Claim
 
 			// original inbound message payload has been restored
 			Assert.That(inboundMessagingStep.Message.Body, Is.EqualTo(outboundMessagingStep.Message.Body));
+		}
+
+		private static IApplicationBindingArtifactLookup BizTalkFactoryApplication
+		{
+			get { return ApplicationBindingArtifactLookupFactory<BizTalkFactoryApplicationBinding>.Create("DEV"); }
 		}
 
 		protected internal override IEnumerable<string> SystemOutputFolders

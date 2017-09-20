@@ -16,7 +16,7 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>10155</WindowHeight>
+  <WindowHeight>11415</WindowHeight>
   <WindowWidth>19635</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
@@ -219,7 +219,7 @@
     <Cell ss:StyleID="s74"/>
     <Cell ss:StyleID="s74"><Data ss:Type="String">p@ssw0rd</Data></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="String">p@ssw0rd</Data></Cell>
-    <Cell ss:StyleID="s74"><Data ss:Type="String">some&quot;{\~!()-+=?/\|*-&lt;&gt;,.!@#$%^&amp;*</Data></Cell>
+    <Cell ss:StyleID="s74"/>
     <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
@@ -346,7 +346,7 @@
     <Cell ss:StyleID="s73"><Data ss:Type="String">LogDirectory</Data></Cell>
     <Cell ss:StyleID="s74"/>
     <Cell ss:StyleID="s74"><Data ss:Type="String">c:\files\logs</Data></Cell>
-    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">c:\files\logs</Data></Cell>
     <Cell ss:StyleID="s74"/>
     <Cell ss:StyleID="s74"/>
    </Row>
@@ -355,8 +355,8 @@
     <Cell ss:StyleID="s74"/>
     <Cell ss:StyleID="s74"><Data ss:Type="String">INFO</Data></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="String">WARN</Data></Cell>
-    <Cell ss:StyleID="s74"><Data ss:Type="String">WARN</Data></Cell>
-    <Cell ss:StyleID="s74"><Data ss:Type="String">WARN</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
     <Cell ss:StyleID="s73"/>
@@ -388,7 +388,7 @@
    <SplitHorizontal>6</SplitHorizontal>
    <TopRowBottomPane>6</TopRowBottomPane>
    <SplitVertical>1</SplitVertical>
-   <LeftColumnRightPane>2</LeftColumnRightPane>
+   <LeftColumnRightPane>1</LeftColumnRightPane>
    <ActivePane>0</ActivePane>
    <Panes>
     <Pane>
@@ -396,13 +396,13 @@
     </Pane>
     <Pane>
      <Number>1</Number>
-     <ActiveCol>1</ActiveCol>
     </Pane>
     <Pane>
      <Number>2</Number>
     </Pane>
     <Pane>
      <Number>0</Number>
+     <ActiveCol>2</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

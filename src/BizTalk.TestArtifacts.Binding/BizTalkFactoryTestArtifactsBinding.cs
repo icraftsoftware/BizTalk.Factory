@@ -106,9 +106,9 @@ namespace Be.Stateless.BizTalk
 					o => { o.Host = CommonSettings.ReceiveHost; }),
 				new Orchestrations.Dummy.ProcessOrchestrationBinding(
 					o => {
-						o.ReceivePort = _batchReceivePort;
+						o.ReceivePort = ReceivePorts.Find<BatchReceivePort>();
 						o.RequestResponsePort = _twoWayReceivePort;
-						o.SendPort = _batchSendPort;
+						o.SendPort = SendPorts.Find<BatchAddPartSendPort>();
 						o.SolicitResponsePort = _twoWaySendPort;
 						o.Host = CommonSettings.ReceiveHost;
 						o.State = ServiceState.Unenlisted;

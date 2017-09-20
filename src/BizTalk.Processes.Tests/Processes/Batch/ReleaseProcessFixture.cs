@@ -20,12 +20,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Explorer;
 using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
+using Be.Stateless.BizTalk.Unit.Binding;
 using Be.Stateless.BizTalk.Unit.Constraints;
 using Be.Stateless.BizTalk.Unit.Process;
 using Be.Stateless.IO.Extensions;
@@ -105,13 +107,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value1 == "*"
 					&& p.Value3 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
 					&& s.Value3 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "*"
@@ -152,13 +154,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value1 == "*"
 					&& p.Value3 == "p-one");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& s.Value1 == "*"
 					&& s.Value3 == "p-one");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& s.Value1 == "*"
@@ -200,13 +202,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
 					&& s.Value3 == "*");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -237,12 +239,12 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Status == TrackingStatus.Completed
 					&& _envelopeSpecName.StartsWith(p.Value1));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1));
@@ -258,11 +260,11 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == null); // partition 0 did not leak out of the database
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 			var envelopeMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestBatchReleaseSendPort>().Name
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -287,13 +289,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
 					&& s.Value3 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -310,11 +312,11 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 			var envelopeMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestBatchReleaseSendPort>().Name
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -336,12 +338,12 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1));
@@ -364,12 +366,12 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1));
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1));
@@ -436,10 +438,8 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value3 == "p-count-limit");
 
 			// 2 processes have been tracked as more items than twice the item count limit have been accumulated
-			// ReSharper disable PossibleMultipleEnumeration
 			Assert.That(() => processesQuery.Count(), Is.EqualTo(2).After(TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(1)));
 			var processes = processesQuery.ToArray();
-			// ReSharper restore PossibleMultipleEnumeration
 
 			// ensure the 2 processes are issued from the same polling, thereby validating that all available batches are
 			// released in one shot (i.e., in DEV, one within one second of the other, when polling every 5 seconds)
@@ -447,14 +447,14 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 
 			// each batch is made of 3 parts
 			var envelopeMessage1 = processes[0].MessagingSteps.Single(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestBatchReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
 					&& s.Value3 == "p-count-limit");
 			Assert.That(Regex.Matches(envelopeMessage1.Message.Body, @"<data>count-limit-value-\d</data>").Count, Is.EqualTo(3));
 			var envelopeMessage2 = processes[1].MessagingSteps.Single(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestBatchReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -473,7 +473,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			var addPartMessage1 = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -485,7 +485,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage2 = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -503,36 +503,24 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.Value3 == "partition-z");
 			// control message
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.InputMessage.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestInputMessageReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1)
 					&& s.Value3 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.QueueControlledRelease.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchQueueControlledReleaseSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Schemas.Xml.Batch.Release>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
 					&& s.Value3 == "partition-z");
 			// 1st part
-			process.SingleMessagingStep(
-				s => s.ActivityID == addPartMessage1.ActivityID
-					&& s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
-					&& s.MessageType == new SchemaMetadata<Any>().MessageType
-					&& s.Status == TrackingStatus.Sent
-					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value3 == "partition-z");
+			process.SingleMessagingStep(s => s.ActivityID == addPartMessage1.ActivityID);
 			// 2nd part
-			process.SingleMessagingStep(
-				s => s.ActivityID == addPartMessage2.ActivityID
-					&& s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
-					&& s.MessageType == new SchemaMetadata<Any>().MessageType
-					&& s.Status == TrackingStatus.Sent
-					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value3 == "partition-z");
+			process.SingleMessagingStep(s => s.ActivityID == addPartMessage2.ActivityID);
 			// batch content
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 
@@ -544,7 +532,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "partition-z");
 			var handlingProcessBatchMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 
@@ -569,7 +557,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			var addPartMessage1 = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -581,7 +569,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage2 = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -593,7 +581,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					// ReSharper disable once AccessToModifiedClosure
 					&& p.BeginTime > process.EndTime);
 			var addPartMessage3 = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -607,32 +595,14 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Status == TrackingStatus.Completed);
 			// 1st part
-			process.SingleMessagingStep(
-				s => s.ActivityID == addPartMessage1.ActivityID
-					&& s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
-					&& s.MessageType == new SchemaMetadata<Any>().MessageType
-					&& s.Status == TrackingStatus.Sent
-					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value3 == "partition-z");
+			process.SingleMessagingStep(s => s.ActivityID == addPartMessage1.ActivityID);
 			// 2nd part
-			process.SingleMessagingStep(
-				s => s.ActivityID == addPartMessage2.ActivityID
-					&& s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
-					&& s.MessageType == new SchemaMetadata<Any>().MessageType
-					&& s.Status == TrackingStatus.Sent
-					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value3 == "partition-z");
+			process.SingleMessagingStep(s => s.ActivityID == addPartMessage2.ActivityID);
 			// 3rd part
-			process.SingleMessagingStep(
-				s => s.ActivityID == addPartMessage3.ActivityID
-					&& s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
-					&& s.MessageType == new SchemaMetadata<Any>().MessageType
-					&& s.Status == TrackingStatus.Sent
-					&& _envelopeSpecName.StartsWith(s.Value1)
-					&& s.Value3 == "partition-z");
+			process.SingleMessagingStep(s => s.ActivityID == addPartMessage3.ActivityID);
 			// batch content
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 
@@ -644,7 +614,7 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "partition-z");
 			var handlingProcessBatchMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 
@@ -678,11 +648,11 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& _envelopeSpecName.StartsWith(p.Value1)
 					&& p.Value3 == "partition-z");
 			var releaseProcessBatchMessagingStep = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name
 					// TODO && s.MessageType == new SchemaMetadata<BatchContent>().MessageType
 					&& s.Status == TrackingStatus.Received);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.UnitTest.Batch.Trace.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<UnitTestBatchReleaseSendPort>().Name
 					&& s.Status == TrackingStatus.Sent
 					&& s.MessageType == new SchemaMetadata<Envelope>().MessageType
 					&& _envelopeSpecName.StartsWith(s.Value1)
@@ -702,20 +672,29 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			get { return new[] { DropFolders.TRACE_FOLDER }; }
 		}
 
+		private static IApplicationBindingArtifactLookup BizTalkFactoryApplication
+		{
+			get { return ApplicationBindingArtifactLookupFactory<BizTalkFactoryApplicationBinding>.Create("DEV"); }
+		}
+
 		private static class BatchReleasePort
 		{
 			public static void Enable()
 			{
-				var application = BizTalkServerGroup.Applications["BizTalk.Factory"];
-				var receiveLocation = application.ReceivePorts["BizTalk.Factory.RP1.Batch"].ReceiveLocations["BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"];
+				var application = BizTalkServerGroup.Applications[BizTalkFactoryApplication.Name];
+				var receiveLocation = application
+					.ReceivePorts[BizTalkFactoryApplication.ReceivePort<BatchReceivePort>().Name]
+					.ReceiveLocations[BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name];
 				receiveLocation.Enable();
 				application.ApplyChanges();
 			}
 
 			public static void Disable()
 			{
-				var application = BizTalkServerGroup.Applications["BizTalk.Factory"];
-				var receiveLocation = application.ReceivePorts["BizTalk.Factory.RP1.Batch"].ReceiveLocations["BizTalk.Factory.RL1.Batch.Release.WCF-SQL.XML"];
+				var application = BizTalkServerGroup.Applications[BizTalkFactoryApplication.Name];
+				var receiveLocation = application
+					.ReceivePorts[BizTalkFactoryApplication.ReceivePort<BatchReceivePort>().Name]
+					.ReceiveLocations[BizTalkFactoryApplication.ReceiveLocation<BatchReceiveLocation>().Name];
 				receiveLocation.Disable();
 				application.ApplyChanges();
 			}

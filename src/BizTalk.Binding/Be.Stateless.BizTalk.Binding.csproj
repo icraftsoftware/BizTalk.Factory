@@ -178,7 +178,24 @@
     <Compile Include="BizTalkFactoryApplicationBinding.cs" />
     <Compile Include="EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.Designer.cs" />
     <Compile Include="EnvironmentSettings\Common.SettingsFileGenerator.Designer.cs" />
+    <Compile Include="ReceiveLocations\BatchReceiveLocation.cs" />
+    <Compile Include="ReceiveLocations\ClaimReceiveLocation.cs" />
+    <Compile Include="ReceiveLocations\UnitTestBatchAddPartReceiveLocation.cs" />
+    <Compile Include="ReceiveLocations\UnitTestClaimDeskAnyReceiveLocation.cs" />
+    <Compile Include="ReceiveLocations\UnitTestClaimDeskXmlReceiveLocation.cs" />
+    <Compile Include="ReceiveLocations\UnitTestInputMessageReceiveLocation.cs" />
+    <Compile Include="ReceivePorts\BatchReceivePort.cs" />
+    <Compile Include="ReceivePorts\ClaimReceivePort.cs" />
+    <Compile Include="ReceivePorts\UnitTestReceivePort.cs" />
+    <Compile Include="SendPorts\BatchAddPartSendPort.cs" />
+    <Compile Include="SendPorts\BatchQueueControlledReleaseSendPort.cs" />
+    <Compile Include="SendPorts\ClaimCheckInSendPort.cs" />
+    <Compile Include="SendPorts\SinkFailedMessageSendPort.cs" />
+    <Compile Include="SendPorts\UnitTestBatchReleaseSendPort.cs" />
+    <Compile Include="SendPorts\UnitTestClaimRedeemSendPort.cs" />
+    <Compile Include="SendPorts\UnitTestStubSendPort.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\.imports\Be.Stateless.Dsl.targets" />
   <Target Name="BeforeBuild" DependsOnTargets="$(BeforeBuildDependsOn)" />

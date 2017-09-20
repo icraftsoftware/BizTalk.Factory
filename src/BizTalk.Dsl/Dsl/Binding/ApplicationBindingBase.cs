@@ -89,6 +89,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			return ReceivePorts.Select(rp => rp.ReceiveLocations).SelectMany(rl => rl).OfType<T>().Single();
 		}
 
+		public ISupportNamingConvention ReceivePort<T>() where T : IReceivePort, ISupportNamingConvention
+		{
+			return ReceivePorts.OfType<T>().Single();
+		}
+
 		ISupportNamingConvention IApplicationBindingArtifactLookup.SendPort<T>()
 		{
 			return SendPorts.OfType<T>().Single();

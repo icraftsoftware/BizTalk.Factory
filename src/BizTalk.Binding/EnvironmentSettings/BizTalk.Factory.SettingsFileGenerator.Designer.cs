@@ -34,12 +34,12 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 
 		public static int BamArchiveWindowTimeLength 
 		{
-			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 30, 30, 30, 30 }); }
+			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 30, 30, null, null }); }
 		}
 
 		public static int BamOnlineWindowTimeLength 
 		{
-			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 15, 15, 15, 15 }); }
+			get { return _instance.ValueForTargetEnvironment(new int?[] { null, 15, 15, null, null }); }
 		}
 
 		public static string ClaimStoreAgentTargetHosts 

@@ -19,10 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Tracking;
+using Be.Stateless.BizTalk.Unit.Binding;
 using Be.Stateless.BizTalk.Unit.Process;
 using Be.Stateless.IO.Extensions;
 using NUnit.Framework;
@@ -58,13 +60,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 				p => p.Name == Factory.Areas.Batch.Processes.Aggregate
 					&& p.BeginTime > StartTime);
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Batch.AddPart.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestBatchAddPartReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
 					&& s.Value3 == null);
 			var addPartMessage = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
@@ -85,13 +87,13 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 					&& p.BeginTime > StartTime
 					&& p.Value3 == "partition-z");
 			process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.RL1.UnitTest.Batch.AddPart.FILE.XML"
+				s => s.Name == BizTalkFactoryApplication.ReceiveLocation<UnitTestBatchAddPartReceiveLocation>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Received
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
 					&& s.Value3 == "partition-z");
 			var addPartMessage = process.SingleMessagingStep(
-				s => s.Name == "BizTalk.Factory.SP1.Batch.AddPart.WCF-SQL.XML"
+				s => s.Name == BizTalkFactoryApplication.SendPort<BatchAddPartSendPort>().Name
 					&& s.MessageType == new SchemaMetadata<Any>().MessageType
 					&& s.Status == TrackingStatus.Sent
 					&& _envelopeSpecName.StartsWith(s.Value1, StringComparison.Ordinal)
@@ -100,6 +102,11 @@ namespace Be.Stateless.BizTalk.Processes.Batch
 			var part = BatchAdapter.Parts.Single();
 			Assert.That(part.MessagingStepActivityId, Is.EqualTo(addPartMessage.ActivityID));
 			Assert.That(part.Partition, Is.EqualTo("partition-z"));
+		}
+
+		private static IApplicationBindingArtifactLookup BizTalkFactoryApplication
+		{
+			get { return ApplicationBindingArtifactLookupFactory<BizTalkFactoryApplicationBinding>.Create("DEV"); }
 		}
 
 		protected override IEnumerable<string> InputFolders

@@ -16,8 +16,8 @@
   <RelyOnVML/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>11760</WindowHeight>
-  <WindowWidth>25200</WindowWidth>
+  <WindowHeight>11415</WindowHeight>
+  <WindowWidth>19635</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <TabRatio>151</TabRatio>
@@ -33,14 +33,7 @@
    <NumberFormat/>
    <Protection/>
   </Style>
-  <Style ss:ID="s62">
-   <Protection ss:Protected="0"/>
-  </Style>
-  <Style ss:ID="s63">
-   <Interior/>
-   <Protection ss:Protected="0"/>
-  </Style>
-  <Style ss:ID="s64">
+  <Style ss:ID="s69">
    <Alignment ss:Vertical="Bottom"/>
    <Borders/>
    <Font ss:FontName="Arial" x:Family="Swiss" ss:Size="14" ss:Bold="1"/>
@@ -48,7 +41,12 @@
    <NumberFormat/>
    <Protection ss:Protected="0"/>
   </Style>
-  <Style ss:ID="s65">
+  <Style ss:ID="s70">
+   <Font ss:FontName="Arial"/>
+   <Interior/>
+   <Protection ss:Protected="0"/>
+  </Style>
+  <Style ss:ID="s71">
    <Alignment ss:Vertical="Bottom"/>
    <Borders/>
    <Font ss:FontName="Arial" x:Family="Swiss" ss:Bold="1"/>
@@ -56,7 +54,11 @@
    <NumberFormat/>
    <Protection/>
   </Style>
-  <Style ss:ID="s66">
+  <Style ss:ID="s72">
+   <Font ss:FontName="Arial"/>
+   <Protection ss:Protected="0"/>
+  </Style>
+  <Style ss:ID="s73">
    <Alignment ss:Vertical="Top"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
@@ -64,11 +66,12 @@
     <Border ss:Position="Right" ss:LineStyle="Continuous"/>
     <Border ss:Position="Top" ss:LineStyle="Continuous"/>
    </Borders>
+   <Font ss:FontName="Arial"/>
    <Interior ss:Color="#CCFFFF" ss:Pattern="Solid"/>
    <NumberFormat/>
    <Protection ss:Protected="0"/>
   </Style>
-  <Style ss:ID="s67">
+  <Style ss:ID="s74">
    <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
    <Borders/>
    <Font ss:FontName="Arial" x:Family="Swiss"/>
@@ -79,141 +82,141 @@
  </Styles>
  <Worksheet ss:Name="Settings">
   <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="15" x:FullColumns="1"
-   x:FullRows="1" ss:StyleID="s62" ss:DefaultColumnWidth="51">
-   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="213.75"/>
-   <Column ss:StyleID="s62" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="144"/>
-   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="240" ss:Span="3"/>
-   <Row ss:AutoFitHeight="0" ss:Height="18" ss:StyleID="s63">
-    <Cell ss:StyleID="s64"><Data ss:Type="String">Environment Settings</Data></Cell>
-    <Cell ss:StyleID="s64"/>
-    <Cell ss:StyleID="s64"/>
-    <Cell ss:StyleID="s64"/>
-    <Cell ss:StyleID="s64"/>
-    <Cell ss:StyleID="s64"/>
+   x:FullRows="1" ss:StyleID="s72" ss:DefaultColumnWidth="51">
+   <Column ss:StyleID="s72" ss:AutoFitWidth="0" ss:Width="213.75"/>
+   <Column ss:StyleID="s72" ss:Hidden="1" ss:AutoFitWidth="0" ss:Width="144"/>
+   <Column ss:StyleID="s72" ss:AutoFitWidth="0" ss:Width="240" ss:Span="3"/>
+   <Row ss:AutoFitHeight="0" ss:Height="18" ss:StyleID="s70">
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Environment Settings</Data></Cell>
+    <Cell ss:StyleID="s69"/>
+    <Cell ss:StyleID="s69"/>
+    <Cell ss:StyleID="s69"/>
+    <Cell ss:StyleID="s69"/>
+    <Cell ss:StyleID="s69"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.3125">
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Environment Name:</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Default Values</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Development</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Build</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Acceptance</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Production</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Environment Name:</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Default Values</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Development</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Build</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Acceptance</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Production</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.3125">
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Generate File?</Data></Cell>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Generate File?</Data></Cell>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Yes</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Yes</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.3125">
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Settings File Name:</Data></Cell>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">DEV_Settings.xml</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">BLD_Settings.xml</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">ACC_Settings.xml</Data></Cell>
-    <Cell ss:StyleID="s65"><Data ss:Type="String">PRD_Settings.xml</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Settings File Name:</Data></Cell>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">DEV_Settings.xml</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">BLD_Settings.xml</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">ACC_Settings.xml</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">PRD_Settings.xml</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.3125">
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.3125">
-    <Cell ss:StyleID="s65"><Data ss:Type="String">Settings:</Data></Cell>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
-    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Settings:</Data></Cell>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
+    <Cell ss:StyleID="s71"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">TargetEnvironment</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">DEV</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">BLD</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">ACC</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">PRD</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">TargetEnvironment</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">DEV</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">BLD</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">ACC</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">PRD</Data></Cell>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s73"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">BamArchiveWindowTimeLength</Data><Comment
+    <Cell ss:StyleID="s73"><Data ss:Type="String">BamArchiveWindowTimeLength</Data><Comment
       ss:Author="François Chabot"><ss:Data
        xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
         html:Color="#000000">in days</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">30</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">30</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">30</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">30</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="Number">30</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="Number">30</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">BamOnlineWindowTimeLength</Data><Comment
+    <Cell ss:StyleID="s73"><Data ss:Type="String">BamOnlineWindowTimeLength</Data><Comment
       ss:Author="François Chabot"><ss:Data
        xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
         html:Color="#000000">in days</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="Number">15</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="Number">15</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="Number">15</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s73"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">ClaimStoreAgentTargetHosts</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">*</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">*</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">ClaimStoreAgentTargetHosts</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String" x:Ticked="1">-</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">*</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">*</Data></Cell>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">ClaimStoreCheckInDirectory</Data><Comment
+    <Cell ss:StyleID="s73"><Data ss:Type="String">ClaimStoreCheckInDirectory</Data><Comment
       ss:Author="François Chabot"><ss:Data
        xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
         html:Color="#000000">This typcally is a local direrctory on each BizTalk machine where a temporary copy of the tracked messages will be written. This could be a shared network location as well.</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckIn</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckIn</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckIn</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckIn</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"><Data ss:Type="String">ClaimStoreCheckOutDirectory</Data><Comment
+    <Cell ss:StyleID="s73"><Data ss:Type="String">ClaimStoreCheckOutDirectory</Data><Comment
       ss:Author="François Chabot"><ss:Data
        xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="9"
         html:Color="#000000">This is the central location where all tracked large messages will be moved by tracking agents.</Font></ss:Data></Comment></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckOut</Data></Cell>
-    <Cell ss:StyleID="s67"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckOut</Data></Cell>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckOut</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">C:\Files\Drops\BizTalk.Factory\CheckOut</Data></Cell>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
    <Row>
-    <Cell ss:StyleID="s66"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
-    <Cell ss:StyleID="s67"/>
+    <Cell ss:StyleID="s73"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
+    <Cell ss:StyleID="s74"/>
    </Row>
   </Table>
   <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
@@ -237,7 +240,7 @@
    <SplitHorizontal>6</SplitHorizontal>
    <TopRowBottomPane>6</TopRowBottomPane>
    <SplitVertical>1</SplitVertical>
-   <LeftColumnRightPane>2</LeftColumnRightPane>
+   <LeftColumnRightPane>1</LeftColumnRightPane>
    <ActivePane>0</ActivePane>
    <Panes>
     <Pane>
@@ -245,15 +248,13 @@
     </Pane>
     <Pane>
      <Number>1</Number>
-     <ActiveCol>1</ActiveCol>
     </Pane>
     <Pane>
      <Number>2</Number>
     </Pane>
     <Pane>
      <Number>0</Number>
-     <ActiveRow>20</ActiveRow>
-     <ActiveCol>0</ActiveCol>
+     <ActiveCol>2</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

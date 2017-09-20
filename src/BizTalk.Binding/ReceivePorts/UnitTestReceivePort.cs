@@ -17,17 +17,20 @@
 #endregion
 
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk
 {
-	public interface IApplicationBindingArtifactLookup : ISupportNamingConvention, IFluentInterface
+	public class UnitTestReceivePort : ReceivePort<NamingConvention>
 	{
-		IApplicationBindingArtifactLookup ReferencedApplication<T>() where T : IApplicationBinding, IApplicationBindingArtifactLookup, ISupportNamingConvention;
-
-		ISupportNamingConvention ReceiveLocation<T>() where T : IReceiveLocation, ISupportNamingConvention;
-
-		ISupportNamingConvention ReceivePort<T>() where T : IReceivePort, ISupportNamingConvention;
-
-		ISupportNamingConvention SendPort<T>() where T : ISendPort, ISupportNamingConvention;
+		public UnitTestReceivePort()
+		{
+			Name = ReceivePortName.Offwards("UnitTest");
+			ReceiveLocations.Add(
+				new UnitTestBatchAddPartReceiveLocation(),
+				new UnitTestClaimDeskAnyReceiveLocation(),
+				new UnitTestClaimDeskXmlReceiveLocation(),
+				new UnitTestInputMessageReceiveLocation());
+		}
 	}
 }

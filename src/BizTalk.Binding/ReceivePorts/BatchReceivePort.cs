@@ -17,17 +17,16 @@
 #endregion
 
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Dsl.Binding.Convention.Simple;
 
-namespace Be.Stateless.BizTalk.Dsl.Binding
+namespace Be.Stateless.BizTalk
 {
-	public interface IApplicationBindingArtifactLookup : ISupportNamingConvention, IFluentInterface
+	public class BatchReceivePort : ReceivePort<NamingConvention>
 	{
-		IApplicationBindingArtifactLookup ReferencedApplication<T>() where T : IApplicationBinding, IApplicationBindingArtifactLookup, ISupportNamingConvention;
-
-		ISupportNamingConvention ReceiveLocation<T>() where T : IReceiveLocation, ISupportNamingConvention;
-
-		ISupportNamingConvention ReceivePort<T>() where T : IReceivePort, ISupportNamingConvention;
-
-		ISupportNamingConvention SendPort<T>() where T : ISendPort, ISupportNamingConvention;
+		public BatchReceivePort()
+		{
+			Name = ReceivePortName.Offwards("Batch");
+			ReceiveLocations.Add(new BatchReceiveLocation());
+		}
 	}
 }

@@ -59,7 +59,7 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 
 		public static string BizTalkServerAccountPassword 
 		{
-			get { return _instance.ValueForTargetEnvironment(new string[] { null, "p@ssw0rd", "p@ssw0rd", "some\"{\\~!()-+=?/\\|*-<>,.!@#$%^&*", null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "p@ssw0rd", "p@ssw0rd", null, null }); }
 		}
 
 		public static string SqlAgentAccountName 
@@ -114,12 +114,12 @@ namespace Be.Stateless.BizTalk.EnvironmentSettings
 
 		public static string LogDirectory 
 		{
-			get { return _instance.ValueForTargetEnvironment(new string[] { null, "c:\\files\\logs", null, null, null }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "c:\\files\\logs", "c:\\files\\logs", null, null }); }
 		}
 
 		public static string LogLevel 
 		{
-			get { return _instance.ValueForTargetEnvironment(new string[] { null, "INFO", "WARN", "WARN", "WARN" }); }
+			get { return _instance.ValueForTargetEnvironment(new string[] { null, "INFO", "WARN", null, null }); }
 		}
 
 		protected override string SettingsFileName
