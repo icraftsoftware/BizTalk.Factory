@@ -16,12 +16,34 @@
 
 #endregion
 
-using SFTP;
+using WCF;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
+	/// <summary>
+	/// Allow usage of all <see cref="SFTP"/> properties, including <see cref="FolderPath"/>, through the <see
+	/// cref="WCF"/> property schema's target namespace, which has runtime precedence over the dedicated <see
+	/// cref="SFTP"/> property schema's target namespace.
+	/// </summary>
+	/// <remarks>
+	/// Notice that <see cref="FolderPath"/> is not declared by its dedicated <see cref="SFTP"/> property schema and can
+	/// therefore only be used through the <see cref="WCF"/> property schema's target namespace.
+	/// </remarks>
 	public class SftpProperties
 	{
+		/// <summary>
+		/// Oddly enough, <see cref="FolderPath"/> is concealed in the <see cref="WCF"/> property schema's target
+		/// namespace only.
+		/// </summary>
+		/// <remarks>
+		/// The <see cref="FolderPath"/> property is not exposed by the <see cref="SFTP"/> property schema, but at the
+		/// same time, any context override of the <see cref="FolderPath"/> value is expected to be found in the <see
+		/// cref="WCF"/> property schema's target namespace and not in its dedicated <see cref="SFTP"/> property schema's
+		/// target namespace.
+		/// </remarks>
+		public static readonly MessageContextProperty<FolderPath, string> FolderPath
+			= new MessageContextProperty<FolderPath, string>();
+
 		public static readonly MessageContextProperty<TargetFileName, string> TargetFileName
 			= new MessageContextProperty<TargetFileName, string>();
 	}

@@ -107,6 +107,11 @@
       <Link>be.stateless.public.snk</Link>
     </None>
     <None Include="packages.config" />
+    <Schema Include="Schemas\SftpProperties.xsd">
+      <TypeName>ConcealedProperties</TypeName>
+      <Namespace>WCF</Namespace>
+      <SubType>Task</SubType>
+    </Schema>
     <Schema Include="Schemas\Sql\Procedures\Claim\CheckIn.xsd">
       <TypeName>CheckIn</TypeName>
       <Namespace>Be.Stateless.BizTalk.Schemas.Sql.Procedures.Claim</Namespace>
