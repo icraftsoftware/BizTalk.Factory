@@ -64,7 +64,7 @@ namespace Be.Stateless.Extensions
 		}
 
 		/// <summary>
-		/// Verifies that the <param name="name"/> string is a valid file name.
+		/// Verifies that the <paramref name="name"/> string is a valid file name.
 		/// </summary>
 		/// <param name="name">
 		/// The file name to verify.
