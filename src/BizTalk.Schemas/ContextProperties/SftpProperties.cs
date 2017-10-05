@@ -26,24 +26,40 @@ namespace Be.Stateless.BizTalk.ContextProperties
 	/// cref="SFTP"/> property schema's target namespace.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Notice that <see cref="FolderPath"/> is not declared by its dedicated <see cref="SFTP"/> property schema and can
 	/// therefore only be used through the <see cref="WCF"/> property schema's target namespace.
+	/// </para>
+	/// <para>
+	/// It is detrimental to enable <see cref="BtsProperties.IsDynamicSend"/> when setting these properties at runtime.
+	/// </para>
 	/// </remarks>
 	public class SftpProperties
 	{
 		/// <summary>
-		/// Oddly enough, <see cref="FolderPath"/> is concealed in the <see cref="WCF"/> property schema's target
-		/// namespace only.
+		/// Remote SFTP folder path. Oddly enough, <see cref="FolderPath"/> is concealed in the <see cref="WCF"/> property
+		/// schema's target namespace only.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The <see cref="FolderPath"/> property is not exposed by the <see cref="SFTP"/> property schema, but at the
 		/// same time, any context override of the <see cref="FolderPath"/> value is expected to be found in the <see
 		/// cref="WCF"/> property schema's target namespace and not in its dedicated <see cref="SFTP"/> property schema's
 		/// target namespace.
+		/// </para>
+		/// <para>
+		/// It is detrimental to enable <see cref="BtsProperties.IsDynamicSend"/> when setting this property at runtime.
+		/// </para>
 		/// </remarks>
 		public static readonly MessageContextProperty<FolderPath, string> FolderPath
 			= new MessageContextProperty<FolderPath, string>();
 
+		/// <summary>
+		/// Remote SFTP file name.
+		/// </summary>
+		/// <remarks>
+		/// It is detrimental to enable <see cref="BtsProperties.IsDynamicSend"/> when setting this property at runtime.
+		/// </remarks>
 		public static readonly MessageContextProperty<TargetFileName, string> TargetFileName
 			= new MessageContextProperty<TargetFileName, string>();
 	}
