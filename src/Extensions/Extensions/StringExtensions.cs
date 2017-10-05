@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -60,6 +61,20 @@ namespace Be.Stateless.Extensions
 		public static TR IfNotNullOrEmpty<TR>(this string @string, Func<string, TR> function)
 		{
 			return @string.IsNullOrEmpty() ? default(TR) : function(@string);
+		}
+
+		/// <summary>
+		/// Verifies that the <param name="name"/> string is a valid file name.
+		/// </summary>
+		/// <param name="name">
+		/// The file name to verify.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if it is a valid file name; <c>false</c> otherwise.
+		/// </returns>
+		public static bool IsFileName(this string name)
+		{
+			return name.IfNotNullOrEmpty(n => n.IndexOfAny(Path.GetInvalidFileNameChars()) < 0);
 		}
 
 		/// <summary>

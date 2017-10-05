@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,20 @@ namespace Be.Stateless.Extensions
 	[TestFixture]
 	public class StringExtensionsFixture
 	{
+		[Test]
+		public void IsFileName()
+		{
+			Assert.That("name".IsFileName());
+			Assert.That("name.txt".IsFileName());
+			Assert.That("name-0.txt".IsFileName());
+			Assert.That("name_0.txt".IsFileName());
+
+			Assert.That(((string) null).IsFileName(), Is.False);
+			Assert.That("".IsFileName(), Is.False);
+			Assert.That(@"\name.txt".IsFileName(), Is.False);
+			Assert.That(@"/name.txt".IsFileName(), Is.False);
+		}
+
 		[Test]
 		public void IsQName()
 		{
