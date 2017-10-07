@@ -241,6 +241,7 @@
     <Compile Include="Dsl\Binding\Adapter\FileAdapter.OutboundFixture.cs" />
     <Compile Include="Dsl\Binding\TransportBaseFixture.cs" />
     <Compile Include="Dsl\Binding\Visitor\CurrentApplicationBindingVisitorFixture.cs" />
+    <Compile Include="Dsl\BizTalkAssemblyResolverFixture.cs" />
     <Compile Include="Dsl\Pipeline\ComponentListFixture.cs" />
     <Compile Include="Dsl\Pipeline\PipelineComponentExtensionsFixture.cs" />
     <Compile Include="Dsl\Pipeline\PipelineDesignerDocumentSerializerFixture.cs" />

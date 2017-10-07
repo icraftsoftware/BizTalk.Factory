@@ -60,9 +60,16 @@ namespace Be.Stateless.BizTalk.Dsl
 			AppDomain.CurrentDomain.AssemblyResolve += _instance.OnAssemblyResolve;
 		}
 
-		public static void RegisterProbingPaths(params string[] assemblyPaths)
+		public static void RegisterProbingPaths(params string[] probingPaths)
 		{
-			_instance._privateProbingPaths = assemblyPaths.Select(Path.GetDirectoryName);
+			_instance._privateProbingPaths = RefineProbingPaths(probingPaths);
+		}
+
+		internal static IEnumerable<string> RefineProbingPaths(params string[] probingPaths)
+		{
+			return probingPaths == null
+				? Enumerable.Empty<string>()
+				: probingPaths.Where(p => !p.IsNullOrWhiteSpace()).SelectMany(jp => jp.Split(';').Where(p => !p.IsNullOrWhiteSpace()));
 		}
 
 		public static void Unregister()

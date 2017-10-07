@@ -37,15 +37,8 @@ namespace Be.Stateless.BizTalk.Install
 
 			try
 			{
-				var targetEnvironment = Context.Parameters["TargetEnvironment"];
-				if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
-				BindingGenerationContext.TargetEnvironment = targetEnvironment;
-
-				var environmentSettingRootPath = Context.Parameters["EnvironmentSettingOverridesRootPath"];
-				if (!environmentSettingRootPath.IsNullOrEmpty()) BindingGenerationContext.EnvironmentSettingRootPath = environmentSettingRootPath;
-
 				BizTalkAssemblyResolver.Register(msg => Context.LogMessage(msg));
-				BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyPath"]);
+				ApplyContextArguments();
 				if (Context.Parameters.ContainsKey("BindingFilePath"))
 				{
 					var bindingFilePath = Context.Parameters["BindingFilePath"];
@@ -73,12 +66,8 @@ namespace Be.Stateless.BizTalk.Install
 
 			try
 			{
-				var targetEnvironment = Context.Parameters["TargetEnvironment"];
-				if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
-				BindingGenerationContext.TargetEnvironment = targetEnvironment;
-
 				BizTalkAssemblyResolver.Register(msg => Context.LogMessage(msg));
-				BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyPath"]);
+				ApplyContextArguments();
 				if (Context.Parameters.ContainsKey("TeardownFileAdapterPaths"))
 				{
 					var recurse = Context.Parameters.ContainsKey("Recurse");
@@ -96,6 +85,18 @@ namespace Be.Stateless.BizTalk.Install
 		private T ApplicationBinding
 		{
 			get { return _applicationBinding ?? (_applicationBinding = new T()); }
+		}
+
+		private void ApplyContextArguments()
+		{
+			var targetEnvironment = Context.Parameters["TargetEnvironment"];
+			if (targetEnvironment.IsNullOrEmpty()) throw new InvalidOperationException("TargetEnvironment has no defined value.");
+			BindingGenerationContext.TargetEnvironment = targetEnvironment;
+
+			var environmentSettingRootPath = Context.Parameters["EnvironmentSettingOverridesRootPath"];
+			if (!environmentSettingRootPath.IsNullOrEmpty()) BindingGenerationContext.EnvironmentSettingRootPath = environmentSettingRootPath;
+
+			BizTalkAssemblyResolver.RegisterProbingPaths(Context.Parameters["AssemblyProbingPaths"]);
 		}
 
 		private void GenerateBindingFile(string bindingFilePath)

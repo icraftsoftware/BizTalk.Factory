@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ namespace Be.Stateless.BizTalk.Dsl.MSBuild.Tasks
 				var assemblyPaths = PipelineDefinitionAssemblies
 					.Select(ra => ra.GetMetadata("Identity"))
 					.ToArray();
-				BizTalkAssemblyResolver.RegisterProbingPaths(assemblyPaths);
+				BizTalkAssemblyResolver.RegisterProbingPaths(assemblyPaths.Select(Path.GetDirectoryName).ToArray());
 
 				// TODO refactor this in task ResolveReferencedBizTalkPipelineAssemblies
 				var pipelineTypes = assemblyPaths
