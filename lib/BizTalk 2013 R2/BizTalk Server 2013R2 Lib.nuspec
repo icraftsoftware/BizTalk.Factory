@@ -10,5 +10,6 @@
   </metadata>
   <files>
     <file src="*.dll" target="assemblies\net45\" />
+    <file src="*.xml" target="assemblies\net45\" />
   </files>
 </package>

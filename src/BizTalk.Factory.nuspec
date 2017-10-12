@@ -1,66 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>BizTalk.Factory</id>
-    <version>1.0.0</version>
+    <version>1.0.17278</version>
     <title>BizTalk Factory</title>
-    <authors>ydie</authors>
+    <authors>François Chabot, Yves Dierick</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>BizTalk Factory for BizTalk Server 2013 R2.</description>
   </metadata>
   <files>
+    <file src="Deployment\BizTalk.Factory.Deployment.btdfproj" target="Deployment\BizTalk.Factory.Deployment.btdfproj" />
+    <file src="Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" target="Deployment\BizTalk.Factory.Deployment.IgnoreStandardErrorsAndWarnings.targets" />
+    <file src="Deployment\BizTalk.Factory.Deployment.targets" target="Deployment\BizTalk.Factory.Deployment.targets" />
+    <file src="Deployment\BizTalk.Factory.ItemGroups.Common.proj" target="Deployment\BizTalk.Factory.ItemGroups.Common.proj" />
+    <file src="Deployment\BizTalk.Factory.ItemGroups.proj" target="Deployment\BizTalk.Factory.ItemGroups.proj" />
+    <file src="Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml" target="Deployment\EnvironmentSettings\BizTalk.Factory.SettingsFileGenerator.xml" />
+    <file src="Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml" target="Deployment\EnvironmentSettings\Common.SettingsFileGenerator.xml" />
+    <file src="..\utils\Deployment Tools\BizTalk.Factory.IncludeCustomDatabaseInOtherBackupDatabases.sql" target="Deployment\Tools\BizTalk.Factory.IncludeCustomDatabaseInOtherBackupDatabases.sql" />
+    <file src="..\utils\Deployment Tools\BizTalk.Factory.RemoveCustomDatabaseFromOtherBackupDatabases.sql" target="Deployment\Tools\BizTalk.Factory.RemoveCustomDatabaseFromOtherBackupDatabases.sql" />
     <file src=".imports\Be.Stateless.Dsl.targets" target="assemblies\net45\Be.Stateless.Dsl.targets" />
     <file src="..\lib\dia2lib\net40\dia2lib.dll" target="assemblies\net45\dia2lib.dll" />
     <!-- Be.Stateless.BizTalk.Dsl.MSBuild.dll needs log4net on its side -->
     <file src="packages\log4net.2.0.8\lib\net40-full\log4net.dll" target="assemblies\net45\log4net.dll" />
-    <file src="BizTalk.Binding\bin\Release\Be.Stateless.BizTalk.Binding.dll" target="assemblies\net45\Be.Stateless.BizTalk.Binding.dll" />
-    <file src="BizTalk.Binding\bin\Release\Be.Stateless.BizTalk.Binding.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Binding.pdb" />
-    <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.dll" target="assemblies\net45\Be.Stateless.BizTalk.Common.dll" />
-    <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Common.pdb" />
-    <file src="BizTalk.Common\bin\Release\Be.Stateless.BizTalk.Common.xml" target="assemblies\net45\Be.Stateless.BizTalk.Common.xml" />
-    <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.dll" />
-    <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.pdb" />
-    <file src="BizTalk.Dsl\bin\Release\Be.Stateless.BizTalk.Dsl.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.xml" />
-    <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" />
-    <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" />
-    <file src="BizTalk.Dsl.Binding.Conventions\bin\Release\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" />
-    <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.dll" />
-    <file src="BizTalk.Dsl.MSBuild\bin\Release\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" />
-    <file src="BizTalk.Explorer\bin\Release\Be.Stateless.BizTalk.Explorer.dll" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.dll" />
-    <file src="BizTalk.Explorer\bin\Release\Be.Stateless.BizTalk.Explorer.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.pdb" />
-    <file src="BizTalk.Explorer\bin\Release\Be.Stateless.BizTalk.Explorer.xml" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.xml" />
-    <file src="BizTalk.Monitoring\bin\Release\Be.Stateless.BizTalk.Monitoring.dll" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.dll" />
-    <file src="BizTalk.Monitoring\bin\Release\Be.Stateless.BizTalk.Monitoring.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.pdb" />
-    <file src="BizTalk.Monitoring\bin\Release\Be.Stateless.BizTalk.Monitoring.xml" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.xml" />
-    <file src="BizTalk.Pipeline.Components\bin\Release\Be.Stateless.BizTalk.Pipeline.Components.dll" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.dll" />
-    <file src="BizTalk.Pipeline.Components\bin\Release\Be.Stateless.BizTalk.Pipeline.Components.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.pdb" />
-    <file src="BizTalk.Pipeline.Components\bin\Release\Be.Stateless.BizTalk.Pipeline.Components.xml" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.xml" />
-    <file src="BizTalk.Pipelines\bin\Release\Be.Stateless.BizTalk.Pipelines.dll" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.dll" />
-    <file src="BizTalk.Pipelines\bin\Release\Be.Stateless.BizTalk.Pipelines.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.pdb" />
-    <file src="BizTalk.Policies\bin\Release\Be.Stateless.BizTalk.Policies.dll" target="assemblies\net45\Be.Stateless.BizTalk.Policies.dll" />
-    <file src="BizTalk.Policies\bin\Release\Be.Stateless.BizTalk.Policies.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Policies.pdb" />
-    <file src="BizTalk.Schemas\bin\Release\Be.Stateless.BizTalk.Schemas.dll" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.dll" />
-    <file src="BizTalk.Schemas\bin\Release\Be.Stateless.BizTalk.Schemas.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.pdb" />
-    <file src="BizTalk.Schemas\bin\Release\Be.Stateless.BizTalk.Schemas.xml" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.xml" />
-    <file src="BizTalk.Transforms\bin\Release\Be.Stateless.BizTalk.Transforms.dll" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.dll" />
-    <file src="BizTalk.Transforms\bin\Release\Be.Stateless.BizTalk.Transforms.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.pdb" />
-    <file src="BizTalk.Transforms\bin\Release\Be.Stateless.BizTalk.Transforms.xml" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.xml" />
-    <file src="BizTalk.Unit\bin\Release\Be.Stateless.BizTalk.Unit.dll" target="assemblies\net45\Be.Stateless.BizTalk.Unit.dll" />
-    <file src="BizTalk.Unit\bin\Release\Be.Stateless.BizTalk.Unit.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Unit.pdb" />
-    <file src="BizTalk.Unit\bin\Release\Be.Stateless.BizTalk.Unit.xml" target="assemblies\net45\Be.Stateless.BizTalk.Unit.xml" />
-    <file src="Common\bin\Release\Be.Stateless.Common.dll" target="assemblies\net45\Be.Stateless.Common.dll" />
-    <file src="Common\bin\Release\Be.Stateless.Common.pdb" target="assemblies\net45\Be.Stateless.Common.pdb" />
-    <file src="Common\bin\Release\Be.Stateless.Common.xml" target="assemblies\net45\Be.Stateless.Common.xml" />
-    <file src="Extensions\bin\Release\Be.Stateless.Extensions.dll" target="assemblies\net45\Be.Stateless.Extensions.dll" />
-    <file src="Extensions\bin\Release\Be.Stateless.Extensions.pdb" target="assemblies\net45\Be.Stateless.Extensions.pdb" />
-    <file src="Extensions\bin\Release\Be.Stateless.Extensions.xml" target="assemblies\net45\Be.Stateless.Extensions.xml" />
-    <file src="Logging\bin\Release\Be.Stateless.Logging.dll" target="assemblies\net45\Be.Stateless.Logging.dll" />
-    <file src="Logging\bin\Release\Be.Stateless.Logging.pdb" target="assemblies\net45\Be.Stateless.Logging.pdb" />
-    <file src="Logging\bin\Release\Be.Stateless.Logging.xml" target="assemblies\net45\Be.Stateless.Logging.xml" />
-    <file src="Quartz\bin\Release\Be.Stateless.Quartz.dll" target="assemblies\net45\Be.Stateless.Quartz.dll" />
-    <file src="Quartz\bin\Release\Be.Stateless.Quartz.pdb" target="assemblies\net45\Be.Stateless.Quartz.pdb" />
-    <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.dll" target="assemblies\net45\Be.Stateless.ServiceModel.dll" />
-    <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.pdb" target="assemblies\net45\Be.Stateless.ServiceModel.pdb" />
-    <file src="ServiceModel\bin\Release\Be.Stateless.ServiceModel.xml" target="assemblies\net45\Be.Stateless.ServiceModel.xml" />
+    <file src="BizTalk.Binding\bin\Debug\Be.Stateless.BizTalk.Binding.dll" target="assemblies\net45\Be.Stateless.BizTalk.Binding.dll" />
+    <file src="BizTalk.Binding\bin\Debug\Be.Stateless.BizTalk.Binding.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Binding.pdb" />
+    <file src="BizTalk.Common\bin\Debug\Be.Stateless.BizTalk.Common.dll" target="assemblies\net45\Be.Stateless.BizTalk.Common.dll" />
+    <file src="BizTalk.Common\bin\Debug\Be.Stateless.BizTalk.Common.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Common.pdb" />
+    <file src="BizTalk.Common\bin\Debug\Be.Stateless.BizTalk.Common.xml" target="assemblies\net45\Be.Stateless.BizTalk.Common.xml" />
+    <file src="BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.dll" />
+    <file src="BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.pdb" />
+    <file src="BizTalk.Dsl\bin\Debug\Be.Stateless.BizTalk.Dsl.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.xml" />
+    <file src="BizTalk.Dsl.Binding.Conventions\bin\Debug\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.dll" />
+    <file src="BizTalk.Dsl.Binding.Conventions\bin\Debug\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.pdb" />
+    <file src="BizTalk.Dsl.Binding.Conventions\bin\Debug\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.Binding.Conventions.xml" />
+    <file src="BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.dll" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.dll" />
+    <file src="BizTalk.Dsl.MSBuild\bin\Debug\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Dsl.MSBuild.pdb" />
+    <file src="BizTalk.Explorer\bin\Debug\Be.Stateless.BizTalk.Explorer.dll" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.dll" />
+    <file src="BizTalk.Explorer\bin\Debug\Be.Stateless.BizTalk.Explorer.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.pdb" />
+    <file src="BizTalk.Explorer\bin\Debug\Be.Stateless.BizTalk.Explorer.xml" target="assemblies\net45\Be.Stateless.BizTalk.Explorer.xml" />
+    <file src="BizTalk.Monitoring\bin\Debug\Be.Stateless.BizTalk.Monitoring.dll" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.dll" />
+    <file src="BizTalk.Monitoring\bin\Debug\Be.Stateless.BizTalk.Monitoring.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.pdb" />
+    <file src="BizTalk.Monitoring\bin\Debug\Be.Stateless.BizTalk.Monitoring.xml" target="assemblies\net45\Be.Stateless.BizTalk.Monitoring.xml" />
+    <file src="BizTalk.Pipeline.Components\bin\Debug\Be.Stateless.BizTalk.Pipeline.Components.dll" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.dll" />
+    <file src="BizTalk.Pipeline.Components\bin\Debug\Be.Stateless.BizTalk.Pipeline.Components.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.pdb" />
+    <file src="BizTalk.Pipeline.Components\bin\Debug\Be.Stateless.BizTalk.Pipeline.Components.xml" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.xml" />
+    <file src="BizTalk.Pipelines\bin\Debug\Be.Stateless.BizTalk.Pipelines.dll" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.dll" />
+    <file src="BizTalk.Pipelines\bin\Debug\Be.Stateless.BizTalk.Pipelines.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.pdb" />
+    <file src="BizTalk.Policies\bin\Debug\Be.Stateless.BizTalk.Policies.dll" target="assemblies\net45\Be.Stateless.BizTalk.Policies.dll" />
+    <file src="BizTalk.Policies\bin\Debug\Be.Stateless.BizTalk.Policies.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Policies.pdb" />
+    <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.dll" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.dll" />
+    <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.pdb" />
+    <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.xml" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.xml" />
+    <file src="BizTalk.Transforms\bin\Debug\Be.Stateless.BizTalk.Transforms.dll" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.dll" />
+    <file src="BizTalk.Transforms\bin\Debug\Be.Stateless.BizTalk.Transforms.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.pdb" />
+    <file src="BizTalk.Transforms\bin\Debug\Be.Stateless.BizTalk.Transforms.xml" target="assemblies\net45\Be.Stateless.BizTalk.Transforms.xml" />
+    <file src="BizTalk.Unit\bin\Debug\Be.Stateless.BizTalk.Unit.dll" target="assemblies\net45\Be.Stateless.BizTalk.Unit.dll" />
+    <file src="BizTalk.Unit\bin\Debug\Be.Stateless.BizTalk.Unit.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Unit.pdb" />
+    <file src="BizTalk.Unit\bin\Debug\Be.Stateless.BizTalk.Unit.xml" target="assemblies\net45\Be.Stateless.BizTalk.Unit.xml" />
+    <file src="Common\bin\Debug\Be.Stateless.Common.dll" target="assemblies\net45\Be.Stateless.Common.dll" />
+    <file src="Common\bin\Debug\Be.Stateless.Common.pdb" target="assemblies\net45\Be.Stateless.Common.pdb" />
+    <file src="Common\bin\Debug\Be.Stateless.Common.xml" target="assemblies\net45\Be.Stateless.Common.xml" />
+    <file src="Extensions\bin\Debug\Be.Stateless.Extensions.dll" target="assemblies\net45\Be.Stateless.Extensions.dll" />
+    <file src="Extensions\bin\Debug\Be.Stateless.Extensions.pdb" target="assemblies\net45\Be.Stateless.Extensions.pdb" />
+    <file src="Extensions\bin\Debug\Be.Stateless.Extensions.xml" target="assemblies\net45\Be.Stateless.Extensions.xml" />
+    <file src="Logging\bin\Debug\Be.Stateless.Logging.dll" target="assemblies\net45\Be.Stateless.Logging.dll" />
+    <file src="Logging\bin\Debug\Be.Stateless.Logging.pdb" target="assemblies\net45\Be.Stateless.Logging.pdb" />
+    <file src="Logging\bin\Debug\Be.Stateless.Logging.xml" target="assemblies\net45\Be.Stateless.Logging.xml" />
+    <file src="Quartz\bin\Debug\Be.Stateless.Quartz.dll" target="assemblies\net45\Be.Stateless.Quartz.dll" />
+    <file src="Quartz\bin\Debug\Be.Stateless.Quartz.pdb" target="assemblies\net45\Be.Stateless.Quartz.pdb" />
+    <file src="ServiceModel\bin\Debug\Be.Stateless.ServiceModel.dll" target="assemblies\net45\Be.Stateless.ServiceModel.dll" />
+    <file src="ServiceModel\bin\Debug\Be.Stateless.ServiceModel.pdb" target="assemblies\net45\Be.Stateless.ServiceModel.pdb" />
+    <file src="ServiceModel\bin\Debug\Be.Stateless.ServiceModel.xml" target="assemblies\net45\Be.Stateless.ServiceModel.xml" />
   </files>
 </package>
