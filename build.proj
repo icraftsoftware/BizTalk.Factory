@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildProjectDirectory)\src\AssignBuildNumber\Be.Stateless.AssignBuildNumber.proj" />
+  <!-- <Import Project="$(MSBuildProjectDirectory)\src\AssignBuildNumber\Be.Stateless.AssignBuildNumber.proj" /> -->
 
   <Target Name="Build" DependsOnTargets="GetLatestVersion;AssignBuildNumber;UpdateBuildTools;BuildSolution;Label" />
 
@@ -24,7 +24,7 @@
     <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Get" ItemPath="." All="true" Overwrite="true" Force="true" VersionSpec="T" />
   </Target>
 
-  <Target Name="UpdateBuildTools" DependsOnTargets="AssignBuildNumber">
+  <!-- <Target Name="UpdateBuildTools" DependsOnTargets="AssignBuildNumber">
     <Message Text="Compiling BizTalk Factory Build Tools" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Dsl.MSBuild\Be.Stateless.BizTalk.Dsl.MSBuild.csproj" Properties="Configuration=Debug;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
     <Message Text="Updating BizTalk Factory Build Tools" />
@@ -41,16 +41,16 @@
       <BuildTools Include="$(MSBuildProjectDirectory)\src\Version.cs" />
     </ItemGroup>
     <MSBuild.ExtensionPack.VisualStudio.TfsSource TaskAction="Checkin" ItemCol="@(BuildTools)" Comments="BizTalk.Factory.$(BuildNumber) Build Tools." />
-  </Target>
+  </Target> -->
 
-  <Target Name="BuildSolution">
+  <!-- <Target Name="BuildSolution">
     <Message Text="Building BizTalk Factory Solution in Debug Configuration" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Debug;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
     <Message Text="Building BizTalk Factory Solution in Release Configuration" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Factory.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
     <Message Text="Building BizTalk Factory Web Monitoring Solution in Release Configuration" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\src\BizTalk.Monitoring.sln" Properties="Configuration=Release;DelaySign=false;AssemblyOriginatorKeyFile=..\be.stateless.snk;NoWarn=1591" Targets="Rebuild" />
-  </Target>
+  </Target> -->
 
   <Target Name="Label">
     <Message Text="Applying TFS label with version: $(BuildNumber)" />
