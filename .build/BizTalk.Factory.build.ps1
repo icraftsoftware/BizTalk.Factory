@@ -190,8 +190,8 @@ task GetProductVersion BuildBizTalkFactoryRelease, {
 task GitCommitAndTag GetProductVersion, {
    exec { git add src/.imports/* }
    exec { git add src/Version.cs }
-   exec { git commit -m "BizTalk.Factory Build Tools $productVersion" }
-   exec { git tag s -m "Tagging BizTalk.Factory $productVersion" "V:$productVersion" }
+   exec { git commit -m "Update BizTalk.Factory Build Tools $productVersion" }
+   exec { git tag s -m "BizTalk.Factory $productVersion" "$productVersion" }
 }
 
 task PackAll PackNuget, PackMsi
