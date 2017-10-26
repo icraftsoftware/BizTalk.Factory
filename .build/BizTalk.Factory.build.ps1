@@ -25,7 +25,7 @@ param(
 
 # TODO ensure git repo is in sync with remote
 
-task . Clean, Build, PackAll, Tag, Export
+task . Clean, Build, PackAll, GitCommitAndTag, Export
 
 task AssignBuildNumber {
    Invoke-MSBuild .\src\AssignBuildNumber\Be.Stateless.AssignBuildNumber.proj
@@ -155,6 +155,7 @@ task ExportDeploymentTools {
 
 # SYNOPSIS: Export MSI packages
 task ExportMsiPackages GetProductVersion, PackMsi, {
+   New-Item -Path . -Name .exports -ItemType Directory -Force | Out-Null
    Copy-Item -Path src\Deployment\bin\Debug\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi -Destination .exports\BizTalk.Factory.$productVersion-Debug.msi -Force -PassThru `
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
    Copy-Item -Path src\Deployment\bin\Release\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi -Destination .exports\BizTalk.Factory.$productVersion-Release.msi -Force -PassThru  `
@@ -163,7 +164,8 @@ task ExportMsiPackages GetProductVersion, PackMsi, {
 
 # SYNOPSIS: Export NuGet package
 task ExportNugetPackage GetProductVersion, PackNuget, {
-   Move-Item -Path BizTalk.Factory.$productVersion.nupkg -Destination .\.exports -Force -PassThru `
+   New-Item -Path . -Name .exports -ItemType Directory -Force | Out-Null
+   Move-Item -Path BizTalk.Factory.$productVersion.nupkg -Destination .exports -Force -PassThru `
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
 }
 
@@ -180,8 +182,16 @@ task ExportUtilities {
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
 }
 
-task GetProductVersion Build, {
+task GetProductVersion BuildBizTalkFactoryRelease, {
    $script:productVersion = (Get-Item .\src\Common\bin\release\Be.Stateless.Common.dll).VersionInfo.ProductVersion
+}
+
+# SYNOPSIS: Commit build tools and version.cs items in local GIT repo, and tag local GIT repo as well
+task GitCommitAndTag GetProductVersion, {
+   exec { git add src/.imports/* }
+   exec { git add src/Version.cs }
+   exec { git commit -m "BizTalk.Factory Build Tools $productVersion" }
+   exec { git tag s -m "Tagging BizTalk.Factory $productVersion" "V:$productVersion" }
 }
 
 task PackAll PackNuget, PackMsi
@@ -205,13 +215,6 @@ task RestorePackages Clean, {
    if (Test-Path -Path .exports) { Remove-Item -Path .exports -Confirm:$false -Force -Recurse }
    exec { src\.nuget\NuGet.exe restore src\BizTalk.Factory.sln }
    exec { src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln }
-}
-
-task Tag GetProductVersion, {
-   exec { git add src/.imports/* }
-   exec { git add src/Version.cs }
-   exec { git commit -m "BizTalk.Factory Build Tools $productVersion" }
-   exec { git tag s -m "Tagging BizTalk.Factory $productVersion" "V:$productVersion" }
 }
 
 # SYNOPSIS: Update MSBuild imports, that is Be.Stateless.BizTalk.Dsl.MSBuild.dll and related assemblies residing in .imports folder.
