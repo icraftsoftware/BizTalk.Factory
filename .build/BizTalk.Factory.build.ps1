@@ -207,11 +207,11 @@ task RestorePackages Clean, {
    exec { src\.nuget\NuGet.exe restore src\BizTalk.Monitoring.sln }
 }
 
-task Tag {
-      exect { git add src/.imports/* }
-      exect { git add src/Version.cs }
-   # TODO create git tag
-   #    throw 'TODO'
+task Tag GetProductVersion, {
+   exec { git add src/.imports/* }
+   exec { git add src/Version.cs }
+   exec { git commit -m "BizTalk.Factory Build Tools $productVersion" }
+   exec { git tag s -m "Tagging BizTalk.Factory $productVersion" "V:$productVersion" }
 }
 
 # SYNOPSIS: Update MSBuild imports, that is Be.Stateless.BizTalk.Dsl.MSBuild.dll and related assemblies residing in .imports folder.
