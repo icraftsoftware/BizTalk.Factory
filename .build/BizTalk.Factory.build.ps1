@@ -190,9 +190,9 @@ task GetProductVersion BuildBizTalkFactoryRelease, {
 task GitCommitAndTag GetProductVersion, {
    exec { git add src/.imports/* }
    exec { git add src/Version.cs }
-   exec { git commit -s -m "Update BizTalk.Factory Build Tools $productVersion" }
+   exec { git commit -S -m "Update BizTalk.Factory Build Tools $productVersion" }
    exec { git tag -s -m "BizTalk.Factory $productVersion" $productVersion }
-   exec { git push --tags }
+   exec { git push origin }
 }
 
 task PackAll PackNuget, PackMsi
