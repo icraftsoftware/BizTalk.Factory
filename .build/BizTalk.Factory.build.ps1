@@ -192,6 +192,7 @@ task GitCommitAndTag GetProductVersion, {
    exec { git add src/Version.cs }
    exec { git commit -s -m "Update BizTalk.Factory Build Tools $productVersion" }
    exec { git tag -s -m "BizTalk.Factory $productVersion" $productVersion }
+   exec { git push --tags }
 }
 
 task PackAll PackNuget, PackMsi
