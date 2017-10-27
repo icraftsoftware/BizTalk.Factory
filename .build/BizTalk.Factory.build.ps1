@@ -165,7 +165,7 @@ task ExportMsiPackages GetProductVersion, PackMsi, {
 # SYNOPSIS: Export NuGet package
 task ExportNugetPackage GetProductVersion, PackNuget, {
    New-Item -Path . -Name .exports -ItemType Directory -Force | Out-Null
-   Move-Item -Path BizTalk.Factory.$productVersion.nupkg -Destination .exports -Force -PassThru `
+   Move-Item -Path BizTalk.Factory.$productVersion.nupkg -Destination .exports\BizTalk.Factory.$productVersion.nupkg -Force -PassThru `
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
 }
 
@@ -190,8 +190,8 @@ task GetProductVersion BuildBizTalkFactoryRelease, {
 task GitCommitAndTag GetProductVersion, {
    exec { git add src/.imports/* }
    exec { git add src/Version.cs }
-   exec { git commit -m "Update BizTalk.Factory Build Tools $productVersion" }
-   exec { git tag s -m "BizTalk.Factory $productVersion" "$productVersion" }
+   exec { git commit -s -m "Update BizTalk.Factory Build Tools $productVersion" }
+   exec { git tag -s -m "BizTalk.Factory $productVersion" $productVersion }
 }
 
 task PackAll PackNuget, PackMsi
