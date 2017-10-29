@@ -1,4 +1,0 @@
-Windows Registry Editor Version 5.00
-;http://www.tkachenko.com/blog/archives/000740.html
- [HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\9.0\XmlEditor]
- "XsltIntellisense"="True"
