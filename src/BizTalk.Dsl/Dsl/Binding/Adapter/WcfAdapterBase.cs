@@ -49,6 +49,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		: AdapterBase,
 			IAdapterConfigAddress<TAddress>,
 			IAdapterConfigIdentity,
+			IAdapterConfigBinding<TBinding>,
 			IAdapterConfigTimeouts
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
@@ -65,6 +66,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		#region IAdapterConfigAddress<TAddress> Members
 
 		public TAddress Address { get; set; }
+
+		#endregion
+
+		#region IAdapterConfigBinding<TBinding> Members
+
+		TBinding IAdapterConfigBinding<TBinding>.Binding
+		{
+			get { return _bindingConfigurationElement; }
+		}
 
 		#endregion
 
