@@ -27,13 +27,13 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomAdapterBase<TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<EndpointAddress, TBinding, TConfig>
+	public abstract class WcfCustomAdapterBase<TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<EndpointAddress, TBinding, TConfig>, IAdapterConfigBinding<TBinding>
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
@@ -49,6 +49,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		protected WcfCustomAdapterBase(ProtocolType protocolType) : base(protocolType) { }
+
+		#region IAdapterConfigBinding<TBinding> Members
+
+		public TBinding Binding
+		{
+			get { return _bindingConfigurationElement; }
+		}
+
+		#endregion
 
 		#region Base Class Member Overrides
 
@@ -70,10 +79,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		public TBinding Binding
-		{
-			get { return _bindingConfigurationElement; }
-		}
 	}
 }

@@ -32,13 +32,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class WcfWebHttpAdapter<TAddress, TConfig>
 		: WcfAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
+			IAdapterConfigEndpointBehavior,
 			IAdapterConfigMaxReceivedMessageSize,
 			IAdapterConfigServiceCertificate,
 			IAdapterConfigSecurityMode<Microsoft.BizTalk.Adapter.Wcf.Config.WebHttpSecurityMode>,
 			IAdapterConfigTransportSecurity<HttpClientCredentialType>
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
-			IAdapterConfigEndpointBehavior,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigEndpointBehavior,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigOutboundHttpProperty,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
@@ -61,6 +62,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			// Behavior Tab
 			EndpointBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 		}
+
+		#region IAdapterConfigEndpointBehavior Members
+
+		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
+
+		#endregion
 
 		#region IAdapterConfigMaxReceivedMessageSize Members
 
@@ -202,12 +209,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_adapterConfig.EndpointBehaviorConfiguration = EndpointBehaviors.GetEndpointBehaviorElementXml();
 			base.Save(propertyBag);
 		}
-
-		#endregion
-
-		#region Behavior Tab
-
-		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
 
 		#endregion
 

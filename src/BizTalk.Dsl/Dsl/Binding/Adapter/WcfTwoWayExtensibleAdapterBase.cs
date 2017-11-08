@@ -29,13 +29,13 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>
+	public abstract class WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayAdapterBase<TAddress, TBinding, TConfig>, IAdapterConfigEndpointBehavior
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigBinding,
-			IAdapterConfigEndpointBehavior,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigEndpointBehavior,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
 			new()
@@ -45,6 +45,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			_adapterConfig.BindingType = _bindingConfigurationElement.Name = WcfBindingRegistry.GetBindingName(_bindingConfigurationElement);
 			EndpointBehaviors = Enumerable.Empty<BehaviorExtensionElement>();
 		}
+
+		#region IAdapterConfigEndpointBehavior Members
+
+		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
+
+		#endregion
 
 		#region Base Class Member Overrides
 
@@ -56,7 +62,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		public IEnumerable<BehaviorExtensionElement> EndpointBehaviors { get; set; }
 	}
 }

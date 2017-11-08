@@ -175,8 +175,10 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigAccessControlService.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigAddress.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigBasicHttpSecurity.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigBinding.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigBizTalkCompatibilityMode.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigClientCertificate.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigEndpointBehavior.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigIdentity.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundCredentials.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigInboundDisableLocationOnFailure.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigOutboundTransactionIsolation.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigPerformanceCounters.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigSecurityMode.cs" />
+    <Compile Include="Dsl\Binding\Adapter\IAdapterConfigServiceBehavior.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigServiceCertificate.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigSSO.cs" />
     <Compile Include="Dsl\Binding\Adapter\IAdapterConfigTransportSecurity.cs" />

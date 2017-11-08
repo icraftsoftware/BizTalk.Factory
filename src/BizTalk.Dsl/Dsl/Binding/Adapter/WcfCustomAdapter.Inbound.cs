@@ -54,7 +54,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				IAdapterConfigInboundDisableLocationOnFailure,
 				IAdapterConfigInboundIncludeExceptionDetailInFaults,
 				IAdapterConfigInboundSuspendRequestMessageOnFailure,
-				IAdapterConfigOrdering
+				IAdapterConfigOrdering,
+				IAdapterConfigServiceBehavior
 			where TBinding : StandardBindingElement, new()
 		{
 			public Inbound()
@@ -149,6 +150,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region IAdapterConfigServiceBehavior Members
+
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
+
+			#endregion
+
 			#region Base Class Member Overrides
 
 			protected override void Save(IPropertyBag propertyBag)
@@ -158,8 +165,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
-
-			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 		}
 
 		#endregion

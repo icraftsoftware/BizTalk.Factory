@@ -32,6 +32,7 @@ using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using CustomBindingElement = Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration.CustomBindingElement;
+using IAdapterConfigEndpointBehavior = Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigEndpointBehavior;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 {

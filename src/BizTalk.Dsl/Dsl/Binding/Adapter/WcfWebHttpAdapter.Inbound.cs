@@ -47,6 +47,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				IAdapterConfigInboundIncludeExceptionDetailInFaults,
 				IAdapterConfigInboundSuspendRequestMessageOnFailure,
 				IAdapterConfigMaxConcurrentCalls,
+				IAdapterConfigServiceBehavior,
 				IAdapterConfigSSO
 		{
 			public Inbound()
@@ -108,6 +109,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 			#endregion
 
+			#region IAdapterConfigServiceBehavior Members
+
+			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
+
+			#endregion
+
 			#region IAdapterConfigSSO Members
 
 			/// <summary>
@@ -155,12 +162,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				get { return _adapterConfig.AddMessageBodyForHttpVerbs; }
 				set { _adapterConfig.AddMessageBodyForHttpVerbs = value; }
 			}
-
-			#endregion
-
-			#region Behavior Tab
-
-			public IEnumerable<BehaviorExtensionElement> ServiceBehaviors { get; set; }
 
 			#endregion
 		}

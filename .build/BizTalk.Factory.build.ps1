@@ -19,7 +19,6 @@
 # https://github.com/nightroman/Invoke-Build
 
 param(
-   # Custom build root, still the original $BuildRoot by default.
    $BuildRoot = (Join-Path -Path $BuildRoot -ChildPath '..')
 )
 
