@@ -32,6 +32,16 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		SendPortTransport BackupTransport { get; }
 
+		/// <summary>
+		/// Define conditions based on message context's promoted properties that determine which messages are routed to
+		/// the send port.
+		/// </summary>
+		/// <example>
+		/// <code><![CDATA[Filter = new Be.Stateless.BizTalk.Dsl.Binding.Subscription.Filter(
+		///   () => BtsProperties.MessageType == Schema<SomeSchema>.MessageType && BizTalkFactoryProperties.EnvironmentTag == 'ONE'
+		///     || BtsProperties.MessageType == Schema<OtherSchema>.MessageType && BizTalkFactoryProperties.EnvironmentTag == 'TWO'
+		/// );]]></code>
+		/// </example>
 		Filter Filter { get; set; }
 
 		/// <summary>
