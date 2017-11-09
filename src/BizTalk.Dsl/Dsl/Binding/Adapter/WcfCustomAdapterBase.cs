@@ -17,7 +17,6 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
-using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Extensions;
 using Be.Stateless.Extensions;
@@ -27,7 +26,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
-	public abstract class WcfCustomAdapterBase<TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<EndpointAddress, TBinding, TConfig>, IAdapterConfigBinding<TBinding>
+	public abstract class WcfCustomAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig>, IAdapterConfigBinding<TBinding>
 		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
