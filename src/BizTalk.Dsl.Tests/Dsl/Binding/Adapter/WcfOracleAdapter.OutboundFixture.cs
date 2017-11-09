@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2017 François Chabot, Yves Dierick
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<BindingType vt=\"8\">oracleDBBinding</BindingType>" +
 						"<BindingConfiguration vt=\"8\">" +
 						"&lt;binding name=\"oracleDBBinding\" " +
-						"dataFetchSize=\"65535\" " +
 						"enableBizTalkCompatibilityMode=\"true\" /&gt;" +
 						"</BindingConfiguration>" +
 						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +

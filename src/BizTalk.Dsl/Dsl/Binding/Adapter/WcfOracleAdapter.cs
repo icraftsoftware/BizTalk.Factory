@@ -53,7 +53,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			EnablePerformanceCounters = false;
 
 			// Binding Tab - Buffer Management Settings
-			DataFetchSize = ushort.MaxValue;
+			DataFetchSize = ushort.MaxValue + 1;
 			InsertBatchSize = 1;
 			MaxOutputAssociativeArrayElements = 32;
 			MetadataPooling = true;
@@ -221,9 +221,6 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 
 		#region Binding Tab - Buffer Management Settings
 
@@ -538,5 +535,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
+
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
 	}
 }
