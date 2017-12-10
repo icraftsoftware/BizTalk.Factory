@@ -169,7 +169,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 			var name = adapter.ProtocolType.Name;
 			if (adapter.GetType().IsSubclassOfOpenGenericType(typeof(WcfCustomAdapterBase<,,>)))
 			{
-				// cast to dynamic in order to access Binding property which is declared by WcfCustomAdapterBase<,>
+				// cast to dynamic in order to access Binding property which is declared by WcfCustomAdapterBase<,,>
 				dynamic dynamicAdapter = adapter;
 				var binding = dynamicAdapter.Binding;
 

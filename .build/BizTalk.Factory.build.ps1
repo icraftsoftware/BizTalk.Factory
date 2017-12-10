@@ -22,8 +22,6 @@ param(
    $BuildRoot = (Join-Path -Path $BuildRoot -ChildPath '..')
 )
 
-# TODO ensure git repo is in sync with remote
-
 task . Clean, Build, PackAll, GitCommitAndTag, Export
 
 task AssignBuildNumber {
@@ -65,9 +63,9 @@ task BuildTools RestorePackages, AssignBuildNumber, BuildToolsCore, UpdateMSBuil
 
 task BuildToolsCore {
    Invoke-MSBuild -Project .\src\BizTalk.Dsl.MSBuild\Be.Stateless.BizTalk.Dsl.MSBuild.csproj -Targets Rebuild `
+      -AssemblyOriginatorKeyFile '..\be.stateless.snk' `
       -Configuration Debug `
-      -DelaySign false `
-      -AssemblyOriginatorKeyFile '..\be.stateless.snk'
+      -DelaySign false
 }
 
 task Clean {
