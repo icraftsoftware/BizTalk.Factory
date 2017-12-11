@@ -3,6 +3,7 @@
       .
 .DESCRIPTION
       .
+      Path resolution is always relative to this file's folder.
 .PARAMETER Configuration
       The build configuration under which an assembly has been output when SourceEnvironment is either DEV or BLD, either Debug or Release.
 .PARAMETER IncludeTestArtifacts
@@ -24,11 +25,10 @@ param(
    [switch]
    $IncludeTestArtifacts
 )
-# path resolution is always relative to this file's folder
 @{
    Assemblies         = @(
-      @{ Path = Get-ChildItem -Path ..\src\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll }
-      @{ Path = Get-ChildItem -Path ..\src\packages\log4net.2.0.8\lib\net40-full\log4net.dll }
+      @{ Path = Get-Item -Path ..\src\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll }
+      @{ Path = '..\src\packages\log4net.2.0.8\lib\net40-full\log4net.dll' }
       @{
          Path = Get-ProjectItem -Project 'BizTalk.Dsl', 'BizTalk.Dsl.Binding.Conventions', 'BizTalk.Explorer', 'Common', 'Extensions', 'Logging', 'ServiceModel' `
             -Include '*.dll' `
