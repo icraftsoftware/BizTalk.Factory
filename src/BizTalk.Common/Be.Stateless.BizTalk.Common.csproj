@@ -91,6 +91,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
@@ -107,6 +108,7 @@
     <Compile Include="ProcessInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Streaming\MultipartFormDataContentStream.cs" />
     <Compile Include="Tracking\Extensions\TrackingContextExtensions.cs" />
     <Compile Include="Tracking\Messaging\ProcessName.cs" />
     <Compile Include="Transform\XlangMessageCollection.cs" />

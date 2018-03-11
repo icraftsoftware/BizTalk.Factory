@@ -95,6 +95,7 @@
     <Compile Include="Component\MicroPipelineComponent.cs" />
     <Compile Include="Component\PipelineComponent.cs" />
     <Compile Include="Component\ContextBuilderComponent.cs" />
+    <Compile Include="MicroComponent\MultipartFormDataContentEncoder.cs" />
     <Compile Include="MicroComponent\PluginExecutionMode.cs" />
     <Compile Include="Component\PolicyRunnerComponent.cs" />
     <Compile Include="Component\XmlTranslatorComponent.cs" />
