@@ -16,8 +16,10 @@
 
 #endregion
 
+using System.IO;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Unit.MicroComponent;
+using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.IO;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
@@ -28,6 +30,24 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	[TestFixture]
 	public class MultipartFormDataContentEncoderFixture : MicroPipelineComponentFixture
 	{
+		[Test]
+		public void ContentIsMultipart()
+		{
+			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+
+				var sut = new MultipartFormDataContentEncoder();
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
+				{
+					var content = reader.ReadToEnd();
+					Assert.That(content, Does.Match("^(--[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12})\r\nContent-Disposition: form-data\r\n[\\w\\W]+\r\n\\1--\r\n$"));
+				}
+			}
+		}
+
 		[Test]
 		public void WrapsMessageStreamInMultipartFormDataContentStream()
 		{

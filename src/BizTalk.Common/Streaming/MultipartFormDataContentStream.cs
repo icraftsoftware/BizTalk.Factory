@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		public override bool CanSeek
 		{
-			get { return _stream.CanSeek; }
+			get { return false; }
 		}
 
 		public override bool CanWrite
@@ -66,7 +66,7 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		public override long Length
 		{
-			get { return _stream.Length; }
+			get { throw new NotSupportedException(); }
 		}
 
 		public override long Position { get; set; }
@@ -78,12 +78,12 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			return _stream.Seek(offset, origin);
+			throw new NotSupportedException();
 		}
 
 		public override void SetLength(long value)
 		{
-			_stream.SetLength(value);
+			throw new NotSupportedException();
 		}
 
 		public override void Write(byte[] buffer, int offset, int count)
@@ -92,6 +92,11 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		#endregion
+
+		public string ContentType
+		{
+			get { return _multipartContent.Headers.ContentType.ToString(); }
+		}
 
 		private MultipartFormDataContent _multipartContent;
 		private Stream _stream;
