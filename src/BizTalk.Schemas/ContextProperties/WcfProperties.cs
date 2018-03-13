@@ -27,6 +27,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<Action, string> Action
 			= new MessageContextProperty<Action, string>();
 
+		public static readonly MessageContextProperty<HttpHeaders, string> HttpHeaders
+			= new MessageContextProperty<HttpHeaders, string>();
+
 		public static readonly MessageContextProperty<InboundBodyLocation, string> InboundBodyLocation
 			= new MessageContextProperty<InboundBodyLocation, string>();
 
