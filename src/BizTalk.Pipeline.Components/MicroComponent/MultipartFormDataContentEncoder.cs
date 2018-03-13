@@ -37,10 +37,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			message.BodyPart.WrapOriginalDataStream(
 				originalStream => {
 					if (_logger.IsDebugEnabled) _logger.Debug("Wrapping message stream in a MultipartFormDataContentStream.");
-					return new MultipartFormDataContentStream(originalStream);
+					var multipartFormDataContentStream = new MultipartFormDataContentStream(originalStream);
+					message.BodyPart.ContentType = multipartFormDataContentStream.ContentType;
+					return multipartFormDataContentStream;
 				},
 				pipelineContext.ResourceTracker);
-
 			return message;
 		}
 

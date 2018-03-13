@@ -40,6 +40,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				var sut = new MultipartFormDataContentEncoder();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
+				Assert.That(MessageMock.Object.BodyPart.ContentType, Does.Match("multipart/form-data; boundary=\"[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12}\""));
 				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
 				{
 					var content = reader.ReadToEnd();
