@@ -195,6 +195,6 @@ ModelManifest.xml
 .exports/
 src/be.stateless.snk
 src/BTSNTSvc.log4net.config
-src/Deployment/InstallUtil.InstallLog
 utils/nxslt-2.2/
+*.InstallLog
 *_LastAutoDeploy.xml
