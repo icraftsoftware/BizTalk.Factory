@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -165,6 +165,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			}
 
 			#endregion
+
+			/// <summary>
+			/// On the service side, initialize the session-idle timeout which controls how long a session can be idle
+			/// before timing out.
+			/// </summary>
+			/// <remarks>
+			/// It defaults to <c>10</c> minutes.
+			/// </remarks>
+			public TimeSpan ReceiveTimeout
+			{
+				get { return Binding.ReceiveTimeout; }
+				set { Binding.ReceiveTimeout = value; }
+			}
 		}
 
 		#endregion
