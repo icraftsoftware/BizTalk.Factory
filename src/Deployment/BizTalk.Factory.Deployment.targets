@@ -342,7 +342,7 @@
 
   <Target Name="BuildCertificatesQualified" Outputs="%(Certificates.Identity)%(Certificates.TargetHosts)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(Certificates.TargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(Certificates.TargetHosts))))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
 
@@ -1048,7 +1048,7 @@
           Outputs="%(MsmqReceiveQueues.Identity)">
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqReceiveQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(MsmqReceiveQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
     <!-- keep only the queues whose TargetHosts have CoincidingHosts -->
@@ -1091,7 +1091,7 @@
           Outputs="%(MsmqDeadLetterQueues.Identity)">
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqDeadLetterQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(MsmqDeadLetterQueues.TargetHosts))))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
     <!-- keep only the queues whose TargetHosts have CoincidingHosts -->
@@ -1136,7 +1136,7 @@
           Outputs="%(MsmqReceiveQueues.Identity)">
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqReceiveQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(MsmqReceiveQueues.TargetHosts))))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
     <!-- keep only the queues whose TargetHosts have CoincidingHosts -->
@@ -1157,7 +1157,7 @@
           Outputs="%(MsmqDeadLetterQueues.Identity)">
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqDeadLetterQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(MsmqDeadLetterQueues.TargetHosts))))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
     <!-- keep only the queues whose TargetHosts have CoincidingHosts -->
@@ -1295,7 +1295,7 @@
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
 
     <!-- Check if we are running on a machine that hosts Quartz-->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(($(QuartzAgentTargetHosts))))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
 
@@ -1323,7 +1323,7 @@
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
 
     <!-- Check if we are running on a machine that hosts Quartz-->
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(($(QuartzAgentTargetHosts))))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
 
@@ -1441,7 +1441,7 @@
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
 
-    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(WindowsServices.TargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape((%(WindowsServices.TargetHosts))))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
 
