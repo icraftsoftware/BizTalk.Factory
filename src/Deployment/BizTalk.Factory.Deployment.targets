@@ -341,6 +341,9 @@
   </Target>
 
   <Target Name="BuildCertificatesQualified" Outputs="%(Certificates.Identity)%(Certificates.TargetHosts)" Condition=" '$(IncludeCertificates)' == 'true' and '@(Certificates)' != '' ">
+
+    <Error Text="Certificates.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(Certificates.TargetHosts)' == '' " />
+
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(Certificates.TargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
@@ -1047,6 +1050,8 @@
           Condition=" '$(IncludeMsmqQueues)' == 'true' and '@(MsmqReceiveQueues)' != '' "
           Outputs="%(MsmqReceiveQueues.Identity)">
 
+    <Error Text="MsmqReceiveQueues.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(MsmqReceiveQueues.TargetHosts)' == '' " />
+
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqReceiveQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
@@ -1089,6 +1094,8 @@
   <Target Name="CreateMsmqDeadLetterQueues"
           Condition=" '$(IncludeMsmqQueues)' == 'true' and '@(MsmqDeadLetterQueues)' != '' "
           Outputs="%(MsmqDeadLetterQueues.Identity)">
+
+    <Error Text="MsmqDeadLetterQueues.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(MsmqDeadLetterQueues.TargetHosts)' == '' " />
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqDeadLetterQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
@@ -1135,6 +1142,8 @@
           Condition=" '$(IncludeMsmqQueues)' == 'true' and '@(MsmqReceiveQueues)' != '' "
           Outputs="%(MsmqReceiveQueues.Identity)">
 
+    <Error Text="MsmqReceiveQueues.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(MsmqReceiveQueues.TargetHosts)' == '' " />
+
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqReceiveQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
@@ -1155,6 +1164,8 @@
   <Target Name="DeleteMsmqDeadLetterQueues"
           Condition=" '$(IncludeMsmqQueues)' == 'true' and '@(MsmqDeadLetterQueues)' != '' "
           Outputs="%(MsmqDeadLetterQueues.Identity)">
+
+    <Error Text="MsmqDeadLetterQueues.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(MsmqDeadLetterQueues.TargetHosts)' == '' " />
 
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(MsmqDeadLetterQueues.TargetHosts)))" Metadata="Identity" RegexPattern="^(?i:$(COMPUTERNAME))$">
@@ -1294,6 +1305,8 @@
           Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
 
+    <Error Text="QuartzAgentTargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '$(QuartzAgentTargetHosts)' == '' " />
+
     <!-- Check if we are running on a machine that hosts Quartz-->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
@@ -1321,6 +1334,8 @@
   <Target Name="UnregisterQuartzJobs"
           Condition=" '$(IncludeQuartzJobs)' == 'True' and '@(QuartzJobsFiles)' != '' "
           Outputs="%(QuartzJobsFilesQualified.Fullpath)">
+
+    <Error Text="QuartzAgentTargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '$(QuartzAgentTargetHosts)' == '' " />
 
     <!-- Check if we are running on a machine that hosts Quartz-->
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape($(QuartzAgentTargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
@@ -1440,6 +1455,8 @@
 
   <Target Name="BuildWindowsServicesQualified" Outputs="%(WindowsServices.Identity)%(WindowsServices.TargetHosts)" Condition=" '$(IncludeWindowsServices)' == 'true' and '@(WindowsServices)' != '' ">
     <!-- filter TargetHosts to keep only those that coincides with the local host -->
+
+    <Error Text="WindowsServices.TargetHosts does not have a value. Use '-' instead of '' if there is no actual target host." Condition=" '%(WindowsServices.TargetHosts)' == '' " />
 
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="$([MSBuild]::Unescape(%(WindowsServices.TargetHosts)))" Metadata="Identity" RegexPattern="^\*$|^(?i:$(COMPUTERNAME))$">
       <Output TaskParameter="OutputItems" PropertyName="_CoincidingHosts"/>
