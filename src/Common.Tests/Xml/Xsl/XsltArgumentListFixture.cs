@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using Be.Stateless.Linq.Extensions;
@@ -71,6 +72,14 @@ namespace Be.Stateless.Xml.Xsl
 		}
 
 		[Test]
+		public void Initializer()
+		{
+			var arguments = new XsltArgumentList { new XsltArgument("param", "value") };
+			Assert.That(arguments.GetParam("param", string.Empty), Is.Not.Null);
+			Assert.That(arguments.GetParam("param", string.Empty), Is.EqualTo("value"));
+		}
+
+		[Test]
 		public void Union()
 		{
 			var arguments = new XsltArgumentList();
@@ -91,6 +100,7 @@ namespace Be.Stateless.Xml.Xsl
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "ImplicitlyCapturedClosure")]
 		public void UnionThrowsWhenDuplicate()
 		{
 			var arguments = new XsltArgumentList();
@@ -106,9 +116,7 @@ namespace Be.Stateless.Xml.Xsl
 			var union2 = new System.Xml.Xsl.XsltArgumentList();
 			union2.AddParam(_params.First().Key.Name, _params.First().Key.Namespace, _params.First().Value);
 			Assert.That(
-				// ReSharper disable ImplicitlyCapturedClosure
 				() => arguments.Union(union2),
-				// ReSharper restore ImplicitlyCapturedClosure
 				Throws.ArgumentException);
 		}
 

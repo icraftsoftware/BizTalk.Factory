@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Be.Stateless.Xml.Xsl
 	/// <summary>
 	/// Cloneable <see cref="T:System.Xml.Xsl.XsltArgumentList"/>.
 	/// </summary>
-	public class XsltArgumentList : System.Xml.Xsl.XsltArgumentList, ICloneable
+	public class XsltArgumentList : System.Xml.Xsl.XsltArgumentList, ICloneable, IEnumerable
 	{
 		private static void Copy(System.Xml.Xsl.XsltArgumentList source, System.Xml.Xsl.XsltArgumentList target)
 		{
@@ -100,6 +100,15 @@ namespace Be.Stateless.Xml.Xsl
 		object ICloneable.Clone()
 		{
 			return Clone();
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			throw new NotSupportedException("In order to support C# collection initializer.");
 		}
 
 		#endregion
