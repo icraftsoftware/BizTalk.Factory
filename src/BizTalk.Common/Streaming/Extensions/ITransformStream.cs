@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,6 +56,21 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 		/// The output <see cref="Stream"/> being the results of the transform.
 		/// </returns>
 		Stream Apply(Type transform, Encoding encoding);
+
+		/// <summary>
+		/// Applies the <see cref="TransformBase"/>-derived transform on the current <see cref="Stream"/>, or <see
+		/// cref="Stream"/>s, and returns the results as another <see cref="Stream"/>.
+		/// </summary>
+		/// <param name="transform">
+		/// The <see cref="TransformBase"/>-derived type of the transform to apply.
+		/// </param>
+		/// <param name="arguments">
+		/// An <see cref="XsltArgumentList"/> containing the namespace-qualified arguments used as input to the transform.
+		/// </param>
+		/// <returns>
+		/// The output <see cref="Stream"/> being the results of the transform.
+		/// </returns>
+		Stream Apply(Type transform, XsltArgumentList arguments);
 
 		/// <summary>
 		/// Applies the <see cref="TransformBase"/>-derived transform on the current <see cref="Stream"/>, or <see

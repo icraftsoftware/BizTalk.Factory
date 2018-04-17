@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,11 @@ namespace Be.Stateless.BizTalk.Streaming.Extensions
 			var transformDescriptor = LookupTransformDescriptor(transform);
 			var xsltArgumentList = BuildArgumentList(transformDescriptor, null);
 			return Apply(transformDescriptor.XslCompiledTransform, xsltArgumentList, encoding);
+		}
+
+		public Stream Apply(Type transform, XsltArgumentList arguments)
+		{
+			return Apply(transform, arguments, Encoding.UTF8);
 		}
 
 		public Stream Apply(Type transform, XsltArgumentList arguments, Encoding encoding)
