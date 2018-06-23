@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -300,6 +300,43 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			visitor.VisitApplicationBinding(applicationBindingMock.Object);
 
 			visitableApplicationBindingMock.Verify(a => a.Accept(It.IsAny<ApplicationBindingEnvironmentSettlerVisitor>()), Times.Once);
+		}
+
+		[Test]
+		public void VisitedReceiveLocationNameMustBeUnique()
+		{
+			var visitor = BindingInfoBuilderVisitor.Create();
+			visitor.VisitApplicationBinding(new TestApplication());
+			visitor.VisitReceivePort(new TestApplication.OneWayReceivePort());
+			visitor.VisitReceiveLocation(new TestApplication.OneWayReceiveLocation());
+
+			Assert.That(
+				() => visitor.VisitReceiveLocation(new TestApplication.OneWayReceiveLocation()),
+				Throws.InvalidOperationException.With.Message.EqualTo("Duplicate receive location name: 'OneWayReceiveLocation'."));
+		}
+
+		[Test]
+		public void VisitedReceivePortNameMustBeUnique()
+		{
+			var visitor = BindingInfoBuilderVisitor.Create();
+			visitor.VisitApplicationBinding(new TestApplication());
+			visitor.VisitReceivePort(new TestApplication.OneWayReceivePort());
+
+			Assert.That(
+				() => visitor.VisitReceivePort(new TestApplication.OneWayReceivePort()),
+				Throws.InvalidOperationException.With.Message.EqualTo("Duplicate receive port name: 'OneWayReceivePort'."));
+		}
+
+		[Test]
+		public void VisitedSendPortNameMustBeUnique()
+		{
+			var visitor = BindingInfoBuilderVisitor.Create();
+			visitor.VisitApplicationBinding(new TestApplication());
+			visitor.VisitSendPort(new TestApplication.OneWaySendPort());
+
+			Assert.That(
+				() => visitor.VisitSendPort(new TestApplication.OneWaySendPort()),
+				Throws.InvalidOperationException.With.Message.EqualTo("Duplicate send port name: 'OneWaySendPort'."));
 		}
 	}
 }

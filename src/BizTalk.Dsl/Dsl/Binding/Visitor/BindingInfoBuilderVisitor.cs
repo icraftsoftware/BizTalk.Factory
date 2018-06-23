@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -83,6 +83,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			where TNamingConvention : class
 		{
 			_lastVisitedReceivePort = CreateReceivePort(receivePort);
+			if (BindingInfo.ReceivePortCollection.Find(_lastVisitedReceivePort.Name) != null)
+				throw new InvalidOperationException(
+					string.Format(
+						"Duplicate receive port name: '{0}'.",
+						_lastVisitedReceivePort.Name));
 			BindingInfo.ReceivePortCollection.Add(_lastVisitedReceivePort);
 		}
 
@@ -90,6 +95,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			where TNamingConvention : class
 		{
 			var visitedReceiveLocation = CreateReceiveLocation(receiveLocation);
+			if (_lastVisitedReceivePort.ReceiveLocations.Cast<BtsReceiveLocation>().Any(rl => rl.Name == visitedReceiveLocation.Name))
+				throw new InvalidOperationException(
+					string.Format(
+						"Duplicate receive location name: '{0}'.",
+						visitedReceiveLocation.Name));
 			_lastVisitedReceivePort.ReceiveLocations.Add(visitedReceiveLocation);
 		}
 
@@ -97,6 +107,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 			where TNamingConvention : class
 		{
 			var visitedSendPort = CreateSendPort(sendPort);
+			if (BindingInfo.SendPortCollection.Find(visitedSendPort.Name) != null)
+				throw new InvalidOperationException(
+					string.Format(
+						"Duplicate send port name: '{0}'.",
+						visitedSendPort.Name));
 			BindingInfo.SendPortCollection.Add(visitedSendPort);
 		}
 
