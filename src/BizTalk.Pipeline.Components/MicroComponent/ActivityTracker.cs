@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent.Extensions;
 using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
@@ -96,7 +97,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				messageBodyTracker.TryCheckInMessageBody();
 
 				// tracking context can only be cached for the outbound message of a Solicit-Response MEP, i.e. when BizTalk is the initiator of the 2-way MEP
-				if (messageDirection.IsOutbound() && isSolicitResponse) CacheTrackingContext(message);
+				if (messageDirection.IsOutbound() && isSolicitResponse) CacheTrackingContext(message, message.ResolveTrackingContextCacheDuration(TrackingContextCacheDuration));
 			}
 			return message;
 		}
@@ -124,9 +125,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[XmlElement("TrackingResolutionPolicy", typeof(PolicyNameXmlSerializer))]
 		public PolicyName TrackingResolutionPolicyName { get; set; }
 
-		protected void CacheTrackingContext(IBaseMessage message)
+		protected void CacheTrackingContext(IBaseMessage message, int duration)
 		{
-			var duration = (int) TrackingContextCacheDuration.TotalSeconds;
 			// if propagation of TrackingContext is not disabled, cache the current TrackingContext
 			if (duration > -1)
 			{
@@ -134,7 +134,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				TrackingContextCache.Instance.Set(
 					message.GetProperty(BtsProperties.TransmitWorkId),
 					message.GetTrackingContext(),
-					duration);
+					duration + 1);
 			}
 		}
 

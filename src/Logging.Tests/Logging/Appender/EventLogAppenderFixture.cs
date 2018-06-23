@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -192,7 +192,7 @@ namespace Be.Stateless.Logging.Appender
 		}
 
 		[Test]
-		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other similar tests.")]
+		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other hash-related tests.")]
 		[Category("Hash")]
 		public void StringHashHasBestDistributionWithTypeAssemblyQualifiedName()
 		{
@@ -208,7 +208,7 @@ namespace Be.Stateless.Logging.Appender
 		}
 
 		[Test]
-		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other similar tests.")]
+		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other hash-related tests.")]
 		[Category("Hash")]
 		public void StringHashHasGoodDistributionWithTypeFullName()
 		{
@@ -226,7 +226,7 @@ namespace Be.Stateless.Logging.Appender
 		}
 
 		[Test]
-		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other similar tests.")]
+		[Explicit("Must be run individually because inner hash function has intrinsic side-effects on other hash-related tests.")]
 		[Category("Hash")]
 		public void StringHashHasGoodHashDistributionWithTypeName()
 		{

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessingStepActivityId)).Returns(trackingContext.ProcessingStepActivityId);
 			MessageMock.Setup(m => m.GetProperty(TrackingProperties.MessagingStepActivityId)).Returns(trackingContext.MessagingStepActivityId);
 
-			CacheMock.Setup(c => c.Set(transmitWorkId, trackingContext, 60));
+			CacheMock.Setup(c => c.Set(transmitWorkId, trackingContext, 60 + 1));
 
 			var sut = CreateActivityTracker();
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);

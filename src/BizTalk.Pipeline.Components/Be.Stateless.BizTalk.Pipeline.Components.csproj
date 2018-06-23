@@ -84,6 +84,7 @@
     <Compile Include="Component\BatchTrackerComponent.cs" />
     <Compile Include="Component\ContextPropertyExtractorComponent.cs" />
     <Compile Include="MicroComponent\Extensions\PluginResolutionExtensions.cs" />
+    <Compile Include="MicroComponent\Extensions\TrackingContextCacheDurationResolutionExtensions.cs" />
     <Compile Include="MicroComponent\IContextBuilder.cs" />
     <Compile Include="MicroComponent\IMessageFactory.cs" />
     <Compile Include="Component\MessageFactoryComponent.cs" />

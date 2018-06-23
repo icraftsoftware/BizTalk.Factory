@@ -68,6 +68,7 @@
     <Compile Include="ContextProperties\Extensions\ErrorReportPropertiesExtensions.cs" />
     <Compile Include="ContextProperties\Extensions\TrackingPropertiesExtensions.cs" />
     <Compile Include="ContextProperties\FileProperties.cs" />
+    <Compile Include="ContextProperties\HttpProperties.cs" />
     <Compile Include="ContextProperties\IMessageContextProperty.cs" />
     <Compile Include="ContextProperties\MessageContextProperty.cs" />
     <Compile Include="ContextProperties\OverridableEdiProperties.cs" />
