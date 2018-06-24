@@ -248,14 +248,15 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		{
 			var visitor = BindingInfoBuilderVisitor.Create();
 
-			var orchestrationBinding = new ProcessOrchestrationBinding {
-				Description = "Some Useless Orchestration.",
-				Host = "Processing Host Name",
-				ReceivePort = new TestApplication.OneWayReceivePort(),
-				RequestResponsePort = new TestApplication.TwoWayReceivePort(),
-				SendPort = new TestApplication.OneWaySendPort(),
-				SolicitResponsePort = new TestApplication.TwoWaySendPort()
-			};
+			var orchestrationBinding = new ProcessOrchestrationBinding(
+				ob => {
+					ob.Description = "Some Useless Orchestration.";
+					ob.Host = "Processing Host Name";
+					ob.ReceivePort = new TestApplication.OneWayReceivePort();
+					ob.RequestResponsePort = new TestApplication.TwoWayReceivePort();
+					ob.SendPort = new TestApplication.OneWaySendPort();
+					ob.SolicitResponsePort = new TestApplication.TwoWaySendPort();
+				});
 			var binding = visitor.CreateServiceRef(orchestrationBinding);
 
 			Assert.That(binding.Description, Is.EqualTo("Some Useless Orchestration."));

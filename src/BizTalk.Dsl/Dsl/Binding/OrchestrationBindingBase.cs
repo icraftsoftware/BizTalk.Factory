@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web.Services.Description;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
@@ -54,8 +55,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			public string ActualPortName
 			{
-				// unbound ports, (i.e. Reflector.GetProperty() returning null) have been caught by OrchestrationBindingBase<T>'s ISupportValidation.Validate()
-				get { return ((ISupportNamingConvention) Reflector.GetProperty(_orchestrationBinding, _logicalPort.Name)).Name; }
+				// unbound ports, (i.e. GetActualPort() returning null) have been caught by OrchestrationBindingBase<T>'s ISupportValidation.Validate()
+				get { return ((ISupportNamingConvention) _orchestrationBinding.GetActualPort(_logicalPort.Name)).Name; }
 			}
 
 			public bool IsInbound
@@ -130,7 +131,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 			// validate that all logical ports are bound
 			var unboundPorts = LogicalPorts
-				.Where(p => Reflector.GetProperty(this, p.Name) == null)
+				.Where(p => GetActualPort(p.Name) == null)
 				.ToArray();
 			if (unboundPorts.Any())
 				throw new BindingException(
@@ -150,7 +151,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				if (operationFlow != OperationFlow.OneWay && operationFlow != OperationFlow.RequestResponse) throw new NotSupportedException("Unexpected OperationFlow enumeration value.");
 				var isLogicalPortTwoWay = operationFlow != OperationFlow.OneWay;
 
-				var actualPort = Reflector.GetProperty(this, logicalPort.Name);
+				var actualPort = GetActualPort(logicalPort.Name);
 				var isActualPortTwoWay = logicalPort.Polarity == Polarity.implements
 					? ((IReceivePort) actualPort).IsTwoWay
 					: ((ISendPort) actualPort).IsTwoWay;
@@ -185,12 +186,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		{
 			get
 			{
+				// TODO ensure we get private types as well
 				// see also https://msdn.microsoft.com/en-us/library/System.Web.Services.Description.OperationFlow.aspx
 				return ((PortInfo[]) Reflector.GetField(typeof(T), "_portInfo"))
 					// filter out direct ports
-					// TODO ensure we get private types as well
 					.Where(p => p.FindAttribute(typeof(DirectBindingAttribute)) == null);
 			}
+		}
+
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+		private object GetActualPort(string name)
+		{
+			var portBindingType = GetType().GetInterfaces().SingleOrDefault(i => i.Namespace == GetType().Namespace) ?? GetType();
+			var portProperty = portBindingType.GetProperty(name);
+			var port = portProperty.GetValue(this);
+			return port;
 		}
 
 		protected virtual void ApplyEnvironmentOverrides(string environment) { }

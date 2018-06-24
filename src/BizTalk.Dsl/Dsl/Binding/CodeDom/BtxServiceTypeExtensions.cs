@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,30 +37,135 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			if (type == null) throw new ArgumentNullException("type");
 			if (!typeof(BTXService).IsAssignableFrom(type)) throw new ArgumentException(string.Format("{0} is not an orchestration type.", type.FullName), "type");
 
+			var ports = ((PortInfo[]) Reflector.GetField(type, "_portInfo"))
+				// filter out direct ports
+				.Where(p => p.FindAttribute(typeof(DirectBindingAttribute)) == null)
+				.ToArray();
+
 			var @namespace = new CodeNamespace(type.Namespace);
 			@namespace.Imports.Add(new CodeNamespaceImport(typeof(Action<>).Namespace));
 			@namespace.Imports.Add(new CodeNamespaceImport(typeof(GeneratedCodeAttribute).Namespace));
 			@namespace.Imports.Add(new CodeNamespaceImport(typeof(OrchestrationBindingBase<>).Namespace));
+			@namespace.Imports.Add(new CodeNamespaceImport(typeof(PortInfo).Namespace));
 			@namespace.Imports.Add(new CodeNamespaceImport(type.Namespace));
+
+			if (ports.Any())
+			{
+				var @interface = type.BuildOrchestrationBindingInterface(ports);
+				@namespace.Types.Add(@interface);
+
+				var @class = type.BuildOrchestrationBindingClass(ports, @interface);
+				@namespace.Types.Add(@class);
+			}
+			else
+			{
+				var @class = type.BuildOrchestrationBindingClass(ports);
+				@namespace.Types.Add(@class);
+			}
+
+			var compileUnit = new CodeCompileUnit();
+			compileUnit.Namespaces.Add(@namespace);
+			return compileUnit;
+		}
+
+		private static CodeAttributeDeclaration BuildGeneratedCodeAttribute()
+		{
+			return new CodeAttributeDeclaration(
+				new CodeTypeReference(typeof(GeneratedCodeAttribute).Name),
+				new CodeAttributeArgument(new CodePrimitiveExpression(_assemblyName.Name)),
+				new CodeAttributeArgument(new CodePrimitiveExpression(_assemblyName.Version.ToString()))
+				);
+		}
+
+		private static CodeTypeDeclaration BuildOrchestrationBindingInterface(this Type type, PortInfo[] ports)
+		{
+			var @interface = new CodeTypeDeclaration("I" + type.Name + ORCHESTRATION_BINDING_SUFFIX) {
+				TypeAttributes = TypeAttributes.NotPublic,
+				// ! IsInterface must be set last !
+				IsInterface = true
+			};
+			@interface.BaseTypes.Add(new CodeTypeReference(typeof(IOrchestrationBinding).Name));
+			@interface.CustomAttributes.Add(BuildGeneratedCodeAttribute());
+
+			// property for each logical port to bind
+			ports.Each(
+				port => {
+					@interface.Members.Add(
+						new CodeMemberProperty {
+							Attributes = MemberAttributes.Public,
+							Name = port.Name,
+							HasGet = true,
+							HasSet = true,
+							Type = new CodeTypeReference(port.Polarity == Polarity.uses ? typeof(ISendPort).Name : typeof(IReceivePort).Name)
+						});
+				});
+
+			return @interface;
+		}
+
+		private static CodeTypeDeclaration BuildOrchestrationBindingClass(this Type type, PortInfo[] ports, CodeTypeDeclaration @interface = null)
+		{
 			var @class = new CodeTypeDeclaration(type.Name + ORCHESTRATION_BINDING_SUFFIX) {
 				IsClass = true,
 				IsPartial = true,
 				TypeAttributes = TypeAttributes.NotPublic
 			};
 			@class.BaseTypes.Add(new CodeTypeReference(typeof(OrchestrationBindingBase<>).Name, new CodeTypeReference(type.Name)));
-			@class.CustomAttributes.Add(
-				new CodeAttributeDeclaration(
-					new CodeTypeReference(typeof(GeneratedCodeAttribute).Name),
-					new CodeAttributeArgument(new CodePrimitiveExpression(_assemblyName.Name)),
-					new CodeAttributeArgument(new CodePrimitiveExpression(_assemblyName.Version.ToString()))
-					));
-			@namespace.Types.Add(@class);
+			if (@interface != null) @class.BaseTypes.Add(new CodeTypeReference(@interface.Name));
+			@class.CustomAttributes.Add(BuildGeneratedCodeAttribute());
+
+			//nested class for each port, which will expose operation names
+			//#region Nested Type: SendPort
+			//public struct class SendPort
+			//{
+			//  public struct class Operations
+			//  {
+			//    public struct class SendOperation
+			//    {
+			//      public static string Name = "SendOperation";
+			//    }
+			//  }
+			//}
+			//#endregion
+			ports.Each(
+				port => {
+					var portStatic = new CodeTypeDeclaration(port.Name) {
+						TypeAttributes = TypeAttributes.Public,
+						IsStruct = true,
+					};
+					portStatic.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, "Nested Type: " + port.Name));
+					portStatic.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, string.Empty));
+
+					var operationCollectionStatic = new CodeTypeDeclaration("Operations") {
+						TypeAttributes = TypeAttributes.Public,
+						IsStruct = true,
+					};
+					portStatic.Members.Add(operationCollectionStatic);
+
+					port.Operations.Each(
+						operation => {
+							var operationStatic = new CodeTypeDeclaration(operation.Name) {
+								TypeAttributes = TypeAttributes.Public,
+								IsStruct = true,
+							};
+							var nameField = new CodeMemberField {
+								Name = "Name",
+								Attributes = MemberAttributes.Public | MemberAttributes.Static,
+								InitExpression = new CodePrimitiveExpression(operation.Name),
+								Type = new CodeTypeReference(typeof(string))
+							};
+							operationStatic.Members.Add(nameField);
+							operationCollectionStatic.Members.Add(operationStatic);
+						});
+
+					@class.Members.Add(portStatic);
+				});
 
 			// default constructor
 			@class.Members.Add(new CodeConstructor { Attributes = MemberAttributes.Public });
 
 			// constructor that accepts a bindingConfigurator delegate
-			// public ctor(Action<ProcessOrchestrationBinding> orchestrationBindingConfigurator)
+			// public ctor(Action<IProcessOrchestrationBinding> orchestrationBindingConfigurator)
 			// {
 			//    orchestrationBindingConfigurator(this);
 			//    ((ISupportValidation) this).Validate();
@@ -68,7 +173,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			var constructor = new CodeConstructor { Attributes = MemberAttributes.Public };
 			constructor.Parameters.Add(
 				new CodeParameterDeclarationExpression(
-					new CodeTypeReference(typeof(Action<>).Name, new CodeTypeReference(@class.Name)),
+					new CodeTypeReference(typeof(Action<>).Name, new CodeTypeReference(@interface != null ? @interface.Name : @class.Name)),
 					"orchestrationBindingConfigurator"));
 			constructor.Statements.Add(
 				new CodeDelegateInvokeExpression(
@@ -80,22 +185,35 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 					"Validate"));
 			@class.Members.Add(constructor);
 
-			// property for each logical port to bind
-			((PortInfo[]) Reflector.GetField(type, "_portInfo"))
-				// filter out direct ports
-				.Where(p => p.FindAttribute(typeof(DirectBindingAttribute)) == null)
-				.Each(
-					port => @class.Members.Add(
-						new CodeMemberField {
-							Attributes = MemberAttributes.Public,
-							// C# auto property CodeDom hack http://stackoverflow.com/questions/13679171/how-to-generate-empty-get-set-statements-using-codedom-in-c-sharp
-							Name = port.Name + " { get; set; } //",
-							Type = new CodeTypeReference(port.Polarity == Polarity.uses ? typeof(ISendPort).Name : typeof(IReceivePort).Name),
-						}));
+			// explicit property for each logical port to bind
+			//private ISendPort _SendPort;
+			//ISendPort IProcessOrchestrationBinding.SendPort
+			//{
+			//  get { return this._SendPort; }
+			//  set { this._SendPort = value; }
+			//}
+			ports.Each(
+				port => {
+					var field = new CodeMemberField {
+						Attributes = MemberAttributes.Private,
+						Name = "_" + port.Name,
+						Type = new CodeTypeReference(port.Polarity == Polarity.uses ? typeof(ISendPort).Name : typeof(IReceivePort).Name)
+					};
+					@class.Members.Add(field);
+					var property = new CodeMemberProperty {
+						Attributes = MemberAttributes.Public,
+						Name = port.Name,
+						GetStatements = { new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), field.Name)) },
+						SetStatements = {
+							new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), field.Name), new CodePropertySetValueReferenceExpression())
+						},
+						Type = new CodeTypeReference(port.Polarity == Polarity.uses ? typeof(ISendPort).Name : typeof(IReceivePort).Name)
+					};
+					if (@interface != null) property.PrivateImplementationType = new CodeTypeReference(@interface.Name);
+					@class.Members.Add(property);
+				});
 
-			var compileUnit = new CodeCompileUnit();
-			compileUnit.Namespaces.Add(@namespace);
-			return compileUnit;
+			return @class;
 		}
 
 		internal static Assembly CompileToDynamicAssembly(this Type type)

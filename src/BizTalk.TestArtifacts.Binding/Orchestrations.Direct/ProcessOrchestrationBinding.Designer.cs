@@ -13,6 +13,7 @@ namespace Be.Stateless.BizTalk.Orchestrations.Direct
 	using System;
 	using System.CodeDom.Compiler;
 	using Be.Stateless.BizTalk.Dsl.Binding;
+	using Microsoft.XLANGs.Core;
 	using Be.Stateless.BizTalk.Orchestrations.Direct;
 	
 	

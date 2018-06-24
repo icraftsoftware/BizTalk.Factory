@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ using System;
 using System.Linq;
 using Be.Stateless.BizTalk.Dsl.Binding.CodeDom;
 using Be.Stateless.BizTalk.Orchestrations.Dummy;
-using Be.Stateless.Reflection;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -44,7 +43,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void AutomaticallyValidatesOnConfiguratorAction()
 		{
-			var orchestrationBindingMock = new Mock<ProcessOrchestrationBinding>((Action<ProcessOrchestrationBinding>) (o => { })) { CallBase = true };
+			var orchestrationBindingMock = new Mock<ProcessOrchestrationBinding>((Action<IProcessOrchestrationBinding>) (o => { })) { CallBase = true };
 			var validatingOrchestrationBindingMock = orchestrationBindingMock.As<ISupportValidation>();
 			validatingOrchestrationBindingMock.Setup(o => o.Validate()).Verifiable();
 
@@ -99,13 +98,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalOneWayReceivePortMustBeBoundToOneWayReceivePort()
 		{
-			var orchestrationBinding = new ProcessOrchestrationBinding {
-				Host = "Host",
-				ReceivePort = new TestApplication.TwoWayReceivePort(),
-				SendPort = new TestApplication.OneWaySendPort(),
-				SolicitResponsePort = new TestApplication.TwoWaySendPort(),
-				RequestResponsePort = new TestApplication.TwoWayReceivePort()
-			};
+			IProcessOrchestrationBinding orchestrationBinding = new ProcessOrchestrationBinding();
+			orchestrationBinding.Host = "Host";
+			orchestrationBinding.ReceivePort = new TestApplication.TwoWayReceivePort();
+			orchestrationBinding.SendPort = new TestApplication.OneWaySendPort();
+			orchestrationBinding.SolicitResponsePort = new TestApplication.TwoWaySendPort();
+			orchestrationBinding.RequestResponsePort = new TestApplication.TwoWayReceivePort();
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
@@ -115,13 +113,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalOneWaySendPortMustBeBoundToOneWaySendPort()
 		{
-			var orchestrationBinding = new ProcessOrchestrationBinding {
-				Host = "Host",
-				ReceivePort = new TestApplication.OneWayReceivePort(),
-				SendPort = new TestApplication.TwoWaySendPort(),
-				SolicitResponsePort = new TestApplication.TwoWaySendPort(),
-				RequestResponsePort = new TestApplication.TwoWayReceivePort()
-			};
+			IProcessOrchestrationBinding orchestrationBinding = new ProcessOrchestrationBinding();
+			orchestrationBinding.Host = "Host";
+			orchestrationBinding.ReceivePort = new TestApplication.OneWayReceivePort();
+			orchestrationBinding.SendPort = new TestApplication.TwoWaySendPort();
+			orchestrationBinding.SolicitResponsePort = new TestApplication.TwoWaySendPort();
+			orchestrationBinding.RequestResponsePort = new TestApplication.TwoWayReceivePort();
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
@@ -131,12 +128,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalPortsMustAllBeBound()
 		{
-			var assembly = typeof(Process).CompileToDynamicAssembly();
-			var orchestrationBinding = (IOrchestrationBinding) assembly.CreateInstance(typeof(Process).FullName + "OrchestrationBinding");
-			// ReSharper disable once PossibleNullReferenceException
+			IProcessOrchestrationBinding orchestrationBinding = new ProcessOrchestrationBinding();
 			orchestrationBinding.Host = "Host";
-			Reflector.SetProperty(orchestrationBinding, "ReceivePort", new Mock<ReceivePort>().Object);
-			Reflector.SetProperty(orchestrationBinding, "SendPort", new Mock<SendPort>().Object);
+			orchestrationBinding.ReceivePort = new Mock<ReceivePort>().Object;
+			orchestrationBinding.SendPort = new Mock<SendPort>().Object;
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
@@ -150,13 +145,12 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalRequestResponsePortMustBeBoundToTwoWayReceivePort()
 		{
-			var orchestrationBinding = new ProcessOrchestrationBinding {
-				Host = "Host",
-				ReceivePort = new TestApplication.OneWayReceivePort(),
-				SendPort = new TestApplication.OneWaySendPort(),
-				SolicitResponsePort = new TestApplication.TwoWaySendPort(),
-				RequestResponsePort = new TestApplication.OneWayReceivePort()
-			};
+			IProcessOrchestrationBinding orchestrationBinding = new ProcessOrchestrationBinding();
+			orchestrationBinding.Host = "Host";
+			orchestrationBinding.ReceivePort = new TestApplication.OneWayReceivePort();
+			orchestrationBinding.SendPort = new TestApplication.OneWaySendPort();
+			orchestrationBinding.SolicitResponsePort = new TestApplication.TwoWaySendPort();
+			orchestrationBinding.RequestResponsePort = new TestApplication.OneWayReceivePort();
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
@@ -166,17 +160,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 		[Test]
 		public void LogicalSolicitResponsePortMustBeBoundToTwoWaySendPort()
 		{
-			var orchestrationBinding = new ProcessOrchestrationBinding {
-				Host = "Host",
-				ReceivePort = new TestApplication.OneWayReceivePort(),
-				SendPort = new TestApplication.OneWaySendPort(),
-				SolicitResponsePort = new TestApplication.OneWaySendPort(),
-				RequestResponsePort = new TestApplication.TwoWayReceivePort()
-			};
+			IProcessOrchestrationBinding orchestrationBinding = new ProcessOrchestrationBinding();
+			orchestrationBinding.Host = "Host";
+			orchestrationBinding.ReceivePort = new TestApplication.OneWayReceivePort();
+			orchestrationBinding.SendPort = new TestApplication.OneWaySendPort();
+			orchestrationBinding.SolicitResponsePort = new TestApplication.OneWaySendPort();
+			orchestrationBinding.RequestResponsePort = new TestApplication.TwoWayReceivePort();
 
 			Assert.That(
 				() => ((ISupportValidation) orchestrationBinding).Validate(),
 				Throws.TypeOf<BindingException>().With.Message.EqualTo("Orchestration's two-way logical port 'SolicitResponsePort' is bound to one-way port 'OneWaySendPort'."));
+		}
+
+		[Test]
+		public void OperationName()
+		{
+			Assert.That(ProcessOrchestrationBinding.SolicitResponsePort.Operations.SolicitResponseOperation.Name, Is.Not.Empty);
 		}
 	}
 }

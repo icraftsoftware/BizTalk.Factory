@@ -13,29 +13,171 @@ namespace Be.Stateless.BizTalk.Orchestrations.Dummy
 	using System;
 	using System.CodeDom.Compiler;
 	using Be.Stateless.BizTalk.Dsl.Binding;
+	using Microsoft.XLANGs.Core;
 	using Be.Stateless.BizTalk.Orchestrations.Dummy;
 	
 	
 	[GeneratedCodeAttribute("Be.Stateless.BizTalk.Dsl", "1.0.0.0")]
-	internal partial class ProcessOrchestrationBinding : OrchestrationBindingBase<Process>
+	internal interface IProcessOrchestrationBinding : IOrchestrationBinding
 	{
+		
+		ISendPort SendPort
+		{
+			get;
+			set;
+		}
+		
+		IReceivePort ReceivePort
+		{
+			get;
+			set;
+		}
+		
+		IReceivePort RequestResponsePort
+		{
+			get;
+			set;
+		}
+		
+		ISendPort SolicitResponsePort
+		{
+			get;
+			set;
+		}
+	}
+	
+	[GeneratedCodeAttribute("Be.Stateless.BizTalk.Dsl", "1.0.0.0")]
+	internal partial class ProcessOrchestrationBinding : OrchestrationBindingBase<Process>, IProcessOrchestrationBinding
+	{
+		
+		#region Nested Type: SendPort
+		public struct SendPort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct SendOperation
+				{
+					
+					public static string Name = "SendOperation";
+				}
+			}
+		}
+		#endregion
+		
+		#region Nested Type: ReceivePort
+		public struct ReceivePort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct ReceiveOperation
+				{
+					
+					public static string Name = "ReceiveOperation";
+				}
+			}
+		}
+		#endregion
+		
+		#region Nested Type: RequestResponsePort
+		public struct RequestResponsePort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct RequestResponseOperation
+				{
+					
+					public static string Name = "RequestResponseOperation";
+				}
+			}
+		}
+		#endregion
+		
+		#region Nested Type: SolicitResponsePort
+		public struct SolicitResponsePort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct SolicitResponseOperation
+				{
+					
+					public static string Name = "SolicitResponseOperation";
+				}
+			}
+		}
+		#endregion
 		
 		public ProcessOrchestrationBinding()
 		{
 		}
 		
-		public ProcessOrchestrationBinding(Action<ProcessOrchestrationBinding> orchestrationBindingConfigurator)
+		public ProcessOrchestrationBinding(Action<IProcessOrchestrationBinding> orchestrationBindingConfigurator)
 		{
 			orchestrationBindingConfigurator(this);
 			((Be.Stateless.BizTalk.Dsl.Binding.ISupportValidation)(this)).Validate();
 		}
 		
-		public ISendPort SendPort { get; set; } //;
+		private ISendPort _SendPort;
 		
-		public IReceivePort ReceivePort { get; set; } //;
+		ISendPort IProcessOrchestrationBinding.SendPort
+		{
+			get
+			{
+				return this._SendPort;
+			}
+			set
+			{
+				this._SendPort = value;
+			}
+		}
 		
-		public IReceivePort RequestResponsePort { get; set; } //;
+		private IReceivePort _ReceivePort;
 		
-		public ISendPort SolicitResponsePort { get; set; } //;
+		IReceivePort IProcessOrchestrationBinding.ReceivePort
+		{
+			get
+			{
+				return this._ReceivePort;
+			}
+			set
+			{
+				this._ReceivePort = value;
+			}
+		}
+		
+		private IReceivePort _RequestResponsePort;
+		
+		IReceivePort IProcessOrchestrationBinding.RequestResponsePort
+		{
+			get
+			{
+				return this._RequestResponsePort;
+			}
+			set
+			{
+				this._RequestResponsePort = value;
+			}
+		}
+		
+		private ISendPort _SolicitResponsePort;
+		
+		ISendPort IProcessOrchestrationBinding.SolicitResponsePort
+		{
+			get
+			{
+				return this._SolicitResponsePort;
+			}
+			set
+			{
+				this._SolicitResponsePort = value;
+			}
+		}
 	}
 }
