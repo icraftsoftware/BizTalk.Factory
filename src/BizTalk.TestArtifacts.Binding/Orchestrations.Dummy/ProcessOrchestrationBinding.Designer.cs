@@ -18,7 +18,7 @@ namespace Be.Stateless.BizTalk.Orchestrations.Dummy
 	
 	
 	[GeneratedCodeAttribute("Be.Stateless.BizTalk.Dsl", "1.0.0.0")]
-	internal interface IProcessOrchestrationBinding : IOrchestrationBinding
+	internal partial interface IProcessOrchestrationBinding : IOrchestrationBinding
 	{
 		
 		ISendPort SendPort

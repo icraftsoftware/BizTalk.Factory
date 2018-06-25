@@ -220,6 +220,8 @@
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Outbound.cs" />
+    <Compile Include="Dsl\Binding\CodeDom\CodeNamespaceExtensions.cs" />
+    <Compile Include="Dsl\Binding\CodeDom\CodeTypeDeclarationExtensions.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingArtifactLookup.cs" />
     <Compile Include="Dsl\Binding\IEnvironmentSettingOverrides.cs" />
     <Compile Include="Dsl\Binding\IReferencedApplicationBindingCollection.cs" />
