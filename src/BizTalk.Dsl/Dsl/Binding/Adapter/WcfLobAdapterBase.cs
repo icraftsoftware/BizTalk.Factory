@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
-	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfTwoWayExtensibleAdapterBase<TAddress, TBinding, TConfig>
-		where TBinding : StandardBindingElement,
-			new()
+	public abstract class WcfLobAdapterBase<TAddress, TBinding, TConfig> : WcfBindingCentricAdapterBase<TAddress, TBinding, TConfig>
+		where TBinding : StandardBindingElement, new()
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,

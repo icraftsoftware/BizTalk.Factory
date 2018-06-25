@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Net.Security;
 using System.ServiceModel;
 using NUnit.Framework;
@@ -32,6 +33,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				a => {
 					a.Address = new EndpointAddress("net.pipe://localhost/biztalk.factory/service.svc");
 					a.SecurityMode = NetNamedPipeSecurityMode.Transport;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.TransportProtectionLevel = ProtectionLevel.EncryptAndSign;
 				});
 			var xml = ((IAdapterBindingSerializerFactory) npa).GetAdapterBindingSerializer().Serialize();
@@ -50,7 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
 						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
-						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<SendTimeout vt=\"8\">00:02:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"</CustomProps>"));
 		}

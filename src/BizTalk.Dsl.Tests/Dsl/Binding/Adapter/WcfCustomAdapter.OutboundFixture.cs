@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			var wca = new WcfCustomAdapter.Outbound<CustomBindingElement>(
 				a => {
 					a.OpenTimeout = TimeSpan.FromMinutes(33);
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.Binding.Add(
 						new MtomMessageEncodingElement {
 							MessageVersion = MessageVersion.Soap11,
@@ -56,7 +57,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					"<CustomProps>" +
 						"<BindingType vt=\"8\">customBinding</BindingType>" +
 						"<BindingConfiguration vt=\"8\">" + (
-							"&lt;binding name=\"customDslBinding\" openTimeout=\"00:33:00\"&gt;" +
+							"&lt;binding name=\"customDslBinding\" openTimeout=\"00:33:00\" sendTimeout=\"00:02:00\"&gt;" +
 								"&lt;mtomMessageEncoding messageVersion=\"Soap11\"&gt;" +
 								"&lt;readerQuotas maxStringContentLength=\"7340032\" /&gt;" +
 								"&lt;/mtomMessageEncoding&gt;" +

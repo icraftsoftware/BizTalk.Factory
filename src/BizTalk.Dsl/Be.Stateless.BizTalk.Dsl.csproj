@@ -220,6 +220,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfBasicHttpRelayAdapter.Outbound.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfOneWayAdapterBase.cs" />
     <Compile Include="Dsl\Binding\CodeDom\CodeNamespaceExtensions.cs" />
     <Compile Include="Dsl\Binding\CodeDom\CodeTypeDeclarationExtensions.cs" />
     <Compile Include="Dsl\Binding\IApplicationBindingArtifactLookup.cs" />
@@ -238,7 +239,7 @@
     <Compile Include="Dsl\Binding\Adapter\WcfCustomIsolatedAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetTcpRelayAdapter.Outbound.cs" />
-    <Compile Include="Dsl\Binding\Adapter\WcfTwoWayExtensibleAdapterBase.cs" />
+    <Compile Include="Dsl\Binding\Adapter\WcfBindingCentricAdapterBase.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.Inbound.cs" />
     <Compile Include="Dsl\Binding\Adapter\WcfNetMsmqAdapter.Outbound.cs" />

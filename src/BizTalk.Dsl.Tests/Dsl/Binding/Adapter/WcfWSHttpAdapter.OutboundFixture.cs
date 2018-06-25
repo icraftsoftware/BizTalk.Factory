@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.ServiceModel;
 using System.Text;
 using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
@@ -33,6 +34,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				a => {
 					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("service_spn");
 					a.SecurityMode = SecurityMode.Message;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.TextEncoding = Encoding.Unicode;
 				});
 			var xml = ((IAdapterBindingSerializerFactory) wha).GetAdapterBindingSerializer().Serialize();
@@ -58,7 +60,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
 						"<PropagateFaultMessage vt=\"11\">-1</PropagateFaultMessage>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
-						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<SendTimeout vt=\"8\">00:02:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"<Identity vt=\"8\">&lt;identity&gt;\r\n  &lt;servicePrincipalName value=\"service_spn\" /&gt;\r\n&lt;/identity&gt;</Identity>" +
 						"</CustomProps>"));

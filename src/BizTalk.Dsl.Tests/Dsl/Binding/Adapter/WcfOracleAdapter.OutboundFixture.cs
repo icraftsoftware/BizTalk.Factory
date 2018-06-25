@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Transactions;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter.Metadata;
 using Microsoft.Adapters.OracleDB;
@@ -36,6 +37,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.IsolationLevel = IsolationLevel.ReadCommitted;
 					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
 					a.PropagateFaultMessage = true;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.StaticAction = new ActionMapping {
 						new ActionMappingOperation("CreateTicket", "http://Microsoft.LobServices.OracleDB/2007/03/SCOTT/Procedure/CREATE_TICKET"),
 						new ActionMappingOperation("UpdateTicket", "http://Microsoft.LobServices.OracleDB/2007/03/SCOTT/Procedure/UPDATE_TICKET")
@@ -50,8 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					"<CustomProps>" +
 						"<BindingType vt=\"8\">oracleDBBinding</BindingType>" +
 						"<BindingConfiguration vt=\"8\">" +
-						"&lt;binding name=\"oracleDBBinding\" " +
-						"enableBizTalkCompatibilityMode=\"true\" /&gt;" +
+						"&lt;binding name=\"oracleDBBinding\" sendTimeout=\"00:02:00\" enableBizTalkCompatibilityMode=\"true\" /&gt;" +
 						"</BindingConfiguration>" +
 						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
 						"<StaticAction vt=\"8\">" +

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						new VariablePropertyMapping("id", BizTalkFactoryProperties.ReceiverName)
 					};
 
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.MaxReceivedMessageSize = 2048;
 				});
 			var xml = ((IAdapterBindingSerializerFactory) wha).GetAdapterBindingSerializer().Serialize();
@@ -97,7 +98,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<IssuerSecret vt=\"8\">secret</IssuerSecret>" +
 						"<UseAcsAuthentication vt=\"11\">-1</UseAcsAuthentication>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
-						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<SendTimeout vt=\"8\">00:02:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"<Identity vt=\"8\">" + (
 							"&lt;identity&gt;\r\n" +

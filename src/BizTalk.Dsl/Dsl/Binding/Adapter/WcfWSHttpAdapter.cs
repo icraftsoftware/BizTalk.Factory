@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract class WcfWSHttpAdapter<TAddress, TConfig>
 		: WcfTwoWayAdapterBase<TAddress, WSHttpBindingElement, TConfig>,
@@ -39,10 +40,11 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
-			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
-			IAdapterConfigTransactions,
 			IAdapterConfigInboundMessageMarshalling,
 			IAdapterConfigOutboundMessageMarshalling,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
+			IAdapterConfigTimeouts,
+			IAdapterConfigTransactions,
 			IAdapterConfigWSHttpBinding,
 			IAdapterConfigWSHttpSecurity,
 			new()
@@ -239,6 +241,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		#endregion
 
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+		private static readonly ProtocolType _protocolType;
+
 		#region Security Tab - Message Security Settings
 
 		/// <summary>
@@ -289,8 +294,5 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		}
 
 		#endregion
-
-		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-		private static readonly ProtocolType _protocolType;
 	}
 }

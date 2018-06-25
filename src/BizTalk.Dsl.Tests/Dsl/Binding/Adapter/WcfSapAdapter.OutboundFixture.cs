@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using Microsoft.Adapters.SAP;
 using NUnit.Framework;
 
@@ -39,6 +40,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					};
 					a.AutoConfirmSentIdocs = true;
 					a.MaxConnectionsPerSystem = 30;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.Password = "p@ssw0rd";
 					a.UserName = "BTS_USER";
 					a.MaxConnectionsPerSystem = 30;
@@ -50,7 +52,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					"<CustomProps>" +
 						"<BindingType vt=\"8\">sapBinding</BindingType>" +
 						"<BindingConfiguration vt=\"8\">" +
-						"&lt;binding name=\"sapBinding\" enableBizTalkCompatibilityMode=\"true\" maxConnectionsPerSystem=\"30\" autoConfirmSentIdocs=\"true\" /&gt;" +
+						"&lt;binding name=\"sapBinding\" sendTimeout=\"00:02:00\" enableBizTalkCompatibilityMode=\"true\" maxConnectionsPerSystem=\"30\" autoConfirmSentIdocs=\"true\" /&gt;" +
 						"</BindingConfiguration>" +
 						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
 						"<UseSSO vt=\"11\">0</UseSSO>" +

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Transactions;
 using Microsoft.Adapters.Sql;
 using Microsoft.BizTalk.Adapter.Wcf.Config;
@@ -35,6 +36,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.IsolationLevel = IsolationLevel.ReadCommitted;
 					a.OutboundBodyLocation = OutboundMessageBodySelection.UseBodyElement;
 					a.PropagateFaultMessage = true;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.StaticAction = "TypedProcedure/dbo/usp_batch_AddPart";
 				});
 			var xml = ((IAdapterBindingSerializerFactory) osa).GetAdapterBindingSerializer().Serialize();
@@ -43,7 +45,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				Is.EqualTo(
 					"<CustomProps>" +
 						"<BindingType vt=\"8\">sqlBinding</BindingType>" +
-						"<BindingConfiguration vt=\"8\">&lt;binding name=\"sqlBinding\" /&gt;</BindingConfiguration>" +
+						"<BindingConfiguration vt=\"8\">"
+						+ "&lt;binding name=\"sqlBinding\" sendTimeout=\"00:02:00\" /&gt;"
+						+ "</BindingConfiguration>" +
 						"<EndpointBehaviorConfiguration vt=\"8\">&lt;behavior name=\"EndpointBehavior\" /&gt;" + "</EndpointBehaviorConfiguration>" +
 						"<StaticAction vt=\"8\">TypedProcedure/dbo/usp_batch_AddPart</StaticAction>" +
 						"<UseSSO vt=\"11\">0</UseSSO>" +

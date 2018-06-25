@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using Be.Stateless.BizTalk.Dsl.Binding.ServiceModel.Configuration;
@@ -34,6 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 					a.Address = new EndpointAddress("net.msmq://localhost/private/service_queue");
 					a.Identity = EndpointIdentityFactory.CreateCertificateIdentity(StoreLocation.LocalMachine, StoreName.TrustedPeople, X509FindType.FindBySubjectName, "subject-name");
 					a.SecurityMode = NetMsmqSecurityMode.Message;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.UseSourceJournal = true;
 					a.DeadLetterQueue = DeadLetterQueue.Custom;
 					a.CustomDeadLetterQueue = "net.msmq://localhost/deadLetterQueueName";
@@ -61,7 +63,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<OutboundBodyLocation vt=\"8\">UseBodyElement</OutboundBodyLocation>" +
 						"<OutboundXmlTemplate vt=\"8\">&lt;bts-msg-body xmlns=\"http://www.microsoft.com/schemas/bts2007\" encoding=\"xml\"/&gt;</OutboundXmlTemplate>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
-						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<SendTimeout vt=\"8\">00:02:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"<Identity vt=\"8\">" + (
 							"&lt;identity&gt;\r\n  " +

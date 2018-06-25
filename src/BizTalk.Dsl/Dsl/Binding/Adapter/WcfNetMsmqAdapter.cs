@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Public API.")]
 	public abstract class WcfNetMsmqAdapter<TConfig>
-		: WcfAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>,
+		: WcfOneWayAdapterBase<EndpointAddress, NetMsmqBindingElement, TConfig>,
 			IAdapterConfigMessageSecurity<MessageCredentialType>,
 			IAdapterConfigNetMsmqSecurity,
 			IAdapterConfigSecurityMode<NetMsmqSecurityMode>,
@@ -37,8 +37,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		where TConfig : AdapterConfig,
 			IAdapterConfigAddress,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
-			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigNetMsmqSecurity,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
+			IAdapterConfigTimeouts,
 			IAdapterConfigTransactions,
 			new()
 	{

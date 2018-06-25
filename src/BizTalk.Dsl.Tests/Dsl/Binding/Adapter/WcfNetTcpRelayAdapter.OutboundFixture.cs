@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,17 +36,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 				a => {
 					a.Address = new EndpointAddress("sb://biztalk.factory.servicebus.windows.net/batch-queue");
 					a.Identity = EndpointIdentityFactory.CreateSpnIdentity("spn_name");
-
 					a.MaxReceivedMessageSize = 64512;
-
 					a.SecurityMode = EndToEndSecurityMode.TransportWithMessageCredential;
+					a.SendTimeout = TimeSpan.FromMinutes(2);
 					a.TransportProtectionLevel = ProtectionLevel.Sign;
 					a.MessageClientCredentialType = MessageCredentialType.Certificate;
 					a.AlgorithmSuite = SecurityAlgorithmSuiteValue.TripleDesSha256Rsa15;
 					a.ClientCertificate = "thumbprint";
-
 					a.PropagateFaultMessage = true;
-
 					a.UseAcsAuthentication = true;
 					a.StsUri = new Uri("https://biztalk.factory-sb.accesscontrol.windows.net/");
 					a.IssuerName = "issuer_name";
@@ -76,7 +73,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 						"<IssuerSecret vt=\"8\">issuer_secret</IssuerSecret>" +
 						"<UseAcsAuthentication vt=\"11\">-1</UseAcsAuthentication>" +
 						"<OpenTimeout vt=\"8\">00:01:00</OpenTimeout>" +
-						"<SendTimeout vt=\"8\">00:01:00</SendTimeout>" +
+						"<SendTimeout vt=\"8\">00:02:00</SendTimeout>" +
 						"<CloseTimeout vt=\"8\">00:01:00</CloseTimeout>" +
 						"<Identity vt=\"8\">" + (
 							"&lt;identity&gt;\r\n  &lt;servicePrincipalName value=\"spn_name\" /&gt;\r\n&lt;/identity&gt;") +

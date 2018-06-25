@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ using Microsoft.BizTalk.Deployment.Binding;
 namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 {
 	public abstract class WcfWebHttpAdapter<TAddress, TConfig>
-		: WcfAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
+		: WcfOneWayAdapterBase<TAddress, WebHttpBindingElement, TConfig>,
 			IAdapterConfigEndpointBehavior,
 			IAdapterConfigMaxReceivedMessageSize,
 			IAdapterConfigServiceCertificate,
@@ -42,8 +42,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigEndpointBehavior,
 			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigIdentity,
 			IAdapterConfigOutboundHttpProperty,
-			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
 			IAdapterConfigRequestHttpProperty,
+			Microsoft.BizTalk.Adapter.Wcf.Config.IAdapterConfigServiceCertificate,
+			IAdapterConfigTimeouts,
 			IAdapterConfigVariablePropertyMapping,
 			IAdapterConfigWebHttpBinding,
 			IAdapterConfigWebHttpSecurity,
