@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@ namespace Be.Stateless.Reflection
 		{
 			if (Equals(instance, default(T))) throw new ArgumentNullException("instance");
 			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-			SetProperty(typeof(T), instance, propertyName, value, flags);
+			SetProperty(typeof(T).IsInterface ? instance.GetType() : typeof(T), instance, propertyName, value, flags);
 		}
 
 		private static void SetProperty(Type type, object instance, string propertyName, object value, BindingFlags flags)

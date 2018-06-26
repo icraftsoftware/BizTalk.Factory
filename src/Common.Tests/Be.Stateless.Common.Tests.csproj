@@ -74,6 +74,7 @@
     <Compile Include="IO\StringStreamFixture.cs" />
     <Compile Include="IO\XmlBuilderStreamFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\ReflectorFixture.cs" />
     <Compile Include="Text\EncodingConverterFixture.cs" />
     <Compile Include="Text\Extensions\StringBuilderExtensionsFixture.cs" />
     <Compile Include="Xml\EmptyXmlReaderFixture.cs" />
