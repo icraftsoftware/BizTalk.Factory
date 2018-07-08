@@ -62,6 +62,7 @@
     <Compile Include="Extensions\OperatingSystemExtensions.cs" />
     <Compile Include="Extensions\RegistryExtensions.cs" />
     <Compile Include="IO\EnumerableStream.cs" />
+    <Compile Include="IO\Extensions\TextReaderExtensions.cs" />
     <Compile Include="IO\XmlBuilderStream.cs" />
     <Compile Include="Linq\Extensions\EnumeratorExtensions.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
