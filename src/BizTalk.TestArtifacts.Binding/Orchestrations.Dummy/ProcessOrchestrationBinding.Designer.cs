@@ -50,6 +50,22 @@ namespace Be.Stateless.BizTalk.Orchestrations.Dummy
 	internal partial class ProcessOrchestrationBinding : OrchestrationBindingBase<Process>, IProcessOrchestrationBinding
 	{
 		
+		#region Nested Type: DirectReceivePort
+		public struct DirectReceivePort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct DirectReceiveOperation
+				{
+					
+					public static string Name = "DirectReceiveOperation";
+				}
+			}
+		}
+		#endregion
+		
 		#region Nested Type: SendPort
 		public struct SendPort
 		{
@@ -77,6 +93,22 @@ namespace Be.Stateless.BizTalk.Orchestrations.Dummy
 				{
 					
 					public static string Name = "ReceiveOperation";
+				}
+			}
+		}
+		#endregion
+		
+		#region Nested Type: DirectSendPort
+		public struct DirectSendPort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct DirectSendOperation
+				{
+					
+					public static string Name = "DirectSendOperation";
 				}
 			}
 		}

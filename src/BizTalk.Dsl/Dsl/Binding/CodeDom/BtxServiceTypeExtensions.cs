@@ -37,7 +37,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			if (type == null) throw new ArgumentNullException("type");
 			if (!typeof(BTXService).IsAssignableFrom(type)) throw new ArgumentException(string.Format("{0} is not an orchestration type.", type.FullName), "type");
 
-			var ports = ((PortInfo[]) Reflector.GetField(type, "_portInfo"))
+			var ports = (PortInfo[]) Reflector.GetField(type, "_portInfo");
+			var unboundPorts = ports
 				// filter out direct ports
 				.Where(p => p.FindAttribute(typeof(DirectBindingAttribute)) == null)
 				.ToArray();
@@ -49,19 +50,20 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.CodeDom
 			@namespace.ImportNamespace(typeof(PortInfo));
 			@namespace.ImportNamespace(type);
 
-			if (ports.Any())
+			if (unboundPorts.Any())
 			{
 				var @interface = @namespace.AddBindingInterface(type);
-				ports.Each(port => @interface.AddPortPropertyMember(port));
+				unboundPorts.Each(port => @interface.AddPortPropertyMember(port));
 				var @class = @namespace.AddBindingClass(type, @interface);
 				ports.Each(port => @class.AddPortOperationMember(port));
 				@class.AddDefaultConstructor();
 				@class.AddBindingConfigurationConstructor(@interface);
-				ports.Each(port => @class.AddPortPropertyMember(port, @interface));
+				unboundPorts.Each(port => @class.AddPortPropertyMember(port, @interface));
 			}
 			else
 			{
 				var @class = @namespace.AddBindingClass(type);
+				ports.Each(port => @class.AddPortOperationMember(port));
 				@class.AddDefaultConstructor();
 				@class.AddBindingConfigurationConstructor();
 			}

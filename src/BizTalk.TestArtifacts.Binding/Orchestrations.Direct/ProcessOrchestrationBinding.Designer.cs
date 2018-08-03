@@ -21,6 +21,38 @@ namespace Be.Stateless.BizTalk.Orchestrations.Direct
 	internal partial class ProcessOrchestrationBinding : OrchestrationBindingBase<Process>
 	{
 		
+		#region Nested Type: DirectReceivePort
+		public struct DirectReceivePort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct Receive
+				{
+					
+					public static string Name = "Receive";
+				}
+			}
+		}
+		#endregion
+		
+		#region Nested Type: DirectSendPort
+		public struct DirectSendPort
+		{
+			
+			public struct Operations
+			{
+				
+				public struct Operation
+				{
+					
+					public static string Name = "Operation";
+				}
+			}
+		}
+		#endregion
+		
 		public ProcessOrchestrationBinding()
 		{
 		}
