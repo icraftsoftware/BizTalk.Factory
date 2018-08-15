@@ -237,7 +237,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		}
 
 		[Test]
-		public void FilterOnEnumValue()
+		public void FilterOnEnumLabel()
 		{
 			var filter = new Filter(() => BizTalkFactoryProperties.SenderName == FtpAdapter.FtpsConnectionMode.Explicit);
 
@@ -249,6 +249,21 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						BizTalkFactoryProperties.SenderName.Type.FullName,
 						(int) FilterOperator.Equals,
 						FtpAdapter.FtpsConnectionMode.Explicit)));
+		}
+
+		[Test]
+		public void FilterOnEnumValue()
+		{
+			var filter = new Filter(() => BtsProperties.ActualRetryCount == (int) FtpAdapter.FtpsConnectionMode.Implicit);
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BtsProperties.ActualRetryCount.Type.FullName,
+						(int) FilterOperator.Equals,
+						(int) FtpAdapter.FtpsConnectionMode.Implicit)));
 		}
 
 		[Test]
