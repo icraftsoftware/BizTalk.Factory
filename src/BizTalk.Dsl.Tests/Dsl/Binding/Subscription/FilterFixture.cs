@@ -252,6 +252,22 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		}
 
 		[Test]
+		public void FilterOnTypeWithImplicitStringCastOperator()
+		{
+			var environmentTag = new SampleApplicationBinding.AcceptanceEnvironmentTag("TAG");
+			var filter = new Filter(() => BizTalkFactoryProperties.EnvironmentTag == environmentTag);
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BizTalkFactoryProperties.EnvironmentTag.Type.FullName,
+						(int) FilterOperator.Equals,
+						(string) environmentTag)));
+		}
+
+		[Test]
 		public void GreaterThanBasedFilter()
 		{
 			const int retryCountToken = 3;
@@ -409,6 +425,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 
 		private class SampleApplicationBinding : ApplicationBinding
 		{
+			#region Nested Type: AcceptanceEnvironmentTag
+
+			public class AcceptanceEnvironmentTag
+			{
+				#region Operators
+
+				public static implicit operator string(AcceptanceEnvironmentTag environmentTag)
+				{
+					return environmentTag._tag;
+				}
+
+				#endregion
+
+				public AcceptanceEnvironmentTag(string tag)
+				{
+					_tag = tag;
+				}
+
+				private readonly string _tag;
+			}
+
+			#endregion
+
 			public SampleApplicationBinding()
 			{
 				Name = "BizTalk.Factory";

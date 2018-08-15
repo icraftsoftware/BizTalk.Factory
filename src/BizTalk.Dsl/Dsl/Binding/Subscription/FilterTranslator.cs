@@ -281,19 +281,29 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		{
 			if (expression.NodeType == ExpressionType.Convert)
 			{
-				// handle cast operator to IConvertible
+				// handle cast operator to IConvertible, which is the case of Enum
 				if (expression.Type == typeof(IConvertible))
 				{
 					var convertible = (IConvertible) Expression.Lambda(expression).Compile().DynamicInvoke();
 					return convertible.ToString(CultureInfo.InvariantCulture);
 				}
 
-				// handle cast operator to INamingConvention<TNamingConvention>
-				var declaringType = expression.Method.DeclaringType;
-				if (declaringType != null && declaringType.IsSubclassOfOpenGenericType(typeof(INamingConvention<>)))
+				var method = expression.Method;
+				if (method != null)
 				{
-					var memberExpression = expression.Operand as MemberExpression;
-					if (memberExpression != null) return TranslateValueExpression(memberExpression);
+					// handle cast operator to INamingConvention<TNamingConvention>
+					var declaringType = method.DeclaringType;
+					if (declaringType != null && declaringType.IsSubclassOfOpenGenericType(typeof(INamingConvention<>)))
+					{
+						var memberExpression = expression.Operand as MemberExpression;
+						if (memberExpression != null) return TranslateValueExpression(memberExpression);
+					}
+
+					// handle implicit cast operator to string
+					if (method.IsStatic && method.Name == "op_Implicit" && method.ReturnType == typeof(string))
+					{
+						return (string) Expression.Lambda(expression).Compile().DynamicInvoke();
+					}
 				}
 			}
 
