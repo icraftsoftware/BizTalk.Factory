@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using Be.Stateless.BizTalk.ContextProperties;
@@ -280,6 +281,13 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		{
 			if (expression.NodeType == ExpressionType.Convert)
 			{
+				// handle cast operator to IConvertible
+				if (expression.Type == typeof(IConvertible))
+				{
+					var convertible = (IConvertible) Expression.Lambda(expression).Compile().DynamicInvoke();
+					return convertible.ToString(CultureInfo.InvariantCulture);
+				}
+
 				// handle cast operator to INamingConvention<TNamingConvention>
 				var declaringType = expression.Method.DeclaringType;
 				if (declaringType != null && declaringType.IsSubclassOfOpenGenericType(typeof(INamingConvention<>)))

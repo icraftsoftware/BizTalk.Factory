@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,18 @@ namespace Be.Stateless.BizTalk.ContextProperties
 	{
 		#region Operators
 
+		// IConvertible supports writing of filter expression against Enum values without having to explicitly convert them to a string 
+		public static bool operator ==(MessageContextProperty<T, TR> property, IConvertible value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
 		public static bool operator ==(MessageContextProperty<T, TR> property, TR value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
+		public static bool operator >(MessageContextProperty<T, TR> property, IConvertible value)
 		{
 			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
 		}
@@ -61,7 +72,17 @@ namespace Be.Stateless.BizTalk.ContextProperties
 			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
 		}
 
+		public static bool operator >=(MessageContextProperty<T, TR> property, IConvertible value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
 		public static bool operator >=(MessageContextProperty<T, TR> property, TR value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
+		public static bool operator !=(MessageContextProperty<T, TR> property, IConvertible value)
 		{
 			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
 		}
@@ -71,7 +92,17 @@ namespace Be.Stateless.BizTalk.ContextProperties
 			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
 		}
 
+		public static bool operator <(MessageContextProperty<T, TR> property, IConvertible value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
 		public static bool operator <(MessageContextProperty<T, TR> property, TR value)
+		{
+			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
+		}
+
+		public static bool operator <=(MessageContextProperty<T, TR> property, IConvertible value)
 		{
 			throw new NotSupportedException("Exists only to support the writing of SendPort's Filter predicates in Binding DSL.");
 		}
