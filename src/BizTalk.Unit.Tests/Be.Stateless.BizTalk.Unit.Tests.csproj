@@ -84,9 +84,6 @@
     <Compile Include="Unit\Message\MockFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\Resources\ResourceManagerFixture.cs" />
-    <Compile Include="Unit\Schema\Envelope.cs">
-      <DependentUpon>Envelope.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Unit\Schema\SchemaFixtureFixture.cs" />
     <Compile Include="Unit\ServiceModel\StubServiceHostFixture.cs" />
     <Compile Include="Unit\ServiceModel\Stub\OperationCallSetupCollectionFixture.cs" />
@@ -136,7 +133,6 @@
     <EmbeddedResource Include="Unit\Resources\Data\Resource.Composite.Name.txt" />
     <EmbeddedResource Include="Unit\Resources\Data\Resource.txt" />
     <EmbeddedResource Include="Unit\Schema\Data\Envelope.xml" />
-    <EmbeddedResource Include="Unit\Schema\Envelope.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

@@ -21,6 +21,7 @@ using System.Xml;
 using System.Xml.Schema;
 using BTF2Schemas;
 using Be.Stateless.BizTalk.Message;
+using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Unit.Resources;
 using NUnit.Framework;
 
