@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Monitoring.Configuration;
 using Be.Stateless.BizTalk.Tracking;
@@ -97,9 +96,8 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		{
 			get
 			{
-				var receivedFileName = MessagingStep.Context.Properties
-					.SingleOrDefault(p => p.Name.Equals("ReceivedFileName") && p.Namespace.Equals(_biztalkFilePropertiesNamespace));
-				return receivedFileName.IfNotNull(f => Path.GetFileName(f.Value))
+				var receivedFileNameProperty = MessagingStep.Context.GetProperty(FileProperties.ReceivedFileName);
+				return receivedFileNameProperty.IfNotNull(f => Path.GetFileName(f.Value))
 					?? (MimeType.StartsWith("application/", StringComparison.OrdinalIgnoreCase)
 						? "message.bin"
 						: MimeType.Equals("text/html", StringComparison.OrdinalIgnoreCase)
@@ -132,7 +130,6 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
-		private static readonly string _biztalkFilePropertiesNamespace = FileProperties.Username.Name;
 		// buffer used to read the first preview characters of large message bodies
 		private static readonly char[] _buffer = new char[1024];
 	}

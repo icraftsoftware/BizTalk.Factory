@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -26,51 +28,61 @@ using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Monitoring.Model
 {
-	// ReSharper disable ClassNeverInstantiated.Global
-	// ReSharper disable UnusedAutoPropertyAccessor.Global
-	// ReSharper disable MemberCanBePrivate.Global
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class MessageContext
 	{
-		#region Nested type: Property
+		#region Nested Type: Property
 
 		public class Property<T>
 		{
-			public static implicit operator Property<T>(Property<string> src)
+			#region Operators
+
+			public static implicit operator Property<T>(Property<string> property)
 			{
-				return new Property<T> {
-					IsPromoted = src.IsPromoted,
-					Name = src.Name,
-					Namespace = src.Namespace,
-					Value = (T) (object) src.Value
-				};
+				return property == null
+					? null
+					: new Property<T> {
+						IsPromoted = property.IsPromoted,
+						Name = property.Name,
+						Namespace = property.Namespace,
+						Value = (T) Convert.ChangeType(property.Value, typeof(T))
+					};
 			}
 
+			#endregion
+
 			public bool IsPromoted { get; set; }
+
 			public string Name { get; set; }
+
 			public string Namespace { get; set; }
+
 			public T Value { get; set; }
 		}
 
-		public class Property : Property<string> { }
-
 		#endregion
 
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		public string EncodedContext { get; set; }
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		public MessagingStep MessagingStep { get; set; }
+
+		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		public string MessagingStepActivityID { get; set; }
 
-		public IEnumerable<Property> Properties
+		private IEnumerable<Property<string>> Properties
 		{
 			get
 			{
 				if (_properties != null) return _properties;
 				_properties = EncodedContext.IsNullOrEmpty()
-					? Enumerable.Empty<Property>()
+					? Enumerable.Empty<Property<string>>()
 					: XDocument.Load(new StringReader(EncodedContext)).Elements("context")
 						.Elements()
 						.Select(
-							p => new Property {
-								IsPromoted = bool.Parse(p.Attribute("promoted").IfNotNull(v => v.Value) ?? bool.FalseString),
+							p => new Property<string> {
+								IsPromoted = p.Attribute("promoted").IfNotNull(v => bool.Parse(v.Value)),
 								Name = p.Attribute("n").IfNotNull(v => v.Value) ?? string.Empty,
 								Namespace = p.Name.Namespace.NamespaceName,
 								Value = p.Value
@@ -80,19 +92,19 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			}
 		}
 
-		public Property GetProperty<T>(MessageContextProperty<T, string> property)
+		public Property<string> GetProperty<T>(MessageContextProperty<T, string> property)
 			where T : MessageContextPropertyBase, new()
 		{
 			return Properties.SingleOrDefault(p => p.Name == property.Name && p.Namespace == property.Namespace);
 		}
 
-		public Property<TR?> GetProperty<T, TR>(MessageContextProperty<T, TR> property)
+		public Property<TR> GetProperty<T, TR>(MessageContextProperty<T, TR> property)
 			where T : MessageContextPropertyBase, new()
 			where TR : struct
 		{
 			return Properties.SingleOrDefault(p => p.Name == property.Name && p.Namespace == property.Namespace);
 		}
 
-		private IEnumerable<Property> _properties;
+		private IEnumerable<Property<string>> _properties;
 	}
 }
