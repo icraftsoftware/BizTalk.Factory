@@ -16,10 +16,13 @@
 
 #endregion
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using SBMessaging;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public static class SBMessagingProperties
 	{
 		public static readonly MessageContextProperty<ContentType, string> ContentType
@@ -31,11 +34,11 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<CustomBrokeredMessagePropertyNamespace, string> CustomBrokeredMessagePropertyNamespace
 			= new MessageContextProperty<CustomBrokeredMessagePropertyNamespace, string>();
 
-		public static readonly MessageContextProperty<DeliveryCount, string> DeliveryCount
-			= new MessageContextProperty<DeliveryCount, string>();
+		public static readonly MessageContextProperty<DeliveryCount, int> DeliveryCount
+			= new MessageContextProperty<DeliveryCount, int>();
 
-		public static readonly MessageContextProperty<ExpiresAtUtc, string> ExpiresAtUtc
-			= new MessageContextProperty<ExpiresAtUtc, string>();
+		public static readonly MessageContextProperty<ExpiresAtUtc, DateTime> ExpiresAtUtc
+			= new MessageContextProperty<ExpiresAtUtc, DateTime>();
 
 		public static readonly MessageContextProperty<Label, string> Label
 			= new MessageContextProperty<Label, string>();
@@ -46,8 +49,8 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<ReplyTo, string> ReplyTo
 			= new MessageContextProperty<ReplyTo, string>();
 
-		public static readonly MessageContextProperty<ScheduledEnqueueTimeUtc, string> ScheduledEnqueueTimeUtc
-			= new MessageContextProperty<ScheduledEnqueueTimeUtc, string>();
+		public static readonly MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime> ScheduledEnqueueTimeUtc
+			= new MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime>();
 
 		public static readonly MessageContextProperty<TimeToLive, string> TimeToLive
 			= new MessageContextProperty<TimeToLive, string>();

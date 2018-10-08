@@ -36,6 +36,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<InboundBodyPathExpression, string> InboundBodyPathExpression
 			= new MessageContextProperty<InboundBodyPathExpression, string>();
 
+		public static readonly MessageContextProperty<MaxConcurrentCalls, int> MaxConcurrentCalls
+			= new MessageContextProperty<MaxConcurrentCalls, int>();
+
 		public static readonly MessageContextProperty<OutboundBodyLocation, string> OutboundBodyLocation
 			= new MessageContextProperty<OutboundBodyLocation, string>();
 
