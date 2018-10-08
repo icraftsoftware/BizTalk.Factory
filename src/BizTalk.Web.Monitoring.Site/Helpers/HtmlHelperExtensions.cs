@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -86,9 +86,9 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
 							: helper.Raw(string.Format("<pre>{0}</pre>", helper.Encode(Regex.Replace(message.Body, @"\p{Cc}", "")))));
 		}
 
-		public static IEnumerable<IGrouping<string, MessageContext.Property>> MessageContextPropertiesGroupedByNamespace(
+		public static IEnumerable<IGrouping<string, MessageContext.Property<object>>> MessageContextPropertiesGroupedByNamespace(
 			this HtmlHelper helper,
-			IEnumerable<MessageContext.Property> properties)
+			IEnumerable<MessageContext.Property<object>> properties)
 		{
 			return properties
 				.Where(p => !p.IsPipelineConfigurationData())
@@ -97,9 +97,9 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
 				.OrderBy(g => g.Key);
 		}
 
-		public static IEnumerable<IGrouping<string, MessageContext.Property>> MessageContextPipelineDataByNamespace(
+		public static IEnumerable<IGrouping<string, MessageContext.Property<object>>> MessageContextPipelineDataByNamespace(
 			this HtmlHelper helper,
-			IEnumerable<MessageContext.Property> properties)
+			IEnumerable<MessageContext.Property<object>> properties)
 		{
 			// TODO return nothing when not BizTalk Administrator role
 			return properties
@@ -109,7 +109,7 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Helpers
 				.OrderBy(g => g.Key);
 		}
 
-		private static bool IsPipelineConfigurationData(this MessageContext.Property property)
+		private static bool IsPipelineConfigurationData(this MessageContext.Property<object> property)
 		{
 			return property.Name.Contains("Config") || (property.Name.Contains("Pipeline") && property.Namespace.Equals(Resource.BiztalkSystemPropertiesNamespace));
 		}

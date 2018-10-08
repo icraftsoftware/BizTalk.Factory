@@ -20,8 +20,11 @@ using HTTP;
 
 namespace Be.Stateless.BizTalk.ContextProperties
 {
-	public class HttpProperties
+	public static class HttpProperties
 	{
+		public static readonly MessageContextProperty<ContentType, string> ContentType
+			= new MessageContextProperty<ContentType, string>();
+
 		public static readonly MessageContextProperty<RequestTimeout, int> RequestTimeout
 			= new MessageContextProperty<RequestTimeout, int>();
 	}

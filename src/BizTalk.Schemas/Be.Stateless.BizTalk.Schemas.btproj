@@ -44,6 +44,9 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Adapters.SAP.BiztalkPropertySchema">
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.Adapters.SAP.BiztalkPropertySchema.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.BizTalk.Edi.BaseArtifacts">
       <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.BizTalk.Edi.BaseArtifacts.dll</HintPath>
     </Reference>
@@ -74,6 +77,8 @@
     <Compile Include="ContextProperties\OverridableEdiProperties.cs" />
     <Compile Include="ContextProperties\Pop3Properties.cs" />
     <Compile Include="ContextProperties\BizTalkFactoryProperties.cs" />
+    <Compile Include="ContextProperties\SapProperties.cs" />
+    <Compile Include="ContextProperties\SBMessagingProperties.cs" />
     <Compile Include="ContextProperties\SftpProperties.cs" />
     <Compile Include="ContextProperties\TrackingProperties.cs" />
     <Compile Include="ContextProperties\WcfProperties.cs" />

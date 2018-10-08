@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ using MvcContrib.UI.Grid;
 
 namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Models
 {
-	public abstract class ContextGridModelBase : GridModel<MessageContext.Property>
+	public abstract class ContextGridModelBase : GridModel<MessageContext.Property<object>>
 	{
 		protected ContextGridModelBase(HtmlHelper helper)
 		{
@@ -33,7 +33,7 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Models
 				.Sortable(false);
 			Column.For(p => p.Name)
 				.Named("Property");
-			RenderUsing(new ContextGridRenderer<MessageContext.Property>());
+			RenderUsing(new ContextGridRenderer<MessageContext.Property<object>>());
 		}
 	}
 }

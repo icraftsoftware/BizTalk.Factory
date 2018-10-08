@@ -37,7 +37,7 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		{
 			#region Operators
 
-			public static implicit operator Property<T>(Property<string> property)
+			public static implicit operator Property<T>(Property<object> property)
 			{
 				return property == null
 					? null
@@ -71,17 +71,17 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		public string MessagingStepActivityID { get; set; }
 
-		private IEnumerable<Property<string>> Properties
+		internal IEnumerable<Property<object>> Properties
 		{
 			get
 			{
 				if (_properties != null) return _properties;
 				_properties = EncodedContext.IsNullOrEmpty()
-					? Enumerable.Empty<Property<string>>()
+					? Enumerable.Empty<Property<object>>()
 					: XDocument.Load(new StringReader(EncodedContext)).Elements("context")
 						.Elements()
 						.Select(
-							p => new Property<string> {
+							p => new Property<object> {
 								IsPromoted = p.Attribute("promoted").IfNotNull(v => bool.Parse(v.Value)),
 								Name = p.Attribute("n").IfNotNull(v => v.Value) ?? string.Empty,
 								Namespace = p.Name.Namespace.NamespaceName,
@@ -105,6 +105,6 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 			return Properties.SingleOrDefault(p => p.Name == property.Name && p.Namespace == property.Namespace);
 		}
 
-		private IEnumerable<Property<string>> _properties;
+		private IEnumerable<Property<object>> _properties;
 	}
 }

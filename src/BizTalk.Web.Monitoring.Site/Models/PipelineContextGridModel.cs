@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Models
 				p => string.Format(
 					"<div>{0}</div>",
 					p.Name.EndsWith("Config")
-						? helper.AsXml(p.Value)
+						? helper.AsXml(p.Value.ToString())
 						: new HtmlString(helper.Encode(p.Value))))
 				.Named("Value")
 				.Encode(false);
