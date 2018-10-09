@@ -4,7 +4,7 @@
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!--
-  Copyright © 2012 - 2017 François Chabot, Yves Dierick
+  Copyright © 2012 - 2018 François Chabot
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -321,6 +321,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Schemas Include="Microsoft.Adapters.SAP.BiztalkPropertySchema.dll">
+      <LocationPath>..\..\lib\BizTalk 2013 R2</LocationPath>
+    </Schemas>
     <Schemas Include="Be.Stateless.BizTalk.Schemas.dll">
       <LocationPath>..\BizTalk.Schemas\bin\$(Configuration)</LocationPath>
     </Schemas>
