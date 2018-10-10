@@ -27,7 +27,11 @@ namespace Be.Stateless.BizTalk.Streaming
 		public MultipartFormDataContentStream(Stream stream)
 		{
 			_multipartContent = new MultipartFormDataContent { new StreamContent(stream) };
-			_stream = _multipartContent.ReadAsStreamAsync().Result;
+		}
+
+		public MultipartFormDataContentStream(Stream stream, string name)
+		{
+			_multipartContent = new MultipartFormDataContent { { new StreamContent(stream), name } };
 		}
 
 		#region Base Class Member Overrides
@@ -49,19 +53,19 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && _multipartContent != null)
+			if (disposing)
 			{
-				_stream.Dispose();
-				_stream = null;
-				_multipartContent.Dispose();
+				if (_multipartContent != null) _multipartContent.Dispose();
 				_multipartContent = null;
+				if (_dataContentStream != null) _dataContentStream.Dispose();
+				_dataContentStream = null;
 			}
 			base.Dispose(disposing);
 		}
 
 		public override void Flush()
 		{
-			_stream.Flush();
+			DataContentStream.Flush();
 		}
 
 		public override long Length
@@ -73,7 +77,7 @@ namespace Be.Stateless.BizTalk.Streaming
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			return _stream.Read(buffer, offset, count);
+			return DataContentStream.Read(buffer, offset, count);
 		}
 
 		public override long Seek(long offset, SeekOrigin origin)
@@ -98,7 +102,13 @@ namespace Be.Stateless.BizTalk.Streaming
 			get { return _multipartContent.Headers.ContentType.ToString(); }
 		}
 
+		private Stream DataContentStream
+		{
+			get { return _dataContentStream ?? (_dataContentStream = _multipartContent.ReadAsStreamAsync().Result); }
+		}
+
+		private Stream _dataContentStream;
+
 		private MultipartFormDataContent _multipartContent;
-		private Stream _stream;
 	}
 }
