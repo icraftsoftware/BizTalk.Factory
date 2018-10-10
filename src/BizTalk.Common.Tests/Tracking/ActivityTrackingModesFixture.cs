@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,66 +32,6 @@ namespace Be.Stateless.BizTalk.Tracking
 	public class ActivityTrackingModesFixture
 	{
 		[Test]
-		public void ArchiveAndBodyHaveToBeCombined()
-		{
-			const ActivityTrackingModes sut = ActivityTrackingModes.Archive | ActivityTrackingModes.Body;
-
-			Assert.That(sut.RequiresBodyArchiving());
-			Assert.That(sut.RequiresBodyTracking());
-
-			Assert.That(Convert.ToString(sut), Is.EqualTo("Body, Archive"));
-
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive, Body"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Body, Archive"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Body"), Is.Not.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive"), Is.Not.EqualTo(sut));
-		}
-
-		[Test]
-		public void ArchiveAndClaimHaveToBeCombined()
-		{
-			const ActivityTrackingModes sut = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
-
-			Assert.That(sut.RequiresBodyArchiving());
-			Assert.That(sut.RequiresBodyClaimChecking());
-
-			Assert.That(Convert.ToString(sut), Is.EqualTo("Claim, Archive"));
-
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive, Claim"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Claim, Archive"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Claim"), Is.Not.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive"), Is.Not.EqualTo(sut));
-		}
-
-		[Test]
-		public void ArchiveDoesNotRequireClaim()
-		{
-			const ActivityTrackingModes sut = ActivityTrackingModes.Archive;
-
-			Assert.That(sut.RequiresBodyArchiving());
-			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
-
-			Assert.That(Convert.ToString(sut), Is.EqualTo("Archive"));
-
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive, Claim"), Is.Not.EqualTo(sut));
-		}
-
-		[Test]
-		public void ArchiveDoesNotRequiresBody()
-		{
-			const ActivityTrackingModes sut = ActivityTrackingModes.Archive;
-
-			Assert.That(sut.RequiresBodyArchiving());
-			Assert.That(sut.RequiresBodyTracking(), Is.False);
-
-			Assert.That(Convert.ToString(sut), Is.EqualTo("Archive"));
-
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive"), Is.EqualTo(sut));
-			Assert.That(Enum.Parse(typeof(ActivityTrackingModes), "Archive, Body"), Is.Not.EqualTo(sut));
-		}
-
-		[Test]
 		public void BodyRequiresContext()
 		{
 			const ActivityTrackingModes sut = ActivityTrackingModes.Body;
@@ -99,7 +39,6 @@ namespace Be.Stateless.BizTalk.Tracking
 			Assert.That(sut, Is.EqualTo(ActivityTrackingModes.Body | ActivityTrackingModes.Context));
 			Assert.That(sut.RequiresBodyTracking());
 			Assert.That(sut.RequiresContextTracking());
-			Assert.That(sut.RequiresBodyArchiving(), Is.False);
 			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
 
 			Assert.That(Convert.ToString(sut), Is.EqualTo("Body"));
@@ -117,7 +56,6 @@ namespace Be.Stateless.BizTalk.Tracking
 			Assert.That(sut, Is.EqualTo(ActivityTrackingModes.Claim | ActivityTrackingModes.Body));
 			Assert.That(sut.RequiresBodyClaimChecking());
 			Assert.That(sut.RequiresBodyTracking());
-			Assert.That(sut.RequiresBodyArchiving(), Is.False);
 
 			Assert.That(Convert.ToString(sut), Is.EqualTo("Claim"));
 
@@ -143,22 +81,6 @@ namespace Be.Stateless.BizTalk.Tracking
 		}
 
 		[Test]
-		public void DiscardBodyClaimChecking()
-		{
-			var sut = (ActivityTrackingModes.Archive | ActivityTrackingModes.Claim).DiscardBodyClaimChecking();
-
-			Assert.That(sut.RequiresBodyArchiving());
-			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
-			Assert.That(sut.RequiresBodyTracking());
-
-			sut = ActivityTrackingModes.Claim.DiscardBodyClaimChecking();
-
-			Assert.That(sut.RequiresBodyArchiving(), Is.False);
-			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
-			Assert.That(sut.RequiresBodyTracking());
-		}
-
-		[Test]
 		public void StepOnly()
 		{
 			const ActivityTrackingModes sut = ActivityTrackingModes.Step;
@@ -167,7 +89,6 @@ namespace Be.Stateless.BizTalk.Tracking
 			Assert.That(sut.RequiresContextTracking(), Is.False);
 			Assert.That(sut.RequiresBodyTracking(), Is.False);
 			Assert.That(sut.RequiresBodyClaimChecking(), Is.False);
-			Assert.That(sut.RequiresBodyArchiving(), Is.False);
 
 			Assert.That(Convert.ToString(sut), Is.EqualTo("Step"));
 		}

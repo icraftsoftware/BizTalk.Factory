@@ -46,8 +46,6 @@
     <file src="BizTalk.Pipeline.Components\bin\Debug\Be.Stateless.BizTalk.Pipeline.Components.xml" target="assemblies\net45\Be.Stateless.BizTalk.Pipeline.Components.xml" />
     <file src="BizTalk.Pipelines\bin\Debug\Be.Stateless.BizTalk.Pipelines.dll" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.dll" />
     <file src="BizTalk.Pipelines\bin\Debug\Be.Stateless.BizTalk.Pipelines.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Pipelines.pdb" />
-    <file src="BizTalk.Policies\bin\Debug\Be.Stateless.BizTalk.Policies.dll" target="assemblies\net45\Be.Stateless.BizTalk.Policies.dll" />
-    <file src="BizTalk.Policies\bin\Debug\Be.Stateless.BizTalk.Policies.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Policies.pdb" />
     <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.dll" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.dll" />
     <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.pdb" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.pdb" />
     <file src="BizTalk.Schemas\bin\Debug\Be.Stateless.BizTalk.Schemas.xml" target="assemblies\net45\Be.Stateless.BizTalk.Schemas.xml" />

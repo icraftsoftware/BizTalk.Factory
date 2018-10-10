@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,9 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.RuleEngine;
 using Microsoft.BizTalk.Message.Interop;
 using Moq;
 using NUnit.Framework;
@@ -38,83 +35,19 @@ namespace Be.Stateless.BizTalk.Tracking
 		{
 			MessageMock = new Unit.Message.Mock<IBaseMessage>();
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
-
-			_policyFactory = Policy.Factory;
-			PolicyMock = new Mock<IPolicy>();
-			Policy.Factory = ruleSetInfo => PolicyMock.Object;
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			Policy.Factory = _policyFactory;
 		}
 
 		#endregion
 
 		[Test]
-		public void PolicyIsExecutedOnceAndOnlyOnce()
-		{
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
-			sut.ResolveArchiveTargetLocation();
-			sut.ResolveProcessName();
-
-			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Once());
-		}
-
-		[Test]
-		public void ResolveArchiveTargetLocationViaContext()
-		{
-			const string location = "context-target-location";
-			MessageMock.Setup(m => m.GetProperty(BizTalkFactoryProperties.ArchiveTargetLocation)).Returns(location);
-
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
-			var targetLocation = sut.ResolveArchiveTargetLocation();
-
-			Assert.That(targetLocation, Is.EqualTo(location));
-
-			MessageMock.Verify(m => m.SetProperty(BizTalkFactoryProperties.ArchiveTargetLocation, location), Times.Never());
-			MessageMock.Verify(m => m.DeleteProperty(BizTalkFactoryProperties.ArchiveTargetLocation), Times.Once());
-			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Never());
-		}
-
-		[Test]
-		public void ResolveArchiveTargetLocationViaPolicy()
-		{
-			const string location = "policy-target-location";
-
-			PolicyMock
-				.Setup(p => p.Execute(It.IsAny<object[]>()))
-				.Callback<object[]>(
-					facts => {
-						// assert the ProcessName in the fact base to be used by the policy mock
-						facts.OfType<Context>().Single().Write(BizTalkFactoryProperties.ArchiveTargetLocation.QName, location);
-						// setup an expectation on mock to ensure subsequent read retrieves info just written
-						MessageMock.Setup(m => m.GetProperty(BizTalkFactoryProperties.ArchiveTargetLocation)).Returns(location);
-					})
-				.Verifiable();
-
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
-			var targetLocation = sut.ResolveArchiveTargetLocation();
-
-			Assert.That(targetLocation, Is.EqualTo(location));
-
-			// ReSharper disable once ImplicitlyCapturedClosure
-			MessageMock.Verify(m => m.SetProperty(BizTalkFactoryProperties.ArchiveTargetLocation, location), Times.Once());
-			MessageMock.Verify(m => m.DeleteProperty(BizTalkFactoryProperties.ArchiveTargetLocation), Times.Once());
-			PolicyMock.VerifyAll();
-		}
-
-		[Test]
 		public void ResolveProcessNameToUnidentified()
 		{
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
+			var sut = TrackingResolver.Create(MessageMock.Object);
 			var processName = sut.ResolveProcessName();
 
 			Assert.That(processName, Is.EqualTo(Default.Processes.Unidentified));
 
 			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, Default.Processes.Unidentified), Times.Never());
-			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Once());
 		}
 
 		[Test]
@@ -123,45 +56,14 @@ namespace Be.Stateless.BizTalk.Tracking
 			const string name = "context-process-name";
 			MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessName)).Returns(name);
 
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
+			var sut = TrackingResolver.Create(MessageMock.Object);
 			var processName = sut.ResolveProcessName();
 
 			Assert.That(processName, Is.EqualTo(name));
 
 			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, name), Times.Never());
-			PolicyMock.Verify(p => p.Execute(It.IsAny<object[]>()), Times.Never());
-		}
-
-		[Test]
-		public void ResolveProcessNameViaPolicy()
-		{
-			const string name = "policy-process-name";
-
-			PolicyMock
-				.Setup(p => p.Execute(It.IsAny<object[]>()))
-				.Callback<object[]>(
-					facts => {
-						// assert the ProcessName in the fact base to be used by the policy mock
-						facts.OfType<Context>().Single().Write(TrackingProperties.ProcessName.QName, name);
-						// setup an expectation on mock to ensure subsequent read retrieves info just written
-						MessageMock.Setup(m => m.GetProperty(TrackingProperties.ProcessName)).Returns(name);
-					})
-				.Verifiable();
-
-			var sut = TrackingResolver.Create(new PolicyName("name", 1, 0), MessageMock.Object);
-			var processName = sut.ResolveProcessName();
-
-			Assert.That(processName, Is.EqualTo(name));
-
-			// ReSharper disable once ImplicitlyCapturedClosure
-			MessageMock.Verify(m => m.SetProperty(TrackingProperties.ProcessName, name), Times.Once());
-			PolicyMock.VerifyAll();
 		}
 
 		private Unit.Message.Mock<IBaseMessage> MessageMock { get; set; }
-
-		private Mock<IPolicy> PolicyMock { get; set; }
-
-		private Func<Microsoft.RuleEngine.RuleSetInfo, IPolicy> _policyFactory;
 	}
 }

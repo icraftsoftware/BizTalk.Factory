@@ -75,7 +75,7 @@
     <IncludeDirectoriesAndFiles>true</IncludeDirectoriesAndFiles>
     <IncludeFluentApplicationBindings>true</IncludeFluentApplicationBindings>
     <IncludeMsmqQueues>false</IncludeMsmqQueues>
-    <IncludePolicies>true</IncludePolicies>
+    <IncludePolicies>false</IncludePolicies>
     <IncludeQuartzJobs>false</IncludeQuartzJobs>
   </PropertyGroup>
 

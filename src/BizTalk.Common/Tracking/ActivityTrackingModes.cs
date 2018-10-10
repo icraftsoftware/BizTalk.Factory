@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,26 +50,11 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// Track the messaging step together with its context and payload data. Moreover the payload data will be claimed
 		/// to disk and replaced by a <see cref="Schemas.Xml.Claim.CheckIn"/> payload token.
 		/// </summary>
-		Claim = Body | 1 << 3,
-
-		/// <summary>
-		/// Archive the payload data and track the messaging step together with its context and payload data.
-		/// </summary>
-		Archive = 1 << 4
+		Claim = Body | 1 << 3
 	}
 
 	public static class ActivityTrackingModesExtensions
 	{
-		public static ActivityTrackingModes DiscardBodyClaimChecking(this ActivityTrackingModes modes)
-		{
-			return (modes ^ ActivityTrackingModes.Claim) | ActivityTrackingModes.Body;
-		}
-
-		public static bool RequiresBodyArchiving(this ActivityTrackingModes modes)
-		{
-			return (modes & ActivityTrackingModes.Archive) == ActivityTrackingModes.Archive;
-		}
-
 		public static bool RequiresBodyClaimChecking(this ActivityTrackingModes modes)
 		{
 			return (modes & ActivityTrackingModes.Claim) == ActivityTrackingModes.Claim;

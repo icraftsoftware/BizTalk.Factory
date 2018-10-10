@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,11 +20,8 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component.Interop;
-using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.MicroComponent;
-using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Tracking;
-using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -104,7 +101,6 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			propertyBag.ReadProperty("TrackingContextRetentionDuration", value => TrackingContextRetentionDuration = value);
 			propertyBag.ReadProperty<ActivityTrackingModes>("TrackingModes", value => TrackingModes = value);
-			propertyBag.ReadProperty("TrackingResolutionPolicy", value => TrackingResolutionPolicy = PolicyName.Parse(value));
 		}
 
 		/// <summary>
@@ -115,7 +111,6 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			propertyBag.WriteProperty("TrackingContextRetentionDuration", TrackingContextRetentionDuration);
 			propertyBag.WriteProperty("TrackingModes", TrackingModes);
-			propertyBag.WriteProperty("TrackingResolutionPolicy", TrackingResolutionPolicy.IfNotNull(prp => prp.ToString()));
 		}
 
 		#endregion
@@ -141,21 +136,6 @@ namespace Be.Stateless.BizTalk.Component
 		{
 			get { return _microComponent.TrackingModes; }
 			set { _microComponent.TrackingModes = value; }
-		}
-
-		/// <summary>
-		/// Policy used to resolve either the process name of a messaging-only flow, <see
-		/// cref="TrackingProperties.ProcessName"/>, or the archive's target location, <see
-		/// cref="BizTalkFactoryProperties.ArchiveTargetLocation"/>, should neither one of them be found in message
-		/// context.
-		/// </summary>
-		[Browsable(true)]
-		[Description("Policy used to resolve either the process name of a messaging-only flow or the archive's target location should neither be found in message context.")]
-		[TypeConverter(typeof(PolicyNameConverter))]
-		public PolicyName TrackingResolutionPolicy
-		{
-			get { return _microComponent.TrackingResolutionPolicyName; }
-			set { _microComponent.TrackingResolutionPolicyName = value; }
 		}
 
 		private const string CLASS_ID = "1b4c83dd-7e71-453c-80de-457f70e8a703";

@@ -126,10 +126,6 @@
       <Project>{2c77abb3-fad7-41fa-80bc-616bf3762c70}</Project>
       <Name>Be.Stateless.BizTalk.Pipelines</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BizTalk.Policies\Be.Stateless.BizTalk.Policies.csproj">
-      <Project>{62ec131f-0984-4c8c-b1bd-66bef9800cfa}</Project>
-      <Name>Be.Stateless.BizTalk.Policies</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
       <Project>{f33df96f-ec86-41de-94d4-0ec981b7c9ff}</Project>
       <Name>Be.Stateless.BizTalk.Schemas</Name>

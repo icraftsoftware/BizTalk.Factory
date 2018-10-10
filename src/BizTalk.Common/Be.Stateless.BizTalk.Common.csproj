@@ -104,7 +104,13 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="ContextBuilders\Send\Batch\AggregateProcessResolver.cs" />
+    <Compile Include="ContextBuilders\Send\Batch\ReleaseProcessResolver.cs" />
+    <Compile Include="ContextBuilders\Send\Claim\ProcessResolver.cs" />
     <Compile Include="Default.cs" />
+    <Compile Include="MicroComponent\IContextBuilder.cs" />
+    <Compile Include="MicroComponent\IMessageFactory.cs" />
+    <Compile Include="ContextBuilders\Send\FailedProcessResolver.cs" />
     <Compile Include="ProcessInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -159,7 +165,6 @@
     <Compile Include="Streaming\XmlTranslationSetConverter.cs" />
     <Compile Include="Streaming\XmlTranslatorStream.cs" />
     <Compile Include="Streaming\ZipOutputStream.cs" />
-    <Compile Include="Tracking\ArchiveDescriptor.cs" />
     <Compile Include="Tracking\BatchTrackingContext.cs" />
     <Compile Include="Tracking\ClaimStore.cs" />
     <Compile Include="Schema\ISchemaAnnotations.cs" />

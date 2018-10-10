@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Message.Extensions;
@@ -69,143 +67,9 @@ namespace Be.Stateless.BizTalk.Tracking
 			File.Delete(Path.Combine(Path.GetTempPath(), "cca95baa39ab4e25a3c54971ea170911"));
 			Directory.GetFiles(Path.GetTempPath(), "*.chk").Each(File.Delete);
 			Directory.GetFiles(Path.GetTempPath(), "*.trk").Each(File.Delete);
-			Directory.GetFiles(Path.GetTempPath(), "*.rchk").Each(File.Delete);
-			Directory.GetFiles(Path.GetTempPath(), "*.rjob").Each(File.Delete);
-			Directory.GetFiles(Path.GetTempPath(), "*.rtrk").Each(File.Delete);
 		}
 
 		#endregion
-
-		[Test]
-		public void ArchiveAndCaptureMessageBody()
-		{
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
-				.Returns(Path.GetTempPath());
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
-				.Returns(@"\\network\share");
-
-			using (var trackingStream = new TrackingStream(FakeTextStream.Create(1024 * 512)))
-			{
-				MessageMock.Object.BodyPart.Data = trackingStream;
-
-				var ascertainedTracking = ClaimStore.Instance.SetupMessageBodyCapture(trackingStream, ActivityTrackingModes.Body | ActivityTrackingModes.Archive, null);
-				Assert.That(ascertainedTracking, Is.EqualTo(ActivityTrackingModes.Body | ActivityTrackingModes.Archive));
-
-				ClaimStore.Instance.SetupMessageBodyArchiving(trackingStream, "archive-target-location", null);
-				MessageMock.Object.BodyPart.Data.Drain();
-
-				// payload is claimed to disk and file extension is .rtrk
-				var captureDescriptor = trackingStream.CaptureDescriptor;
-				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rtrk")), Is.True);
-
-				// archive job descriptor file is written next to captured payload
-				var archiveDescriptor = trackingStream.ArchiveDescriptor;
-				Assert.That(archiveDescriptor.Source, Is.EqualTo(captureDescriptor.Data));
-				Assert.That(archiveDescriptor.Target, Is.EqualTo("archive-target-location"));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rjob")), Is.True);
-			}
-		}
-
-		[Test]
-		public void ArchiveAndClaimMessageBody()
-		{
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
-				.Returns(Path.GetTempPath());
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
-				.Returns(@"\\network\share");
-
-			using (var contentStream = FakeTextStream.Create(1024 * 1024))
-			using (var trackingStream = new TrackingStream(contentStream))
-			{
-				MessageMock.Object.BodyPart.Data = trackingStream;
-
-				var ascertainedTracking = ClaimStore.Instance.SetupMessageBodyCapture(trackingStream, ActivityTrackingModes.Claim | ActivityTrackingModes.Archive, null);
-				Assert.That(ascertainedTracking, Is.EqualTo(ActivityTrackingModes.Claim | ActivityTrackingModes.Archive));
-
-				ClaimStore.Instance.SetupMessageBodyArchiving(trackingStream, "archive-target-location", null);
-				ClaimStore.Instance.Claim(MessageMock.Object, ResourceTrackerMock.Object);
-				// message's actual body stream has been exhausted (i.e. saved to disk)
-				Assert.That(contentStream.Position, Is.EqualTo(contentStream.Length));
-
-				// message's body stream is replaced by a token message
-				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
-				{
-					Assert.That(reader.ReadToEnd(), Is.EqualTo(MessageFactory.CreateClaimCheckIn(trackingStream.CaptureDescriptor.Data).OuterXml));
-				}
-
-				// MessageType of token message is promoted in message context
-				var schemaMetadata = typeof(Claim.CheckIn).GetMetadata();
-				MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, schemaMetadata.MessageType), Times.Once());
-				MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, schemaMetadata.DocumentSpec.DocSpecStrongName), Times.Once());
-
-				// payload is claimed to disk and file extension is .rchk
-				var captureDescriptor = trackingStream.CaptureDescriptor;
-				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rchk")), Is.True);
-
-				// archive job descriptor file is written next to captured payload
-				var archiveDescriptor = trackingStream.ArchiveDescriptor;
-				Assert.That(archiveDescriptor.Source, Is.EqualTo(captureDescriptor.Data));
-				Assert.That(archiveDescriptor.Target, Is.EqualTo("archive-target-location"));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rjob")), Is.True);
-			}
-		}
-
-		[Test]
-		public void ArchiveAndClaimMessageBodyCanSkipClaimIfPayloadSizeIsSmallEnough()
-		{
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
-				.Returns(Path.GetTempPath());
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
-				.Returns(@"\\network\share");
-
-			using (var contentStream = FakeTextStream.Create(1024))
-			using (var trackingStream = new TrackingStream(contentStream))
-			{
-				MessageMock.Object.BodyPart.Data = trackingStream;
-
-				var ascertainedTracking = ClaimStore.Instance.SetupMessageBodyCapture(trackingStream, ActivityTrackingModes.Claim | ActivityTrackingModes.Archive, null);
-				Assert.That(ascertainedTracking, Is.EqualTo(ActivityTrackingModes.Body | ActivityTrackingModes.Archive));
-
-				ClaimStore.Instance.SetupMessageBodyArchiving(trackingStream, "archive-target-location", null);
-				ClaimStore.Instance.Claim(MessageMock.Object, ResourceTrackerMock.Object);
-
-				// message's actual body stream has been exhausted (i.e. saved to disk)
-				Assert.That(contentStream.Position, Is.EqualTo(contentStream.Length));
-
-				// message's body stream is replaced by a token message
-				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
-				{
-					Assert.That(reader.ReadToEnd(), Is.EqualTo(MessageFactory.CreateClaimCheckIn(trackingStream.CaptureDescriptor.Data).OuterXml));
-				}
-
-				// MessageType of token message is promoted in message context
-				var schemaMetadata = typeof(Claim.CheckIn).GetMetadata();
-				MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, schemaMetadata.MessageType), Times.Once());
-				MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, schemaMetadata.DocumentSpec.DocSpecStrongName), Times.Once());
-
-				// payload is claimed to disk and file extension is .rchk
-				var captureDescriptor = trackingStream.CaptureDescriptor;
-				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
-				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rtrk")), Is.True);
-
-				// archive job descriptor file is written next to captured payload
-				var archiveDescriptor = trackingStream.ArchiveDescriptor;
-				Assert.That(archiveDescriptor.Source, Is.EqualTo(captureDescriptor.Data));
-				Assert.That(archiveDescriptor.Target, Is.EqualTo("archive-target-location"));
-				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".rjob")), Is.True);
-			}
-		}
 
 		[Test]
 		public void CaptureMessageBody()
@@ -368,54 +232,6 @@ namespace Be.Stateless.BizTalk.Tracking
 				Assert.That(captureDescriptor.CaptureMode, Is.EqualTo(MessageBodyCaptureMode.Claimed));
 				Assert.That(captureDescriptor.Data, Does.StartWith(DateTime.Today.ToString(@"yyyyMMdd\\")));
 				Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), captureDescriptor.Data.Replace("\\", "") + ".chk")), Is.True);
-			}
-		}
-
-		[Test]
-		public void RedeemAndArchiveMessageBody()
-		{
-			const string content = "dummy";
-			const string url = "cca95baa39ab4e25a3c54971ea170911";
-			var path = Path.Combine(Path.GetTempPath(), url);
-			using (var file = File.CreateText(path))
-			{
-				file.Write(content);
-			}
-
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
-				.Returns(Path.GetTempPath());
-			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
-				//.Returns(Path.GetTempPath());
-				.Returns(@"\\network\share");
-
-			using (var tokenStream = MessageFactory.CreateClaimCheck("file://" + path).AsStream())
-			{
-				MessageMock.Object.BodyPart.Data = tokenStream;
-
-				ClaimStore.Instance.Redeem(MessageMock.Object, ResourceTrackerMock.Object);
-				var trackingStream = (TrackingStream) MessageMock.Object.BodyPart.Data;
-				ClaimStore.Instance.SetupMessageBodyArchiving(trackingStream, "archive-target-location", null);
-
-				// archive job descriptor file is written next to captured payload
-				var captureDescriptor = trackingStream.CaptureDescriptor;
-				var archiveDescriptor = trackingStream.ArchiveDescriptor;
-				Assert.That(archiveDescriptor.Source, Is.EqualTo(captureDescriptor.Data));
-				Assert.That(archiveDescriptor.Target, Is.EqualTo("archive-target-location"));
-
-				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
-				{
-					Assert.That(reader.ReadToEnd(), Is.EqualTo(content));
-				}
-			}
-
-			// archive job descriptor file is written next to where payload would be captured if it was not checked out
-			using (var reader = XmlReader.Create(Directory.GetFiles(Path.GetTempPath(), "*.rjob").Single()))
-			{
-				var archiveDescriptor = ArchiveDescriptor.Create(reader);
-				Assert.That(archiveDescriptor.Source, Is.EqualTo("file://" + path));
-				Assert.That(archiveDescriptor.Target, Is.EqualTo("archive-target-location"));
 			}
 		}
 

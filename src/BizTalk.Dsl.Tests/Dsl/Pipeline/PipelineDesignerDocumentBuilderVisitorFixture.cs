@@ -41,7 +41,6 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 				new PropertyContents("Enabled", true),
 				new PropertyContents("TrackingContextRetentionDuration", 60),
 				new PropertyContents("TrackingModes", "Body"),
-				new PropertyContents("TrackingResolutionPolicy", string.Empty)
 			};
 
 			Assert.That(componentInfo.QualifiedNameOrClassId, Is.EqualTo(typeof(ActivityTrackerComponent).FullName));

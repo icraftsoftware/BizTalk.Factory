@@ -52,6 +52,13 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Installer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Policies\Send\Batch\AggregateProcessResolver.cs" />
+    <Compile Include="Policies\Send\Batch\ReleaseProcessResolver.cs" />
+    <Compile Include="Policies\Send\Claim\ProcessResolver.cs" />
+    <Compile Include="Policies\Send\FailedProcessResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,9 +68,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68e5cfcc-205d-4526-923c-09f5f46058e4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
+      <Project>{46e0347e-7978-4f76-86d7-7d31201d856d}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
       <Project>{f33df96f-ec86-41de-94d4-0ec981b7c9ff}</Project>
       <Name>Be.Stateless.BizTalk.Schemas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Be.Stateless.Extensions.csproj">
+      <Project>{8c40c4cf-5fc3-49ce-8314-56aead6dda60}</Project>
+      <Name>Be.Stateless.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +104,11 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\BizTalk 2013 R2\Microsoft.XLANGs.BaseTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />

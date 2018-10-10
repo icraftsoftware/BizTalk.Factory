@@ -22,7 +22,6 @@ using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.MicroComponent.Extensions;
-using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Tracking.Extensions;
@@ -44,12 +43,12 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 		internal class Context
 		{
-			internal Context(IPipelineContext pipelineContext, IBaseMessage message, ActivityTrackingModes trackingModes, PolicyName trackingResolutionPolicy)
+			internal Context(IPipelineContext pipelineContext, IBaseMessage message, ActivityTrackingModes trackingModes)
 			{
 				Message = message;
 				PipelineContext = pipelineContext;
 				TrackingModes = trackingModes;
-				TrackingResolver = TrackingResolver.Create(trackingResolutionPolicy, message);
+				TrackingResolver = TrackingResolver.Create(message);
 			}
 
 			internal IBaseMessage Message { get; private set; }
@@ -83,7 +82,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				// tracking context can only be restored for the inbound message of a Solicit-Response MEP, i.e. when BizTalk was the initiator of the 2-way MEP
 				if (messageDirection.IsInbound() && isSolicitResponse) RestoreCachedTrackingContext(message);
 
-				var context = new Context(pipelineContext, message, TrackingModes, TrackingResolutionPolicyName);
+				var context = new Context(pipelineContext, message, TrackingModes);
 				var activityTracker = Tracking.Messaging.ActivityTracker.Create(context);
 				var messageBodyTracker = MessageBodyTracker.Create(context);
 
@@ -115,15 +114,6 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// Level of tracking to use, or the extent of message data to capture.
 		/// </summary>
 		public ActivityTrackingModes TrackingModes { get; set; }
-
-		/// <summary>
-		/// Policy used to resolve either the process name of a messaging-only flow, <see
-		/// cref="TrackingProperties.ProcessName"/>, or the archive's target location, <see
-		/// cref="BizTalkFactoryProperties.ArchiveTargetLocation"/>, should neither one of them be found in message
-		/// context.
-		/// </summary>
-		[XmlElement("TrackingResolutionPolicy", typeof(PolicyNameXmlSerializer))]
-		public PolicyName TrackingResolutionPolicyName { get; set; }
 
 		protected void CacheTrackingContext(IBaseMessage message, int duration)
 		{

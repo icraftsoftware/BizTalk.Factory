@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,33 +17,32 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Message.Interop;
-using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Tracking
 {
 	/// <summary>
-	/// Ensure <see cref="ActivityTrackerComponent"/>'s <see cref="ActivityTrackerComponent.TrackingResolutionPolicy"/>
-	/// is executed both lazily and one and only once.
+	/// Ensure process name resolution while <see cref="ActivityTrackerComponent"/> is tracking.
 	/// </summary>
-	// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+	// TODO refactor off
+	[SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
 	internal class TrackingResolver
 	{
-		internal static TrackingResolver Create(PolicyName policyName, IBaseMessage message)
+		internal static TrackingResolver Create(IBaseMessage message)
 		{
-			return Factory(policyName, message);
+			return Factory(message);
 		}
 
 		#region Mock's Factory Hook Point
 
-		internal static Func<PolicyName, IBaseMessage, TrackingResolver> Factory
+		internal static Func<IBaseMessage, TrackingResolver> Factory
 		{
 			get { return _factory; }
 			set { _factory = value; }
@@ -53,15 +52,14 @@ namespace Be.Stateless.BizTalk.Tracking
 
 		// ReSharper disable once MemberCanBePrivate.Global
 		// ctor is protected for mocking purposes
-		protected TrackingResolver(PolicyName policyName, IBaseMessage message)
+		protected TrackingResolver(IBaseMessage message)
 		{
-			_policyName = policyName;
 			_message = message;
 		}
 
 		internal virtual string ResolveProcessName()
 		{
-			var processName = ResolveProperty(TrackingProperties.ProcessName);
+			var processName = _message.GetProperty(TrackingProperties.ProcessName);
 			if (processName.IsNullOrEmpty())
 			{
 				// could fallback on an UnidentifiedProcessResolver policy if process name remains unresolved but that would
@@ -72,34 +70,8 @@ namespace Be.Stateless.BizTalk.Tracking
 			return processName;
 		}
 
-		internal virtual string ResolveArchiveTargetLocation()
-		{
-			var targetLocation = ResolveProperty(BizTalkFactoryProperties.ArchiveTargetLocation);
-			// remove it from ctxt to avoid unintended side effects
-			_message.DeleteProperty(BizTalkFactoryProperties.ArchiveTargetLocation);
-			return targetLocation;
-		}
-
-		private string ResolveProperty<T>(MessageContextProperty<T, string> property)
-			where T : MessageContextPropertyBase, new()
-		{
-			var value = _message.GetProperty(property);
-			if (value.IsNullOrEmpty() && _policyName != null && !_hasPolicyRun)
-			{
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Executing {0}'s policy '{1}'.", typeof(ActivityTrackerComponent).Name, _policyName);
-				Policy.Execute(_policyName, new Context(_message.Context));
-				value = _message.GetProperty(property);
-				_hasPolicyRun = true;
-			}
-			return value;
-		}
-
-		private static Func<PolicyName, IBaseMessage, TrackingResolver> _factory =
-			(trackingResolutionPolicy, message) => new TrackingResolver(trackingResolutionPolicy, message);
-
+		private static Func<IBaseMessage, TrackingResolver> _factory = message => new TrackingResolver(message);
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(TrackingResolver));
 		private readonly IBaseMessage _message;
-		private readonly PolicyName _policyName;
-		private bool _hasPolicyRun;
 	}
 }

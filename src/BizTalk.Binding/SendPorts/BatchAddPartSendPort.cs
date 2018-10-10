@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 using System.Transactions;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
-using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
@@ -45,7 +44,8 @@ namespace Be.Stateless.BizTalk
 					pipeline.Encoder<MicroPipelineComponent>(
 						pc => {
 							pc.Components = new IMicroPipelineComponent[] {
-								new ActivityTracker { TrackingResolutionPolicyName = Policy<Policies.Send.Batch.AggregateProcessResolver>.Name },
+								new ContextBuilder { BuilderType = typeof(ContextBuilders.Send.Batch.AggregateProcessResolver) },
+								new ActivityTracker(),
 								new XsltRunner { MapType = typeof(AnyToAddPart) }
 							};
 						});

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -83,12 +83,7 @@ namespace Be.Stateless.BizTalk.Tracking.Messaging
 
 			if (_context.TrackingModes.RequiresBodyTracking() && _trackingStream.CaptureDescriptor == null)
 			{
-				_context.TrackingModes = ClaimStore.Instance.SetupMessageBodyCapture(_trackingStream, _context.TrackingModes, KernelTransactionFactory);
-			}
-
-			if (_context.TrackingModes.RequiresBodyArchiving() && _trackingStream.ArchiveDescriptor == null)
-			{
-				ClaimStore.Instance.SetupMessageBodyArchiving(_trackingStream, _context.TrackingResolver.ResolveArchiveTargetLocation(), KernelTransactionFactory);
+				ClaimStore.Instance.SetupMessageBodyCapture(_trackingStream, _context.TrackingModes, KernelTransactionFactory);
 			}
 		}
 

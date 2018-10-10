@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -111,9 +111,9 @@ namespace Be.Stateless.BizTalk.ClaimStore.States
 		private const string STATE_TOKEN = "State";
 		private const string TRACKING_MODE_TOKEN = "TrackingMode";
 		private const string UNLOCKED_FILE_PATH_TOKEN = "UnlockedFilePath";
-		// file name is made of either 2 or 4 tokens: yyyyMMdd<GUID>.([r]chk|[r]trk) or yyyyMMdd<GUID>.(chk|trk).yyyyMMddHHmmss.(gathered|locked|released)
+		// file name is made of either 2 or 4 tokens: yyyyMMdd<GUID>.(chk|trk) or yyyyMMdd<GUID>.(chk|trk).yyyyMMddHHmmss.(gathered|locked|released)
 		private static readonly string _pattern = string.Format(
-			@"^(?<{0}>(?:.*\\)?(?<{1}>\d{{8}})(?<{2}>[\dA-Fa-f]{{32}})\.(?<{3}>r?(?:trk|chk)))(?:\.(?<{4}>\d{{14}})\.(?<{5}>locked|gathered|released))?$",
+			@"^(?<{0}>(?:.*\\)?(?<{1}>\d{{8}})(?<{2}>[\dA-Fa-f]{{32}})\.(?<{3}>(?:trk|chk)))(?:\.(?<{4}>\d{{14}})\.(?<{5}>locked|gathered|released))?$",
 			UNLOCKED_FILE_PATH_TOKEN,
 			CAPTURE_DATE_TOKEN,
 			ID_TOKEN,

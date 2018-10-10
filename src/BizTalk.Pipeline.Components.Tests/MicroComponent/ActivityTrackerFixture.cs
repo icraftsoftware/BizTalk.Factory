@@ -22,7 +22,6 @@ using System.Xml;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Runtime.Caching;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Tracking.Messaging;
@@ -44,7 +43,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		{
 			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
 
-			var activityTrackerContext = new ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null);
+			var activityTrackerContext = new ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body);
 
 			_activityTrackerFactory = Tracking.Messaging.ActivityTracker.Factory;
 			ActivityTrackerMock = new Mock<Tracking.Messaging.ActivityTracker>(activityTrackerContext);
@@ -59,8 +58,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			TrackingContextCache.Instance = CacheMock.Object;
 
 			_trackingResolverFactory = TrackingResolver.Factory;
-			TrackingResolverMock = new Mock<TrackingResolver>(null, MessageMock.Object);
-			TrackingResolver.Factory = (policyName, message) => TrackingResolverMock.Object;
+			TrackingResolverMock = new Mock<TrackingResolver>(MessageMock.Object);
+			TrackingResolver.Factory = message => TrackingResolverMock.Object;
 		}
 
 		[TearDown]
@@ -102,7 +101,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				builder.ToString(),
 				Is.EqualTo(
 					string.Format(
-						"<mComponent name=\"{0}\"><TrackingContextCacheDuration>00:01:00</TrackingContextCacheDuration><TrackingModes>Body</TrackingModes><TrackingResolutionPolicy /></mComponent>",
+						"<mComponent name=\"{0}\"><TrackingContextCacheDuration>00:01:00</TrackingContextCacheDuration><TrackingModes>Body</TrackingModes></mComponent>",
 						component.GetType().AssemblyQualifiedName)));
 		}
 
@@ -235,7 +234,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		public void TrackingModesIsAnythingButNone()
 		{
 			// MockBehavior must be Strict for following test
-			var activityTrackerComponentContext = new ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body, null);
+			var activityTrackerComponentContext = new ActivityTracker.Context(PipelineContextMock.Object, MessageMock.Object, ActivityTrackingModes.Body);
 			ActivityTrackerMock = new Mock<Tracking.Messaging.ActivityTracker>(MockBehavior.Strict, activityTrackerComponentContext);
 			MessageBodyTrackerMock = new Mock<MessageBodyTracker>(MockBehavior.Strict, activityTrackerComponentContext);
 
@@ -290,6 +289,6 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		private Func<ActivityTracker.Context, Tracking.Messaging.ActivityTracker> _activityTrackerFactory;
 		private Func<ActivityTracker.Context, MessageBodyTracker> _messageBodyTrackerFactory;
 		private TrackingContextCache _trackingContextCacheInstance;
-		private Func<PolicyName, IBaseMessage, TrackingResolver> _trackingResolverFactory;
+		private Func<IBaseMessage, TrackingResolver> _trackingResolverFactory;
 	}
 }

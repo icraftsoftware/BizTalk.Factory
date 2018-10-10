@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.MicroComponent;
-using Be.Stateless.BizTalk.RuleEngine;
 using Be.Stateless.BizTalk.Tracking;
 using Be.Stateless.BizTalk.Unit.Resources;
 using Be.Stateless.BizTalk.XPath;
@@ -63,7 +62,6 @@ namespace Be.Stateless.BizTalk.Dsl.Pipeline
 						})
 					.AddComponent(
 						new ActivityTrackerComponent {
-							TrackingResolutionPolicy = new PolicyName("ResolutionPolicyName", 2, 2),
 							TrackingModes = ActivityTrackingModes.Context
 						});
 				Stages.Disassemble

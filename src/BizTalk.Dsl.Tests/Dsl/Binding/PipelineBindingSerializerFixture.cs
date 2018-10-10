@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new ReceivePipeline<Pipelines.XmlReceive>();
 			pipeline.Stages.Decode.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Disassemble.Component<XmlDasmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -146,7 +146,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				pl => {
 					pl.Stages.Decode.Components
 						.ComponentAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-						.ComponentAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; });
+						.ComponentAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; });
 					pl.Stages.Disassemble.Components.ComponentAt<XmlDasmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -168,7 +168,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new ReceivePipeline<Pipelines.XmlReceive>();
 			pipeline.Stages.Decode.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Disassemble.Component<XmlDasmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -182,7 +182,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				pl => {
 					pl.Stages.Decode
 						.ComponentAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-						.ComponentAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; });
+						.ComponentAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; });
 					pl.Stages.Disassemble.ComponentAt<XmlDasmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -204,7 +204,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new ReceivePipeline<Pipelines.XmlReceive>();
 			pipeline.Stages.Decode.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.Decode.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Disassemble.Component<XmlDasmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -217,7 +217,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var pipeline6 = ReceivePipeline<Pipelines.XmlReceive>.Configure(
 				pl => pl
 					.DecoderAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-					.DecoderAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; })
+					.DecoderAt<ActivityTrackerComponent>(4).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; })
 					.DisassemblerAt<XmlDasmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -276,7 +276,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					.FirstDecoder<ActivityTrackerComponent>(
 						c => {
 							c.Enabled = true;
-							c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+							c.TrackingModes = ActivityTrackingModes.Claim;
 						}));
 
 			var binding = ((IPipelineSerializerFactory) pipeline).GetPipelineBindingSerializer().Serialize();
@@ -299,7 +299,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 						"<Properties />" +
 						"</Component>" +
 						"<Component Name=\"Be.Stateless.BizTalk.Component.ActivityTrackerComponent\">" +
-						"<Properties><Enabled vt=\"11\">-1</Enabled><TrackingModes vt=\"8\">Claim, Archive</TrackingModes></Properties>" +
+						"<Properties><Enabled vt=\"11\">-1</Enabled><TrackingModes vt=\"8\">Claim</TrackingModes></Properties>" +
 						"</Component>" +
 						"<Component Name=\"Be.Stateless.BizTalk.Component.XsltRunnerComponent\">" +
 						"<Properties />" +
@@ -414,7 +414,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new SendPipeline<Pipelines.XmlTransmit>();
 			pipeline.Stages.PreAssemble.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Assemble.Component<XmlAsmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -428,7 +428,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				pl => {
 					pl.Stages.PreAssemble.Components
 						.ComponentAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-						.ComponentAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; });
+						.ComponentAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; });
 					pl.Stages.Assemble.Components.ComponentAt<XmlAsmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -450,7 +450,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new SendPipeline<Pipelines.XmlTransmit>();
 			pipeline.Stages.PreAssemble.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Assemble.Component<XmlAsmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -464,7 +464,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 				pl => {
 					pl.Stages.PreAssemble
 						.ComponentAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-						.ComponentAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; });
+						.ComponentAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; });
 					pl.Stages.Assemble.ComponentAt<XmlAsmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -486,7 +486,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			// not fluent-DSL
 			var pipeline = new SendPipeline<Pipelines.XmlTransmit>();
 			pipeline.Stages.PreAssemble.Component<FailedMessageRoutingEnablerComponent>().Enabled = false;
-			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+			pipeline.Stages.PreAssemble.Component<ActivityTrackerComponent>().TrackingModes = ActivityTrackingModes.Claim;
 			pipeline.Stages.Assemble.Component<XmlAsmComp>().DocumentSpecNames = new SchemaList {
 				new SchemaWithNone(Schema<Any>.AssemblyQualifiedName),
 				new SchemaWithNone(Schema<Claim.CheckIn>.AssemblyQualifiedName)
@@ -499,7 +499,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 			var pipeline6 = new SendPipeline<Pipelines.XmlTransmit>(
 				pl => pl
 					.PreAssemblerAt<FailedMessageRoutingEnablerComponent>(0).Configure(c => { c.Enabled = false; })
-					.PreAssemblerAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim; })
+					.PreAssemblerAt<ActivityTrackerComponent>(3).Configure(c => { c.TrackingModes = ActivityTrackingModes.Claim; })
 					.AssemblerAt<XmlAsmComp>(0).Configure(
 						c => {
 							c.DocumentSpecNames = new SchemaList {
@@ -523,7 +523,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 					.FirstPreAssembler<ActivityTrackerComponent>(
 						c => {
 							c.Enabled = true;
-							c.TrackingModes = ActivityTrackingModes.Archive | ActivityTrackingModes.Claim;
+							c.TrackingModes = ActivityTrackingModes.Claim;
 						}));
 
 			var binding = ((IPipelineSerializerFactory) pipeline).GetPipelineBindingSerializer().Serialize();
@@ -543,7 +543,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 						"<Properties />" +
 						"</Component>" +
 						"<Component Name=\"Be.Stateless.BizTalk.Component.ActivityTrackerComponent\">" +
-						"<Properties><Enabled vt=\"11\">-1</Enabled><TrackingModes vt=\"8\">Claim, Archive</TrackingModes></Properties>" +
+						"<Properties><Enabled vt=\"11\">-1</Enabled><TrackingModes vt=\"8\">Claim</TrackingModes></Properties>" +
 						"</Component>" +
 						"<Component Name=\"Be.Stateless.BizTalk.Component.XsltRunnerComponent\">" +
 						"<Properties />" +

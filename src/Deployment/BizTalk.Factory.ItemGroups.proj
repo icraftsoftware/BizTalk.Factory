@@ -310,12 +310,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Policies Include="Be.Stateless.BizTalk.Policies.dll">
-      <LocationPath>..\BizTalk.Policies\bin\$(Configuration)</LocationPath>
-    </Policies>
-  </ItemGroup>
-
-  <ItemGroup>
     <PropsFromEnvSettings Include="BamArchiveWindowTimeLength;BamOnlineWindowTimeLength" />
     <PropsFromEnvSettings Include="ClaimStoreAgentTargetHosts;ClaimStoreCheckInDirectory;ClaimStoreCheckOutDirectory" />
   </ItemGroup>

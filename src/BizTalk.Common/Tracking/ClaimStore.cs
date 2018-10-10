@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Message.Extensions;
@@ -89,89 +88,6 @@ namespace Be.Stateless.BizTalk.Tracking
 			set { _checkOutDirectory = value; }
 		}
 
-		#region Message Body Archiving
-
-		/// <summary>
-		/// Setup archiving of the <paramref name="trackingStream"/> payload.
-		/// </summary>
-		/// <param name="trackingStream">
-		/// The stream whose payload needs to be archived.
-		/// </param>
-		/// <param name="archiveTargetLocation">
-		/// The location where to bring the payload archive.
-		/// </param>
-		/// <param name="transactionFactory">
-		/// The <see cref="IKernelTransaction"/> factory method whose offspring transaction has to be piggybacked if the
-		/// message body's payload needs to be claimed to disk. It can be <c>null</c> if piggybacking is not desired nor
-		/// possible, like for instance when calling this method from a send pipeline, as BizTalk does not provide for
-		/// transaction piggybacking in send pipelines.
-		/// </param>
-		/// <remarks>
-		/// This will essentially write a satellite side file next to the captured payload. This satellite file, that
-		/// share the same base name as the captured payload, merely provides instructions to the Claim Store Agent on
-		/// where to put the archived payload.
-		/// </remarks>
-		public virtual void SetupMessageBodyArchiving(TrackingStream trackingStream, string archiveTargetLocation, Func<IKernelTransaction> transactionFactory)
-		{
-			if (trackingStream == null) throw new ArgumentNullException("trackingStream");
-			if (trackingStream.CaptureDescriptor.CaptureMode != MessageBodyCaptureMode.Claimed) throw new ArgumentException("TrackingStream.CaptureDescriptor has not been setup for Claimed capture.", "trackingStream");
-			if (archiveTargetLocation.IsNullOrEmpty()) throw new ArgumentNullException("archiveTargetLocation");
-
-			if (_logger.IsDebugEnabled) _logger.Debug("Message body archiving is being set up: assessing archiving job descriptor.");
-			trackingStream.ArchiveDescriptor = new ArchiveDescriptor(trackingStream.CaptureDescriptor.Data, archiveTargetLocation);
-
-			trackingStream.AfterLastReadEvent += (sender, args) => {
-				if (_logger.IsDebugEnabled) _logger.Debug("Message body archiving has been set up: creating archiving job descriptor.");
-				var senderTrackingStream = (TrackingStream) sender;
-				var archiveDescriptor = senderTrackingStream.ArchiveDescriptor;
-				// if being redeemed, payload could either already have been captured or CaptureDescriptor.Data could be an
-				// absolute http:// or file:// uri, and, in all cases, no side .rchk-file would exist. That is why a new
-				// pseudo claim store entry is being generated; "pseudo" because no payload will be captured ever/again, but
-				// archiving needs to be processed by ClaimStore.Agent anyway.
-				var url = senderTrackingStream.IsRedeemed ? GenerateClaimStoreEntry() : senderTrackingStream.CaptureDescriptor.Data;
-				using (var fileStream = CreateArchivingJobDescriptorStream(url, transactionFactory))
-				{
-					using (var writer = XmlWriter.Create(fileStream, new XmlWriterSettings { OmitXmlDeclaration = true }))
-					{
-						archiveDescriptor.WriteXml(writer);
-					}
-					(fileStream as IStreamTransacted).IfNotNull(st => st.Commit());
-				}
-			};
-		}
-
-		/// <summary>
-		/// Creates a file <see cref="Stream"/> that piggies back a kernel transaction if one can be factored and that
-		/// will sit next to a claim store entry and describe the archiving job that will have to be performed by the
-		/// Claim Store Agent with this entry.
-		/// </summary>
-		/// <param name="url">
-		/// The claim store entry.
-		/// </param>
-		/// <param name="transactionFactory">
-		/// The <see cref="IKernelTransaction"/> factory.
-		/// </param>
-		/// <returns>
-		/// The <see cref="Stream"/> to archiving job.
-		/// </returns>
-		private Stream CreateArchivingJobDescriptorStream(string url, Func<IKernelTransaction> transactionFactory)
-		{
-			string filePath;
-			if (RequiresCheckInAndOut)
-			{
-				filePath = Path.Combine(CheckInDirectory, url.Replace("\\", ""));
-			}
-			else
-			{
-				filePath = Path.Combine(CheckInDirectory, url);
-				// ReSharper disable once AssignNullToNotNullAttribute
-				Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-			}
-			return FileTransacted.Create(filePath + ".rjob", 1024, transactionFactory.IfNotNull(ktf => ktf()));
-		}
-
-		#endregion
-
 		#region Message Body Capture
 
 		/// <summary>
@@ -211,32 +127,19 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// <c>LongReferenceData</c> item of more than 512 KB.
 		/// </para>
 		/// </remarks>
-		public virtual ActivityTrackingModes SetupMessageBodyCapture(
-			TrackingStream trackingStream,
-			ActivityTrackingModes trackingModes,
-			Func<IKernelTransaction> transactionFactory)
+		public virtual void SetupMessageBodyCapture(TrackingStream trackingStream, ActivityTrackingModes trackingModes, Func<IKernelTransaction> transactionFactory)
 		{
 			if (trackingStream == null) throw new ArgumentNullException("trackingStream");
 
 			if (_logger.IsDebugEnabled)
 				_logger.DebugFormat(
-					"Message body capture is being set up and '{0}' tracking requirements are being ascertained.",
+					"Message body capture is being set up for '{0}' tracking requirements.",
 					Convert.ToString(trackingModes));
 
-			// never want to assess if body can be captured in BAM when archiving alone is required, but never want to
-			// force a claim check either if payload size is small ---whatever archiving requirement. In other words,
-			// always probe payload size if either claim check is required or archiving is not
-			var markableStream = trackingModes.RequiresBodyClaimChecking() || !trackingModes.RequiresBodyArchiving()
-				? trackingStream.AsMarkable()
-				: null;
-
-			string encodedCompression = null;
-			var compressible = markableStream.IfNotNull(ms => ms.TryCompressToBase64String(PAYLOAD_SIZE_THRESHOLD, out encodedCompression));
-			// discard claim check requirement so that no claim check would be forced should archiving be required too
-			if (compressible && trackingModes.RequiresBodyClaimChecking()) trackingModes = trackingModes.DiscardBodyClaimChecking();
-
-			// only capture payload in BAM if archiving is not required
-			if (compressible && !trackingModes.RequiresBodyArchiving())
+			// never want to claim (save to disk) a payload if it is small, hence always probe for its size
+			string encodedCompression;
+			var isCompressible = trackingStream.AsMarkable().TryCompressToBase64String(PAYLOAD_SIZE_THRESHOLD, out encodedCompression);
+			if (isCompressible)
 			{
 				var captureDescriptor = new MessageBodyCaptureDescriptor(encodedCompression, MessageBodyCaptureMode.Unclaimed);
 				trackingStream.SetupCapture(captureDescriptor);
@@ -247,14 +150,6 @@ namespace Be.Stateless.BizTalk.Tracking
 				var capturingStream = CreateCapturingStream(captureDescriptor.Data, trackingModes, transactionFactory);
 				trackingStream.SetupCapture(captureDescriptor, capturingStream);
 			}
-
-			if (_logger.IsDebugEnabled)
-				_logger.DebugFormat(
-					"Message body capture has been set up to be '{0}' and tracking requirements have been ascertained to '{1}'.",
-					Convert.ToString(trackingStream.CaptureDescriptor.CaptureMode),
-					Convert.ToString(trackingModes));
-
-			return trackingModes;
 		}
 
 		/// <summary>
@@ -274,12 +169,12 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// </returns>
 		private Stream CreateCapturingStream(string url, ActivityTrackingModes trackingModes, Func<IKernelTransaction> transactionFactory)
 		{
-			// RequiresCheckInAndOut entails payloads are first saved locally and moved by TrackingAgent into claim store
-			// where there will be a subfolder for each date that some payload has been saved/tracked to disk. To ease the
-			// job of the TrackingAgent the subfolder is not created locally (but the current date is however kept in the
-			// name). When not RequiresCheckInAndOut, the payloads are tracked/saved to disk at the exact same place that
-			// it will be redeemed from afterward, that is in a subfolder corresponding to the current date (of course, one
-			// needs to ensure the folders get created).
+			// RequiresCheckInAndOut entails payloads are first saved locally and moved by ClaimStore.Agent into claim
+			// store where there will be a subfolder for each date that some payload has been saved/tracked to disk. To
+			// ease the job of the ClaimStore.Agent the subfolder is not created locally (but the current date is however
+			// kept in the name). When not RequiresCheckInAndOut, the payloads are tracked/saved to disk at the exact same
+			// place that it will be redeemed from afterwards, that is in a subfolder corresponding to the current date (of
+			// course, one needs to ensure the folders get created).
 
 			string filePath;
 			if (RequiresCheckInAndOut)
@@ -296,14 +191,11 @@ namespace Be.Stateless.BizTalk.Tracking
 				// central claim store, one has therefore to ensure a claim is available in the central claim store before
 				// it could be redeemed.
 
-				// .rchk or .rtrk combine an archiving requirement with either a claim checking or a tracking requirement.
+				// The .chk and .trk extensions are there to allow the ClaimStore.Agent to distinguish these scenarios so
+				// that it can, (1) bring claimed or tracked payloads to the central claim store and (2) make claims
+				// available for redeem as soon as they have been brought to the central store.
 
-				// The .chk/.rchk and .trk/.rtrk extensions are there to allow the ClaimStore.Agent to distinguish these
-				// scenarios so that it can, (1) bring claimed or tracked payloads to the central claim store, (2) bring
-				// payloads to their archive location, and (3) make claims available for redeem as soon as they have been
-				// brought to the central store.
-
-				var extension = (trackingModes.RequiresBodyArchiving() ? ".r" : ".") + (trackingModes.RequiresBodyClaimChecking() ? "chk" : "trk");
+				var extension = trackingModes.RequiresBodyClaimChecking() ? ".chk" : ".trk";
 				filePath = Path.Combine(CheckInDirectory, url.Replace("\\", "") + extension);
 			}
 			else
