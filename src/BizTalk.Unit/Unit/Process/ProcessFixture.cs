@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace Be.Stateless.BizTalk.Unit.Process
 	{
 		protected internal virtual IEnumerable<Type> AllDependantOrchestrationTypes
 		{
-			get { return Enumerable.Empty<Type>(); }
+			get { return DependantOrchestrationTypes; }
 		}
 
 		/// <summary>
@@ -86,6 +86,26 @@ namespace Be.Stateless.BizTalk.Unit.Process
 		protected IEnumerable<MessageBoxServiceInstance> BizTalkServiceInstances
 		{
 			get { return BizTalkOperationsExtensions.GetRunningOrSuspendedServiceInstances(); }
+		}
+
+		/// <summary>
+		/// Ordered list of orchestration types that this process depends upon.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Dependant orchestrations will be started before any test method of this process is run; notice that they will
+		/// be started in the order in which they were given. Likewise, dependant orchestrations will be unenlisted after
+		/// all of the test methods of this process has run; notice that they will be unenlisted in the reverse order in
+		/// which they were given.
+		/// </para>
+		/// <para>
+		/// Any service instance of any one of the dependant orchestrations will be terminated after each test method of
+		/// this process has run should the service instance be suspended or still be running.
+		/// </para>
+		/// </remarks>
+		protected virtual IEnumerable<Type> DependantOrchestrationTypes
+		{
+			get { return Enumerable.Empty<Type>(); }
 		}
 
 		/// <summary>
