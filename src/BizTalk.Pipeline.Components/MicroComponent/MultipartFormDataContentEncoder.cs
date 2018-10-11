@@ -20,6 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Streaming;
+using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -38,9 +39,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			message.BodyPart.WrapOriginalDataStream(
 				originalStream => {
 					if (_logger.IsDebugEnabled) _logger.Debug("Wrapping message stream in a MultipartFormDataContentStream.");
-					var multipartFormDataContentStream = UseBodyPartNameAsContentName
-						? new MultipartFormDataContentStream(originalStream)
-						: new MultipartFormDataContentStream(originalStream, message.BodyPartName);
+					var multipartFormDataContentStream = ContentName.IsNullOrEmpty()
+						? UseBodyPartNameAsContentName
+							? new MultipartFormDataContentStream(originalStream)
+							: new MultipartFormDataContentStream(originalStream, message.BodyPartName)
+						: new MultipartFormDataContentStream(originalStream, ContentName);
 					message.BodyPart.ContentType = multipartFormDataContentStream.ContentType;
 					return multipartFormDataContentStream;
 				},
@@ -49,6 +52,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		#endregion
+
+		public string ContentName { get; set; }
 
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 		public bool UseBodyPartNameAsContentName { get; set; }
