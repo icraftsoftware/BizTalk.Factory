@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<DestinationPartySenderQualifier, string> DestinationPartySenderQualifier
 			= new MessageContextProperty<DestinationPartySenderQualifier, string>();
+
+		public static readonly MessageContextProperty<IsSystemGeneratedAck, bool> IsSystemGeneratedAck
+			= new MessageContextProperty<IsSystemGeneratedAck, bool>();
 
 		public static readonly MessageContextProperty<MKS1, string> MKS1
 			= new MessageContextProperty<MKS1, string>();
