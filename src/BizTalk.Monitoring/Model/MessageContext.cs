@@ -71,7 +71,8 @@ namespace Be.Stateless.BizTalk.Monitoring.Model
 		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 		public string MessagingStepActivityID { get; set; }
 
-		internal IEnumerable<Property<object>> Properties
+		// public for Be.Stateless.BizTalk.Web.Monitoring.Site
+		public IEnumerable<Property<object>> Properties
 		{
 			get
 			{
