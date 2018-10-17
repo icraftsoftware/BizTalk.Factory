@@ -31,6 +31,48 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	public class MultipartFormDataContentEncoderFixture : MicroPipelineComponentFixture
 	{
 		[Test]
+		[Ignore("MessageMock need to be fixed to support BodyPartName setup.")]
+		public void ContentBodyPartHasName()
+		{
+			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+				MessageMock.Setup(m => m.BodyPartName).Returns("implicit");
+
+				var sut = new MultipartFormDataContentEncoder { UseBodyPartNameAsContentName = true };
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(MessageMock.Object.BodyPart.ContentType, Does.Match("multipart/form-data; boundary=\"[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12}\""));
+				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
+				{
+					var content = reader.ReadToEnd();
+					Assert.That(content, Does.Match("^(--[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12})\r\nContent-Disposition: form-data; name=implicit\r\n[\\w\\W]+\r\n\\1--\r\n$"));
+				}
+			}
+		}
+
+		[Test]
+		public void ContentHasName()
+		{
+			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))
+			{
+				MessageMock.Object.BodyPart.Data = dataStream;
+
+				var sut = new MultipartFormDataContentEncoder { ContentName = "explicit" };
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				Assert.That(MessageMock.Object.BodyPart.ContentType, Does.Match("multipart/form-data; boundary=\"[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12}\""));
+				using (var reader = new StreamReader(MessageMock.Object.BodyPart.Data))
+				{
+					var content = reader.ReadToEnd();
+					Assert.That(
+						content,
+						Does.Match("^(--[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12})\r\nContent-Disposition: form-data; name=explicit\r\n[\\w\\W]+\r\n\\1--\r\n$"));
+				}
+			}
+		}
+
+		[Test]
 		public void ContentIsMultipart()
 		{
 			using (var dataStream = ResourceManager.Load("Data.BatchContent.xml"))

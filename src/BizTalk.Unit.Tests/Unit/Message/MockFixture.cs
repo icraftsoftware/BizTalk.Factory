@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -153,6 +153,17 @@ namespace Be.Stateless.BizTalk.Unit.Message
 
 				Assert.That(message.Object.BodyPart.GetOriginalDataStream(), Is.SameAs(inputStream));
 			}
+		}
+
+		[Test]
+		[Ignore("MessageMock need to be fixed to support BodyPartName setup.")]
+		public void BodyPartNameCanBeSetup()
+		{
+			var message = new Mock<IBaseMessage>(MockBehavior.Strict);
+
+			message.Setup(m => m.BodyPartName).Returns("implicit");
+
+			Assert.That(message.Object.BodyPartName, Is.EqualTo("implicit"));
 		}
 
 		[Test]

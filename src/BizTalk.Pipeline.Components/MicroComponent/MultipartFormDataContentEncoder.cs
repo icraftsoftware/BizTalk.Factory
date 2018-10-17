@@ -41,8 +41,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 					if (_logger.IsDebugEnabled) _logger.Debug("Wrapping message stream in a MultipartFormDataContentStream.");
 					var multipartFormDataContentStream = ContentName.IsNullOrEmpty()
 						? UseBodyPartNameAsContentName
-							? new MultipartFormDataContentStream(originalStream)
-							: new MultipartFormDataContentStream(originalStream, message.BodyPartName)
+							? new MultipartFormDataContentStream(originalStream, message.BodyPartName)
+							: new MultipartFormDataContentStream(originalStream)
 						: new MultipartFormDataContentStream(originalStream, ContentName);
 					message.BodyPart.ContentType = multipartFormDataContentStream.ContentType;
 					return multipartFormDataContentStream;
