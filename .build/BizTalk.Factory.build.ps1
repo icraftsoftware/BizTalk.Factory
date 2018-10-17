@@ -153,9 +153,9 @@ task ExportDeploymentTools {
 # SYNOPSIS: Export MSI packages
 task ExportMsiPackages GetProductVersion, PackMsi, {
    New-Item -Path . -Name .exports -ItemType Directory -Force | Out-Null
-   Copy-Item -Path src\Deployment\bin\Debug\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi -Destination .exports\BizTalk.Factory.$productVersion-Debug.msi -Force -PassThru `
+   Copy-Item -Path src\Deployment\bin\Debug\Installer\BizTalk.Factory\BizTalk.Factory.$productVersion.msi -Destination .exports\BizTalk.Factory.$productVersion-Debug.msi -Force -PassThru `
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
-   Copy-Item -Path src\Deployment\bin\Release\Installer\BizTalk.Factory\BizTalk.Factory-1.0.0.msi -Destination .exports\BizTalk.Factory.$productVersion-Release.msi -Force -PassThru  `
+   Copy-Item -Path src\Deployment\bin\Release\Installer\BizTalk.Factory\BizTalk.Factory.$productVersion.msi -Destination .exports\BizTalk.Factory.$productVersion-Release.msi -Force -PassThru  `
       | ForEach-Object -Process { Write-Information -MessageData $_.Name -InformationAction Continue }
 }
 

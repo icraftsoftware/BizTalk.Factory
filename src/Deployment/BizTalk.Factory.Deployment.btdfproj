@@ -42,7 +42,6 @@
     -->
   <PropertyGroup>
     <ProductName>BizTalk Factory for BizTalk Server</ProductName>
-    <ProductVersion>1.0.0</ProductVersion>
     <!-- BizTalk App Version Upgrade -->
     <ProductId>F9D30271-5613-4B2C-8393-B5470CBE6FC6</ProductId>
     <!-- NEVER change the ProductUpgradeCode -->
@@ -116,5 +115,23 @@
 
   <Import Project="BizTalk.Factory.ItemGroups.proj" />
   <Import Project="BizTalk.Factory.Deployment.targets" />
+
+  <PropertyGroup>
+    <CustomPreRedistDependsOn>
+      $(CustomPreRedistDependsOn);
+      AssignProductVersion
+    </CustomPreRedistDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AssignProductVersion">
+    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="%(ApplicationBindingsQualified.Identity)">
+      <Output TaskParameter="OutputItems" ItemName="Info"/>
+    </MSBuild.ExtensionPack.Framework.Assembly>
+    <PropertyGroup>
+      <ProductVersion>%(Info.AssemblyInformationalVersion)</ProductVersion>
+      <MsiName>$(ProjectName).$(ProductVersion)</MsiName>
+    </PropertyGroup>
+    <Message Text="ProductVersion: $(ProductVersion)" />
+  </Target>
 
 </Project>
