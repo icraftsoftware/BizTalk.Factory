@@ -47,5 +47,8 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<SendTimeout, string> SendTimeout
 			= new MessageContextProperty<SendTimeout, string>();
+
+		public static readonly MessageContextProperty<SuppressMessageBodyForHttpVerbs, string> SuppressMessageBodyForHttpVerbs
+			= new MessageContextProperty<SuppressMessageBodyForHttpVerbs, string>();
 	}
 }
