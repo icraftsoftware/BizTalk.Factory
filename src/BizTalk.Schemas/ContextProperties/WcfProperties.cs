@@ -27,8 +27,17 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<Action, string> Action
 			= new MessageContextProperty<Action, string>();
 
+		public static readonly MessageContextProperty<Headers, string> Headers
+			= new MessageContextProperty<Headers, string>();
+
 		public static readonly MessageContextProperty<HttpHeaders, string> HttpHeaders
 			= new MessageContextProperty<HttpHeaders, string>();
+
+		public static readonly MessageContextProperty<HttpMethodAndUrl, string> HttpMethodAndUrl
+			= new MessageContextProperty<HttpMethodAndUrl, string>();
+
+		public static readonly MessageContextProperty<Identity, string> Identity
+			= new MessageContextProperty<Identity, string>();
 
 		public static readonly MessageContextProperty<InboundBodyLocation, string> InboundBodyLocation
 			= new MessageContextProperty<InboundBodyLocation, string>();
@@ -38,6 +47,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<MaxConcurrentCalls, int> MaxConcurrentCalls
 			= new MessageContextProperty<MaxConcurrentCalls, int>();
+
+		public static readonly MessageContextProperty<MaxConnections, int> MaxConnections
+			= new MessageContextProperty<MaxConnections, int>();
 
 		public static readonly MessageContextProperty<OutboundBodyLocation, string> OutboundBodyLocation
 			= new MessageContextProperty<OutboundBodyLocation, string>();
@@ -50,5 +62,14 @@ namespace Be.Stateless.BizTalk.ContextProperties
 
 		public static readonly MessageContextProperty<SuppressMessageBodyForHttpVerbs, string> SuppressMessageBodyForHttpVerbs
 			= new MessageContextProperty<SuppressMessageBodyForHttpVerbs, string>();
+
+		public static readonly MessageContextProperty<TimeToLive, string> TimeToLive
+			= new MessageContextProperty<TimeToLive, string>();
+
+		public static readonly MessageContextProperty<To, string> To
+			= new MessageContextProperty<To, string>();
+
+		public static readonly MessageContextProperty<VariablePropertyMapping, string> VariablePropertyMapping
+			= new MessageContextProperty<VariablePropertyMapping, string>();
 	}
 }
