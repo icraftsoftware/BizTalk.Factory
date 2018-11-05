@@ -37,6 +37,9 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<DeliveryCount, int> DeliveryCount
 			= new MessageContextProperty<DeliveryCount, int>();
 
+		public static readonly MessageContextProperty<EnqueuedTimeUtc, DateTime> EnqueuedTimeUtc
+			= new MessageContextProperty<EnqueuedTimeUtc, DateTime>();
+
 		public static readonly MessageContextProperty<ExpiresAtUtc, DateTime> ExpiresAtUtc
 			= new MessageContextProperty<ExpiresAtUtc, DateTime>();
 
