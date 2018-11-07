@@ -26,6 +26,22 @@ using Microsoft.BizTalk.Message.Interop;
 
 namespace Be.Stateless.BizTalk.MicroComponent
 {
+	/// <summary>
+	/// Propagates message type and correlation token inwards or outwards.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// For inbound messages, <see cref="SBMessagingProperties.ContentType"/> and <see
+	/// cref="SBMessagingProperties.CorrelationId"/>, if any, are respectively propagated as <see
+	/// cref="BtsProperties.MessageType"/> and <see cref="BizTalkFactoryProperties.CorrelationToken"/>. Notice that <see
+	/// cref="BizTalkFactoryProperties.CorrelationToken"/> is moreover promoted.
+	/// </para>
+	/// <para>
+	/// For outbound messages, <see cref="BtsProperties.MessageType"/> and <see
+	/// cref="BizTalkFactoryProperties.CorrelationToken"/>, if any, are respectively propagated as <see
+	/// cref="SBMessagingProperties.ContentType"/> and <see cref="SBMessagingProperties.CorrelationId"/>.
+	/// </para>
+	/// </remarks>
 	public class SBMessagingContextPropagator : IMicroPipelineComponent
 	{
 		#region IMicroPipelineComponent Members
