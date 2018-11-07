@@ -112,6 +112,7 @@
     <Compile Include="MicroComponent\MessageConsumer.cs" />
     <Compile Include="MicroComponent\MessageBodyStreamFactory.cs" />
     <Compile Include="MicroComponent\PolicyRunner.cs" />
+    <Compile Include="MicroComponent\SBMessagingContextPropagator.cs" />
     <Compile Include="MicroComponent\XmlTranslator.cs" />
     <Compile Include="MicroComponent\XsltRunner.cs" />
     <Compile Include="MicroComponent\ZipDecoder.cs" />

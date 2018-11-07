@@ -114,6 +114,7 @@
     <Compile Include="MicroComponent\MessageConsumerFixture.cs" />
     <Compile Include="MicroComponent\MultipartFormDataContentEncoderFixture.cs" />
     <Compile Include="MicroComponent\PolicyRunnerFixture.cs" />
+    <Compile Include="MicroComponent\SBMessagingContextPropagatorFixture.cs" />
     <Compile Include="MicroComponent\XmlTranslatorFixture.cs" />
     <Compile Include="MicroComponent\XsltRunnerFixture.cs" />
     <Compile Include="MicroComponent\ZipDecoderFixture.cs" />
