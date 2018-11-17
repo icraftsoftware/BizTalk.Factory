@@ -31,15 +31,19 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// For inbound messages, <see cref="SBMessagingProperties.ContentType"/> and <see
-	/// cref="SBMessagingProperties.CorrelationId"/>, if any, are respectively propagated as <see
-	/// cref="BtsProperties.MessageType"/> and <see cref="BizTalkFactoryProperties.CorrelationToken"/>. Notice that <see
-	/// cref="BizTalkFactoryProperties.CorrelationToken"/> is moreover promoted.
+	/// For inbound messages,
+	/// <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.CorrelationId"/>
+	/// and <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.Label"/>, if any, are respectively
+	/// promoted into BizTalk message context as <see cref="BizTalkFactoryProperties"/>.<see
+	/// cref="BizTalkFactoryProperties.CorrelationToken"/> and <see cref="BtsProperties"/>.<see
+	/// cref="BtsProperties.MessageType"/>.
 	/// </para>
 	/// <para>
-	/// For outbound messages, <see cref="BtsProperties.MessageType"/> and <see
-	/// cref="BizTalkFactoryProperties.CorrelationToken"/>, if any, are respectively propagated as <see
-	/// cref="SBMessagingProperties.ContentType"/> and <see cref="SBMessagingProperties.CorrelationId"/>.
+	/// For outbound messages,
+	/// <see cref="BizTalkFactoryProperties"/>.<see cref="BizTalkFactoryProperties.CorrelationToken"/>
+	/// and <see cref="BtsProperties"/>.<see cref="BtsProperties.MessageType"/>, if any, are respectively propagated as
+	/// <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.CorrelationId"/>
+	/// and <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.Label"/>.
 	/// </para>
 	/// </remarks>
 	public class SBMessagingContextPropagator : IMicroPipelineComponent
@@ -52,15 +56,15 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			{
 				var correlationId = message.GetProperty(SBMessagingProperties.CorrelationId);
 				if (!correlationId.IsNullOrEmpty()) message.PromoteCorrelationToken(correlationId);
-				var contentType = message.GetProperty(SBMessagingProperties.ContentType);
-				if (!contentType.IsNullOrEmpty()) message.SetProperty(BtsProperties.MessageType, contentType);
+				var label = message.GetProperty(SBMessagingProperties.Label);
+				if (!label.IsNullOrEmpty()) message.Promote(BtsProperties.MessageType, label);
 			}
 			else
 			{
 				var correlationToken = message.GetProperty(BizTalkFactoryProperties.CorrelationToken);
 				if (!correlationToken.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.CorrelationId, correlationToken);
 				var messageType = message.GetProperty(BtsProperties.MessageType);
-				if (!messageType.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.ContentType, messageType);
+				if (!messageType.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.Label, messageType);
 			}
 			return message;
 		}
