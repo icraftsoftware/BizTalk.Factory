@@ -67,6 +67,48 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		}
 
 		[Test]
+		public void CombiningCompoundFiltersByConjunction()
+		{
+			var actualFilter = new Filter(() => BtsProperties.AckRequired == true || BtsProperties.ActualRetryCount > 3)
+				&& new Filter(() => BtsProperties.MessageType == "type" || BtsProperties.MessageDestination == "MD");
+			var expectedFilter = new Filter(
+				() => (BtsProperties.AckRequired == true || BtsProperties.ActualRetryCount > 3)
+					&& (BtsProperties.MessageType == "type" || BtsProperties.MessageDestination == "MD"));
+
+			Assert.That(actualFilter.ToString(), Is.EqualTo(expectedFilter.ToString()));
+		}
+
+		[Test]
+		public void CombiningCompoundFiltersByDisjunction()
+		{
+			var actualFilter = new Filter(() => BtsProperties.AckRequired == true && BtsProperties.ActualRetryCount > 3)
+				|| new Filter(() => BtsProperties.MessageType == "type" && BtsProperties.MessageDestination == "MD");
+			var expectedFilter = new Filter(
+				() => BtsProperties.AckRequired == true && BtsProperties.ActualRetryCount > 3
+					|| BtsProperties.MessageType == "type" && BtsProperties.MessageDestination == "MD");
+
+			Assert.That(actualFilter.ToString(), Is.EqualTo(expectedFilter.ToString()));
+		}
+
+		[Test]
+		public void CombiningFiltersByConjunction()
+		{
+			var actualFilter = new Filter(() => BtsProperties.AckRequired == true) && new Filter(() => BtsProperties.MessageType == "type");
+			var expectedFilter = new Filter(() => BtsProperties.AckRequired == true && BtsProperties.MessageType == "type");
+
+			Assert.That(actualFilter.ToString(), Is.EqualTo(expectedFilter.ToString()));
+		}
+
+		[Test]
+		public void CombiningFiltersByDisjunction()
+		{
+			var actualFilter = new Filter(() => BtsProperties.AckRequired == true) || new Filter(() => BtsProperties.MessageType == "type");
+			var expectedFilter = new Filter(() => BtsProperties.AckRequired == true || BtsProperties.MessageType == "type");
+
+			Assert.That(actualFilter.ToString(), Is.EqualTo(expectedFilter.ToString()));
+		}
+
+		[Test]
 		[TestCaseSource("ConjunctionFilters")]
 		public void ConjunctionIsDistributed(Filter actualFilter, Filter expectedFilter)
 		{

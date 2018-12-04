@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,9 +31,47 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 	{
 		#region Operators
 
+		public static Filter operator &(Filter left, Filter right)
+		{
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/conditional-and-operator
+			return new Filter(
+				Expression.Lambda<Func<bool>>(
+					Expression.MakeBinary(
+						ExpressionType.AndAlso,
+						left._predicate.Body,
+						right._predicate.Body)));
+		}
+
+		public static Filter operator |(Filter left, Filter right)
+		{
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/conditional-or-operator
+			return new Filter(
+				Expression.Lambda<Func<bool>>(
+					Expression.MakeBinary(
+						ExpressionType.OrElse,
+						left._predicate.Body,
+						right._predicate.Body)));
+		}
+
+		public static bool operator false(Filter filter)
+		{
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/true-operator
+			// return opposite of what expected to prevent short-circuit evaluation as actual intent is to return a new expression tree
+			return false;
+		}
+
 		public static implicit operator string(Filter filter)
 		{
 			return TranslateFilterGroup(FilterTranslator.Translate(filter._predicate));
+		}
+
+		public static bool operator true(Filter filter)
+		{
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
+			// see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/false-operator
+			// return opposite of what expected to prevent short-circuit evaluation as actual intent is to return a new expression tree
+			return false;
 		}
 
 		#endregion
