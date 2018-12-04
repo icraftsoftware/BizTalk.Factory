@@ -35,7 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		{
 			try
 			{
-				return TranslateFilterPredicate(expression.Body);
+				return TranslateFilterPredicate(FilterNormalizer.Normalize(expression.Body));
 			}
 			catch (TpmException exception)
 			{

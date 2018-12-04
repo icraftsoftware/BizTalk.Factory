@@ -278,6 +278,7 @@
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\NetMsmqRetryPolicy.cs" />
     <Compile Include="Dsl\Binding\ServiceModel\Configuration\NetMsmqBindingElement.cs" />
     <Compile Include="Dsl\Binding\ServiceState.cs" />
+    <Compile Include="Dsl\Binding\Subscription\FilterNormalizer.cs" />
     <Compile Include="Dsl\Binding\Visitor\BindingInfoBuilderVisitor.cs" />
     <Compile Include="Dsl\Binding\ComponentBinding.cs" />
     <Compile Include="Dsl\Binding\Convention\INamingConvention.cs" />

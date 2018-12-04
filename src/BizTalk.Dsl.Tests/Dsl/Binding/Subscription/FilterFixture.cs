@@ -17,9 +17,11 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Dsl.Binding.Adapter;
 using Be.Stateless.BizTalk.Dsl.Binding.Convention;
+using Be.Stateless.BizTalk.Factory.Areas;
 using Be.Stateless.BizTalk.Install;
 using Be.Stateless.BizTalk.Pipelines;
 using Microsoft.BizTalk.B2B.PartnerManagement;
@@ -47,20 +49,84 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		#endregion
 
 		[Test]
-		public void ConjunctionOfDisjunctionsOfFiltersIsNotSupported()
+		public void BooleanContextPropertyBasedFilter()
 		{
-			const string token1 = "BizTalkFactory.Batcher";
-			const int token2 = 3;
+			// filter's predicate cannot be made of only a boolean property, as in:
+			// var filter = new Filter(() => BtsProperties.AckRequired);
+			// embedded C# DSL requires comparison operator and value to be explicit written as follows:
+			var filter = new Filter(() => BtsProperties.AckRequired == true);
 
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
+						BtsProperties.AckRequired.Type.FullName,
+						(int) FilterOperator.Equals,
+						true.ToString())));
+		}
+
+		[Test]
+		[TestCaseSource("ConjunctionFilters")]
+		public void ConjunctionIsDistributed(Filter actualFilter, Filter expectedFilter)
+		{
+			Assert.That(actualFilter.ToString(), Is.EqualTo(expectedFilter.ToString()));
+		}
+
+		[Test]
+		public void ConjunctionIsDistributedOverDisjunctionOfFilters()
+		{
+			const string senderNameToken = "BizTalkFactory.Batcher";
+			const int retryCountToken = 3;
 			var filter = new Filter(
-				() => (BizTalkFactoryProperties.SenderName == token1 || BtsProperties.ActualRetryCount > token2)
+				() => (BizTalkFactoryProperties.SenderName == senderNameToken || BtsProperties.ActualRetryCount > retryCountToken)
 					&& BtsProperties.MessageType == Schema<Schemas.Xml.Batch.Content>.MessageType);
 
 			Assert.That(
-				() => filter.ToString(),
-				Throws.TypeOf<NotSupportedException>()
-					.With.Message.EqualTo(
-						"Cannot translate FilterStatement \"((BizTalkFactoryProperties.SenderName == \"BizTalkFactory.Batcher\") OrElse (BtsProperties.ActualRetryCount > 3))\" because OrElse node is not supported."));
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter>"
+							+ "<Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" /></Group>"
+							+ "<Group><Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" /></Group>"
+							+ "</Filter>",
+						BizTalkFactoryProperties.SenderName.Type.FullName,
+						(int) FilterOperator.Equals,
+						senderNameToken,
+						BtsProperties.MessageType.Type.FullName,
+						(int) FilterOperator.Equals,
+						Schema<Schemas.Xml.Batch.Content>.MessageType,
+						BtsProperties.ActualRetryCount.Type.FullName,
+						(int) FilterOperator.GreaterThan,
+						retryCountToken)));
+		}
+
+		[Test]
+		public void ConjunctionIsDistributedOverDisjunctionOfFiltersAndDistributionIsCommutative()
+		{
+			const string senderNameToken = "BizTalkFactory.Batcher";
+			const int retryCountToken = 3;
+			var filter = new Filter(
+				() => BtsProperties.MessageType == Schema<Schemas.Xml.Batch.Content>.MessageType
+					&& (BizTalkFactoryProperties.SenderName == senderNameToken || BtsProperties.ActualRetryCount > retryCountToken));
+
+			Assert.That(
+				filter.ToString(),
+				Is.EqualTo(
+					string.Format(
+						"<Filter>"
+							+ "<Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /><Statement Property=\"{3}\" Operator=\"{4}\" Value=\"{5}\" /></Group>"
+							+ "<Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /><Statement Property=\"{6}\" Operator=\"{7}\" Value=\"{8}\" /></Group>"
+							+ "</Filter>",
+						BtsProperties.MessageType.Type.FullName,
+						(int) FilterOperator.Equals,
+						Schema<Schemas.Xml.Batch.Content>.MessageType,
+						BizTalkFactoryProperties.SenderName.Type.FullName,
+						(int) FilterOperator.Equals,
+						senderNameToken,
+						BtsProperties.ActualRetryCount.Type.FullName,
+						(int) FilterOperator.GreaterThan,
+						retryCountToken)));
 		}
 
 		[Test]
@@ -207,7 +273,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 		[Test]
 		public void EqualToStringMember()
 		{
-			var filter = new Filter(() => BizTalkFactoryProperties.CorrelationToken == Factory.Areas.Default.Processes.Unidentified);
+			var filter = new Filter(() => BizTalkFactoryProperties.CorrelationToken == Default.Processes.Unidentified);
 
 			Assert.That(
 				filter.ToString(),
@@ -216,7 +282,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" Value=\"{2}\" /></Group></Filter>",
 						BizTalkFactoryProperties.CorrelationToken.Type.FullName,
 						(int) FilterOperator.Equals,
-						Factory.Areas.Default.Processes.Unidentified)));
+						Default.Processes.Unidentified)));
 		}
 
 		[Test]
@@ -436,6 +502,202 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Subscription
 						"<Filter><Group><Statement Property=\"{0}\" Operator=\"{1}\" /></Group></Filter>",
 						BizTalkFactoryProperties.SenderName.Type.FullName,
 						(int) FilterOperator.Exists)));
+		}
+
+		private static IEnumerable<TestCaseData> ConjunctionFilters
+		{
+			get
+			{
+				var messageType = Schema<Schemas.Xml.Batch.Content>.MessageType;
+				const string operation = "Operation";
+				const string senderName = "BizTalkFactory.Accumulator";
+
+				yield return new TestCaseData(
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName),
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName)
+					).SetName("Scalar");
+
+				yield return new TestCaseData(
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType),
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType)
+					).SetName("Conjunction");
+
+				yield return new TestCaseData(
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3),
+					new Filter(() => BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+					).SetName("Disjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& BtsProperties.MessageType == messageType
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.MessageType == messageType
+						)
+					).SetName("ConjunctionAndBinaryDisjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3 || BtsProperties.Operation > operation)
+							&& BtsProperties.MessageType == messageType
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.MessageType == messageType
+							|| BtsProperties.Operation > operation && BtsProperties.MessageType == messageType
+						)
+					).SetName("ConjunctionAndTernaryDisjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& (BtsProperties.MessageType == messageType || BtsProperties.Operation == operation)
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.Operation == operation
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.Operation == operation
+						)
+					).SetName("ConjunctionOfBinaryDisjunctions");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& (BtsProperties.MessageType == messageType || TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2")
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+						)
+					).SetName("ConjunctionOfBinaryDisjunctionsWhoseOneWithNestedConjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& (
+								BtsProperties.MessageType == messageType || TrackingProperties.Value1 == "v1"
+									&& (TrackingProperties.Value2 == "v2" || TrackingProperties.Value3 == "v3")
+								)
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BizTalkFactoryProperties.SenderName == senderName && TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+						)
+					).SetName("ConjunctionOfBinaryDisjunctionsWhoseOneWithNestedConjunctionAndDisjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (
+							BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3
+								&& (BtsProperties.AckRequired == true || BtsProperties.SendPortName == "SP")
+							) && (
+								BtsProperties.MessageType == messageType || TrackingProperties.Value1 == "v1"
+									&& (TrackingProperties.Value2 == "v2" || TrackingProperties.Value3 == "v3")
+								)
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BizTalkFactoryProperties.SenderName == senderName && TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true && TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+						)
+					).SetName("ConjunctionOfBinaryDisjunctionsEachWithNestedConjunctionAndDisjunction");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& (
+								BtsProperties.AckRequired == true
+									|| BtsProperties.SendPortName == "SP" && (BtsProperties.MessageDestination == "M.D" || BtsProperties.Operation == operation)
+								)
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.AckRequired == true
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+						)
+					).SetName("ConjunctionMixingLeft");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => BtsProperties.MessageType == messageType
+							|| TrackingProperties.Value1 == "v1" && (TrackingProperties.Value2 == "v2" || TrackingProperties.Value3 == "v3")
+						),
+					new Filter(
+						() => BtsProperties.MessageType == messageType
+							|| TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+						)
+					).SetName("ConjunctionMixingRight");
+
+				yield return new TestCaseData(
+					new Filter(
+						() => (BizTalkFactoryProperties.SenderName == senderName || BtsProperties.ActualRetryCount > 3)
+							&& (
+								BtsProperties.AckRequired == true
+									|| BtsProperties.SendPortName == "SP" && (BtsProperties.MessageDestination == "M.D" || BtsProperties.Operation == operation)
+								)
+							&& (
+								BtsProperties.MessageType == messageType
+									|| TrackingProperties.Value1 == "v1" && (TrackingProperties.Value2 == "v2" || TrackingProperties.Value3 == "v3")
+								)
+						),
+					new Filter(
+						() => BizTalkFactoryProperties.SenderName == senderName && BtsProperties.AckRequired == true && BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true
+								&& BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& BtsProperties.MessageType == messageType
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& BtsProperties.MessageType == messageType
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.AckRequired == true
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.AckRequired == true
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BizTalkFactoryProperties.SenderName == senderName && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.AckRequired == true
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.MessageDestination == "M.D"
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value2 == "v2"
+							|| BtsProperties.ActualRetryCount > 3 && BtsProperties.SendPortName == "SP" && BtsProperties.Operation == operation
+								&& TrackingProperties.Value1 == "v1" && TrackingProperties.Value3 == "v3"
+						)
+					).SetName("ConjunctionMixingLeftAndRight");
+			}
 		}
 
 		private class SampleApplicationBinding : ApplicationBinding
