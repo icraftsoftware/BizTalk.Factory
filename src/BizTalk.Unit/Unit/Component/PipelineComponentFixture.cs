@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Be.Stateless.BizTalk.Component;
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -81,7 +82,12 @@ namespace Be.Stateless.BizTalk.Unit.Component
 			// default behavior analogous to actual IPipelineContext implementation
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType(It.IsAny<string>()))
-				.Callback<string>(t => { throw new COMException("Could not locate document specification with type: " + t); });
+				.Callback<string>(
+					t => {
+						throw new COMException(
+							string.Format("Finding the document specification by message type \"{0}\" failed. Verify the schema deployed properly.", t),
+							PipelineContextExtensions.E_SCHEMA_NOT_FOUND);
+					});
 		}
 
 		/// <summary>

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -102,16 +102,25 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		public static ISchemaMetadata GetSchemaMetadataByType(this IPipelineContext pipelineContext, string docType, bool throwOnError)
 		{
 			if (throwOnError) return pipelineContext.GetSchemaMetadataByType(docType);
-			// avoid costly and useless try/catch when no docType
-			if (docType.IsNullOrEmpty()) return SchemaMetadata.Unknown;
+
+			var schemaType = docType
+				.IfNotNullOrEmpty(dt => pipelineContext.SafeGetDocumentSpecByType(dt))
+				.IfNotNull(docSpec => Type.GetType(docSpec.DocSpecStrongName, false));
+			return schemaType.IsSchema() ? schemaType.GetMetadata() : SchemaMetadata.Unknown;
+		}
+
+		private static IDocumentSpec SafeGetDocumentSpecByType(this IPipelineContext pipelineContext, string docType)
+		{
 			try
 			{
-				return pipelineContext.GetSchemaMetadataByType(docType);
+				return pipelineContext.GetDocumentSpecByType(docType);
 			}
 			catch (COMException exception)
 			{
-				_logger.Warn("GetSchemaMetadataByType() has encountered an error.", exception);
-				return SchemaMetadata.Unknown;
+				// test HResult for Finding the document specification by message type "..." failed. Verify the schema deployed properly.
+				if (exception.HResult == E_SCHEMA_NOT_FOUND) return null;
+				if (_logger.IsWarnEnabled) _logger.Warn(string.Format("SafeGetDocumentSpecByType({0}) has failed.", docType), exception);
+				throw;
 			}
 		}
 
@@ -119,6 +128,8 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		{
 			return (IKernelTransaction) ((IPipelineContextEx) pipelineContext).GetTransaction();
 		}
+
+		internal const int E_SCHEMA_NOT_FOUND = unchecked((int) 0xC0C01300);
 
 		private static Func<IPipelineContext, IActivityFactory> _activityFactoryFactory = pipelineContext => new ActivityFactory(pipelineContext);
 		private static readonly ILog _logger = LogManager.GetLogger(typeof(PipelineContextExtensions));

@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="Component\ConstantExtractorFixture.cs" />
     <Compile Include="Component\Extensions\MicroPipelineComponentExtensionsFixture.cs" />
+    <Compile Include="Component\Extensions\PipelineContextExtensionsFixture.cs" />
     <Compile Include="Component\MicroPipelineComponentEnumerableConverterFixture.cs" />
     <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogateFixture.cs" />
     <Compile Include="Component\PropertyExtractorFixture.cs" />

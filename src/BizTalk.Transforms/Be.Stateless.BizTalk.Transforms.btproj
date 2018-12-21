@@ -91,10 +91,4 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\.imports\Be.Stateless.BizTalk.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)..\.imports\Be.Stateless.VoidBizTalkCommonTargetsWithinVisualStudio.targets" Condition=" Exists('$(MSBuildThisFileDirectory)..\..\lib\Targets\VoidBizTalkCommonTargetsWithinVisualStudio.targets') and '$(BuildingInsideVisualStudio)' == 'true' " />
-  <PropertyGroup>
-    <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
-if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"
-</PreBuildEvent>
-  </PropertyGroup>
 </Project>
