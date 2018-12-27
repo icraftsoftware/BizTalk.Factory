@@ -56,7 +56,8 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		public void ExcludedTypesByDefault()
 		{
 			var expected = new[] {
-				typeof(Step)
+				typeof(Step),
+				typeof(SubProcess)
 			};
 
 			_excludedTypes = () => base.ExcludedTypes;
@@ -85,5 +86,10 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	public abstract class Step : BTXService
 	{
 		protected Step() : base(0, Guid.NewGuid(), null, "stuff") { }
+	}
+
+	public abstract class SubProcess : BTXService
+	{
+		protected SubProcess() : base(0, Guid.NewGuid(), null, "stuff") { }
 	}
 }

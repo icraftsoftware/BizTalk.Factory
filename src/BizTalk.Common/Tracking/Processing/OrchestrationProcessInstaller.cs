@@ -44,7 +44,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 			{
 				return GetType().Assembly.GetTypes()
 					.Where(t => typeof(BTXService).IsAssignableFrom(t))
-					.Where(type => type.Name.Equals("Step", StringComparison.InvariantCultureIgnoreCase));
+					.Where(type => type.Name.Equals("Step", StringComparison.InvariantCultureIgnoreCase) || type.Name.Equals("SubProcess", StringComparison.InvariantCultureIgnoreCase));
 			}
 		}
 	}
