@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,23 +19,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.XLANGs.Core;
+using Microsoft.BizTalk.XLANGs.BTXEngine;
 
 namespace Be.Stateless.BizTalk.Tracking.Processing
 {
 	public abstract class OrchestrationProcessInstaller : ProcessInstaller
 	{
-		protected OrchestrationProcessInstaller()
-		{
-			ExcludedTypes = Enumerable.Empty<Type>();
-		}
-
 		#region Base Class Member Overrides
 
 		protected override string[] GetProcessNames()
 		{
 			return GetType().Assembly.GetTypes()
-				.Where(t => typeof(Service).IsAssignableFrom(t))
+				.Where(t => typeof(BTXService).IsAssignableFrom(t))
 				.Except(ExcludedTypes)
 				.Select(type => type.Namespace)
 				.ToArray();
@@ -43,6 +38,14 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 
 		#endregion
 
-		protected IEnumerable<Type> ExcludedTypes { get; set; }
+		protected virtual IEnumerable<Type> ExcludedTypes
+		{
+			get
+			{
+				return GetType().Assembly.GetTypes()
+					.Where(t => typeof(BTXService).IsAssignableFrom(t))
+					.Where(type => type.Name.Equals("Step", StringComparison.InvariantCultureIgnoreCase));
+			}
+		}
 	}
 }

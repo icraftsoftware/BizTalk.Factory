@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2018 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
 using NUnit.Framework;
 
@@ -34,9 +35,9 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				typeof(Orchestration2).Namespace
 			};
 
-			var processNames = GetProcessNames();
+			_excludedTypes = () => base.ExcludedTypes;
 
-			Assert.That(processNames, Is.EquivalentTo(expected));
+			Assert.That(GetProcessNames(), Is.EquivalentTo(expected));
 		}
 
 		[Test]
@@ -46,12 +47,29 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				typeof(Orchestration2).Namespace
 			};
 
-			ExcludedTypes = new List<Type> { typeof(Orchestration1) };
+			_excludedTypes = () => base.ExcludedTypes.Concat(new List<Type> { typeof(Orchestration1) });
 
-			var processNames = GetProcessNames();
-
-			Assert.That(processNames, Is.EquivalentTo(expected));
+			Assert.That(GetProcessNames(), Is.EquivalentTo(expected));
 		}
+
+		[Test]
+		public void ExcludedTypesByDefault()
+		{
+			var expected = new[] {
+				typeof(Step)
+			};
+
+			_excludedTypes = () => base.ExcludedTypes;
+
+			Assert.That(ExcludedTypes, Is.EquivalentTo(expected));
+		}
+
+		protected override IEnumerable<Type> ExcludedTypes
+		{
+			get { return _excludedTypes(); }
+		}
+
+		private Func<IEnumerable<Type>> _excludedTypes;
 	}
 
 	public abstract class Orchestration1 : BTXService
@@ -62,5 +80,10 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	public abstract class Orchestration2 : BTXService
 	{
 		protected Orchestration2() : base(0, Guid.NewGuid(), null, "stuff") { }
+	}
+
+	public abstract class Step : BTXService
+	{
+		protected Step() : base(0, Guid.NewGuid(), null, "stuff") { }
 	}
 }
