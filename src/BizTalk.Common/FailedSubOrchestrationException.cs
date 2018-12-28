@@ -23,9 +23,9 @@ using System.Runtime.Serialization;
 namespace Be.Stateless.BizTalk
 {
 	/// <summary>
-	/// Allows a BizTalk Server sub-orchestration, by throwing a <see cref="FailedSubOrchestrationException"/> that
-	/// identifies it by its <see cref="Name"/>, to notify its calling composite orchestration that precisely it has
-	/// failed.
+	/// In the context of BizTalk Server composite orchestrations, allows a sub-orchestration to notify its caller that
+	/// it has failed by throwing a <see cref="FailedSubOrchestrationException"/> that identifies it by its <see
+	/// cref="Name"/>.
 	/// </summary>
 	[Serializable]
 	[SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -41,13 +41,31 @@ namespace Be.Stateless.BizTalk
 			Name = name;
 		}
 
-		protected FailedSubOrchestrationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+		protected FailedSubOrchestrationException(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+			Name = info.GetString("Name");
+		}
+
+		#region Base Class Member Overrides
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			if (info == null) throw new ArgumentNullException("info");
+			info.AddValue("Name", Name);
+			base.GetObjectData(info, context);
+		}
+
+		public override string Message
+		{
+			get { return string.Format("Orchestration '{0}' failed. {1}", Name, base.Message); }
+		}
+
+		#endregion
 
 		/// <summary>
-		/// The name of the sub orchestration that has failed and thrown this exception.
+		/// The name of the sub-orchestration that has failed and thrown this exception.
 		/// </summary>
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-		[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-		public string Name { get; private set; }
+		public string Name { get; set; }
 	}
 }

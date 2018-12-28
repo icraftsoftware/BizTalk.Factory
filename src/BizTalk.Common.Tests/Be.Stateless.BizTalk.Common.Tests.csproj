@@ -114,6 +114,7 @@
     <Compile Include="Component\MicroPipelineComponentEnumerableConverterFixture.cs" />
     <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogateFixture.cs" />
     <Compile Include="Component\PropertyExtractorFixture.cs" />
+    <Compile Include="FailedSubOrchestrationExceptionFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessageContextFixture.cs" />
     <Compile Include="Streaming\MultipartFormDataContentStreamFixture.cs" />
     <Compile Include="Tracking\Extensions\TrackingContextFixture.cs" />
