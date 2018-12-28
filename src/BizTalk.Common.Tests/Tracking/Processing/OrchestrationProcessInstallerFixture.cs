@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
+using Microsoft.XLANGs.BaseTypes;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Tracking.Processing
@@ -73,11 +74,13 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 		private Func<IEnumerable<Type>> _excludedTypes;
 	}
 
+	[StaticSubscription(0, "CompensationCommandReceivePort", "Receive", -1, -1, true)]
 	public abstract class Orchestration1 : BTXService
 	{
 		protected Orchestration1() : base(0, Guid.NewGuid(), null, "stuff") { }
 	}
 
+	[StaticSubscription(0, "CompensationCommandReceivePort", "Receive", -1, -1, true)]
 	public abstract class Orchestration2 : BTXService
 	{
 		protected Orchestration2() : base(0, Guid.NewGuid(), null, "stuff") { }

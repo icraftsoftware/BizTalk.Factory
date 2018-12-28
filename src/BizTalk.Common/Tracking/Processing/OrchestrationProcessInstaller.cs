@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.BizTalk.XLANGs.BTXEngine;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Tracking.Processing
 {
@@ -44,7 +45,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 			{
 				return GetType().Assembly.GetTypes()
 					.Where(t => typeof(BTXService).IsAssignableFrom(t))
-					.Where(type => type.Name.Equals("Step", StringComparison.InvariantCultureIgnoreCase) || type.Name.Equals("SubProcess", StringComparison.InvariantCultureIgnoreCase));
+					.Where(t => !Attribute.GetCustomAttributes(t, typeof(StaticSubscriptionAttribute)).Any());
 			}
 		}
 	}
