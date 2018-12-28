@@ -17,8 +17,11 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Microsoft.BizTalk.XLANGs.BTXEngine;
+using Microsoft.XLANGs.Core;
 
 namespace Be.Stateless.BizTalk
 {
@@ -28,9 +31,52 @@ namespace Be.Stateless.BizTalk
 	/// cref="Name"/>.
 	/// </summary>
 	[Serializable]
-	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	public class FailedSubOrchestrationException : Exception
 	{
+		/// <summary>
+		/// XLang helper to throw a <see cref="FailedSubOrchestrationException"/>.
+		/// </summary>
+		/// <remarks>
+		/// If the direct caller of this method is an orchestration, i.e. a <see cref="BTXService"/>-derived type, the
+		/// thrown <see cref="FailedSubOrchestrationException"/>'s <see cref="Name"/> will be initialized to this
+		/// orchestration's namespace, which by convention is its name. If the direct caller is not an orchestration, then
+		/// the <see cref="Name"/> will be initialized to the <see cref="Service.RootService"/>'s <see cref="Type"/>
+		/// namespace.
+		/// </remarks>
+		public static void Throw()
+		{
+			var declaringType = new StackTrace().GetFrame(1).GetMethod().DeclaringType;
+			var name = declaringType != null && typeof(BTXService).IsAssignableFrom(declaringType)
+				? declaringType.Namespace
+				: Service.RootService.GetType().Namespace;
+			var message = string.Format("Orchestration '{0}' failed.", name);
+			throw new FailedSubOrchestrationException(name, message);
+		}
+
+		/// <summary>
+		/// XLang helper to throw a <see cref="FailedSubOrchestrationException"/> with an <paramref name="inner"/> <see
+		/// cref="Exception"/>.
+		/// </summary>
+		/// <param name="inner">
+		/// The inner exception.
+		/// </param>
+		/// <remarks>
+		/// If the direct caller of this method is an orchestration, i.e. a <see cref="BTXService"/>-derived type, the
+		/// thrown <see cref="FailedSubOrchestrationException"/>'s <see cref="Name"/> will be initialized to this
+		/// orchestration's namespace, which by convention is its name. If the direct caller is not an orchestration, then
+		/// the <see cref="Name"/> will be initialized to the <see cref="Service.RootService"/>'s <see cref="Type"/>
+		/// namespace.
+		/// </remarks>
+		public static void Throw(Exception inner)
+		{
+			var declaringType = new StackTrace().GetFrame(1).GetMethod().DeclaringType;
+			var name = declaringType != null && typeof(BTXService).IsAssignableFrom(declaringType)
+				? declaringType.Namespace
+				: Service.RootService.GetType().Namespace;
+			var message = string.Format("Orchestration '{0}' failed.", name);
+			throw new FailedSubOrchestrationException(name, message, inner);
+		}
+
 		public FailedSubOrchestrationException(string name, string message) : base(message)
 		{
 			Name = name;
