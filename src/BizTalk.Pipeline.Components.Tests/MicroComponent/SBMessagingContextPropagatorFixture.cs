@@ -24,7 +24,9 @@ using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
+using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.Unit.MicroComponent;
+using Microsoft.BizTalk.Streaming;
 using Moq;
 using NUnit.Framework;
 
@@ -38,6 +40,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[SetUp]
 		public void SetUp()
 		{
+			_proberFactory = StreamExtensions.StreamProberFactory;
 			PipelineContextMock
 				.Setup(pc => pc.GetDocumentSpecByType("urn:ns#root"))
 				.Returns(Schema<Any>.DocumentSpec);
@@ -50,6 +53,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[TearDown]
 		public void TearDown()
 		{
+			StreamExtensions.StreamProberFactory = _proberFactory;
 			SchemaBaseExtensions.SchemaMetadataFactory = _schemaMetadataFactory;
 		}
 
@@ -66,7 +70,33 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
 			MessageMock.Verify(m => m.SetProperty(SBMessagingProperties.CorrelationId, It.IsAny<string>()), Times.Never);
-			MessageMock.Verify(m => m.SetProperty(SBMessagingProperties.Label, It.IsAny<string>()), Times.Never);
+			MessageMock.Verify(m => m.SetProperty(BrokeredProperties.MessageType, It.IsAny<string>()), Times.Never);
+		}
+
+		[Test]
+		public void BrokeredMessageTypeIsNotPromotedInwardWhenEmpty()
+		{
+			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
+
+			var sut = new SBMessagingContextPropagator();
+			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
+			MessageMock.Verify(m => m.SetProperty(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
+		}
+
+		[Test]
+		public void BrokeredMessageTypeIsPromotedInward()
+		{
+			var messageType = "urn:ns#root";
+			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
+			MessageMock.Setup(m => m.GetProperty(BrokeredProperties.MessageType)).Returns(messageType);
+
+			var sut = new SBMessagingContextPropagator();
+			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, messageType), Times.Once);
+			MessageMock.Verify(m => m.SetProperty(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
 		}
 
 		[Test]
@@ -128,33 +158,26 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		}
 
 		[Test]
-		public void LabelIsNotPromotedInwardWhenEmpty()
+		public void MessageTypeIsNotProbedWhenKnown()
 		{
-			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.MessageType)).Returns("urn:ns#root");
 
-			var sut = new SBMessagingContextPropagator();
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+				var probeStreamMock = new Mock<IProbeStream>();
+				StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
 
-			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
-			MessageMock.Verify(m => m.SetProperty(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
+				var sut = new SBMessagingContextPropagator();
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				probeStreamMock.VerifyGet(ps => ps.MessageType, Times.Never());
+			}
 		}
 
 		[Test]
-		public void LabelIsPromotedInward()
-		{
-			var messageType = "urn:ns#root";
-			MessageMock.Setup(m => m.GetProperty(BtsProperties.InboundTransportLocation)).Returns("inbound-transport-location");
-			MessageMock.Setup(m => m.GetProperty(SBMessagingProperties.Label)).Returns(messageType);
-
-			var sut = new SBMessagingContextPropagator();
-			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
-
-			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, messageType), Times.Once);
-			MessageMock.Verify(m => m.SetProperty(BtsProperties.MessageType, It.IsAny<string>()), Times.Never);
-		}
-
-		[Test]
-		public void MessageTypeIsNotPropagatedOutwardWhenEmpty()
+		public void MessageTypeIsNotPropagatedOutwardWhenPayloadIsNotXml()
 		{
 			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("non xml payload")))
 			{
@@ -164,7 +187,25 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				var sut = new SBMessagingContextPropagator();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
-				MessageMock.Verify(m => m.SetProperty(SBMessagingProperties.Label, It.IsAny<string>()), Times.Never);
+				MessageMock.Verify(m => m.SetProperty(BrokeredProperties.MessageType, It.IsAny<string>()), Times.Never);
+			}
+		}
+
+		[Test]
+		public void MessageTypeIsProbedWhenUnknown()
+		{
+			using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes("non xml payload")))
+			{
+				MessageMock.Object.BodyPart.Data = inputStream;
+				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
+
+				var probeStreamMock = new Mock<IProbeStream>();
+				StreamExtensions.StreamProberFactory = stream => probeStreamMock.Object;
+
+				var sut = new SBMessagingContextPropagator();
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+
+				probeStreamMock.VerifyGet(ps => ps.MessageType, Times.Once);
 			}
 		}
 
@@ -178,7 +219,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			var sut = new SBMessagingContextPropagator();
 			sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
-			MessageMock.Verify(m => m.SetProperty(SBMessagingProperties.Label, messageType), Times.Once);
+			MessageMock.Verify(m => m.SetProperty(BrokeredProperties.MessageType, messageType), Times.Once);
 		}
 
 		[Test]
@@ -189,7 +230,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				MessageMock.Object.BodyPart.Data = inputStream;
 				MessageMock.Setup(m => m.GetProperty(BtsProperties.OutboundTransportLocation)).Returns("outbound-transport-location");
 				MessageMock.Setup(m => m.GetProperty(SBMessagingProperties.CorrelationId)).Returns(Guid.NewGuid().ToString);
-				MessageMock.Setup(m => m.GetProperty(SBMessagingProperties.Label)).Returns("urn:ns#root");
+				MessageMock.Setup(m => m.GetProperty(BrokeredProperties.MessageType)).Returns("urn:ns#root");
 
 				var sut = new SBMessagingContextPropagator();
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
@@ -201,6 +242,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			}
 		}
 
+		private Func<MarkableForwardOnlyEventingReadStream, IProbeStream> _proberFactory;
 		private Func<Type, ISchemaMetadata> _schemaMetadataFactory;
 	}
 }

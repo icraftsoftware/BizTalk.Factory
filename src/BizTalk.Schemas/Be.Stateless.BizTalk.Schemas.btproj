@@ -64,6 +64,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="ContextProperties\BrokeredProperties.cs" />
     <Compile Include="ContextProperties\BtsProperties.cs" />
     <Compile Include="ContextProperties\EdiProperties.cs" />
     <Compile Include="ContextProperties\ErrorReportProperties.cs" />
@@ -113,6 +114,11 @@
       <Link>be.stateless.public.snk</Link>
     </None>
     <None Include="packages.config" />
+    <Schema Include="Schemas\BrokeredProperties.xsd">
+      <TypeName>Properties</TypeName>
+      <Namespace>Be.Stateless.BizTalk.Schemas.Brokered</Namespace>
+      <SubType>Task</SubType>
+    </Schema>
     <Schema Include="Schemas\SftpProperties.xsd">
       <TypeName>ConcealedProperties</TypeName>
       <Namespace>WCF</Namespace>

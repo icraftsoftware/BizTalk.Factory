@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.ContextProperties.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.MicroComponent.Extensions;
-using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -35,7 +34,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// <para>
 	/// For inbound messages,
 	/// <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.CorrelationId"/>
-	/// and <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.Label"/>, if any, are respectively
+	/// and <see cref="BrokeredProperties"/>.<see cref="BrokeredProperties.MessageType"/>, if any, are respectively
 	/// promoted into BizTalk message context as <see cref="BizTalkFactoryProperties"/>.<see
 	/// cref="BizTalkFactoryProperties.CorrelationToken"/> and <see cref="BtsProperties"/>.<see
 	/// cref="BtsProperties.MessageType"/>.
@@ -45,7 +44,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	/// <see cref="BizTalkFactoryProperties"/>.<see cref="BizTalkFactoryProperties.CorrelationToken"/>
 	/// and <see cref="BtsProperties"/>.<see cref="BtsProperties.MessageType"/>, if any, are respectively propagated as
 	/// <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.CorrelationId"/>
-	/// and <see cref="SBMessagingProperties"/>.<see cref="SBMessagingProperties.Label"/>.
+	/// and <see cref="BrokeredProperties"/>.<see cref="BrokeredProperties.MessageType"/>.
 	/// </para>
 	/// </remarks>
 	public class SBMessagingContextPropagator : IMicroPipelineComponent
@@ -58,15 +57,15 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			{
 				var correlationId = message.GetProperty(SBMessagingProperties.CorrelationId);
 				if (!correlationId.IsNullOrEmpty()) message.PromoteCorrelationToken(correlationId);
-				var label = message.GetProperty(SBMessagingProperties.Label);
-				if (!label.IsNullOrEmpty()) message.Promote(BtsProperties.MessageType, label);
+				var messageType = message.GetProperty(BrokeredProperties.MessageType);
+				if (!messageType.IsNullOrEmpty()) message.Promote(BtsProperties.MessageType, messageType);
 			}
 			else
 			{
 				var correlationToken = message.GetProperty(BizTalkFactoryProperties.CorrelationToken);
 				if (!correlationToken.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.CorrelationId, correlationToken);
 				var messageType = message.GetOrProbeMessageType(pipelineContext);
-				if (!messageType.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.Label, messageType);
+				if (!messageType.IsNullOrEmpty()) message.SetProperty(BrokeredProperties.MessageType, messageType);
 			}
 			return message;
 		}
