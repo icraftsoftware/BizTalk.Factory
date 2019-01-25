@@ -20,6 +20,8 @@ using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.ContextProperties.Extensions;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent.Extensions;
+using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -63,7 +65,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			{
 				var correlationToken = message.GetProperty(BizTalkFactoryProperties.CorrelationToken);
 				if (!correlationToken.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.CorrelationId, correlationToken);
-				var messageType = message.GetProperty(BtsProperties.MessageType);
+				var messageType = message.GetOrProbeMessageType(pipelineContext);
 				if (!messageType.IsNullOrEmpty()) message.SetProperty(SBMessagingProperties.Label, messageType);
 			}
 			return message;

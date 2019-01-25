@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,12 +23,10 @@ using System.Linq;
 using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.Component.Extensions;
-using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent.Extensions;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.XPath;
-using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
@@ -177,14 +175,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Any does not really enumerate.")]
 		internal IEnumerable<PropertyExtractor> BuildPropertyExtractorCollection(IPipelineContext pipelineContext, IBaseMessage message)
 		{
-			var messageType = message.GetProperty(BtsProperties.MessageType);
-			if (messageType.IsNullOrEmpty())
-			{
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => originalStream.AsMarkable(),
-					pipelineContext.ResourceTracker);
-				messageType = message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
-			}
+			var messageType = message.GetOrProbeMessageType(pipelineContext);
 			var schemaMetadata = pipelineContext.GetSchemaMetadataByType(messageType, false);
 			var schemaExtractors = schemaMetadata.Annotations.Extractors;
 			return schemaExtractors.Union(Extractors);
