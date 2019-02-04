@@ -61,6 +61,16 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- sort Services, SendPorts, ReceivePorts, ReceiveLocations -->
+  <xsl:template mode="clean-binding-phase-one" match="ModuleRefCollection | Services | SendPortCollection | ReceivePortCollection | ReceiveLocations">
+    <xsl:copy>
+      <xsl:apply-templates select="ModuleRef | Service | SendPort | ReceivePort | ReceiveLocation" mode="clean-binding-phase-one">
+        <xsl:sort select="@Name" />
+      </xsl:apply-templates>
+    </xsl:copy>
+  </xsl:template>
+
+
   <!-- sort Pipeline Components' Properties but don't take the chance to reorganize them when there could be xml preprocess comments -->
   <xsl:template mode="clean-binding-phase-one" match="Component/Properties[not(comment())]">
     <xsl:copy>
@@ -71,7 +81,7 @@
   </xsl:template>
 
   <!-- sort CustomProps elements but don't take the chance to reorganize them when there could be xml preprocess comments -->
-  <xsl:template mode="clean-binding-phase-one" match="CustomProps[not(comment())]">
+  <xsl:template mode="clean-binding-phase-one" match="CustomProps[not(comment())] | Config[not(comment())]">
     <xsl:copy>
       <xsl:apply-templates select="*" mode="clean-binding-phase-one">
         <xsl:sort select="local-name(.)" />
