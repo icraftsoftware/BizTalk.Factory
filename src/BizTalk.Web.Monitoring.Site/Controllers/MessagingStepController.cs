@@ -102,8 +102,9 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Controllers
 				.Message;
 			return message != null && message.HasContent
 				? (ActionResult) File(message.Stream, message.MimeType, message.ReceivedFileName)
-				// HACK workaround to avoid NullReferenceException but should Disable Download button instead, see MessagingStepGridModel
-				: new EmptyResult();
+				// HACK to avoid returning FileStreamResult that will ultimately throw a NullReferenceException
+				// but should Disable Download button instead, see MessagingStepGridModel
+				: new ContentResult { Content = "There is no data available." };
 		}
 
 		//
