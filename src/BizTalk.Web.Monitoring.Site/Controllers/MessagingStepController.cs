@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -95,12 +95,15 @@ namespace Be.Stateless.BizTalk.Web.Monitoring.Site.Controllers
 		//
 		// GET: /MessagingStep/Save/9d783ae8-d214-46e6-9015-74f6b353b85f
 
-		public FileStreamResult Save(string id)
+		public ActionResult Save(string id)
 		{
 			var message = _repository.MessagingSteps
 				.Single(m => m.ActivityID == id)
 				.Message;
-			return File(message.Stream, message.MimeType, message.ReceivedFileName);
+			return message != null && message.HasContent
+				? (ActionResult) File(message.Stream, message.MimeType, message.ReceivedFileName)
+				// HACK workaround to avoid NullReferenceException but should Disable Download button instead, see MessagingStepGridModel
+				: new EmptyResult();
 		}
 
 		//
