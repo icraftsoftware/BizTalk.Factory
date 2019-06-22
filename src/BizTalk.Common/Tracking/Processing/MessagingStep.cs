@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,11 +18,13 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Xml;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Tracking.Extensions;
 using Be.Stateless.Extensions;
+using Be.Stateless.IO.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Tracking.Processing
@@ -71,34 +73,23 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 
 		private void TrackMessageBody()
 		{
-			// TODO TrackMessageBody()
-
-			//if (_message[0] != null)
-			//   AddCustomReference(
-			//      Messaging.MessagingStepTracking.MessageBodyReferenceType,
-			//      Messaging.MessagingStepTracking.MessageBodyReferenceName,
-			// // timestamp because it is mandatory to use a non-null reference data
-			//      DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-			//      _message[0].ToEncodedBase64());
+			if (_message[0] != null)
+				AddCustomReference(
+					MessageBodyCaptureMode.Unclaimed.ToString(),
+					Messaging.MessagingStep.MESSAGE_BODY_REFERENCE_NAME,
+					// timestamp because it is mandatory to use a non-null reference data
+					DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+					_message[0].AsStream().CompressToBase64String());
 		}
 
 		private void TrackMessageContext()
 		{
-			// TODO TrackMessageContext()
-
-			// http://msdn.microsoft.com/en-us/library/microsoft.xlangs.core.service.rootservice(v=bts.10).aspx
-
-			// http://maximelabelle.wordpress.com/2011/01/07/retrieving-the-context-of-a-biztalk-message-from-an-orchestration/
-			// Custom GetContextProperty Functoid
-			// http://blogdoc.biztalk247.com/article.aspx?page=b5f70410-6661-4479-bf4f-88ae6c78675f
-
-			//Microsoft.XLANGs.Core.Context.FindFields()
-			//AddCustomReference(
-			//   Messaging.MessagingStepTracking.MessageContextReferenceType,
-			//   Messaging.MessagingStepTracking.MessageContextReferenceName,
-			// // timestamp because it is mandatory to use a non-null reference data
-			//   DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-			//   _message.Context.ToXml());
+			AddCustomReference(
+				Messaging.MessagingStep.MESSAGE_CONTEXT_REFERENCE_TYPE,
+				Messaging.MessagingStep.MESSAGE_CONTEXT_REFERENCE_NAME,
+				// timestamp because it is mandatory to use a non-null reference data
+				DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+				_message.GetContext().ToXml());
 		}
 
 		private void TrackStep()
