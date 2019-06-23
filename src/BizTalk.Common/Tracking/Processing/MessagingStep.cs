@@ -32,6 +32,29 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 	[SuppressMessage("ReSharper", "LocalizableElement")]
 	public partial class MessagingStep
 	{
+		public static void TrackDirectReceive(TrackingContext trackingContext, XLANGMessage message)
+		{
+			TrackDirectReceive(trackingContext, message, false, false);
+		}
+
+		public static void TrackDirectReceive(TrackingContext trackingContext, XLANGMessage message, bool trackMessageBody)
+		{
+			TrackDirectReceive(trackingContext, message, trackMessageBody, false);
+		}
+
+		public static void TrackDirectReceive(TrackingContext trackingContext, XLANGMessage message, bool trackMessageBody, bool skipMessageContextTracking)
+		{
+			var messagingStepTracking = new MessagingStep(Tracking.ActivityId.NewActivityId(), message);
+			messagingStepTracking.BeginMessagingStepActivity();
+			if (trackMessageBody) messagingStepTracking.TrackMessageBody();
+			if (!skipMessageContextTracking) messagingStepTracking.TrackMessageContext();
+			messagingStepTracking.TrackStep(TrackingStatus.Received);
+			messagingStepTracking.CommitMessagingStepActivity();
+			messagingStepTracking.EndMessagingStepActivity();
+
+			new Process(trackingContext.ProcessActivityId).AddStep(messagingStepTracking);
+		}
+
 		public static void TrackDirectSend(TrackingContext trackingContext, XLANGMessage message)
 		{
 			TrackDirectSend(trackingContext, message, false, false);
@@ -48,7 +71,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 			messagingStepTracking.BeginMessagingStepActivity();
 			if (trackMessageBody) messagingStepTracking.TrackMessageBody();
 			if (!skipMessageContextTracking) messagingStepTracking.TrackMessageContext();
-			messagingStepTracking.TrackStep();
+			messagingStepTracking.TrackStep(TrackingStatus.Sent);
 			messagingStepTracking.CommitMessagingStepActivity();
 			messagingStepTracking.EndMessagingStepActivity();
 
@@ -92,7 +115,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				_message.GetContext().ToXml());
 		}
 
-		private void TrackStep()
+		private void TrackStep(string trackingStatus)
 		{
 			_message.GetProperty(BtsProperties.InterchangeID).IfNotNull(id => InterchangeID = id.AsNormalizedActivityId());
 			_message.GetProperty(BtsProperties.MessageID).IfNotNull(id => MessageID = id.AsNormalizedActivityId());
@@ -103,7 +126,7 @@ namespace Be.Stateless.BizTalk.Tracking.Processing
 				MessageType = _message.GetProperty(BtsProperties.MessageType);
 			}
 			catch (XmlException) { }
-			Status = TrackingStatus.Sent;
+			Status = trackingStatus;
 			// pointless as will be affiliated to process anyway: PortName = ProcessTracking.GetCurrentProcessName();
 			Time = DateTime.UtcNow;
 			TransportLocation = "MessageBox";
