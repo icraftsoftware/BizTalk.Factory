@@ -46,8 +46,8 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<Label, string> Label
 			= new MessageContextProperty<Label, string>();
 
-		public static readonly MessageContextProperty<LockedUntilUtc, string> LockedUntilUtc
-			= new MessageContextProperty<LockedUntilUtc, string>();
+		public static readonly MessageContextProperty<LockedUntilUtc, DateTime> LockedUntilUtc
+			= new MessageContextProperty<LockedUntilUtc, DateTime>();
 
 		public static readonly MessageContextProperty<LockToken, string> LockToken
 			= new MessageContextProperty<LockToken, string>();
@@ -64,11 +64,11 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime> ScheduledEnqueueTimeUtc
 			= new MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime>();
 
-		public static readonly MessageContextProperty<SequenceNumber, DateTime> SequenceNumber
-			= new MessageContextProperty<SequenceNumber, DateTime>();
+		public static readonly MessageContextProperty<SequenceNumber, string> SequenceNumber
+			= new MessageContextProperty<SequenceNumber, string>();
 
-		public static readonly MessageContextProperty<SessionId, DateTime> SessionId
-			= new MessageContextProperty<SessionId, DateTime>();
+		public static readonly MessageContextProperty<SessionId, string> SessionId
+			= new MessageContextProperty<SessionId, string>();
 
 		public static readonly MessageContextProperty<TimeToLive, string> TimeToLive
 			= new MessageContextProperty<TimeToLive, string>();
