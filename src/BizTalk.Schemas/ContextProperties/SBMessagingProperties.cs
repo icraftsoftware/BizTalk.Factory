@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,14 +46,29 @@ namespace Be.Stateless.BizTalk.ContextProperties
 		public static readonly MessageContextProperty<Label, string> Label
 			= new MessageContextProperty<Label, string>();
 
+		public static readonly MessageContextProperty<LockedUntilUtc, string> LockedUntilUtc
+			= new MessageContextProperty<LockedUntilUtc, string>();
+
+		public static readonly MessageContextProperty<LockToken, string> LockToken
+			= new MessageContextProperty<LockToken, string>();
+
 		public static readonly MessageContextProperty<MessageId, string> MessageId
 			= new MessageContextProperty<MessageId, string>();
 
 		public static readonly MessageContextProperty<ReplyTo, string> ReplyTo
 			= new MessageContextProperty<ReplyTo, string>();
 
+		public static readonly MessageContextProperty<ReplyToSessionId, string> ReplyToSessionId
+			= new MessageContextProperty<ReplyToSessionId, string>();
+
 		public static readonly MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime> ScheduledEnqueueTimeUtc
 			= new MessageContextProperty<ScheduledEnqueueTimeUtc, DateTime>();
+
+		public static readonly MessageContextProperty<SequenceNumber, DateTime> SequenceNumber
+			= new MessageContextProperty<SequenceNumber, DateTime>();
+
+		public static readonly MessageContextProperty<SessionId, DateTime> SessionId
+			= new MessageContextProperty<SessionId, DateTime>();
 
 		public static readonly MessageContextProperty<TimeToLive, string> TimeToLive
 			= new MessageContextProperty<TimeToLive, string>();
