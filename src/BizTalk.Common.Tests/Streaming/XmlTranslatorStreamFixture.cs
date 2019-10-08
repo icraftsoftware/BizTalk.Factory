@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -135,6 +136,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		public void RemoveVersionFromWcfLobNamespaces()
 		{
 			const string input = @"<Receive xmlns='http://Microsoft.LobServices.Sap/2007/03/Idoc/3/ANY_IDOC//701/Receive'>
@@ -234,6 +236,7 @@ namespace Be.Stateless.BizTalk.Streaming
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		public void RestoreVersionInWcfLobNamespaces()
 		{
 			const string input = @"<Send xmlns='http://Microsoft.LobServices.Sap/2007/03/Idoc/ANY_IDOC/Send'>
@@ -268,9 +271,7 @@ namespace Be.Stateless.BizTalk.Streaming
 	{
 		public static XPathNodeIterator Select(this XPathNavigator navigator, string xpath, params string[] namespaces)
 		{
-			// ReSharper disable AssignNullToNotNullAttribute
 			var nsr = new XmlNamespaceManager(navigator.NameTable);
-			// ReSharper restore AssignNullToNotNullAttribute
 			namespaces
 				.Select(namespaceWithPrefix => namespaceWithPrefix.Split('='))
 				.Each(splitString => nsr.AddNamespace(splitString[0], splitString[1]));
