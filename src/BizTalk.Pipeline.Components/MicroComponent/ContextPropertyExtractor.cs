@@ -110,8 +110,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 	///   <tp:Value1 [mode="clear | ignore | promote | write"]
 	///              value="constant-string-literal" />
 	///   <tp:Value2 [mode="clear | demote | ignore | promote | write"]
+	///              [qnameValue="localName | name"]
 	///              xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Subject']" />
-	///   <tp:Value3 mode="clear | ignore"] />
+	///   <tp:Value3 mode="clear | ignore" />
 	/// </san:Properties>
 	/// ]]></code>
 	/// </para>

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,69 +27,68 @@ namespace Be.Stateless.Extensions
 	public class StringExtensionsFixture
 	{
 		[Test]
-		public void IsFileName()
+		[TestCase("name", true)]
+		[TestCase("name.txt", true)]
+		[TestCase("name-0.txt", true)]
+		[TestCase("name_0.txt", true)]
+		[TestCase(null, false)]
+		[TestCase("", false)]
+		[TestCase(@"\name.txt", false)]
+		[TestCase(@"/name.txt", false)]
+		public void IsFileName(string fileName, bool expectedPredicateResult)
 		{
-			Assert.That("name".IsFileName());
-			Assert.That("name.txt".IsFileName());
-			Assert.That("name-0.txt".IsFileName());
-			Assert.That("name_0.txt".IsFileName());
-
-			Assert.That(((string) null).IsFileName(), Is.False);
-			Assert.That("".IsFileName(), Is.False);
-			Assert.That(@"\name.txt".IsFileName(), Is.False);
-			Assert.That(@"/name.txt".IsFileName(), Is.False);
+			Assert.That(fileName.IsFileName(), Is.EqualTo(expectedPredicateResult));
 		}
 
 		[Test]
-		public void IsQName()
+		[TestCase("name", true)]
+		[TestCase("name0", true)]
+		[TestCase("name-0", true)]
+		[TestCase("na-me", true)]
+		[TestCase("na.me", true)]
+		[TestCase("na.me.0", true)]
+		[TestCase("ns0:name", true)]
+		[TestCase("ns-0:name-0", true)]
+		[TestCase(null, false)]
+		[TestCase("", false)]
+		[TestCase("-name", false)]
+		[TestCase("ns:-name", false)]
+		[TestCase(".name", false)]
+		[TestCase("ns:.name", false)]
+		[TestCase("0name", false)]
+		[TestCase("ns:0name", false)]
+		[TestCase("0ns:0name", false)]
+		[TestCase(":name", false)]
+		[TestCase(":name:name", false)]
+		[TestCase("ns0::name", false)]
+		[TestCase("ns:name:suffix", false)]
+		public void IsQName(string qName, bool expectedPredicateResult)
 		{
-			Assert.That("name".IsQName());
-			Assert.That("name0".IsQName());
-			Assert.That("name-0".IsQName());
-			Assert.That("na-me".IsQName());
-			Assert.That("na.me".IsQName());
-			Assert.That("na.me.0".IsQName());
-			Assert.That("ns0:name".IsQName());
-			Assert.That("ns-0:name-0".IsQName());
-
-			Assert.That(((string) null).IsQName(), Is.False);
-			Assert.That("".IsQName(), Is.False);
-			Assert.That("0name".IsQName(), Is.False);
-			Assert.That("-name".IsQName(), Is.False);
-			Assert.That("ns:-name".IsQName(), Is.False);
-			Assert.That(".name".IsQName(), Is.False);
-			Assert.That("ns:.name".IsQName(), Is.False);
-			Assert.That("ns:0name".IsQName(), Is.False);
-			Assert.That("0ns:0name".IsQName(), Is.False);
-			Assert.That(":name".IsQName(), Is.False);
-			Assert.That(":name:name".IsQName(), Is.False);
-			Assert.That("ns0::name".IsQName(), Is.False);
-			Assert.That("ns:name:suffix".IsQName(), Is.False);
+			Assert.That(qName.IsQName(), Is.EqualTo(expectedPredicateResult));
 		}
 
 		[Test]
-		public void Right()
+		[TestCase(null, 3, "")]
+		[TestCase("", 3, "")]
+		[TestCase("123456", 3, "456")]
+		[TestCase("123456", 9, "123456")]
+		public void Right(string @string, int length, string expectedResult)
 		{
-			Assert.That(((string) null).Right(3), Is.EqualTo(string.Empty));
-			Assert.That("".Right(3), Is.EqualTo(string.Empty));
-			Assert.That("123456".Right(3), Is.EqualTo("456"));
-			Assert.That("123456".Right(9), Is.EqualTo("123456"));
+			Assert.That(@string.Right(length), Is.EqualTo(expectedResult));
 		}
 
 		[Test]
-		public void SubstringEx()
+		[TestCase(null, 3, "")]
+		[TestCase(null, -3, "")]
+		[TestCase("", 3, "")]
+		[TestCase("", -3, "")]
+		[TestCase("123456", 3, "123")]
+		[TestCase("123456", -3, "456")]
+		[TestCase("123456", 9, "123456")]
+		[TestCase("123456", -9, "123456")]
+		public void SubstringEx(string @string, int length, string expectedResult)
 		{
-			Assert.That(((string) null).SubstringEx(3), Is.EqualTo(string.Empty));
-			Assert.That(((string) null).SubstringEx(-3), Is.EqualTo(string.Empty));
-
-			Assert.That("".SubstringEx(3), Is.EqualTo(string.Empty));
-			Assert.That("".SubstringEx(-3), Is.EqualTo(string.Empty));
-
-			Assert.That("123456".SubstringEx(3), Is.EqualTo("123"));
-			Assert.That("123456".SubstringEx(-3), Is.EqualTo("456"));
-
-			Assert.That("123456".SubstringEx(9), Is.EqualTo("123456"));
-			Assert.That("123456".SubstringEx(-9), Is.EqualTo("123456"));
+			Assert.That(@string.SubstringEx(length), Is.EqualTo(expectedResult));
 		}
 
 		[Test]
@@ -117,7 +116,19 @@ namespace Be.Stateless.Extensions
 				Is.EqualTo(new XmlQualifiedName("MessagingStepActivityID", "urn:schemas.stateless.be:biztalk:properties:tracking:2012:04")));
 			Assert.That(
 				() => ":MessagingStepActivityID".ToQName(nsm),
-				Throws.ArgumentException.With.Message.EqualTo("':MessagingStepActivityID' is not a valid XML qualified name.\r\nParameter name: qname"));
+				Throws.ArgumentException.With.Message.EqualTo("':MessagingStepActivityID' is not a valid XML qualified name.\r\nParameter name: qName"));
+		}
+
+		[Test]
+		[TestCase("0value", false, null, null)]
+		[TestCase("value", true, "", "value")]
+		[TestCase("ns:value", true, "ns", "value")]
+		public void TryParseQName(string qName, bool success, string prefix, string localPart)
+		{
+			string actualPrefix, actualLocalPart;
+			Assert.That(qName.TryParseQName(out actualPrefix, out actualLocalPart), Is.EqualTo(success));
+			Assert.That(actualPrefix, Is.EqualTo(prefix));
+			Assert.That(actualLocalPart, Is.EqualTo(localPart));
 		}
 	}
 }

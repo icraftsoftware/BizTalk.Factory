@@ -108,6 +108,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Component\QNameValueExtractionMode.cs" />
     <Compile Include="ContextBuilders\Send\Batch\AggregateProcessResolver.cs" />
     <Compile Include="ContextBuilders\Send\Batch\ReleaseProcessResolver.cs" />
     <Compile Include="ContextBuilders\Send\Claim\ProcessResolver.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Component\PropertyExtractorCollectionConverter.cs" />
     <Compile Include="Component\PropertyExtractorCollection.cs" />
     <Compile Include="Component\PropertyExtractorCollectionSerializerSurrogate.cs" />
+    <Compile Include="XPath\QNameValueExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">

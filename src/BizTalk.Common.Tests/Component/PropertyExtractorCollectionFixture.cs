@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -273,6 +273,50 @@ namespace Be.Stateless.BizTalk.Component
 				Assert.That(
 					() => sut.ReadXml(reader),
 					Throws.TypeOf<ConfigurationErrorsException>().With.Message.EqualTo("ExtractionMode is missing for PropertyExtractor without a Value or an XPath."));
+			}
+		}
+
+		[Test]
+		public void ReadXmlForQNameValueExtractor()
+		{
+			var xml = string.Format(
+				"<san:Properties xmlns:s0='urn' xmlns:san='{0}'>"
+					+ "<s0:Property3 mode='promote' qnameValue='localName' xpath='*/extra-node'/>"
+					+ "</san:Properties>",
+				SchemaAnnotations.NAMESPACE);
+
+			using (var reader = XmlReader.Create(new StringReader(xml)))
+			{
+				var sut = new PropertyExtractorCollection();
+				sut.ReadXml(reader);
+				Assert.That(
+					sut,
+					Is.EqualTo(
+						new PropertyExtractor[] {
+							new QNameValueExtractor(new XmlQualifiedName("Property3", "urn"), "*/extra-node", ExtractionMode.Promote, QNameValueExtractionMode.LocalName)
+						}));
+			}
+		}
+
+		[Test]
+		public void ReadXmlForQNameValueExtractorFallsBackOnXPathExtractorWhenQNameValueExtractionModeIsDefault()
+		{
+			var xml = string.Format(
+				"<san:Properties xmlns:s0='urn' xmlns:san='{0}'>"
+					+ "<s0:Property3 mode='promote' qnameValue='name' xpath='*/extra-node'/>"
+					+ "</san:Properties>",
+				SchemaAnnotations.NAMESPACE);
+
+			using (var reader = XmlReader.Create(new StringReader(xml)))
+			{
+				var sut = new PropertyExtractorCollection();
+				sut.ReadXml(reader);
+				Assert.That(
+					sut,
+					Is.EqualTo(
+						new PropertyExtractor[] {
+							new XPathExtractor(new XmlQualifiedName("Property3", "urn"), "*/extra-node", ExtractionMode.Promote),
+						}));
 			}
 		}
 

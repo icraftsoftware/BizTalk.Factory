@@ -1,6 +1,6 @@
 #region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,11 +48,13 @@ namespace Be.Stateless.BizTalk.Component
 	///                 xmlns:tp='urn:schemas.stateless.be:biztalk:properties:tracking:2012:04'
 	///                 xmlns:san='urn:schemas.stateless.be:biztalk:annotations:2013:01'>
 	///   <tp:Value1 [mode="clear | ignore | promote | write"]
-	///              [promoted="true"] value="constant-string-literal" />
+	///              [promoted="true"]
+	///              value="constant-string-literal" />
 	///   <tp:Value2 [mode="clear | demote | ignore | promote | write"]
+	///              [qnameValue="localName | name"]
 	///              [promoted="true"]
 	///              xpath="/*[local-name()='Send']/*[local-name()='Message']/*[local-name()='Subject']" />
-	///   <tp:Value3 mode="clear | ignore"] />
+	///   <tp:Value3 mode="clear | ignore" />
 	/// </san:Properties>
 	/// ]]></code>
 	/// </para>
@@ -295,9 +297,15 @@ namespace Be.Stateless.BizTalk.Component
 							? ExtractionMode.Promote
 							: default(ExtractionMode)
 						: default(ExtractionMode);
+				var qnameValueMode = reader.HasAttribute("qnameValue")
+					? reader.GetAttribute("qnameValue").IfNotNull(v => v.Parse<QNameValueExtractionMode>())
+					: QNameValueExtractionMode.Default;
 				if (reader.HasAttribute("xpath"))
 				{
-					var extractor = new XPathExtractor(name, reader.GetAttribute("xpath"), mode);
+					var xpathExpression = reader.GetAttribute("xpath");
+					var extractor = qnameValueMode == QNameValueExtractionMode.Default
+						? new XPathExtractor(name, xpathExpression, mode)
+						: new QNameValueExtractor(name, xpathExpression, mode, qnameValueMode);
 					list.Add(extractor);
 				}
 				else if (reader.HasAttribute("value"))
@@ -387,6 +395,7 @@ namespace Be.Stateless.BizTalk.Component
   <s0:Property1 [mode='clear|ignore|promote|write'] value='constant' />
   <s0:Property2 [promoted='true'] value='constant' />
   <s1:Property3 [mode='clear|demote|ignore|promote|write'] xpath='*' />
+  <s1:Property3 [mode='clear|demote|ignore|promote|write'] [qnameValue='localName|name'] xpath='*' />
   <s1:Property4 [promoted='true'] xpath='*' />
   <s1:Property5 mode='clear|ignore' />
 </san:Properties>";
