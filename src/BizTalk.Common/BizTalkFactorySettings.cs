@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ namespace Be.Stateless.BizTalk
 	{
 		public static string ClaimStoreCheckInDirectory
 		{
-			get { return SsoSettingsReader.Instance.ReadString(AFFILIATE_APPLICATION_NAME, CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME); }
+			get { return SsoSettingsReader.Instance.ReadString(APPLICATION_NAME, CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME); }
 		}
 
 		public static string ClaimStoreCheckOutDirectory
 		{
-			get { return SsoSettingsReader.Instance.ReadString(AFFILIATE_APPLICATION_NAME, CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME); }
+			get { return SsoSettingsReader.Instance.ReadString(APPLICATION_NAME, CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME); }
 		}
 
-		internal const string AFFILIATE_APPLICATION_NAME = "BizTalk.Factory";
+		public const string APPLICATION_NAME = "BizTalk.Factory";
 		internal const string CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME = "ClaimStoreCheckInDirectory";
 		internal const string CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME = "ClaimStoreCheckOutDirectory";
 	}

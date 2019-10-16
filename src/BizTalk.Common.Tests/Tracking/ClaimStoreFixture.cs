@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -80,10 +80,10 @@ namespace Be.Stateless.BizTalk.Tracking
 			messageMock.Object.BodyPart.Data = trackingStream;
 
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(@"\\network\share");
 
 			ClaimStore.Instance.SetupMessageBodyCapture(trackingStream, ActivityTrackingModes.Body, null);
@@ -101,10 +101,10 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void CaptureMessageBodyWillHaveMessageClaimed()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(@"\\network\share");
 
 			var trackingStreamMock = new Mock<TrackingStream>(FakeTextStream.Create(1024 * 1024)) { CallBase = true };
@@ -127,7 +127,7 @@ namespace Be.Stateless.BizTalk.Tracking
 		{
 			// setup a mock's callback to ensure that, even if the BizTalk.Factory SSO store is deployed, the call will look for an SSO store that does not exist
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Callback(() => _ssoSettingsReaderInstance.ReadString("NONEXISTENT_APPLICATION", BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 
@@ -160,10 +160,10 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void CaptureMessageBodyWithEmptyStreamWillHaveMessageUnclaimed()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(@"\\network\share");
 
 			var trackingStreamMock = new Mock<TrackingStream>(new MemoryStream()) { CallBase = true };
@@ -199,10 +199,10 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void ClaimMessageBody()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(@"\\network\share");
 
 			using (var contentStream = FakeTextStream.Create(1024 * 1024))
@@ -246,10 +246,10 @@ namespace Be.Stateless.BizTalk.Tracking
 			}
 
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 
 			using (var tokenStream = MessageFactory.CreateClaimCheck(url).AsStream())
@@ -301,10 +301,10 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void RequiresCheckInAndOutIsCaseInsensitive()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath().ToUpper());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath().ToLower());
 
 			Assert.That(ClaimStore.RequiresCheckInAndOut, Is.False);
@@ -314,11 +314,11 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void RequiresCheckInAndOutIsTrailingBackslashInsensitive()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				// makes sure there is one trailing '\'
 				.Returns(Path.GetTempPath().ToUpper().TrimEnd('\\') + '\\');
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				// makes sure there is no trailing '\'
 				.Returns(Path.GetTempPath().ToLower().TrimEnd('\\'));
 
@@ -329,10 +329,10 @@ namespace Be.Stateless.BizTalk.Tracking
 		public void RequiresCheckInAndOutIsTrue()
 		{
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME))
 				.Returns(Path.GetTempPath());
 			SsoSettingsReaderMock
-				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.AFFILIATE_APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
+				.Setup(ssr => ssr.ReadString(BizTalkFactorySettings.APPLICATION_NAME, BizTalkFactorySettings.CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME))
 				.Returns(@"\\network\share");
 
 			Assert.That(ClaimStore.RequiresCheckInAndOut);
