@@ -116,6 +116,9 @@
     <Compile Include="Component\PropertyExtractorFixture.cs" />
     <Compile Include="FailedSubOrchestrationExceptionFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessageContextFixture.cs" />
+    <Compile Include="Schema\TypeSchema.cs">
+      <DependentUpon>TypeSchema.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Streaming\MultipartFormDataContentStreamFixture.cs" />
     <Compile Include="Tracking\Extensions\TrackingContextFixture.cs" />
     <Compile Include="Message\Extensions\BaseMessagePartFixture.cs" />
@@ -217,6 +220,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Streaming\Data\METERING_REQUEST_20150531.zip" />
+    <EmbeddedResource Include="Schema\TypeSchema.xsd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Message\Data\Message.xml" />

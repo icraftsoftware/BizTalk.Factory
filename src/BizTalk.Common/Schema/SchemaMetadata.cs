@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -99,16 +99,22 @@ namespace Be.Stateless.BizTalk.Schema
 
 			var sa = Attribute.GetCustomAttributes(type, typeof(SchemaAttribute))
 				.Cast<SchemaAttribute>()
-				.Single();
+				.SingleOrDefault();
 
-			// ?? use SchemaMetadata.For(type).SchemaName
-			MessageType = PartTypeMetadata.ComposeMessageType(sa.TargetNamespace, sa.RootElement);
-
-			// ?? use SchemaMetadata.For(type).RootElementName
-			RootElementName = sa.RootElement;
-
-			// ?? use SchemaMetadata.For(type).TargetNamespace
-			TargetNamespace = sa.TargetNamespace;
+			if (sa == null)
+			{
+				var schema = (SchemaBase) Activator.CreateInstance(type);
+				TargetNamespace = schema.Schema.TargetNamespace;
+			}
+			else
+			{
+				// ?? use SchemaMetadata.For(type).SchemaName
+				MessageType = PartTypeMetadata.ComposeMessageType(sa.TargetNamespace, sa.RootElement);
+				// ?? use SchemaMetadata.For(type).RootElementName
+				RootElementName = sa.RootElement;
+				// ?? use SchemaMetadata.For(type).TargetNamespace
+				TargetNamespace = sa.TargetNamespace;
+			}
 		}
 
 		#region ISchemaMetadata Members

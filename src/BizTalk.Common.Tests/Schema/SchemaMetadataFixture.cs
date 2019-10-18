@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,11 +49,25 @@ namespace Be.Stateless.BizTalk.Schema
 		}
 
 		[Test]
+		public void GetMessageTypeForTypeOnlySchema()
+		{
+			Assert.That(new SchemaMetadata(typeof(TypeSchema)).MessageType, Is.Null);
+		}
+
+		[Test]
 		public void GetTargetNamespace()
 		{
 			Assert.That(
 				new SchemaMetadata(typeof(Batch.Release)).TargetNamespace,
 				Is.EqualTo("urn:schemas.stateless.be:biztalk:batch:2012:12"));
+		}
+
+		[Test]
+		public void GetTargetNamespaceForTypeOnlySchema()
+		{
+			Assert.That(
+				new SchemaMetadata(typeof(TypeSchema)).TargetNamespace,
+				Is.EqualTo("urn:schemas.stateless.be:unit:type"));
 		}
 
 		[Test]
