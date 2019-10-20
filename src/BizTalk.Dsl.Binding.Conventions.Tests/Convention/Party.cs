@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Convention
 {
 	public enum Party
 	{
-		Unknown,
-		Bank,
-		Customer,
-		TaxAgency
+		Unknown = 0,
+		Bank = 1,
+		Customer = 2,
+		TaxAgency = 3
 	}
 }

@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -101,9 +101,9 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public enum FirewallType
 		{
 			[XmlEnum("NoFirewall")]
-			None,
-			Socks4,
-			Socks5
+			None = 0,
+			Socks4 = 1,
+			Socks5 = 2
 		}
 
 		#endregion
@@ -112,8 +112,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		public enum FtpsConnectionMode
 		{
-			Explicit,
-			Implicit
+			Explicit = 0,
+			Implicit = 1
 		}
 
 		#endregion
@@ -122,8 +122,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 
 		public enum Mode
 		{
-			Active,
-			Passive
+			Active = 0,
+			Passive = 1
 		}
 
 		#endregion
@@ -133,10 +133,10 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 		public enum RepresentationType
 		{
 			[XmlEnum("binary")]
-			Binary,
+			Binary = 0,
 
 			[XmlEnum("ASCII")]
-			Ascii
+			Ascii = 1
 		}
 
 		#endregion

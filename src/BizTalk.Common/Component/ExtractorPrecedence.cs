@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,18 +51,18 @@ namespace Be.Stateless.BizTalk.Component
 		/// Only <see cref="PropertyExtractorCollection"/> declared by XML schema annotations is taken into account and
 		/// the one declared by pipeline configuration is ignored.
 		/// </summary>
-		SchemaOnly,
+		SchemaOnly = 1,
 
 		/// <summary>
 		/// <see cref="PropertyExtractorCollection"/> declared by pipeline configuration have precedence over the one
 		/// declared by XML schema annotations.
 		/// </summary>
-		Pipeline,
+		Pipeline = 2,
 
 		/// <summary>
 		/// Only the <see cref="PropertyExtractorCollection"/> declared by pipeline configuration is taken into account
 		/// and the one declared by XML schema annotations is ignored.
 		/// </summary>
-		PipelineOnly
+		PipelineOnly = 3
 	}
 }

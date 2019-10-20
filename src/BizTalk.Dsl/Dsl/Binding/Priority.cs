@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 	/// <list type="bullet">
 	/// <item>
 	/// How to Configure Transport Advanced Options for a Send Port,
-	/// https://msdn.microsoft.com/en-us/library/aa578109.aspx.
+	/// https://docs.microsoft.com/en-us/biztalk/core/how-to-configure-transport-advanced-options-for-a-send-port.
 	/// </item>
 	/// </list>
 	/// </para>

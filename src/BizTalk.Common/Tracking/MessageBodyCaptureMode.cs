@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,12 +27,12 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// Denotes a message whose payload has been saved, or claimed, to disk and not directly captured in the BAM
 		/// monitoring database.
 		/// </summary>
-		Claimed,
+		Claimed = 0,
 
 		/// <summary>
 		/// Denotes a message body whose payload has not been saved, or claimed, to disk but instead directly captured in
 		/// the BAM monitoring database.
 		/// </summary>
-		Unclaimed
+		Unclaimed = 1
 	}
 }

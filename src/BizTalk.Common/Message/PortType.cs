@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ namespace Be.Stateless.BizTalk.Message
 {
 	public enum PortType
 	{
-		OneWaySendPort,
-		SolicitResponseSendPort,
-		OneWayReceivePort,
-		RequestResponseReceivePort
+		OneWaySendPort = 0,
+		SolicitResponseSendPort = 1,
+		OneWayReceivePort = 2,
+		RequestResponseReceivePort = 3
 	}
 }

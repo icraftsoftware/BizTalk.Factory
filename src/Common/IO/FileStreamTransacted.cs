@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ namespace Be.Stateless.IO
 
 		private enum TransactionState
 		{
-			Completed,
-			Faulted,
-			Running
+			Completed = 0,
+			Faulted = 1,
+			Running = 2
 		}
 
 		#endregion

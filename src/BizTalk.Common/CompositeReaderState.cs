@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ namespace Be.Stateless.BizTalk
 {
 	internal enum CompositeReaderState
 	{
-		RootAggregateOpeningTag,
-		MessagePartWrapperOpeningTag,
-		MessagePartDocumentElement,
-		MessagePartContent,
-		MessagePartWrapperClosingTag,
-		RootAggregateClosingTag,
+		RootAggregateOpeningTag = 0,
+		MessagePartWrapperOpeningTag = 1,
+		MessagePartDocumentElement = 2,
+		MessagePartContent = 3,
+		MessagePartWrapperClosingTag = 4,
+		RootAggregateClosingTag = 5
 	}
 }

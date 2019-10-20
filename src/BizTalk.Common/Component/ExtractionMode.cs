@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,19 +65,19 @@ namespace Be.Stateless.BizTalk.Component
 		/// This <see cref="ExtractionMode"/> is not compatible with <see cref="ConstantExtractor"/> and cannot be used
 		/// with it.
 		/// </remarks>
-		Demote,
+		Demote = 2,
 
 		/// <summary>
 		/// The extractor is ignored and no action is performed.
 		/// </summary>
-		Ignore,
+		Ignore = 3,
 
 		/// <summary>
 		/// The value either given via the <see cref="ConstantExtractor"/>.<see cref="ConstantExtractor.Value"/> property
 		/// or extracted according to its <see cref="XPathExtractor"/>.<see cref="XPathExtractor.XPathExpression"/> is
 		/// promoted to the context.
 		/// </summary>
-		Promote,
+		Promote = 4,
 
 		/// <summary>
 		/// The value either given via the <see cref="ConstantExtractor"/>.<see cref="ConstantExtractor.Value"/> property

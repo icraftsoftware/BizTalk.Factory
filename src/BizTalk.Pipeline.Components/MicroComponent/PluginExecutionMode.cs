@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ namespace Be.Stateless.BizTalk.MicroComponent
 		/// <summary>
 		/// Executes the plugin as soon as its hosting pipeline component starts being executed.
 		/// </summary>
-		Immediate,
+		Immediate = 0,
 
 		/// <summary>
 		/// Executes the plugin only after the message stream has been exhausted.
 		/// </summary>
-		Deferred
+		Deferred = 1
 	}
 }

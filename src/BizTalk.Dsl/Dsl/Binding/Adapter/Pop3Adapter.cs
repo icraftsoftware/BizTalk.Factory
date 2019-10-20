@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,19 +35,19 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Adapter
 			/// Password will be sent to POP3 server in clear text.
 			/// </summary>
 			[XmlEnum("Basic")]
-			Basic,
+			Basic = 0,
 
 			/// <summary>
 			/// Password hash will be sent to POP3 server.
 			/// </summary>
 			[XmlEnum("Digest")]
-			Digest,
+			Digest = 1,
 
 			/// <summary>
 			/// NTLM will be used for authentication.
 			/// </summary>
 			[XmlEnum("SPA")]
-			SecurePasswordAuthentication
+			SecurePasswordAuthentication = 2
 		}
 
 		#endregion

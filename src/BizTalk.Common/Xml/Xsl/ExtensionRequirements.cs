@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,16 +31,16 @@ namespace Be.Stateless.BizTalk.Xml.Xsl
 		/// <summary>
 		/// The <see cref="XslCompiledTransform"/> has no requirement.
 		/// </summary>
-		None,
+		None = 0,
 
 		/// <summary>
 		/// The <see cref="XslCompiledTransform"/> needs the <see cref="BaseMessageContextFunctions"/> extension object.
 		/// </summary>
 		/// <remarks>
-		/// If will automatically be set if the stylesheet markup declares the namespace of the <see
-		/// cref="BaseMessageContextFunctions"/> (see <see cref="BaseMessageContextFunctions.TARGET_NAMESPACE"/>).
-		/// </remarks>>
+		/// If will automatically be set if the stylesheet markup declares the namespace of the <see cref="BaseMessageContextFunctions"/> (see <see
+		/// cref="BaseMessageContextFunctions.TARGET_NAMESPACE"/>).
+		/// </remarks>
 		/// <seealso cref="BaseMessageContextFunctions.TARGET_NAMESPACE"/>
-		MessageContext
+		MessageContext = 1
 	}
 }
