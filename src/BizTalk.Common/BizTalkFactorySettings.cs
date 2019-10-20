@@ -39,8 +39,14 @@ namespace Be.Stateless.BizTalk
 			get { return SsoSettingsReader.Instance.ReadString(APPLICATION_NAME, CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME); }
 		}
 
+		public static string TargetEnvironment
+		{
+			get { return SsoSettingsReader.Instance.ReadString(APPLICATION_NAME, TARGET_ENVIRONMENT_PROPERTY_NAME); }
+		}
+
 		public const string APPLICATION_NAME = "BizTalk.Factory";
 		internal const string CLAIM_STORE_CHECK_IN_DIRECTORY_PROPERTY_NAME = "ClaimStoreCheckInDirectory";
 		internal const string CLAIM_STORE_CHECK_OUT_DIRECTORY_PROPERTY_NAME = "ClaimStoreCheckOutDirectory";
+		private const string TARGET_ENVIRONMENT_PROPERTY_NAME = "TargetEnvironment";
 	}
 }

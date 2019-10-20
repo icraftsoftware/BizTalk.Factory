@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 #endregion
 
+using Be.Stateless.BizTalk.Dsl.Binding;
+using Be.Stateless.BizTalk.Unit.Binding;
 using Microsoft.BizTalk.ExplorerOM;
 using NUnit.Framework;
 
@@ -28,8 +30,8 @@ namespace Be.Stateless.BizTalk.Explorer
 		[Explicit("BizTalk.Factory has to be deployed.")]
 		public void Unenlist()
 		{
-			var application = BizTalkServerGroup.Applications["BizTalk.Factory"];
-			var sendPort = application.SendPorts["BizTalk.Factory.SP1.Sink.FailedMessage.FILE"];
+			var application = BizTalkServerGroup.Applications[BizTalkFactorySettings.APPLICATION_NAME];
+			var sendPort = application.SendPorts[BizTalkFactoryApplication.SendPort<SinkFailedMessageSendPort>().Name];
 
 			sendPort.Unenlist();
 			application.ApplyChanges();
@@ -46,6 +48,11 @@ namespace Be.Stateless.BizTalk.Explorer
 			sendPort.Start();
 			application.ApplyChanges();
 			Assert.That(sendPort.Status, Is.EqualTo(PortStatus.Started));
+		}
+
+		private static IApplicationBindingArtifactLookup BizTalkFactoryApplication
+		{
+			get { return ApplicationBindingArtifactLookupFactory<BizTalkFactoryApplicationBinding>.Create(); }
 		}
 	}
 }

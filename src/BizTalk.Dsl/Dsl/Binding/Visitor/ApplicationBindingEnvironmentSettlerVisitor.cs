@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Install;
 
 namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
@@ -26,6 +27,14 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </summary>
 	public class ApplicationBindingEnvironmentSettlerVisitor : IApplicationBindingVisitor
 	{
+		public static IApplicationBindingVisitor Create()
+		{
+			return new ApplicationBindingEnvironmentSettlerVisitor();
+		}
+
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "ApplicationBindingEnvironmentSettlerVisitorFixture needs to instantiate a mock.")]
+		internal ApplicationBindingEnvironmentSettlerVisitor() { }
+
 		#region IApplicationBindingVisitor Members
 
 		public void VisitReferencedApplicationBinding(IVisitable<IApplicationBindingVisitor> applicationBinding)

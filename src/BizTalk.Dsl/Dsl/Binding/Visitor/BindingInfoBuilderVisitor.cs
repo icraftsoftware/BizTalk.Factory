@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,10 +62,8 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 		public void VisitApplicationBinding<TNamingConvention>(IApplicationBinding<TNamingConvention> applicationBinding)
 			where TNamingConvention : class
 		{
-			// ensure referenced application is settled for environment
-			var applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
-			((IVisitable<IApplicationBindingVisitor>) applicationBinding).Accept(applicationBindingEnvironmentSettlerVisitor);
-
+			// ensure application bindings are settled for target environment before visit
+			((IVisitable<IApplicationBindingVisitor>) applicationBinding).Accept(ApplicationBindingEnvironmentSettlerVisitor.Create());
 			ApplicationName = ((ISupportNamingConvention) applicationBinding).Name;
 			BindingInfo = CreateBindingInfo(applicationBinding);
 		}

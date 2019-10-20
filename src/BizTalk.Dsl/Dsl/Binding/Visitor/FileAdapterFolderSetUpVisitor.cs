@@ -29,7 +29,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding.Visitor
 	/// </summary>
 	public class FileAdapterFolderSetUpVisitor : FileAdapterFolderVisitorBase
 	{
-		public static FileAdapterFolderSetUpVisitor Create(string[] users)
+		public static IApplicationBindingVisitor Create(string[] users)
 		{
 			if (users == null) throw new ArgumentNullException("users");
 			return new FileAdapterFolderSetUpVisitor(users);

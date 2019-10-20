@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Be.Stateless.Reflection
@@ -31,6 +32,7 @@ namespace Be.Stateless.Reflection
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void SetInterfaceReadOnlyPropertyManually()
 		{
 			Stub.Instance.GetType().GetProperty("TargetEnvironment").SetValue(Stub.Instance, "DEV");
@@ -55,10 +57,12 @@ namespace Be.Stateless.Reflection
 
 			#region IStub Members
 
+			[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 			public string TargetEnvironment { get; private set; }
 
 			#endregion
 
+			[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 			public string Property { get; private set; }
 
 			internal static readonly IStub Instance = new Stub();

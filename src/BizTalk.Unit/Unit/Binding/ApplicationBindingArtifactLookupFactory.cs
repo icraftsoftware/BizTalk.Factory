@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Dsl.Binding;
 using Be.Stateless.BizTalk.Dsl.Binding.Visitor;
@@ -30,6 +31,18 @@ namespace Be.Stateless.BizTalk.Unit.Binding
 	public static class ApplicationBindingArtifactLookupFactory<T>
 		where T : IApplicationBinding, IApplicationBindingArtifactLookup, IVisitable<IApplicationBindingVisitor>, new()
 	{
+		[SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+		public static IApplicationBindingArtifactLookup Create()
+		{
+			// rely on BizTalk.Factory SSO store, which is be deployed to run process tests anyway, to determine the target environment to use to generate the binding
+			// artifacts' names
+			var targetEnvironment = BizTalkFactorySettings.TargetEnvironment;
+			var assemblyPath = Path.GetDirectoryName(new Uri(typeof(T).Assembly.CodeBase).AbsolutePath);
+			// rely on ApplicationBinding's assembly to compute an EnvironmentSettingOverridesRootPath by convention
+			var environmentSettingOverridesRootPath = Path.Combine(assemblyPath, "EnvironmentSettings");
+			return Create(targetEnvironment, environmentSettingOverridesRootPath);
+		}
+
 		public static IApplicationBindingArtifactLookup Create(string targetEnvironment)
 		{
 			if (targetEnvironment.IsNullOrEmpty()) throw new ArgumentNullException("targetEnvironment");
@@ -52,8 +65,8 @@ namespace Be.Stateless.BizTalk.Unit.Binding
 
 		private static void SettleApplicationBindingForBindingGenerationContext(T applicationBinding)
 		{
-			var applicationBindingEnvironmentSettlerVisitor = new ApplicationBindingEnvironmentSettlerVisitor();
-			applicationBinding.Accept(applicationBindingEnvironmentSettlerVisitor);
+			// ensure application bindings are settled for target environment before visit
+			applicationBinding.Accept(ApplicationBindingEnvironmentSettlerVisitor.Create());
 		}
 
 		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]

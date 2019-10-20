@@ -93,9 +93,29 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BizTalk.Binding\Be.Stateless.BizTalk.Binding.csproj">
+      <Project>{C788BF6D-9229-4578-8E29-87143846A4F9}</Project>
+      <Name>Be.Stateless.BizTalk.Binding</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
+      <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
+      <Name>Be.Stateless.BizTalk.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl.Binding.Conventions\Be.Stateless.BizTalk.Dsl.Binding.Conventions.csproj">
+      <Project>{99348f15-85c7-4c31-befc-12d3ad0c38e1}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl.Binding.Conventions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
+      <Project>{46E0347E-7978-4F76-86D7-7D31201D856D}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Explorer\Be.Stateless.BizTalk.Explorer.csproj">
       <Project>{c1e4257c-6ba5-4e88-96e2-6961da3053d4}</Project>
       <Name>Be.Stateless.BizTalk.Explorer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Unit\Be.Stateless.BizTalk.Unit.csproj">
+      <Project>{36EAAC42-F1B1-409A-A7DC-BBA0D59DD3AA}</Project>
+      <Name>Be.Stateless.BizTalk.Unit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

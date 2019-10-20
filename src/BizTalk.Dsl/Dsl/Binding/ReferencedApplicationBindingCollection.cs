@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,11 +35,7 @@ namespace Be.Stateless.BizTalk.Dsl.Binding
 
 		public IReferencedApplicationBindingCollection Add<T>(params T[] applicationBindings) where T : IApplicationBinding
 		{
-			applicationBindings.Each(
-				applicationBinding => {
-					var visitable = (IApplicationBinding) applicationBinding;
-					base.Add(visitable);
-				});
+			applicationBindings.Each(applicationBinding => base.Add(applicationBinding));
 			return this;
 		}
 
