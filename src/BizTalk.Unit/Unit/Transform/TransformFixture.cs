@@ -169,41 +169,13 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 			/// <summary>
 			/// Concatenates all the text values of the nodes selected using the specified XPath expression and uses the
-			/// default separator ('#') between each value.
-			/// </summary>
-			/// <param name="xpathExpression">
-			/// A <see cref="string"/> representing an XPath expression.
-			/// </param>
-			/// <returns>
-			/// A string that consists of the selected nodes' values delimited by the separator <see cref="char"/>.
-			/// </returns>
-			/// <remarks>
-			/// <para>
-			/// <see cref="StringJoin(string)"/> automatically benefits of an <see cref="IXmlNamespaceResolver"/> resolver
-			/// that redeclares all of the namespaces that the generic XSLT transform of <see cref="TransformFixture{T}"/>
-			/// have declared.
-			/// </para>
-			/// <para>
-			/// It is possible to extend this <see cref="IXmlNamespaceResolver"/> resolver via the <see
-			/// cref="TransformFixture{T}.AddNamespace"/> method. Notice that the namespaces added this way will scope the
-			/// whole <see cref="TransformFixture{T}"/> and not a particular test method.
-			/// </para>
-			/// </remarks>
-			/// <seealso href="http://www.w3.org/TR/2002/WD-xquery-operators-20021115/#func-string-join"/>
-			public string StringJoin(string xpathExpression)
-			{
-				return StringJoin(xpathExpression, '#');
-			}
-
-			/// <summary>
-			/// Concatenates all the text values of the nodes selected using the specified XPath expression and uses the
 			/// specified separator between each value.
 			/// </summary>
 			/// <param name="xpathExpression">
 			/// A <see cref="string"/> representing an XPath expression.
 			/// </param>
 			/// <param name="separator">
-			/// The <see cref="char"/> to use as a separator.
+			/// The <see cref="char"/> to use as a separator; it defaults to '#'.
 			/// </param>
 			/// <returns>
 			/// A string that consists of the selected nodes' values delimited by the separator <see cref="char"/>.
@@ -221,7 +193,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			/// </para>
 			/// </remarks>
 			/// <seealso href="http://www.w3.org/TR/2002/WD-xquery-operators-20021115/#func-string-join"/>
-			public string StringJoin(string xpathExpression, char separator)
+			public string StringJoin(string xpathExpression, char separator = '#')
 			{
 				return Select(xpathExpression)
 					.OfType<XPathNavigator>()
