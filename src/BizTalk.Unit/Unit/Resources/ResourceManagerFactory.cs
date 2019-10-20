@@ -23,15 +23,15 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 	public static class ResourceManagerFactory
 	{
 		/// <summary>
-		/// Instantiate an <see cref="IResourceManager"/> providing access to the resources embedded in the assembly to which belongs <see cref="T"/>, and scoped by the
-		/// namespace of the specified type <see cref="T"/>.
+		/// Instantiate an <see cref="IResourceManager"/> providing access to the resources embedded in the assembly to which belongs <typeparamref name="T"/>, and scoped
+		/// by the namespace of the specified type <typeparamref name="T"/>.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type whose namespace scope is to be used to access the embedded resources in its containing assembly.
 		/// </typeparam>
 		/// <returns>
-		/// An <see cref="IResourceManager"/> that provides access to the resources scoped by the namespace of the specified type <see cref="T"/> and embedded in the
-		/// containing assembly of <see cref="T"/>.
+		/// An <see cref="IResourceManager"/> that provides access to the resources scoped by the namespace of the specified type <typeparamref name="T"/> and embedded in
+		/// the containing assembly of <typeparamref name="T"/>.
 		/// </returns>
 		public static IResourceManager Create<T>()
 		{
