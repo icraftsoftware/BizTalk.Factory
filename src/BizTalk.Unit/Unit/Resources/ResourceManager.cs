@@ -19,7 +19,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Xsl;
 
@@ -55,12 +54,6 @@ namespace Be.Stateless.BizTalk.Unit.Resources
 		public static string LoadXmlString(string name)
 		{
 			return GetResourceManagerImpl().LoadXmlString(name);
-		}
-
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		private static T Load<T>(Assembly assembly, string name, Func<Stream, T> deserializer)
-		{
-			return GetResourceManagerImpl().Load<T>(name, deserializer);
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
