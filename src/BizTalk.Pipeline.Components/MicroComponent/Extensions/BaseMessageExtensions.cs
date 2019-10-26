@@ -30,14 +30,17 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 		public static string GetOrProbeMessageType(this IBaseMessage message, IPipelineContext pipelineContext)
 		{
 			var messageType = message.GetProperty(BtsProperties.MessageType);
-			if (messageType.IsNullOrEmpty())
-			{
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => originalStream.AsMarkable(),
-					pipelineContext.ResourceTracker);
-				messageType = message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
-			}
-			return messageType;
+			return messageType.IsNullOrEmpty()
+				? ProbeMessageType(message, pipelineContext)
+				: messageType;
+		}
+
+		public static string ProbeMessageType(IBaseMessage message, IPipelineContext pipelineContext)
+		{
+			message.BodyPart.WrapOriginalDataStream(
+				originalStream => originalStream.AsMarkable(),
+				pipelineContext.ResourceTracker);
+			return message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
 		}
 	}
 }
