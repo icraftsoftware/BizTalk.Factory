@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Xml
 {
 	[TestFixture]
-	public class CompositeEmbeddedTransformFixture : TransformFixture<CompositeEmbeddedTransform>
+	public class CompositeEmbeddedTransformFixture : ClosedTransformFixture<CompositeEmbeddedTransform>
 	{
 		[Test]
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
@@ -35,7 +35,8 @@ namespace Be.Stateless.BizTalk.Xml
 		{
 			using (var stream = ResourceManager.Load("Data.BatchContent.xml"))
 			{
-				Transform<Any>(XmlSchemaContentProcessing.None, stream);
+				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<Any>().WithStrictConformanceLevel();
+				Assert.That(() => setup.Execute(), Throws.InstanceOf<XmlSchemaValidationException>());
 			}
 		}
 

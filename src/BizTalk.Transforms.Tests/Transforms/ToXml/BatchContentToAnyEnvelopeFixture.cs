@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Schemas.Xml;
@@ -27,20 +28,10 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Transforms.ToXml
 {
 	[TestFixture]
-	public class BatchContentToAnyEnvelopeFixture : TransformFixture<BatchContentToAnyEnvelope>
+	public class BatchContentToAnyEnvelopeFixture : ClosedTransformFixture<BatchContentToAnyEnvelope>
 	{
-		#region Setup/Teardown
-
-		[OneTimeSetUp]
-		public void TestFixtureSetUp()
-		{
-			AddNamespace("env", new SchemaMetadata(typeof(Envelope)).TargetNamespace);
-			AddNamespace("tns", new SchemaMetadata(typeof(Batch.Release)).TargetNamespace);
-		}
-
-		#endregion
-
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
 			var templateTargetEnvelope = MessageFactory.CreateEnvelope<Envelope>();
@@ -49,9 +40,18 @@ namespace Be.Stateless.BizTalk.Transforms.ToXml
 			var templateTargetEnvelopeStream = new StringStream(templateTargetEnvelope.OuterXml);
 			var batchContentWithPartsStream = new StringStream(batchContentWithParts.OuterXml);
 
-			var result = Transform<Envelope, Batch.Release>(templateTargetEnvelopeStream, batchContentWithPartsStream);
+			var setup = Given
+				.Message(templateTargetEnvelopeStream)
+				.Message(batchContentWithPartsStream)
+				.Transform.OutputsXml()
+				.ConformingTo<Envelope>()
+				.ConformingTo<Batch.Release>()
+				.WithStrictConformanceLevel();
+			var result = setup.Execute();
+			result.XmlNamespaceManager.AddNamespace("env", new SchemaMetadata(typeof(Envelope)).TargetNamespace);
+			result.XmlNamespaceManager.AddNamespace("tns", new SchemaMetadata(typeof(Batch.Release)).TargetNamespace);
 
-			Assert.That(result.Single("/*").LocalName, Is.EqualTo("Envelope"));
+			Assert.That(result.SelectSingleNode("/*").LocalName, Is.EqualTo("Envelope"));
 			Assert.That(result.Select("/env:Envelope/tns:ReleaseBatch").Count, Is.EqualTo(3));
 		}
 	}

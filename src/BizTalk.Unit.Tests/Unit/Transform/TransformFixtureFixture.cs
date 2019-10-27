@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,9 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	[TestFixture]
+#pragma warning disable 618
 	public class TransformFixtureFixture : TransformFixture<IdentityTransform>
+#pragma warning restore 618
 	{
 		#region Setup/Teardown
 

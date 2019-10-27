@@ -39,6 +39,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 	/// <typeparam name="T">
 	/// The type of the BizTalk transform to test.
 	/// </typeparam>
+	[Obsolete("Use ClosedTransformFixture instead.")]
 	public abstract class TransformFixture<T> : IMapCustomXsltPathResolver
 		where T : TransformBase, new()
 	{

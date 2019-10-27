@@ -90,6 +90,10 @@
       <Project>{68E5CFCC-205D-4526-923C-09F5F46058E4}</Project>
       <Name>Be.Stateless.BizTalk.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BizTalk.Dsl\Be.Stateless.BizTalk.Dsl.csproj">
+      <Project>{46e0347e-7978-4f76-86d7-7d31201d856d}</Project>
+      <Name>Be.Stateless.BizTalk.Dsl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BizTalk.Schemas\Be.Stateless.BizTalk.Schemas.btproj">
       <Project>{F33DF96F-EC86-41DE-94D4-0EC981B7C9FF}</Project>
       <Name>Be.Stateless.BizTalk.Schemas</Name>

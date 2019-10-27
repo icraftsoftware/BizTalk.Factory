@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schemas.Sql.Procedures.Batch;
@@ -27,9 +28,10 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 {
 	[TestFixture]
-	public class AnyToAddPartFixture : TransformFixture<AnyToAddPart>
+	public class AnyToAddPartFixture : ClosedTransformFixture<AnyToAddPart>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
 			var contextMock = new MessageContextMock();
@@ -39,14 +41,16 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(contextMock.Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
+				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.Select("//usp:messagingStepActivityId").Count, Is.EqualTo(0));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithEnvironmentTag()
 		{
 			var contextMock = new MessageContextMock();
@@ -62,14 +66,16 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(contextMock.Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
-				Assert.That(result.Single("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
-				Assert.That(result.Single("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
+				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
+				Assert.That(result.SelectSingleNode("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
+				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithMessagingStepActivityId()
 		{
 			var contextMock = new MessageContextMock();
@@ -82,14 +88,16 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(contextMock.Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
+				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
-				Assert.That(result.Single("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
+				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithPartition()
 		{
 			var contextMock = new MessageContextMock();
@@ -105,10 +113,11 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var result = Transform<AddPart>(contextMock.Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
-				Assert.That(result.Single("//usp:partition/text()").Value, Is.EqualTo("A"));
-				Assert.That(result.Single("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
+				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
+				Assert.That(result.SelectSingleNode("//usp:partition/text()").Value, Is.EqualTo("A"));
+				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
 			}
 		}
 	}

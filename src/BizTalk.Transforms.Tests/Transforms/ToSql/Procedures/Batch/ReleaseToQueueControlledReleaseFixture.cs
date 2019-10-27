@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Schema;
@@ -31,45 +32,67 @@ using NUnit.Framework;
 namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 {
 	[TestFixture]
-	public class ReleaseToQueueControlledReleaseFixture : TransformFixture<ReleaseToQueueControlledRelease>
+	public class ReleaseToQueueControlledReleaseFixture : ClosedTransformFixture<ReleaseToQueueControlledRelease>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
+				var setup = Given
+					.Message(stream)
+					.Context(new Mock<IBaseMessageContext>().Object)
+					.Transform
+					.OutputsXml()
+					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithEnvironmentTag()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchEnvironmentTag.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
-				Assert.That(result.Single("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
+				var setup = Given
+					.Message(stream)
+					.Context(new Mock<IBaseMessageContext>().Object)
+					.Transform
+					.OutputsXml()
+					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
+				Assert.That(result.SelectSingleNode("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithPartition()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchPartition.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(new Mock<IBaseMessageContext>().Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
-				Assert.That(result.Single("//usp:partition/text()").Value, Is.EqualTo("A"));
+				var setup = Given
+					.Message(stream)
+					.Context(new Mock<IBaseMessageContext>().Object)
+					.Transform
+					.OutputsXml()
+					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
+				Assert.That(result.SelectSingleNode("//usp:partition/text()").Value, Is.EqualTo("A"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithProcessActivityId()
 		{
 			var contextMock = new Mock<IBaseMessageContext>();
@@ -80,10 +103,16 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var result = Transform<QueueControlledRelease>(contextMock.Object, stream);
-				Assert.That(result.Single("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
+				var setup = Given
+					.Message(stream)
+					.Context(contextMock.Object)
+					.Transform
+					.OutputsXml()
+					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
+				var result = setup.Execute();
+				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
-				Assert.That(result.Single("//usp:processActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
+				Assert.That(result.SelectSingleNode("//usp:processActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
 			}
 		}
 	}

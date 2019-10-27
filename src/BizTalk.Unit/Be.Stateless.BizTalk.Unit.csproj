@@ -162,14 +162,32 @@
     <Compile Include="Unit\ServiceModel\Stub\StubService.cs" />
     <Compile Include="Unit\ServiceModel\StubServiceHost.cs" />
     <Compile Include="Unit\ServiceModel\StubServiceHostActivatorAttribute.cs" />
+    <Compile Include="Unit\Transform\ClosedTransformFixture.cs" />
+    <Compile Include="Unit\Transform\ClosedTransformFixtureXmlResult.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingEmbeddedXmlResolver.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingTransformer.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingXslCompiledTransformDescriptorBuilder.cs" />
     <Compile Include="Unit\Transform\IdentityTransform.cs" />
+    <Compile Include="Unit\Transform\IFirstXmlOutputTransformFixtureSetup.cs" />
+    <Compile Include="Unit\Transform\IInputTransformFixtureSetup.cs" />
     <Compile Include="Unit\Transform\IMapCustomXsltPathResolver.cs" />
+    <Compile Include="Unit\ISystemUnderTestSetup.cs" />
+    <Compile Include="Unit\Transform\IFirstInputTransformFixtureSetup.cs" />
+    <Compile Include="Unit\Transform\IOutputTransformFixtureSetup.cs" />
+    <Compile Include="Unit\Transform\ITransformFixtureTextResult.cs" />
+    <Compile Include="Unit\Transform\ITransformFixtureXmlResult.cs" />
+    <Compile Include="Unit\Transform\IXmlOutputTransformFixtureSetup.cs" />
     <Compile Include="Unit\Transform\MapCustomXsltPathResolver.cs" />
     <Compile Include="Unit\Transform\TransformFixture.cs" />
+    <Compile Include="Unit\Transform\TransformFixtureInputSetup.cs" />
+    <Compile Include="Unit\Transform\TransformFixtureOutputSetup.cs" />
+    <Compile Include="Unit\Transform\TransformFixtureTextResult.cs" />
+    <Compile Include="Unit\Transform\TransformOutputFixtureSetup.cs" />
+    <Compile Include="Unit\Transform\TransformWithTextOutputFixtureSetup.cs" />
+    <Compile Include="Unit\Transform\TransformWithXmlOutputFixtureSetup.cs" />
     <Compile Include="Unit\Transform\XPathNavigable.cs" />
+    <Compile Include="Xml\XPathNavigatorDecorator.cs" />
+    <Compile Include="Xml\XPathNodeIteratorDecorator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BizTalk.Common\Be.Stateless.BizTalk.Common.csproj">
