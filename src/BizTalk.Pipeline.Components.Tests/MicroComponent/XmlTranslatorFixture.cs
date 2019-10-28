@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Xml;
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Unit.MicroComponent;
 using Be.Stateless.BizTalk.Xml;
+using Be.Stateless.Text.Extensions;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.MicroComponent
@@ -85,6 +90,21 @@ namespace Be.Stateless.BizTalk.MicroComponent
 							new XmlNamespaceTranslation("sourceUrn5", "urn05")
 						}
 					}));
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		public void RoundTripXmlSerialization()
+		{
+			var builder = new StringBuilder();
+			using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { OmitXmlDeclaration = true }))
+			{
+				new XmlTranslator().Serialize(writer);
+			}
+			using (var reader = builder.GetReaderAtContent())
+			{
+				Assert.That(() => reader.DeserializeMicroPipelineComponent(), Throws.Nothing);
+			}
 		}
 
 		[Test]
