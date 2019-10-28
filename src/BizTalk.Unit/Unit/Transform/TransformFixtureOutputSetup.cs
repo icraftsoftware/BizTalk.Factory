@@ -55,22 +55,25 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			return this;
 		}
 
+		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithConformanceLevel(XmlSchemaContentProcessing xmlSchemaContentProcessing)
+		{
+			ContentProcessing = xmlSchemaContentProcessing;
+			return new TransformWithXmlOutputFixtureSetup(_inputs, this);
+		}
+
 		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithNoConformanceLevel()
 		{
-			ContentProcessing = XmlSchemaContentProcessing.None;
-			return new TransformWithXmlOutputFixtureSetup(_inputs, this);
+			return WithConformanceLevel(XmlSchemaContentProcessing.Skip);
 		}
 
 		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithLaxConformanceLevel()
 		{
-			ContentProcessing = XmlSchemaContentProcessing.Lax;
-			return new TransformWithXmlOutputFixtureSetup(_inputs, this);
+			return WithConformanceLevel(XmlSchemaContentProcessing.Lax);
 		}
 
 		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithStrictConformanceLevel()
 		{
-			ContentProcessing = XmlSchemaContentProcessing.Strict;
-			return new TransformWithXmlOutputFixtureSetup(_inputs, this);
+			return WithConformanceLevel(XmlSchemaContentProcessing.Strict);
 		}
 
 		#endregion

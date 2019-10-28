@@ -16,10 +16,14 @@
 
 #endregion
 
+using System.Xml.Schema;
+
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	public interface IXmlOutputTransformFixtureSetup : IFirstXmlOutputTransformFixtureSetup
 	{
+		ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithConformanceLevel(XmlSchemaContentProcessing xmlSchemaContentProcessing);
+
 		ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithNoConformanceLevel();
 
 		ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithLaxConformanceLevel();
