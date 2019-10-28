@@ -24,6 +24,7 @@ using System.Xml.Xsl;
 
 namespace Be.Stateless.BizTalk.Unit.Resources
 {
+	// TODO to be deprecated
 	public static class ResourceManager
 	{
 		[MethodImpl(MethodImplOptions.NoInlining)]
