@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2015 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -63,28 +63,22 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			if (map != null)
 			{
 				if (_logger.IsDebugEnabled) _logger.DebugFormat("Applying '{0}' XSL Transform to message.", map.AssemblyQualifiedName);
-				var markableForwardOnlyEventingReadStream = message.BodyPart.WrapOriginalDataStream(
+				message.BodyPart.WrapOriginalDataStream(
 					originalStream => originalStream
 						.Transform()
 						.ExtendWith(message.Context)
-						.Apply(map, Encoding)
-						.AsMarkable(),
+						.Apply(map, Encoding),
 					pipelineContext.ResourceTracker);
 
 				if (map.GetOutputSettings().OutputMethod == XmlOutputMethod.Xml)
 				{
-					if (_logger.IsDebugEnabled) _logger.DebugFormat("Probing output of '{0}' XSL Transform for a new message type.", map.AssemblyQualifiedName);
-					var messageType = markableForwardOnlyEventingReadStream.Probe().MessageType;
-					var docSpec = pipelineContext.GetDocumentSpecByType(messageType);
-					message.Promote(BtsProperties.MessageType, docSpec.DocType);
-					message.Promote(BtsProperties.SchemaStrongName, docSpec.DocSpecStrongName);
+					if (_logger.IsDebugEnabled) _logger.DebugFormat("Probing output of '{0}' XSL Transform and promoting new message type.", map.AssemblyQualifiedName);
+					message.ProbeAndPromoteMessageType(pipelineContext);
 				}
 				else if (_logger.IsDebugEnabled)
 				{
-					_logger.DebugFormat("Skipping probing of '{0}' XSL Transform output for a new message type as its OutputMethod is not XML.", map.AssemblyQualifiedName);
+					_logger.DebugFormat("Skip probing of '{0}' XSL Transform output for a message type as its OutputMethod is not XML.", map.AssemblyQualifiedName);
 				}
-
-				markableForwardOnlyEventingReadStream.StopMarking();
 			}
 			else
 			{

@@ -16,10 +16,9 @@
 
 #endregion
 
+using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
-using Be.Stateless.BizTalk.Streaming.Extensions;
-using Be.Stateless.Extensions;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -29,18 +28,31 @@ namespace Be.Stateless.BizTalk.MicroComponent.Extensions
 	{
 		public static string GetOrProbeMessageType(this IBaseMessage message, IPipelineContext pipelineContext)
 		{
-			var messageType = message.GetProperty(BtsProperties.MessageType);
-			return messageType.IsNullOrEmpty()
-				? ProbeMessageType(message, pipelineContext)
-				: messageType;
+			return message.GetOrProbeMessageType(pipelineContext.ResourceTracker);
 		}
 
-		public static string ProbeMessageType(IBaseMessage message, IPipelineContext pipelineContext)
+		public static string ProbeMessageType(this IBaseMessage message, IPipelineContext pipelineContext)
 		{
-			message.BodyPart.WrapOriginalDataStream(
-				originalStream => originalStream.AsMarkable(),
-				pipelineContext.ResourceTracker);
-			return message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
+			return message.ProbeMessageType(pipelineContext.ResourceTracker);
+		}
+
+		public static void ProbeAndPromoteMessageType(this IBaseMessage message, IPipelineContext pipelineContext)
+		{
+			var messageType = message.ProbeMessageType(pipelineContext);
+			var docSpec = pipelineContext.GetDocumentSpecByType(messageType);
+			message.Promote(BtsProperties.MessageType, docSpec.DocType);
+			message.Promote(BtsProperties.SchemaStrongName, docSpec.DocSpecStrongName);
+		}
+
+		public static void TryProbeAndPromoteMessageType(this IBaseMessage message, IPipelineContext pipelineContext)
+		{
+			var messageType = message.ProbeMessageType(pipelineContext);
+			IDocumentSpec docSpec;
+			if (pipelineContext.TryGetDocumentSpecByType(messageType, out docSpec))
+			{
+				message.Promote(BtsProperties.MessageType, docSpec.DocType);
+				message.Promote(BtsProperties.SchemaStrongName, docSpec.DocSpecStrongName);
+			}
 		}
 	}
 }

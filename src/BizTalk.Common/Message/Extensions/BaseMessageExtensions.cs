@@ -23,9 +23,12 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.Extensions;
 using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Reflection;
+using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.XLANGs.BaseTypes;
 using Microsoft.XLANGs.Core;
@@ -71,6 +74,24 @@ namespace Be.Stateless.BizTalk.Message.Extensions
 				// TODO add some logging here
 			}
 			return new XmlQNameTable(contextProperties ?? new Hashtable());
+		}
+
+		public static string GetOrProbeMessageType(this IBaseMessage message, IResourceTracker resourceTracker)
+		{
+			var messageType = message.GetProperty(BtsProperties.MessageType);
+			return messageType.IsNullOrEmpty()
+				? message.ProbeMessageType(resourceTracker)
+				: messageType;
+		}
+
+		public static string ProbeMessageType(this IBaseMessage message, IResourceTracker resourceTracker)
+		{
+			var markableForwardOnlyEventingReadStream = message.BodyPart.WrapOriginalDataStream(
+				originalStream => originalStream.AsMarkable(),
+				resourceTracker);
+			var messageType = message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
+			markableForwardOnlyEventingReadStream.StopMarking();
+			return messageType;
 		}
 
 		public static string ToXml(this XmlQNameTable context)

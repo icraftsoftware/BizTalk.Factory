@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -154,7 +154,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
-				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Once); // probing for MessageType calls AsMarkable() which wraps stream
 
 				MessageMock.Verify(m => m.Context.Promote(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
 				MessageMock.Verify(m => m.Context.Write(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
@@ -233,7 +233,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.SameAs(inputStream));
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.Not.TypeOf<XPathMutatorStream>());
-				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Never());
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Once); // probing for MessageType calls AsMarkable() which wraps stream
 			}
 		}
 
@@ -252,7 +252,8 @@ namespace Be.Stateless.BizTalk.MicroComponent
 				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
 
 				Assert.That(MessageMock.Object.BodyPart.Data, Is.TypeOf<XPathMutatorStream>());
-				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.AtLeastOnce);
+				// twice: 1st when probing for MessageType calls AsMarkable() which wraps stream, 2nd when wrapping in XPathMutatorStream
+				PipelineContextMock.Verify(pc => pc.ResourceTracker, Times.Exactly(2));
 			}
 		}
 

@@ -17,15 +17,20 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using System.Xml;
 using Be.Stateless.BizTalk.Component.Extensions;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Schema;
+using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Unit.MicroComponent;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Text.Extensions;
+using Moq;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.MicroComponent
@@ -90,6 +95,50 @@ namespace Be.Stateless.BizTalk.MicroComponent
 							new XmlNamespaceTranslation("sourceUrn5", "urn05")
 						}
 					}));
+		}
+
+		[Test]
+		public void ProbeAndPromoteMessageTypeIfKnown()
+		{
+			PipelineContextMock
+				.Setup(m => m.GetDocumentSpecByType("urn:ns:translated#root"))
+				.Returns(Schema<Batch.Content>.DocumentSpec);
+
+			using (var dataStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				var sut = new XmlTranslator {
+					Translations = new XmlTranslationSet {
+						Items = new[] {
+							new XmlNamespaceTranslation("urn:ns", "urn:ns:translated")
+						}
+					}
+				};
+				MessageMock.Object.BodyPart.Data = dataStream;
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			}
+
+			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType), Times.Once());
+			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName), Times.Once());
+		}
+
+		[Test]
+		public void ProbeAndSkipPromoteMessageTypeIfUnknown()
+		{
+			using (var dataStream = new MemoryStream(Encoding.UTF8.GetBytes("<root xmlns='urn:ns'></root>")))
+			{
+				var sut = new XmlTranslator {
+					Translations = new XmlTranslationSet {
+						Items = new[] {
+							new XmlNamespaceTranslation("urn:ns", "urn:ns:translated")
+						}
+					}
+				};
+				MessageMock.Object.BodyPart.Data = dataStream;
+				sut.Execute(PipelineContextMock.Object, MessageMock.Object);
+			}
+
+			MessageMock.Verify(m => m.Promote(BtsProperties.MessageType, Schema<Batch.Content>.MessageType), Times.Never);
+			MessageMock.Verify(m => m.Promote(BtsProperties.SchemaStrongName, new SchemaMetadata<Batch.Content>().DocumentSpec.DocSpecStrongName), Times.Never);
 		}
 
 		[Test]

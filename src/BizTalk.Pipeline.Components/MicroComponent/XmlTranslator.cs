@@ -23,9 +23,11 @@ using System.Xml.Serialization;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.MicroComponent.Extensions;
 using Be.Stateless.BizTalk.Streaming;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Extensions;
+using Be.Stateless.Logging;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
 
@@ -61,6 +63,9 @@ namespace Be.Stateless.BizTalk.MicroComponent
 						return substitutionStream;
 					},
 					pipelineContext.ResourceTracker);
+
+				if (_logger.IsDebugEnabled) _logger.DebugFormat("Trying to probe and promote translated XML output's message type.");
+				message.TryProbeAndPromoteMessageType(pipelineContext);
 			}
 			return message;
 		}
@@ -92,5 +97,7 @@ namespace Be.Stateless.BizTalk.MicroComponent
 			var contextReplacements = XmlTranslationSetConverter.Deserialize(translations);
 			return contextReplacements.Union(Translations);
 		}
+
+		private static readonly ILog _logger = LogManager.GetLogger(typeof(XmlTranslator));
 	}
 }

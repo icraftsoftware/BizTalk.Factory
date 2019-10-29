@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -102,23 +102,25 @@ namespace Be.Stateless.BizTalk.Component.Extensions
 		public static ISchemaMetadata GetSchemaMetadataByType(this IPipelineContext pipelineContext, string docType, bool throwOnError)
 		{
 			if (throwOnError) return pipelineContext.GetSchemaMetadataByType(docType);
-
-			var schemaType = docType
-				.IfNotNullOrEmpty(dt => pipelineContext.SafeGetDocumentSpecByType(dt))
-				.IfNotNull(docSpec => Type.GetType(docSpec.DocSpecStrongName, false));
+			IDocumentSpec documentSpec;
+			var schemaType = !docType.IsNullOrEmpty() && pipelineContext.TryGetDocumentSpecByType(docType, out documentSpec)
+				? Type.GetType(documentSpec.DocSpecStrongName, false)
+				: null;
 			return schemaType.IsSchema() ? schemaType.GetMetadata() : SchemaMetadata.Unknown;
 		}
 
-		private static IDocumentSpec SafeGetDocumentSpecByType(this IPipelineContext pipelineContext, string docType)
+		public static bool TryGetDocumentSpecByType(this IPipelineContext pipelineContext, string docType, out IDocumentSpec documentSpec)
 		{
 			try
 			{
-				return pipelineContext.GetDocumentSpecByType(docType);
+				documentSpec = pipelineContext.GetDocumentSpecByType(docType);
+				return true;
 			}
 			catch (COMException exception)
 			{
+				documentSpec = null;
 				// test HResult for Finding the document specification by message type "..." failed. Verify the schema deployed properly.
-				if (exception.HResult == E_SCHEMA_NOT_FOUND) return null;
+				if (exception.HResult == E_SCHEMA_NOT_FOUND) return false;
 				if (_logger.IsWarnEnabled) _logger.Warn(string.Format("SafeGetDocumentSpecByType({0}) has failed.", docType), exception);
 				throw;
 			}

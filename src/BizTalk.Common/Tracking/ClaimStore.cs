@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Message.Extensions;
 using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Streaming;
-using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.Tracking.Messaging;
 using Be.Stateless.Extensions;
 using Be.Stateless.IO;
@@ -342,16 +341,7 @@ namespace Be.Stateless.BizTalk.Tracking
 		/// </remarks>
 		public virtual void Redeem(IBaseMessage message, IResourceTracker resourceTracker)
 		{
-			// TODO factor out this code in an IBaseMessage (or other) extension method (with its own unit test)
-			var messageType = message.GetProperty(BtsProperties.MessageType);
-			if (messageType.IsNullOrEmpty())
-			{
-				message.BodyPart.WrapOriginalDataStream(
-					originalStream => originalStream.AsMarkable(),
-					resourceTracker);
-				messageType = message.BodyPart.Data.EnsureMarkable().Probe().MessageType;
-			}
-
+			var messageType = message.GetOrProbeMessageType(resourceTracker);
 			if (messageType == typeof(Claim.Check).GetMetadata().MessageType || messageType == typeof(Claim.CheckOut).GetMetadata().MessageType)
 			{
 				var messageBodyCaptureDescriptor = message.BodyPart.AsMessageBodyCaptureDescriptor();
