@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.BizTalk.Component;
 using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.Extensions;
 using Be.Stateless.Logging;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.BizTalk.XPath;
@@ -116,8 +117,13 @@ namespace Be.Stateless.BizTalk.XPath
 			}
 			else if (ExtractionMode == ExtractionMode.Demote)
 			{
-				newValue = messageContext.Read(PropertyName.Name, PropertyName.Namespace).ToString();
-				if (_logger.IsDebugEnabled) _logger.DebugFormat("Demoting property {0} with value {1} from context.", PropertyName, newValue);
+				var @object = messageContext.Read(PropertyName.Name, PropertyName.Namespace);
+				var value = @object.IfNotNull(o => o.ToString());
+				if (!value.IsNullOrEmpty())
+				{
+					newValue = value;
+					if (_logger.IsDebugEnabled) _logger.DebugFormat("Demoting property {0} with value {1} from context.", PropertyName, newValue);
+				}
 			}
 			else
 			{

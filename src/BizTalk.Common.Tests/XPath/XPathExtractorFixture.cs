@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Be.Stateless.BizTalk.Component;
+using Be.Stateless.BizTalk.ContextProperties;
+using Be.Stateless.BizTalk.Unit;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.XPath
@@ -27,6 +29,16 @@ namespace Be.Stateless.BizTalk.XPath
 	[SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
 	public class XPathExtractorFixture
 	{
+		[Test]
+		public void DemoteDoesNotThrowIfNewValueIsNullOrEmpty()
+		{
+			var messageMock = new MessageMock();
+			var sut = new XPathExtractor(TrackingProperties.Value1.QName, "//value1", ExtractionMode.Demote);
+			string newValue = null;
+			Assert.That(() => sut.Execute(messageMock.Object.Context, "old", ref newValue), Throws.Nothing);
+			Assert.That(newValue, Is.Null);
+		}
+
 		[Test]
 		public void Equality()
 		{
