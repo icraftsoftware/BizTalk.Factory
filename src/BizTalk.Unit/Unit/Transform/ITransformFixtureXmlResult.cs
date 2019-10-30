@@ -19,7 +19,6 @@
 using System.Xml;
 using System.Xml.XPath;
 using Be.Stateless.BizTalk.Dsl;
-using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
@@ -34,14 +33,6 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		/// Namespace resolver initialized with each of the namespaces and their prefixes declared in the XSLT.
 		/// </summary>
 		XmlNamespaceManager XmlNamespaceManager { get; }
-
-		/// <summary>
-		/// Add all the namespaces and their prefixes declared in the XSLT transform.
-		/// </summary>
-		/// <typeparam name="T">
-		/// The XSLT transform to get the namespaces to declare from.
-		/// </typeparam>
-		void AddNamespace<T>() where T : TransformBase, new();
 
 		/// <summary>
 		/// Evaluates the specified XPath expression and returns the typed result, implicitly using the <see cref="XmlNamespaceManager" /> to resolve namespace prefixes in

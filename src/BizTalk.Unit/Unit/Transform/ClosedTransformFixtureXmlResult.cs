@@ -23,8 +23,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Be.Stateless.BizTalk.Xml;
-using Be.Stateless.Linq.Extensions;
-using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
@@ -54,16 +52,6 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		public XmlNamespaceManager XmlNamespaceManager { get; private set; }
-
-		public void AddNamespace<T>() where T : TransformBase, new()
-		{
-			using (var sr = new StringReader(new T().XmlContent))
-			{
-				var navigator = new XPathDocument(sr).CreateNavigator();
-				navigator.MoveToFollowing(XPathNodeType.Element);
-				navigator.GetNamespacesInScope(XmlNamespaceScope.All).Each(n => XmlNamespaceManager.AddNamespace(n.Key, n.Value));
-			}
-		}
 
 		public string StringJoin(string xpath, char separator = '#')
 		{

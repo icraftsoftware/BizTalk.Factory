@@ -167,6 +167,9 @@
     <Compile Include="Unit\Transform\DebuggerSupportingEmbeddedXmlResolver.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingTransformer.cs" />
     <Compile Include="Unit\Transform\DebuggerSupportingXslCompiledTransformDescriptorBuilder.cs" />
+    <Compile Include="Unit\Transform\Extensions\XmlNamespaceManagerExtensions.cs" />
+    <Compile Include="Unit\Transform\Extensions\XPathNavigatorExtensions.cs" />
+    <Compile Include="Unit\Transform\Extensions\XPathNodeIteratorExtensions.cs" />
     <Compile Include="Unit\Transform\IdentityTransform.cs" />
     <Compile Include="Unit\Transform\IFirstXmlOutputTransformFixtureSetup.cs" />
     <Compile Include="Unit\Transform\IInputTransformFixtureSetup.cs" />
