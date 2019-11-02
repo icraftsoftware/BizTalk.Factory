@@ -16,17 +16,12 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+using Be.Stateless.BizTalk.Dsl;
 
-namespace Be.Stateless.BizTalk.Unit.Transform.Extensions
+namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	public static class XPathNodeIteratorExtensions
+	public interface ITransformFixtureSetup : IFluentInterface
 	{
-		public static IEnumerable<XPathNavigator> Select(this XPathNodeIterator nodeIterator, string xpath)
-		{
-			return nodeIterator.Cast<XPathNavigator>().SelectMany(n => n.Select(xpath).Cast<XPathNavigator>());
-		}
+		ITransformFixtureOutputSelector Transform { get; }
 	}
 }

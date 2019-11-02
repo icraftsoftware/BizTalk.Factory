@@ -16,17 +16,22 @@
 
 #endregion
 
-using Be.Stateless.Xml.Xsl;
-using Microsoft.BizTalk.Message.Interop;
-
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	public interface IInputTransformFixtureSetup : IFirstInputTransformFixtureSetup
+	internal class TransformFixtureTextOutputSetup : TransformFixtureOutputSetup, ISystemUnderTestSetup<ITransformFixtureTextResult>
 	{
-		IInputTransformFixtureSetup Arguments(XsltArgumentList arguments);
+		internal TransformFixtureTextOutputSetup(TransformFixtureInputSetup inputs) : base(inputs) { }
 
-		IInputTransformFixtureSetup Context(IBaseMessageContext context);
+		#region ISystemUnderTestSetup<ITransformFixtureTextResult> Members
 
-		IOutputTransformFixtureSetup Transform { get; }
+		public ITransformFixtureTextResult Validate()
+		{
+			using (var xsltResultStream = CreateXsltResultStream())
+			{
+				return new TransformFixtureTextResult(xsltResultStream);
+			}
+		}
+
+		#endregion
 	}
 }

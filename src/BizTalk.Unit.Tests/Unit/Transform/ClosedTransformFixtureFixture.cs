@@ -23,7 +23,9 @@ using System.Xml;
 using System.Xml.Schema;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Message.Extensions;
+using Be.Stateless.BizTalk.Schemas.Xml;
 using Be.Stateless.BizTalk.Unit.Resources;
+using Be.Stateless.Xml.Xsl;
 using BTF2Schemas;
 using NUnit.Framework;
 
@@ -33,57 +35,140 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 	public class ClosedTransformFixtureFixture : ClosedTransformFixture<IdentityTransform>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void InvalidTransformResultThrows()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(MessageFactory.CreateMessage<btf2_services_header>().OuterXml)))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<btf2_services_header>().WithStrictConformanceLevel();
-				Assert.That(() => setup.Execute(), Throws.InstanceOf<XmlSchemaValidationException>());
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+				Assert.That(() => setup.Validate(), Throws.InstanceOf<XmlSchemaValidationException>());
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ScalarAssertion()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<btf2_services_header>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.SelectSingleNode("//*[1]/tns:sendBy/text()").Value, Is.EqualTo("2012-04-12T12:13:14"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[Ignore("WIP")]
+		public void SetupTextTransform()
+		{
+			var setup = Given(
+				input => input
+					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Context(new MessageContextMock().Object)
+					.Arguments(new XsltArgumentList()))
+				.Transform
+				.OutputsText();
+
+			// TODO execute should throw if setup is invalid
+			// TODO should fail as output declared in transform is not text nor html
+			var result = setup.Validate();
+
+			//TODO assertion on setup
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[Ignore("WIP")]
+		public void SetupValuednessValidationCallback()
+		{
+			// TODO
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[Ignore("WIP")]
+		public void SetupXmlTransform()
+		{
+			var setup = Given(
+				input => input
+					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Context(new MessageContextMock().Object)
+					.Arguments(new XsltArgumentList()))
+				.Transform
+				.OutputsXml(
+					output => output
+						.ConformingTo<Any>()
+						.ConformingTo<Batch>()
+						.WithStrictConformanceLevel());
+
+			// TODO execute should throw if setup is invalid
+			var result = setup.Validate();
+
+			//TODO assertion on setup
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[Ignore("WIP")]
+		public void SetupXmlTransformWithoutConformance()
+		{
+			var setup = Given(input => input.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml))))
+				.Transform
+				.OutputsXml(output => output.ConformingTo<Any>().WithNoConformanceLevel());
+
+			// TODO execute should throw if setup is invalid
+			var result = setup.Validate();
+
+			//TODO assertion on setup
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void StringJoinAssertion()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<btf2_services_header>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.StringJoin("//tns:sendBy"), Is.EqualTo("2012-04-12T12:13:14#2012-04-12T23:22:21"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void ValidTransformResultDoesNotThrow()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<btf2_services_header>().WithStrictConformanceLevel();
-				Assert.That(() => setup.Execute(), Throws.Nothing);
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+				Assert.That(() => setup.Validate(), Throws.Nothing);
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void XPathAssertion()
 		{
 			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<btf2_services_header>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.Select("//tns:sendBy").Count, Is.EqualTo(2));
 			}

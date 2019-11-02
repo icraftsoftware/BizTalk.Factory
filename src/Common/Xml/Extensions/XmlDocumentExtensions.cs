@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ namespace Be.Stateless.Xml.Extensions
 		{
 			var namespaceManager = new XmlNamespaceManager(document.NameTable);
 			namespaceManager.AddNamespace("xs", XmlSchema.Namespace);
+			namespaceManager.AddNamespace("xsi", XmlSchema.InstanceNamespace);
 			return namespaceManager;
 		}
 	}

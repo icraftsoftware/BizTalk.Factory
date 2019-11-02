@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ using System.Xml.XPath;
 using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Linq.Extensions;
+using Be.Stateless.Xml.XPath.Extensions;
 using Be.Stateless.Xml.Xsl;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.XLANGs.BaseTypes;
@@ -220,8 +221,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			{
 				var navigator = new XPathDocument(sr).CreateNavigator();
 				navigator.MoveToFollowing(XPathNodeType.Element);
-				Debug.Assert(navigator.NameTable != null, "_namespaceResolver.NameTable != null");
-				_namespaceManager = new XmlNamespaceManager(navigator.NameTable);
+				_namespaceManager = navigator.GetNamespaceManager();
 				navigator.GetNamespacesInScope(XmlNamespaceScope.All).Each(n => _namespaceManager.AddNamespace(n.Key, n.Value));
 			}
 		}

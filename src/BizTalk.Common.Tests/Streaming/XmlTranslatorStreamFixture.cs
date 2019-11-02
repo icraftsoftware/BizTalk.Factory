@@ -24,6 +24,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.Linq.Extensions;
+using Be.Stateless.Xml.XPath.Extensions;
 using NUnit.Framework;
 
 namespace Be.Stateless.BizTalk.Streaming
@@ -271,11 +272,11 @@ namespace Be.Stateless.BizTalk.Streaming
 	{
 		public static XPathNodeIterator Select(this XPathNavigator navigator, string xpath, params string[] namespaces)
 		{
-			var nsr = new XmlNamespaceManager(navigator.NameTable);
+			var nsm = navigator.GetNamespaceManager();
 			namespaces
 				.Select(namespaceWithPrefix => namespaceWithPrefix.Split('='))
-				.Each(splitString => nsr.AddNamespace(splitString[0], splitString[1]));
-			return navigator.Select(xpath, nsr);
+				.Each(splitString => nsm.AddNamespace(splitString[0], splitString[1]));
+			return navigator.Select(xpath, nsm);
 		}
 	}
 }

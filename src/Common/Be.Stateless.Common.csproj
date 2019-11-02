@@ -85,6 +85,7 @@
     <Compile Include="Xml\Builder\Extensions\XmlInformationItemBuilder.cs" />
     <Compile Include="Xml\EmptyXmlReader.cs" />
     <Compile Include="Xml\Extensions\XmlWriterSettingsExtensions.cs" />
+    <Compile Include="Xml\XPath\Extensions\XPathNavigatorExtensions.cs" />
     <Compile Include="Xml\Serialization\Extensions\XmlAttributeOverridesExtensions.cs" />
     <Compile Include="Xml\Serialization\XmlSerializerFactory.cs" />
     <Compile Include="Xml\ValidatingXmlReaderSettings.cs" />

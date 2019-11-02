@@ -16,14 +16,22 @@
 
 #endregion
 
+using System.IO;
 using Be.Stateless.BizTalk.Dsl;
+using Be.Stateless.Xml.Xsl;
+using Microsoft.BizTalk.Message.Interop;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	public interface IOutputTransformFixtureSetup : IFluentInterface
+	public interface ITransformFixtureInputSetup : IFluentInterface
 	{
-		IFirstXmlOutputTransformFixtureSetup OutputsXml();
+		ITransformFixtureInputSetup Arguments(XsltArgumentList arguments);
 
-		ISystemUnderTestSetup<ITransformFixtureTextResult> OutputsText();
+		ITransformFixtureInputSetup Context(IBaseMessageContext context);
+
+		ITransformFixtureInputSetup Message<T>(Stream message) where T : SchemaBase, new();
+
+		ITransformFixtureInputSetup Message(Stream message);
 	}
 }

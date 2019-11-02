@@ -28,7 +28,7 @@ using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureInputSetup : IInputTransformFixtureSetup
+	internal class TransformFixtureInputSetup : ITransformFixtureInputSetup, ITransformFixtureSetup
 	{
 		internal TransformFixtureInputSetup(Type transformType, Dictionary<string, string> xsltNamespaces)
 		{
@@ -39,28 +39,23 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			Messages = new List<Stream>();
 		}
 
-		#region IInputTransformFixtureSetup Members
+		#region ITransformFixtureInputSetup Members
 
-		public IOutputTransformFixtureSetup Transform
-		{
-			get { return new TransformFixtureOutputSetup(this); }
-		}
-
-		public IInputTransformFixtureSetup Arguments(XsltArgumentList arguments)
+		public ITransformFixtureInputSetup Arguments(XsltArgumentList arguments)
 		{
 			if (arguments == null) throw new ArgumentNullException("arguments");
 			XsltArguments = arguments;
 			return this;
 		}
 
-		public IInputTransformFixtureSetup Context(IBaseMessageContext context)
+		public ITransformFixtureInputSetup Context(IBaseMessageContext context)
 		{
 			if (context == null) throw new ArgumentNullException("context");
 			MessageContext = context;
 			return this;
 		}
 
-		public IInputTransformFixtureSetup Message<T>(Stream message) where T : SchemaBase, new()
+		public ITransformFixtureInputSetup Message<T>(Stream message) where T : SchemaBase, new()
 		{
 			if (message == null) throw new ArgumentNullException("message");
 			var reader = ValidatingXmlReader.Create<T>(message, XmlSchemaContentProcessing.Strict);
@@ -69,11 +64,20 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			return this;
 		}
 
-		public IInputTransformFixtureSetup Message(Stream message)
+		public ITransformFixtureInputSetup Message(Stream message)
 		{
 			if (message == null) throw new ArgumentNullException("message");
 			Messages.Add(message);
 			return this;
+		}
+
+		#endregion
+
+		#region ITransformFixtureSetup Members
+
+		public ITransformFixtureOutputSelector Transform
+		{
+			get { return new TransformFixtureOutputSelector(this); }
 		}
 
 		#endregion

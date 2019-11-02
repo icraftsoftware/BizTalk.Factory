@@ -17,15 +17,26 @@
 #endregion
 
 using System.IO;
-using Be.Stateless.BizTalk.Dsl;
-using Microsoft.XLANGs.BaseTypes;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.XPath;
+using Be.Stateless.IO;
 
-namespace Be.Stateless.BizTalk.Unit.Transform
+namespace Be.Stateless.Xml.XPath.Extensions
 {
-	public interface IFirstInputTransformFixtureSetup : IFluentInterface
+	public static class XPathNavigatorExtensions
 	{
-		IInputTransformFixtureSetup Message<T>(Stream message) where T : SchemaBase, new();
+		public static Stream AsStream(this XPathNavigator navigator)
+		{
+			return new StringStream(navigator.OuterXml);
+		}
 
-		IInputTransformFixtureSetup Message(Stream message);
+		public static XmlNamespaceManager GetNamespaceManager(this XPathNavigator navigator)
+		{
+			var namespaceManager = new XmlNamespaceManager(navigator.NameTable);
+			namespaceManager.AddNamespace("xs", XmlSchema.Namespace);
+			namespaceManager.AddNamespace("xsi", XmlSchema.InstanceNamespace);
+			return namespaceManager;
+		}
 	}
 }

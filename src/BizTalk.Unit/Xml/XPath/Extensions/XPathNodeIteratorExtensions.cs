@@ -16,22 +16,17 @@
 
 #endregion
 
-namespace Be.Stateless.BizTalk.Unit.Transform
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+
+namespace Be.Stateless.BizTalk.Xml.XPath.Extensions
 {
-	internal class TransformWithTextOutputFixtureSetup : TransformOutputFixtureSetup, ISystemUnderTestSetup<ITransformFixtureTextResult>
+	public static class XPathNodeIteratorExtensions
 	{
-		internal TransformWithTextOutputFixtureSetup(TransformFixtureInputSetup inputs) : base(inputs) { }
-
-		#region ISystemUnderTestSetup<ITransformFixtureTextResult> Members
-
-		public ITransformFixtureTextResult Execute()
+		public static IEnumerable<XPathNavigator> Select(this XPathNodeIterator nodeIterator, string xpath)
 		{
-			using (var xsltResultStream = CreateXsltResultStream())
-			{
-				return new TransformFixtureTextResult(xsltResultStream);
-			}
+			return nodeIterator.Cast<XPathNavigator>().SelectMany(n => n.Select(xpath).Cast<XPathNavigator>());
 		}
-
-		#endregion
 	}
 }

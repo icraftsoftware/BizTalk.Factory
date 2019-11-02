@@ -22,6 +22,6 @@ namespace Be.Stateless.BizTalk.Unit
 {
 	public interface ISystemUnderTestSetup<out T> : IFluentInterface
 	{
-		T Execute();
+		T Validate();
 	}
 }

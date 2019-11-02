@@ -22,7 +22,7 @@ using System.Xml.XPath;
 using Be.Stateless.Linq.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 
-namespace Be.Stateless.BizTalk.Unit.Transform.Extensions
+namespace Be.Stateless.BizTalk.Xml.Extensions
 {
 	public static class XmlNamespaceManagerExtensions
 	{

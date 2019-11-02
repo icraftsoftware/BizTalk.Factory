@@ -31,6 +31,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 	public class AnyToAddPartFixture : ClosedTransformFixture<AnyToAddPart>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
@@ -41,8 +42,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<AddPart>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.Select("//usp:messagingStepActivityId").Count, Is.EqualTo(0));
@@ -50,6 +53,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithEnvironmentTag()
 		{
@@ -66,8 +70,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<AddPart>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.SelectSingleNode("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
 				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
@@ -75,6 +81,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithMessagingStepActivityId()
 		{
@@ -88,8 +95,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<AddPart>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));
@@ -97,6 +106,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithPartition()
 		{
@@ -113,8 +123,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 
 			using (var stream = new StringStream("<?xml version=\"1.0\" encoding=\"utf-16\" ?><root>content of a part is irrelevant here</root>"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<AddPart>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<AddPart>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo("envelope-name"));
 				Assert.That(result.SelectSingleNode("//usp:partition/text()").Value, Is.EqualTo("A"));
 				Assert.That(result.SelectSingleNode("//usp:messagingStepActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));

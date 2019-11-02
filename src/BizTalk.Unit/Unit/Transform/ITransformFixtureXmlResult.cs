@@ -48,6 +48,18 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		object Evaluate(string xpath);
 
 		/// <summary>
+		/// Determines whether the current node matches the specified XPath expression implicitly using the <see cref="XmlNamespaceManager" /> to resolve namespace
+		/// prefixes.
+		/// </summary>
+		/// <param name="xpath">
+		/// A <see cref="T:System.String" /> representing an XPath expression.
+		/// </param>
+		/// <returns>
+		/// <see langword="true" /> if the current node matches the specified XPath expression; otherwise, <see langword="false" />.
+		/// </returns>
+		bool Matches(string xpath);
+
+		/// <summary>
 		/// Selects a node set using the specified XPath expression implicitly using the <see cref="XmlNamespaceManager" /> to resolve namespace prefixes in the XPath
 		/// expression.
 		/// </summary>

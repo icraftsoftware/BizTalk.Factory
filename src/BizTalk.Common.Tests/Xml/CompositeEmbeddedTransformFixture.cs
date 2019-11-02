@@ -35,8 +35,10 @@ namespace Be.Stateless.BizTalk.Xml
 		{
 			using (var stream = ResourceManager.Load("Data.BatchContent.xml"))
 			{
-				var setup = Given.Message(stream).Transform.OutputsXml().ConformingTo<Any>().WithStrictConformanceLevel();
-				Assert.That(() => setup.Execute(), Throws.InstanceOf<XmlSchemaValidationException>());
+				var setup = Given(inputs => inputs.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<Any>().WithStrictConformanceLevel());
+				Assert.That(() => setup.Validate(), Throws.InstanceOf<XmlSchemaValidationException>());
 			}
 		}
 

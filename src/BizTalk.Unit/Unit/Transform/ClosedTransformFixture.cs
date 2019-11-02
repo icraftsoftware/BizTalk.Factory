@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -27,7 +28,6 @@ using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	// TODO assert that no element in XML output is empty
 	public abstract class ClosedTransformFixture<T> : IMapCustomXsltPathResolver
 		where T : TransformBase, new()
 	{
@@ -57,9 +57,11 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		#endregion
 
-		protected IFirstInputTransformFixtureSetup Given
+		protected ITransformFixtureSetup Given(Action<ITransformFixtureInputSetup> inputSetupConfigurator)
 		{
-			get { return new TransformFixtureInputSetup(typeof(T), _namespaceCache); }
+			var setup = new TransformFixtureInputSetup(typeof(T), _namespaceCache);
+			inputSetupConfigurator(setup);
+			return setup;
 		}
 
 		private readonly Dictionary<string, string> _namespaceCache;

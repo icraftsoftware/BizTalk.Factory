@@ -31,6 +31,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToXml
 	public class BatchContentToAnyEnvelopeFixture : ClosedTransformFixture<BatchContentToAnyEnvelope>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
@@ -40,14 +41,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToXml
 			var templateTargetEnvelopeStream = new StringStream(templateTargetEnvelope.OuterXml);
 			var batchContentWithPartsStream = new StringStream(batchContentWithParts.OuterXml);
 
-			var setup = Given
-				.Message(templateTargetEnvelopeStream)
-				.Message(batchContentWithPartsStream)
-				.Transform.OutputsXml()
-				.ConformingTo<Envelope>()
-				.ConformingTo<Batch.Release>()
-				.WithStrictConformanceLevel();
-			var result = setup.Execute();
+			var setup = Given(input => input.Message(templateTargetEnvelopeStream).Message(batchContentWithPartsStream))
+				.Transform
+				.OutputsXml(output => output.ConformingTo<Envelope>().ConformingTo<Batch.Release>().WithStrictConformanceLevel());
+			var result = setup.Validate();
 			result.XmlNamespaceManager.AddNamespace("env", new SchemaMetadata(typeof(Envelope)).TargetNamespace);
 			result.XmlNamespaceManager.AddNamespace("tns", new SchemaMetadata(typeof(Batch.Release)).TargetNamespace);
 

@@ -17,71 +17,29 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Xml.Schema;
-using Microsoft.XLANGs.BaseTypes;
+using System.IO;
+using Be.Stateless.BizTalk.Streaming.Extensions;
+using Be.Stateless.Extensions;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureOutputSetup : IOutputTransformFixtureSetup, IXmlOutputTransformFixtureSetup
+	internal abstract class TransformFixtureOutputSetup
 	{
-		public TransformFixtureOutputSetup(TransformFixtureInputSetup inputs)
+		protected TransformFixtureOutputSetup(TransformFixtureInputSetup inputs)
 		{
 			if (inputs == null) throw new ArgumentNullException("inputs");
 			_inputs = inputs;
-			ContentProcessing = XmlSchemaContentProcessing.Strict;
-			Schemas = new List<XmlSchema>();
 		}
 
-		#region IOutputTransformFixtureSetup Members
-
-		public IFirstXmlOutputTransformFixtureSetup OutputsXml()
+		protected Stream CreateXsltResultStream()
 		{
-			return this;
+			var inputStream = _inputs.Messages.ToArray().Transform();
+			_inputs.MessageContext.IfNotNull(messageContext => inputStream.ExtendWith(messageContext));
+			return _inputs.XsltArguments != null
+				? inputStream.Apply(_inputs.TransformType, _inputs.XsltArguments)
+				: inputStream.Apply(_inputs.TransformType);
 		}
 
-		public ISystemUnderTestSetup<ITransformFixtureTextResult> OutputsText()
-		{
-			return new TransformWithTextOutputFixtureSetup(_inputs);
-		}
-
-		#endregion
-
-		#region IXmlOutputTransformFixtureSetup Members
-
-		public IXmlOutputTransformFixtureSetup ConformingTo<T>() where T : SchemaBase, new()
-		{
-			Schemas.Add(new T().CreateResolvedSchema());
-			return this;
-		}
-
-		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithConformanceLevel(XmlSchemaContentProcessing xmlSchemaContentProcessing)
-		{
-			ContentProcessing = xmlSchemaContentProcessing;
-			return new TransformWithXmlOutputFixtureSetup(_inputs, this);
-		}
-
-		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithNoConformanceLevel()
-		{
-			return WithConformanceLevel(XmlSchemaContentProcessing.Skip);
-		}
-
-		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithLaxConformanceLevel()
-		{
-			return WithConformanceLevel(XmlSchemaContentProcessing.Lax);
-		}
-
-		public ISystemUnderTestSetup<ClosedTransformFixtureXmlResult> WithStrictConformanceLevel()
-		{
-			return WithConformanceLevel(XmlSchemaContentProcessing.Strict);
-		}
-
-		#endregion
-
-		internal XmlSchemaContentProcessing ContentProcessing { get; private set; }
-
-		internal List<XmlSchema> Schemas { get; private set; }
-
-		private readonly TransformFixtureInputSetup _inputs;
+		protected readonly TransformFixtureInputSetup _inputs;
 	}
 }

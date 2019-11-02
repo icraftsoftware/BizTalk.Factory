@@ -35,63 +35,58 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 	public class ReleaseToQueueControlledReleaseFixture : ClosedTransformFixture<ReleaseToQueueControlledRelease>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransform()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var setup = Given
-					.Message(stream)
-					.Context(new Mock<IBaseMessageContext>().Object)
+				var setup = Given(input => input.Message(stream).Context(new Mock<IBaseMessageContext>().Object))
 					.Transform
-					.OutputsXml()
-					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+					.OutputsXml(output => output.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithEnvironmentTag()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchEnvironmentTag.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var setup = Given
-					.Message(stream)
-					.Context(new Mock<IBaseMessageContext>().Object)
+				var setup = Given(input => input.Message(stream).Context(new Mock<IBaseMessageContext>().Object))
 					.Transform
-					.OutputsXml()
-					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+					.OutputsXml(output => output.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.SelectSingleNode("//usp:environmentTag/text()").Value, Is.EqualTo("Tag"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithPartition()
 		{
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatchPartition.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var setup = Given
-					.Message(stream)
-					.Context(new Mock<IBaseMessageContext>().Object)
+				var setup = Given(input => input.Message(stream).Context(new Mock<IBaseMessageContext>().Object))
 					.Transform
-					.OutputsXml()
-					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+					.OutputsXml(output => output.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.SelectSingleNode("//usp:partition/text()").Value, Is.EqualTo("A"));
 			}
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformWithProcessActivityId()
 		{
@@ -103,13 +98,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Batch
 			var instance = MessageFactory.CreateMessage<Schemas.Xml.Batch.Release>(ResourceManager.LoadString("Data.ReleaseBatch.xml"));
 			using (var stream = new StringStream(instance.OuterXml))
 			{
-				var setup = Given
-					.Message(stream)
-					.Context(contextMock.Object)
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
 					.Transform
-					.OutputsXml()
-					.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+					.OutputsXml(output => output.ConformingTo<QueueControlledRelease>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.SelectSingleNode("//usp:envelopeSpecName/text()").Value, Is.EqualTo(new SchemaMetadata<Envelope>().DocumentSpec.DocSpecStrongName));
 				Assert.That(result.Select("//usp:partition").Count, Is.EqualTo(0));
 				Assert.That(result.SelectSingleNode("//usp:processActivityId/text()").Value, Is.EqualTo("D4D3A8E583024BAC9D35EC98C5422E82"));

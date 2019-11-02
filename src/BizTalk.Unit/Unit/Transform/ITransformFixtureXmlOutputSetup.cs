@@ -16,13 +16,24 @@
 
 #endregion
 
-using Be.Stateless.BizTalk.Dsl;
+using System.Xml.Schema;
+using Be.Stateless.BizTalk.Xml;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	public interface IFirstXmlOutputTransformFixtureSetup : IFluentInterface
+	public interface ITransformFixtureXmlOutputSetup
 	{
-		IXmlOutputTransformFixtureSetup ConformingTo<T>() where T : SchemaBase, new();
+		ITransformFixtureXmlOutputSetup WithValuednessValidationCallback(ValuednessValidationCallback valuednessValidationCallback);
+
+		ITransformFixtureXmlOutputSetup ConformingTo<T>() where T : SchemaBase, new();
+
+		ISystemUnderTestSetup<TransformFixtureXmlResult> WithConformanceLevel(XmlSchemaContentProcessing xmlSchemaContentProcessing);
+
+		ISystemUnderTestSetup<TransformFixtureXmlResult> WithNoConformanceLevel();
+
+		ISystemUnderTestSetup<TransformFixtureXmlResult> WithLaxConformanceLevel();
+
+		ISystemUnderTestSetup<TransformFixtureXmlResult> WithStrictConformanceLevel();
 	}
 }

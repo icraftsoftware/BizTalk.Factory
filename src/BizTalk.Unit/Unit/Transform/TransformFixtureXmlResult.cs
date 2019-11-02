@@ -26,9 +26,9 @@ using Be.Stateless.BizTalk.Xml;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	public class ClosedTransformFixtureXmlResult : XPathNavigatorDecorator, ITransformFixtureXmlResult
+	public class TransformFixtureXmlResult : XPathNavigatorDecorator, ITransformFixtureXmlResult
 	{
-		public ClosedTransformFixtureXmlResult(XPathNavigator decoratedNavigator, XmlNamespaceManager xmlNamespaceManager) : base(decoratedNavigator)
+		public TransformFixtureXmlResult(XPathNavigator decoratedNavigator, XmlNamespaceManager xmlNamespaceManager) : base(decoratedNavigator)
 		{
 			if (xmlNamespaceManager == null) throw new ArgumentNullException("xmlNamespaceManager");
 			XmlNamespaceManager = xmlNamespaceManager;
@@ -66,6 +66,11 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			return base.Evaluate(xpath, XmlNamespaceManager);
 		}
 
+		public override bool Matches(string xpath)
+		{
+			return base.Matches(XPathExpression.Compile(xpath, XmlNamespaceManager));
+		}
+
 		public override XPathNodeIterator Select(string xpath)
 		{
 			return base.Select(xpath, XmlNamespaceManager);
@@ -82,7 +87,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		protected internal override XPathNavigator CreateXPathNavigatorDecorator(XPathNavigator decoratedNavigator)
 		{
-			return new ClosedTransformFixtureXmlResult(decoratedNavigator, XmlNamespaceManager);
+			return new TransformFixtureXmlResult(decoratedNavigator, XmlNamespaceManager);
 		}
 
 		#endregion

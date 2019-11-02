@@ -31,6 +31,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 	public class ClaimToCheckInFixture : ClosedTransformFixture<ClaimToCheckIn>
 	{
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformClaimTokenWithContext()
 		{
@@ -47,8 +48,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 
 			using (var stream = ResourceManager.Load("Data.Token.1.xml"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<CheckIn>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<CheckIn>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.SelectSingleNode("//usp:messageType/text()").Value, Is.EqualTo("context-claimed-message-type"));
 				Assert.That(result.SelectSingleNode("//usp:correlationToken/text()").Value, Is.EqualTo("context-correlation-token"));
@@ -57,6 +60,7 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformClaimTokenWithEmbeddedDataAndContext()
 		{
@@ -76,8 +80,10 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 
 			using (var stream = ResourceManager.Load("Data.Token.3.xml"))
 			{
-				var setup = Given.Message(stream).Context(contextMock.Object).Transform.OutputsXml().ConformingTo<CheckIn>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(contextMock.Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<CheckIn>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.SelectSingleNode("//usp:correlationToken/text()").Value, Is.EqualTo("embedded-correlation-token"));
 				Assert.That(result.SelectSingleNode("//usp:environmentTag/text()").Value, Is.EqualTo("embedded-environment-tag"));
@@ -91,13 +97,16 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void ValidateTransformComplexClaimToken()
 		{
 			using (var stream = ResourceManager.Load("Data.Token.2.xml"))
 			{
-				var setup = Given.Message(stream).Context(new MessageContextMock().Object).Transform.OutputsXml().ConformingTo<CheckIn>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(new MessageContextMock().Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<CheckIn>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Select("//usp:any").Count, Is.EqualTo(1));
 				Assert.That(
@@ -107,12 +116,15 @@ namespace Be.Stateless.BizTalk.Transforms.ToSql.Procedures.Claim
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void ValidateTransformSimpleClaimToken()
 		{
 			using (var stream = ResourceManager.Load("Data.Token.1.xml"))
 			{
-				var setup = Given.Message(stream).Context(new MessageContextMock().Object).Transform.OutputsXml().ConformingTo<CheckIn>().WithStrictConformanceLevel();
-				var result = setup.Execute();
+				var setup = Given(input => input.Message(stream).Context(new MessageContextMock().Object))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<CheckIn>().WithStrictConformanceLevel());
+				var result = setup.Validate();
 				Assert.That(result.Select("//usp:url/text()").Count, Is.EqualTo(1));
 				Assert.That(result.Select("//usp:any").Count, Is.EqualTo(0));
 			}
