@@ -122,7 +122,7 @@
     <Pipeline Include="MicroPipelines\FFReceive.btp">
       <TypeName>FFReceive</TypeName>
       <Namespace>Be.Stateless.BizTalk.MicroPipelines</Namespace>
-      <SubType>Task</SubType>
+      <SubType>Designer</SubType>
     </Pipeline>
     <Pipeline Include="MicroPipelines\FFTransmit.btp">
       <TypeName>FFTransmit</TypeName>

@@ -39,7 +39,7 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 
 				var sut = new ValuednessValidator(navigator, null);
 
-				Assert.That(sut.Validate(), Is.False);
+				Assert.That(() => sut.Validate(), Throws.TypeOf<XmlException>());
 			}
 		}
 
@@ -59,14 +59,12 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 						.With.Message.EqualTo(
 							"The following nodes have either no value nor any child element:" + Environment.NewLine + string.Join(
 								Environment.NewLine,
-								new[] {
-									"/root/empty-parent",
-									"/root/parent/empty-child[1]",
-									"/root/parent/non-nil-child",
-									"/root/parent/child/firstname",
-									"/root/parent/empty-child[2]",
-									"/root/parent/child/firstname/@no-language"
-								})));
+								"/root/empty-parent",
+								"/root/parent/empty-child[1]",
+								"/root/parent/non-nil-child",
+								"/root/parent/child/firstname",
+								"/root/parent/empty-child[2]",
+								"/root/parent/child/firstname/@no-language")));
 			}
 		}
 

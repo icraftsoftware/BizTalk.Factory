@@ -17,14 +17,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using Be.Stateless.BizTalk.Xml.XPath.Extensions;
-using Be.Stateless.Linq.Extensions;
 
 namespace Be.Stateless.BizTalk.Xml.XPath
 {
@@ -36,40 +34,29 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 			if (navigator == null) throw new ArgumentNullException("navigator");
 			_navigator = navigator;
 			_validationCallback = validationCallback;
-			IsValid = true;
-			OffendingNodeXPaths = new List<string>();
 		}
-
-		private bool IsValid { get; set; }
-
-		private List<string> OffendingNodeXPaths { get; set; }
 
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 		internal virtual bool Validate()
 		{
-			var emptyElements = _navigator.SelectEmptyElements();
-			if (emptyElements.Any()) IsValid = false;
-			var emptyAttributes = _navigator.SelectEmptyAttributes();
-			if (emptyAttributes.Any()) IsValid = false;
-			if (_validationCallback != null)
-			{
-				emptyElements.Each(n => InvokeValidationCallback(n.Clone()));
-				emptyAttributes.Each(n => InvokeValidationCallback(n.Clone()));
-			}
-			if (!IsValid && OffendingNodeXPaths.Any())
-			{
-				var message = "The following nodes have either no value nor any child element:" + Environment.NewLine + string.Join(Environment.NewLine, OffendingNodeXPaths);
-				throw new XmlException(message);
-			}
-			return IsValid;
+			var emptyNodes = _navigator.SelectEmptyElements().Concat(_navigator.SelectEmptyAttributes());
+			var offendingEmptyNodes = _validationCallback == null
+				// consider every empty node as offending when there is no ValidationCallback as its severity is assumed to be error
+				? emptyNodes
+				// consider the node as offending if its severity has not been demoted to warning by ValidationCallback
+				: emptyNodes.Where(node => InvokeValidationCallback(node) == XmlSeverityType.Error);
+			if (!offendingEmptyNodes.Any()) return !emptyNodes.Any();
+
+			var message = "The following nodes have either no value nor any child element:"
+				+ offendingEmptyNodes.Aggregate(string.Empty, (s, node) => s + Environment.NewLine + GetCurrentNodeXPath(node));
+			throw new XmlException(message);
 		}
 
-		private void InvokeValidationCallback(XPathNavigator offendingNodeNavigator)
+		private XmlSeverityType InvokeValidationCallback(XPathNavigator emptyNodeNavigator)
 		{
-			var args = new ValuednessValidationCallbackArgs(offendingNodeNavigator, XmlSeverityType.Error);
+			var args = new ValuednessValidationCallbackArgs(emptyNodeNavigator.Clone(), XmlSeverityType.Error);
 			_validationCallback(_navigator, args);
-			// consider the node as offending if its severity has not been demoted to warning
-			if (args.Severity == XmlSeverityType.Error) OffendingNodeXPaths.Add(GetCurrentNodeXPath(offendingNodeNavigator));
+			return args.Severity;
 		}
 
 		private string GetCurrentNodeXPath(XPathNavigator navigator)

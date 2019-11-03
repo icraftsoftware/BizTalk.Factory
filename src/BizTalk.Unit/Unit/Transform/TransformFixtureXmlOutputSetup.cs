@@ -55,10 +55,9 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			using (var xsltResultReader = CreateValidationAwareReader(XsltOutputStream))
 			{
 				var navigator = new XPathDocument(xsltResultReader).CreateNavigator();
-				var xmlNamespaceManager = navigator.GetNamespaceManager();
-				xmlNamespaceManager.AddNamespaces<TTransform>();
-				navigator.CheckValuedness(ValuednessValidationCallback);
-				return new TransformFixtureXmlResult(navigator, xmlNamespaceManager);
+				var xmlResult = new TransformFixtureXmlResult(navigator, navigator.GetNamespaceManager().AddNamespaces<TTransform>());
+				xmlResult.CheckValuedness(ValuednessValidationCallback);
+				return xmlResult;
 			}
 		}
 
