@@ -16,31 +16,17 @@
 
 #endregion
 
-using System;
 using System.IO;
+using System.Xml;
+using Microsoft.BizTalk.Streaming;
 
-namespace Be.Stateless.BizTalk.Unit.Transform
+namespace Be.Stateless.BizTalk.Xml.Extensions
 {
-	internal class TransformFixtureTextOutputSetup : ISystemUnderTestSetup<ITransformFixtureTextResult>
+	public static class XmlReaderExtensions
 	{
-		internal TransformFixtureTextOutputSetup(Stream xsltOutputStream)
+		public static Stream AsStream(this XmlReader reader)
 		{
-			if (xsltOutputStream == null) throw new ArgumentNullException("xsltOutputStream");
-			XsltOutputStream = xsltOutputStream;
+			return new XmlTranslatorStream(reader);
 		}
-
-		#region ISystemUnderTestSetup<ITransformFixtureTextResult> Members
-
-		public ITransformFixtureTextResult Validate()
-		{
-			using (XsltOutputStream)
-			{
-				return new TransformFixtureTextResult(XsltOutputStream);
-			}
-		}
-
-		#endregion
-
-		private Stream XsltOutputStream { get; set; }
 	}
 }

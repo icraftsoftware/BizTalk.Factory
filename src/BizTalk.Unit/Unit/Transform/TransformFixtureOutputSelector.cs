@@ -17,34 +17,34 @@
 #endregion
 
 using System;
+using System.IO;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureOutputSelector : ITransformFixtureOutputSelector
+	internal class TransformFixtureOutputSelector<TTransform> : ITransformFixtureOutputSelector
+		where TTransform : TransformBase, new()
 	{
-		public TransformFixtureOutputSelector(TransformFixtureInputSetup inputSetup)
+		internal TransformFixtureOutputSelector(Stream xsltOutputStream)
 		{
-			if (inputSetup == null) throw new ArgumentNullException("inputSetup");
-			_inputSetup = inputSetup;
+			if (xsltOutputStream == null) throw new ArgumentNullException("xsltOutputStream");
+			XsltOutputStream = xsltOutputStream;
 		}
 
 		#region ITransformFixtureOutputSelector Members
 
 		public ISystemUnderTestSetup<TransformFixtureXmlResult> OutputsXml(Action<ITransformFixtureXmlOutputSetup> xmlOutputSetupConfigurator)
 		{
-			var outputSetup = new TransformFixtureXmlOutputSetup(_inputSetup);
-			xmlOutputSetupConfigurator(outputSetup);
-			return outputSetup;
+			return new TransformFixtureXmlOutputSetup<TTransform>(XsltOutputStream, xmlOutputSetupConfigurator);
 		}
 
 		public ISystemUnderTestSetup<ITransformFixtureTextResult> OutputsText()
 		{
-			throw new NotImplementedException();
-			return new TransformFixtureTextOutputSetup(_inputSetup);
+			return new TransformFixtureTextOutputSetup(XsltOutputStream);
 		}
 
 		#endregion
 
-		private readonly TransformFixtureInputSetup _inputSetup;
+		private Stream XsltOutputStream { get; set; }
 	}
 }

@@ -43,6 +43,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var setup = Given(input => input.Message(stream))
 					.Transform
 					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+
 				Assert.That(() => setup.Validate(), Throws.InstanceOf<XmlSchemaValidationException>());
 			}
 		}
@@ -57,7 +58,9 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var setup = Given(input => input.Message(stream))
 					.Transform
 					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+
 				var result = setup.Validate();
+
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.SelectSingleNode("//*[1]/tns:sendBy/text()").Value, Is.EqualTo("2012-04-12T12:13:14"));
 			}
@@ -70,10 +73,10 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			var setup = Given(
 				input => input
-					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
-					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Arguments(new XsltArgumentList())
 					.Context(new MessageContextMock().Object)
-					.Arguments(new XsltArgumentList()))
+					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml))))
 				.Transform
 				.OutputsText();
 
@@ -86,10 +89,44 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		[Test]
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-		[Ignore("WIP")]
-		public void SetupValuednessValidationCallback()
+		public void SetupValuednessValidationCallbackConfirmingSeverity()
 		{
-			// TODO
+			using (var stream = new MemoryStream(Encoding.Default.GetBytes(MessageFactory.CreateMessage<btf2_services_header>().OuterXml)))
+			{
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(
+						output => output
+							.WithValuednessValidationCallback((sender, args) => args.Severity = XmlSeverityType.Error)
+							.ConformingTo<btf2_services_header>().WithNoConformanceLevel()
+					);
+
+				Assert.That(
+					() => setup.Validate(),
+					Throws.InstanceOf<XmlException>()
+						.With.Message.Contains("/ns0:services/ns0:deliveryReceiptRequest/ns0:sendTo/ns0:address")
+						.And.With.Message.Contains("/ns0:services/ns0:deliveryReceiptRequest/ns0:sendBy")
+						.And.With.Message.Contains("/ns0:services/ns0:commitmentReceiptRequest/ns0:sendBy")
+					);
+			}
+		}
+
+		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		public void SetupValuednessValidationCallbackDemotingSeverity()
+		{
+			using (var stream = new MemoryStream(Encoding.Default.GetBytes(MessageFactory.CreateMessage<btf2_services_header>().OuterXml)))
+			{
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(
+						output => output
+							.WithValuednessValidationCallback((sender, args) => args.Severity = XmlSeverityType.Warning)
+							.ConformingTo<btf2_services_header>().WithNoConformanceLevel()
+					);
+
+				Assert.That(() => setup.Validate(), Throws.Nothing);
+			}
 		}
 
 		[Test]
@@ -99,10 +136,10 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			var setup = Given(
 				input => input
-					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
-					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Arguments(new XsltArgumentList())
 					.Context(new MessageContextMock().Object)
-					.Arguments(new XsltArgumentList()))
+					.Message<Envelope>(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+					.Message(new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml))))
 				.Transform
 				.OutputsXml(
 					output => output
@@ -140,7 +177,9 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var setup = Given(input => input.Message(stream))
 					.Transform
 					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+
 				var result = setup.Validate();
+
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.StringJoin("//tns:sendBy"), Is.EqualTo("2012-04-12T12:13:14#2012-04-12T23:22:21"));
 			}
@@ -155,6 +194,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var setup = Given(input => input.Message(stream))
 					.Transform
 					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+
 				Assert.That(() => setup.Validate(), Throws.Nothing);
 			}
 		}
@@ -168,7 +208,9 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				var setup = Given(input => input.Message(stream))
 					.Transform
 					.OutputsXml(output => output.ConformingTo<btf2_services_header>().WithStrictConformanceLevel());
+
 				var result = setup.Validate();
+
 				result.XmlNamespaceManager.AddNamespace("tns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
 				Assert.That(result.Select("//tns:sendBy").Count, Is.EqualTo(2));
 			}

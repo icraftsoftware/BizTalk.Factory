@@ -127,6 +127,7 @@
     <Compile Include="Transform\XlangTransformHelper.cs" />
     <Compile Include="Xml\EmbeddedXmlResolver.cs" />
     <Compile Include="Xml\EncodingXmlSerializer.cs" />
+    <Compile Include="Xml\Extensions\XmlReaderExtensions.cs" />
     <Compile Include="Xml\PolicyNameXmlSerializer.cs" />
     <Compile Include="Xml\RuntimeTypeXmlSerializer.cs" />
     <Compile Include="Component\MicroPipelineComponentDedicatedXmlWriter.cs" />

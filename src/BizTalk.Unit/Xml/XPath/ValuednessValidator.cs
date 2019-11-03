@@ -37,12 +37,12 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 			_navigator = navigator;
 			_validationCallback = validationCallback;
 			IsValid = true;
-			OffendingPaths = new List<string>();
+			OffendingNodeXPaths = new List<string>();
 		}
 
 		private bool IsValid { get; set; }
 
-		private List<string> OffendingPaths { get; set; }
+		private List<string> OffendingNodeXPaths { get; set; }
 
 		[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 		internal virtual bool Validate()
@@ -56,9 +56,9 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 				emptyElements.Each(n => InvokeValidationCallback(n.Clone()));
 				emptyAttributes.Each(n => InvokeValidationCallback(n.Clone()));
 			}
-			if (!IsValid && OffendingPaths.Any())
+			if (!IsValid && OffendingNodeXPaths.Any())
 			{
-				var message = "The following nodes have either no value nor any child element:" + Environment.NewLine + string.Join(Environment.NewLine, OffendingPaths);
+				var message = "The following nodes have either no value nor any child element:" + Environment.NewLine + string.Join(Environment.NewLine, OffendingNodeXPaths);
 				throw new XmlException(message);
 			}
 			return IsValid;
@@ -66,12 +66,10 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 
 		private void InvokeValidationCallback(XPathNavigator offendingNodeNavigator)
 		{
-			// invalid as soon as there is an empty node
-			IsValid = false;
 			var args = new ValuednessValidationCallbackArgs(offendingNodeNavigator, XmlSeverityType.Error);
 			_validationCallback(_navigator, args);
-			// if error severity level has not been downgraded to warning accumulate empty nodes to throw a global exception afterwards
-			if (args.Severity == XmlSeverityType.Error) OffendingPaths.Add(GetCurrentNodeXPath(offendingNodeNavigator));
+			// consider the node as offending if its severity has not been demoted to warning
+			if (args.Severity == XmlSeverityType.Error) OffendingNodeXPaths.Add(GetCurrentNodeXPath(offendingNodeNavigator));
 		}
 
 		private string GetCurrentNodeXPath(XPathNavigator navigator)
@@ -96,7 +94,7 @@ namespace Be.Stateless.BizTalk.Xml.XPath
 
 		private int GetCurrentNodePosition(XPathNavigator navigator)
 		{
-			// return 0 if current node is the only child with the same name, or its actual position otherwise
+			// return 0 if current node is the only one/child among its sibling with the same name, or its actual position otherwise
 			var previousCount = 0;
 			var previousSiblingNavigator = navigator.Clone();
 			while (previousSiblingNavigator.MoveToPrevious())

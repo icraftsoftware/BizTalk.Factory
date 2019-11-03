@@ -19,24 +19,28 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Schema;
+using Be.Stateless.BizTalk.Streaming.Extensions;
 using Be.Stateless.BizTalk.Xml;
+using Be.Stateless.BizTalk.Xml.Extensions;
 using Be.Stateless.Xml.Xsl;
 using Microsoft.BizTalk.Message.Interop;
-using Microsoft.BizTalk.Streaming;
 using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureInputSetup : ITransformFixtureInputSetup, ITransformFixtureSetup
+	internal class TransformFixtureInputSetup<TTransform> : ITransformFixtureInputSetup, ITransformFixtureSetup
+		where TTransform : TransformBase, new()
+
 	{
-		internal TransformFixtureInputSetup(Type transformType, Dictionary<string, string> xsltNamespaces)
+		internal TransformFixtureInputSetup(Action<ITransformFixtureInputSetup> inputSetupConfigurator)
 		{
-			if (transformType == null) throw new ArgumentNullException("transformType");
-			if (xsltNamespaces == null) throw new ArgumentNullException("xsltNamespaces");
-			TransformType = transformType;
-			XsltNamespaces = xsltNamespaces;
+			if (inputSetupConfigurator == null) throw new ArgumentNullException("inputSetupConfigurator");
 			Messages = new List<Stream>();
+
+			inputSetupConfigurator(this);
+			ValidateSetup();
 		}
 
 		#region ITransformFixtureInputSetup Members
@@ -55,19 +59,25 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			return this;
 		}
 
-		public ITransformFixtureInputSetup Message<T>(Stream message) where T : SchemaBase, new()
-		{
-			if (message == null) throw new ArgumentNullException("message");
-			var reader = ValidatingXmlReader.Create<T>(message, XmlSchemaContentProcessing.Strict);
-			var validatingStream = new XmlTranslatorStream(reader);
-			Messages.Add(validatingStream);
-			return this;
-		}
-
 		public ITransformFixtureInputSetup Message(Stream message)
 		{
 			if (message == null) throw new ArgumentNullException("message");
 			Messages.Add(message);
+			return this;
+		}
+
+		public ITransformFixtureInputSetup Message<TSchema>(Stream message)
+			where TSchema : SchemaBase, new()
+		{
+			return Message<TSchema>(message, XmlSchemaContentProcessing.Strict);
+		}
+
+		public ITransformFixtureInputSetup Message<TSchema>(Stream message, XmlSchemaContentProcessing contentProcessing)
+			where TSchema : SchemaBase, new()
+		{
+			if (message == null) throw new ArgumentNullException("message");
+			// TODO validation exception should return xml content in exception and be specific about this input message
+			Messages.Add(ValidatingXmlReader.Create<TSchema>(message, contentProcessing).AsStream());
 			return this;
 		}
 
@@ -77,19 +87,28 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		public ITransformFixtureOutputSelector Transform
 		{
-			get { return new TransformFixtureOutputSelector(this); }
+			get
+			{
+				var inputStream = Messages.ToArray().Transform();
+				if (MessageContext != null) inputStream.ExtendWith(MessageContext);
+				var outputStream = XsltArguments != null
+					? inputStream.Apply(typeof(TTransform), XsltArguments)
+					: inputStream.Apply(typeof(TTransform));
+				return new TransformFixtureOutputSelector<TTransform>(outputStream);
+			}
 		}
 
 		#endregion
 
-		internal IBaseMessageContext MessageContext { get; private set; }
+		private IBaseMessageContext MessageContext { get; set; }
 
-		internal List<Stream> Messages { get; private set; }
+		private List<Stream> Messages { get; set; }
 
-		internal Type TransformType { get; private set; }
+		private XsltArgumentList XsltArguments { get; set; }
 
-		internal XsltArgumentList XsltArguments { get; private set; }
-
-		internal Dictionary<string, string> XsltNamespaces { get; private set; }
+		private void ValidateSetup()
+		{
+			if (!Messages.Any()) throw new InvalidOperationException("At least one input message must be setup.");
+		}
 	}
 }

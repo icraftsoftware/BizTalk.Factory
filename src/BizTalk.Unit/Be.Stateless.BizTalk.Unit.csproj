@@ -187,7 +187,6 @@
     <Compile Include="Unit\Transform\TransformFixtureInputSetup.cs" />
     <Compile Include="Unit\Transform\TransformFixtureXmlOutputSetup.cs" />
     <Compile Include="Unit\Transform\TransformFixtureTextResult.cs" />
-    <Compile Include="Unit\Transform\TransformFixtureOutputSetup.cs" />
     <Compile Include="Unit\Transform\TransformFixtureTextOutputSetup.cs" />
     <Compile Include="Xml\XPath\Extensions\XPathNavigable.cs" />
     <Compile Include="Xml\ValuednessValidationCallback.cs" />

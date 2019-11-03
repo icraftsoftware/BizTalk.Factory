@@ -29,18 +29,19 @@ namespace Be.Stateless.BizTalk.Xml.Extensions
 		/// <summary>
 		/// Add all the namespaces and their prefixes declared in a given <see cref="TransformBase"/>-derived the XSLT transform.
 		/// </summary>
-		/// <typeparam name="T">
+		/// <typeparam name="TTransform">
 		/// The <see cref="TransformBase"/>-derived XSLT transform to get the namespaces to declare from.
 		/// </typeparam>
 		/// <param name="xmlNamespaceManager">
-		/// The <see cref="XmlNamespaceManager"/> to which to add the namespace declared in the given <typeparamref name="T"/> <see cref="TransformBase"/> transform.
+		/// The <see cref="XmlNamespaceManager"/> to which to add the namespace declared in the given <typeparamref name="TTransform"/> <see cref="TransformBase"/> transform.
 		/// </param>
 		/// <returns>
 		/// The <see cref="XmlNamespaceManager"/> to which the namespace declarations have been added.
 		/// </returns>
-		public static XmlNamespaceManager AddNamespaces<T>(this XmlNamespaceManager xmlNamespaceManager) where T : TransformBase, new()
+		public static XmlNamespaceManager AddNamespaces<TTransform>(this XmlNamespaceManager xmlNamespaceManager)
+			where TTransform : TransformBase, new()
 		{
-			using (var sr = new StringReader(new T().XmlContent))
+			using (var sr = new StringReader(new TTransform().XmlContent))
 			{
 				var navigator = new XPathDocument(sr).CreateNavigator();
 				navigator.MoveToFollowing(XPathNodeType.Element);

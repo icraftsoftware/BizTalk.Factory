@@ -16,6 +16,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,33 +24,39 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using Be.Stateless.BizTalk.Xml;
+using Be.Stateless.BizTalk.Xml.Extensions;
 using Be.Stateless.BizTalk.Xml.XPath.Extensions;
-using Be.Stateless.Linq.Extensions;
 using Be.Stateless.Xml.XPath.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 using ValidatingXmlReaderSettings = Be.Stateless.Xml.ValidatingXmlReaderSettings;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureXmlOutputSetup : TransformFixtureOutputSetup, ITransformFixtureXmlOutputSetup, ISystemUnderTestSetup<TransformFixtureXmlResult>
+	internal class TransformFixtureXmlOutputSetup<TTransform> : ITransformFixtureXmlOutputSetup, ISystemUnderTestSetup<TransformFixtureXmlResult>
+		where TTransform : TransformBase, new()
 	{
-		public TransformFixtureXmlOutputSetup(TransformFixtureInputSetup inputs) : base(inputs)
+		internal TransformFixtureXmlOutputSetup(Stream xsltOutputStream, Action<ITransformFixtureXmlOutputSetup> xmlOutputSetupConfigurator)
 		{
+			if (xsltOutputStream == null) throw new ArgumentNullException("xsltOutputStream");
+			if (xmlOutputSetupConfigurator == null) throw new ArgumentNullException("xmlOutputSetupConfigurator");
+			XsltOutputStream = xsltOutputStream;
 			ContentProcessing = XmlSchemaContentProcessing.Strict;
 			Schemas = new List<XmlSchema>();
+
+			xmlOutputSetupConfigurator(this);
+			ValidateSetup();
 		}
 
 		#region ISystemUnderTestSetup<TransformFixtureXmlResult> Members
 
 		public TransformFixtureXmlResult Validate()
 		{
-			using (var xsltResultStream = CreateXsltResultStream())
-			using (var xsltResultReader = CreateValidationAwareReader(xsltResultStream))
+			using (XsltOutputStream)
+			using (var xsltResultReader = CreateValidationAwareReader(XsltOutputStream))
 			{
 				var navigator = new XPathDocument(xsltResultReader).CreateNavigator();
 				var xmlNamespaceManager = navigator.GetNamespaceManager();
-				_inputs.XsltNamespaces.Each(ns => xmlNamespaceManager.AddNamespace(ns.Key, ns.Value));
-				// assert that there is no empty element, i.e. element without child or without text, and no non-valued attribute
+				xmlNamespaceManager.AddNamespaces<TTransform>();
 				navigator.CheckValuedness(ValuednessValidationCallback);
 				return new TransformFixtureXmlResult(navigator, xmlNamespaceManager);
 			}
@@ -94,19 +101,36 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		#endregion
 
-		internal XmlSchemaContentProcessing ContentProcessing { get; private set; }
+		private XmlSchemaContentProcessing ContentProcessing { get; set; }
 
-		internal List<XmlSchema> Schemas { get; private set; }
+		private List<XmlSchema> Schemas { get; set; }
 
-		internal ValuednessValidationCallback ValuednessValidationCallback { get; private set; }
+		private ValuednessValidationCallback ValuednessValidationCallback { get; set; }
+
+		private Stream XsltOutputStream { get; set; }
+
+		private void ValidateSetup()
+		{
+			switch (ContentProcessing)
+			{
+				case XmlSchemaContentProcessing.None:
+				case XmlSchemaContentProcessing.Skip:
+					break;
+				case XmlSchemaContentProcessing.Lax:
+				case XmlSchemaContentProcessing.Strict:
+					if (!Schemas.Any()) throw new InvalidOperationException("At least one XML Schema to which the output must conform to must be setup.");
+					break;
+			}
+		}
 
 		private XmlReader CreateValidationAwareReader(Stream transformStream)
 		{
-			// TODO validation exception should return output/transformed xml content in exception
-
-			return Schemas.Any()
-				? XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()))
-				: XmlReader.Create(transformStream);
+			// TODO validation exception should return xml content in exception and be specific about this TTransform transform's output stream
+			return XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()));
+			// TODO ?? check if necessary ??
+			//return Schemas.Any()
+			//	? XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()))
+			//	: XmlReader.Create(transformStream);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	public class TransformFixtureXmlResult : XPathNavigatorDecorator, ITransformFixtureXmlResult
 	{
-		public TransformFixtureXmlResult(XPathNavigator decoratedNavigator, XmlNamespaceManager xmlNamespaceManager) : base(decoratedNavigator)
+		internal TransformFixtureXmlResult(XPathNavigator decoratedNavigator, XmlNamespaceManager xmlNamespaceManager) : base(decoratedNavigator)
 		{
 			if (xmlNamespaceManager == null) throw new ArgumentNullException("xmlNamespaceManager");
 			XmlNamespaceManager = xmlNamespaceManager;
@@ -44,8 +44,8 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 				using (var writer = new StringWriter(builder))
 				using (var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true }))
 				{
+					MoveToRoot();
 					WriteSubtree(xmlWriter);
-					xmlWriter.Close();
 				}
 				return builder.ToString();
 			}
@@ -57,8 +57,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		{
 			return Select(xpath, XmlNamespaceManager)
 				.OfType<XPathNavigator>()
-				.Aggregate(string.Empty, (str, node) => str + node.Value + separator)
-				.TrimEnd(separator);
+				.Aggregate(string.Empty, (str, node) => str + node.Value + separator, str => str.TrimEnd(separator));
 		}
 
 		public override object Evaluate(string xpath)

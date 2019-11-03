@@ -17,6 +17,7 @@
 #endregion
 
 using System.IO;
+using System.Xml.Schema;
 using Be.Stateless.BizTalk.Dsl;
 using Be.Stateless.Xml.Xsl;
 using Microsoft.BizTalk.Message.Interop;
@@ -30,8 +31,12 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		ITransformFixtureInputSetup Context(IBaseMessageContext context);
 
-		ITransformFixtureInputSetup Message<T>(Stream message) where T : SchemaBase, new();
-
 		ITransformFixtureInputSetup Message(Stream message);
+
+		ITransformFixtureInputSetup Message<TSchema>(Stream message)
+			where TSchema : SchemaBase, new();
+
+		ITransformFixtureInputSetup Message<TSchema>(Stream message, XmlSchemaContentProcessing contentProcessing)
+			where TSchema : SchemaBase, new();
 	}
 }

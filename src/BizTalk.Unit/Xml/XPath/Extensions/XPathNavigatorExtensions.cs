@@ -19,6 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.XPath;
 using Be.Stateless.Xml.XPath.Extensions;
 
@@ -36,14 +38,40 @@ namespace Be.Stateless.BizTalk.Xml.XPath.Extensions
 
 		#endregion
 
-		public static IEnumerable<XPathNavigator> Select(this IEnumerable<XPathNavigator> navigators, string xpath)
-		{
-			return navigators.SelectMany(n => n.Select(xpath).Cast<XPathNavigator>());
-		}
-
+		/// <summary>
+		/// Test whether the XML denoted by the <see cref="XPathNavigator"/> contains any empty element or attribute.
+		/// </summary>
+		/// <param name="navigator">
+		/// The <see cref="XPathNavigator"/> over the XML to test for valuedness.
+		/// </param>
+		/// <param name="valuednessValidationCallback">
+		/// An optional validation callback that can be used to demote the <see cref="XmlSeverityType"/> so that no exception is thrown if all the empty elements or
+		/// attributes are only to be considered as <see cref="XmlSeverityType.Warning"/>.
+		/// </param>
+		/// <returns>
+		/// <see langword="true" /> if there are any empty element or attribute; <see langword="false" /> otherwise.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// An element is considered empty if it has either no children nor any value; an element, which has the xsi:nil='true', is not considered empty.
+		/// </para>
+		/// <para>
+		/// An attribute is considered empty if it has no value.
+		/// </para>
+		/// <para>
+		/// Empty elements or attributes will be considered as an <see cref="XmlSeverityType.Error"/> condition which will entail that an <see cref="XmlException"/> will
+		/// be thrown unless a <see cref="ValuednessValidationCallback"/> validation callback is passed to demote the severity of the error for a given element or
+		/// attribute to <see cref="XmlSeverityType.Warning"/>.
+		/// </para>
+		/// </remarks>
 		public static bool CheckValuedness(this XPathNavigator navigator, ValuednessValidationCallback valuednessValidationCallback)
 		{
 			return ValuednessValidatorFactory(navigator, valuednessValidationCallback).Validate();
+		}
+
+		public static IEnumerable<XPathNavigator> Select(this IEnumerable<XPathNavigator> navigators, string xpath)
+		{
+			return navigators.SelectMany(n => n.Select(xpath).Cast<XPathNavigator>());
 		}
 
 		public static IEnumerable<XPathNavigator> SelectEmptyAttributes(this XPathNavigator navigator)
@@ -53,7 +81,7 @@ namespace Be.Stateless.BizTalk.Xml.XPath.Extensions
 
 		public static IEnumerable<XPathNavigator> SelectEmptyElements(this XPathNavigator navigator)
 		{
-			return navigator.Select("//*[not(text() | *)][not(@xsi:nil = 'true')]", navigator.GetNamespaceManager()).Cast<XPathNavigator>();
+			return navigator.Select("//*[not(@xsi:nil = 'true')][not(text() | *)]", navigator.GetNamespaceManager()).Cast<XPathNavigator>();
 		}
 
 		private static Func<XPathNavigator, ValuednessValidationCallback, ValuednessValidator> _valuednessValidatorFactory

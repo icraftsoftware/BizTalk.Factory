@@ -22,17 +22,17 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	internal class TransformFixtureTextResult : ITransformFixtureTextResult
 	{
-		public TransformFixtureTextResult(Stream xsltResultReader)
+		internal TransformFixtureTextResult(Stream xsltResultReader)
 		{
-			using (var x = new StreamReader(xsltResultReader))
+			using (var reader = new StreamReader(xsltResultReader))
 			{
-				Result = x.ReadToEnd();
+				TextContent = reader.ReadToEnd();
 			}
 		}
 
 		#region ITransformFixtureTextResult Members
 
-		public string Result { get; private set; }
+		public string TextContent { get; private set; }
 
 		#endregion
 	}

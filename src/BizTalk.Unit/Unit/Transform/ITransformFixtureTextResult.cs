@@ -22,6 +22,6 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 {
 	public interface ITransformFixtureTextResult : IFluentInterface
 	{
-		string Result { get; }
+		string TextContent { get; }
 	}
 }
