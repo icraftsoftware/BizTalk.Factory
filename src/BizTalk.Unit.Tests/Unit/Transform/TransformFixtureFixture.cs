@@ -17,13 +17,12 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using Be.Stateless.BizTalk.Message;
 using Be.Stateless.BizTalk.Schema;
 using Be.Stateless.BizTalk.Unit.Resources;
+using Be.Stateless.Xml.Extensions;
 using BTF2Schemas;
 using NUnit.Framework;
 
@@ -48,7 +47,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void InvalidTransformResultThrows()
 		{
-			using (var stream = new MemoryStream(Encoding.Default.GetBytes(MessageFactory.CreateMessage<btf2_services_header>().OuterXml)))
+			using (var stream = MessageFactory.CreateMessage<btf2_services_header>().AsStream())
 			{
 				Assert.That(() => Transform<btf2_services_header>(stream), Throws.InstanceOf<XmlSchemaValidationException>());
 			}
@@ -57,7 +56,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		[Test]
 		public void ScalarAssertion()
 		{
-			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+			using (var stream = _document.AsStream())
 			{
 				var result = Transform<btf2_services_header>(stream);
 				Assert.That(result.Single("//*[1]/tns:sendBy/text()").Value, Is.EqualTo("2012-04-12T12:13:14"));
@@ -67,7 +66,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		[Test]
 		public void StringJoinAssertion()
 		{
-			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+			using (var stream = _document.AsStream())
 			{
 				var result = Transform<btf2_services_header>(stream);
 				Assert.That(result.StringJoin("//tns:sendBy"), Is.EqualTo("2012-04-12T12:13:14#2012-04-12T23:22:21"));
@@ -78,7 +77,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void ValidTransformResultDoesNotThrow()
 		{
-			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+			using (var stream = _document.AsStream())
 			{
 				Assert.That(() => Transform<btf2_services_header>(stream), Throws.Nothing);
 			}
@@ -87,7 +86,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		[Test]
 		public void XPathAssertion()
 		{
-			using (var stream = new MemoryStream(Encoding.Default.GetBytes(_document.OuterXml)))
+			using (var stream = _document.AsStream())
 			{
 				var result = Transform<btf2_services_header>(stream);
 				Assert.That(result.Select("//tns:sendBy").Count, Is.EqualTo(2));

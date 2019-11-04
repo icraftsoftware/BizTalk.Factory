@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2017 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -40,21 +41,6 @@ namespace Be.Stateless.IO.Extensions
 			{
 				stream.CopyTo(compressionStream);
 			}
-			return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
-		}
-
-		/// <summary>
-		/// Returns a stream content as a base64 encoding.
-		/// </summary>
-		/// <param name="stream">The stream to encode in base64.</param>
-		/// <returns>The base64 encoding of the stream.</returns>
-		public static string ToBase64String(this Stream stream)
-		{
-			if (stream == null) throw new ArgumentNullException("stream");
-			if (!stream.CanRead) throw new InvalidOperationException("Cannot compress a non-readable stream.");
-
-			var destinationStream = new MemoryStream();
-			stream.CopyTo(destinationStream);
 			return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
 		}
 
@@ -94,8 +80,8 @@ namespace Be.Stateless.IO.Extensions
 		/// <param name="name">The file name to use to save the strem.</param>
 		/// <remarks>
 		/// <para>
-		/// The <paramref name="stream"/> is first saved to a temporary file before being moved to file with the given
-		/// <paramref name="name"/>, but only after its content has been completely flushed to disk.
+		/// The <paramref name="stream"/> is first saved to a temporary file before being moved to file with the given <paramref name="name"/>, but only after its content
+		/// has been completely flushed to disk.
 		/// </para>
 		/// <para>
 		/// The target <paramref name="folder"/> is created if it does not exist.
@@ -126,12 +112,10 @@ namespace Be.Stateless.IO.Extensions
 		/// <returns>
 		/// </returns>
 		/// <remarks>
-		/// MIME type detection, or "data sniffing," refers to the process of determining an appropriate MIME type from
-		/// binary data. The final result depends on a combination of server-supplied MIME type headers, file name
-		/// extension, and/or the data itself. Usually, only the first 256 bytes of data are significant. For more
-		/// information and a complete list of recognized MIME types, see <a
-		/// href="http://msdn.microsoft.com/en-us/library/ms775147(v=vs.85).aspx">MIME Type Detection in Internet
-		/// Explorer.</a>
+		/// MIME type detection, or "data sniffing," refers to the process of determining an appropriate MIME type from binary data. The final result depends on a
+		/// combination of server-supplied MIME type headers, file name extension, and/or the data itself. Usually, only the first 256 bytes of data are significant. For
+		/// more information and a complete list of recognized MIME types, see <a href="http://msdn.microsoft.com/en-us/library/ms775147(v=vs.85).aspx">MIME Type Detection
+		/// in Internet Explorer.</a>
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/library/ms775107(v=vs.85).aspx"/>
 		/// <seealso href="Microsoft.Practices.ESB.ExceptionHandling.PipelineComponents.SafeNativeMethods.GetMimeType(Stream)"/>
@@ -149,11 +133,37 @@ namespace Be.Stateless.IO.Extensions
 		}
 
 		/// <summary>
+		/// Returns the content of the stream as a <see cref="string"/>.
+		/// </summary>
+		/// <param name="stream">The stream whose content will be returned as a <see cref="string"/>.</param>
+		/// <returns>The <paramref name="stream"/>'s content as a <see cref="string"/>.</returns>
+		/// <remarks>
+		/// The <paramref name="stream"/> will be rewinded before being read.
+		/// </remarks>
+		public static string ReadToEnd(this Stream stream)
+		{
+			return new StreamReader(stream.Rewind()).ReadToEnd();
+		}
+
+		/// <summary>
+		/// Rewind the stream to its <see cref="Stream.Position"/> 0.
+		/// </summary>
+		/// <param name="stream">The <see cref="Stream"/> to rewind.</param>
+		/// <returns>The <paramref name="stream"/> which has been rewinded.</returns>
+		/// <exception cref="InvalidOperationException">If the <paramref name="stream"/> is not seekable, i.e. <see cref="Stream.CanSeek"/> is <c>false</c>.</exception>
+		public static Stream Rewind(this Stream stream)
+		{
+			if (!stream.CanSeek) throw new InvalidOperationException("Stream cannot be rewinded.");
+			stream.Position = 0;
+			return stream;
+		}
+
+		/// <summary>
 		/// Save the content of a stream to disk.
 		/// </summary>
 		/// <param name="stream">The stream whose content needs to be saved.</param>
 		/// <param name="path">The file path to where to save the stream.</param>
-		/// <remarks>Usefull for debugging.</remarks>
+		/// <remarks>Useful for debugging.</remarks>
 		public static void Save(this Stream stream, string path)
 		{
 			using (Stream file = File.OpenWrite(path))
@@ -163,17 +173,30 @@ namespace Be.Stateless.IO.Extensions
 		}
 
 		/// <summary>
-		/// Try to compress a stream and outputs its compressed content as a base64 encoded string, as long as its
-		/// compressed content does not exceed a given <paramref name="threshold"/>. Note that <paramref
-		/// name="threshold"/> is an approximate limit, and can be slightly overrun. This is because a compressing
-		/// stream's length cannot be accurately determined while writing data to it.
+		/// Returns a stream content as a base64 encoding.
+		/// </summary>
+		/// <param name="stream">The stream to encode in base64.</param>
+		/// <returns>The base64 encoding of the stream.</returns>
+		public static string ToBase64String(this Stream stream)
+		{
+			if (stream == null) throw new ArgumentNullException("stream");
+			if (!stream.CanRead) throw new InvalidOperationException("Cannot compress a non-readable stream.");
+
+			var destinationStream = new MemoryStream();
+			stream.CopyTo(destinationStream);
+			return Convert.ToBase64String(destinationStream.GetBuffer(), 0, (int) destinationStream.Position);
+		}
+
+		/// <summary>
+		/// Try to compress a stream and outputs its compressed content as a base64 encoded string, as long as its compressed content does not exceed a given <paramref
+		/// name="threshold"/>. Note that <paramref name="threshold"/> is an approximate limit, and can be slightly overrun. This is because a compressing stream's length
+		/// cannot be accurately determined while writing data to it.
 		/// </summary>
 		/// <param name="stream">
 		/// The stream to compress and encode.
 		/// </param>
 		/// <param name="threshold">
-		/// The threshold in bytes that the compressed stream cannot exceed. Notice that this threshold is approximate,
-		/// and can in certain cases be exceeded.
+		/// The threshold in bytes that the compressed stream cannot exceed. Notice that this threshold is approximate, and can in certain cases be exceeded.
 		/// </param>
 		/// <param name="compressedBase64String">
 		/// The base64 encoding of the compressed stream if the latter's length does not exceed the compression threshold.
@@ -198,9 +221,8 @@ namespace Be.Stateless.IO.Extensions
 			}
 			// HACK to avoid (most of the time) firing end of stream event on input stream when we do not actually allow compression
 			var endOfStreamPossiblyReached = bytesRead < bufferSize && bytesRead > 0;
-			// try to read one more byte to check for end of stream if the last read returned less than what we requested
-			// if we are unlucky, that last read will return the last byte and fire the end of stream event :-(
-			// but this should not be the case most of the time
+			// try to read one more byte to check for end of stream if the last read returned less than what we requested if we are unlucky, that last read will return the
+			// last byte and fire the end of stream event :-( but this should not be the case most of the time
 			if (endOfStreamPossiblyReached)
 			{
 				bytesRead = stream.Read(buffer, 0, 1);
@@ -217,9 +239,9 @@ namespace Be.Stateless.IO.Extensions
 
 		#region External Imports
 
-		// ReSharper disable InconsistentNaming
-
 		[DllImport("urlmon.dll", CharSet = CharSet.Auto)]
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		[SuppressMessage("ReSharper", "StringLiteralTypo")]
 		private static extern int FindMimeFromData(
 			IntPtr pBC,
 			[MarshalAs(UnmanagedType.LPWStr)] string pwzUrl,
@@ -229,8 +251,6 @@ namespace Be.Stateless.IO.Extensions
 			int dwMimeFlags,
 			[MarshalAs(UnmanagedType.LPWStr)] out string ppwzMimeOut,
 			int dwReserved);
-
-		// ReSharper restore InconsistentNaming
 
 		#endregion
 	}

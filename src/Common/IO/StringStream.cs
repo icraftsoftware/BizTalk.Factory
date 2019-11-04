@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2016 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Xml;
 using Be.Stateless.Extensions;
 
 namespace Be.Stateless.IO
@@ -29,14 +28,7 @@ namespace Be.Stateless.IO
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Notice that when consumed by an <see cref="XmlReader"/> in .NET 3.5, the Unicode encoding is not correctly
-	/// detected even though .NET strings are always sequence of Unicode (UTF-16) code points; in .NET 3.5, the <see
-	/// cref="XmlReader"/> mistakenly assumes that the encoding UTF-8. To workaround this issue, a Unicode BOM (see <see
-	/// cref="Encoding.GetPreamble"/>), is always inserted at the beginning of the <see cref="StringStream"/>'s content.
-	/// </para>
-	/// <para>
-	/// .NET 4.0 <see cref="XmlReader"/> does not exhibit the same behavior. The BOM preamble is nonetheless always
-	/// inserted.
+	/// Notice that a Unicode BOM (see <see cref="Encoding.GetPreamble"/>), is always inserted at the beginning of the <see cref="StringStream"/>'s content.
 	/// </para>
 	/// </remarks>
 	/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
@@ -93,8 +85,8 @@ namespace Be.Stateless.IO
 		/// Methods were called after the stream was closed.
 		/// </exception>
 		/// <remarks>
-		/// The length of the string multiplied by two, since a <see cref="string"/> is a series of Unicode UTF-16 code
-		/// points and each code point is 2 bytes. Notice the length will also account for the extra 2-byte BOM preamble.
+		/// The length of the string multiplied by two, since a <see cref="string"/> is a series of Unicode UTF-16 code points and each code point is 2 bytes. Notice the
+		/// length will also account for the extra 2-byte BOM preamble.
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public override long Length
@@ -113,21 +105,18 @@ namespace Be.Stateless.IO
 		}
 
 		/// <summary>
-		/// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the
-		/// position within the stream by the number of bytes read.
+		/// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
 		/// </summary>
 		/// <returns>
-		/// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
-		/// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+		/// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0)
+		/// if the end of the stream has been reached.
 		/// </returns>
 		/// <param name="buffer">
-		/// An array of bytes. When this method returns, the buffer contains the specified byte array with the values
-		/// between <paramref name="offset"/> and (<paramref name="offset"/> + <paramref name="count"/> - 1) replaced by
-		/// the bytes read from the current source.
+		/// An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset"/> and (<paramref
+		/// name="offset"/> + <paramref name="count"/> - 1) replaced by the bytes read from the current source.
 		/// </param>
 		/// <param name="offset">
-		/// The zero-based byte offset in <paramref name="buffer"/> at which to begin storing the data read from the
-		/// current stream.
+		/// The zero-based byte offset in <paramref name="buffer"/> at which to begin storing the data read from the current stream.
 		/// </param>
 		/// <param name="count">
 		/// The maximum number of bytes to be read from the current stream.
@@ -151,11 +140,9 @@ namespace Be.Stateless.IO
 		/// Methods were called after the stream was closed.
 		/// </exception>
 		/// <remarks>
-		/// The loop consists of picking up the next character from the string and extracting from it the appropriate byte
-		/// by using some simple bit manipulation. <see cref="BitConverter.GetBytes(char)"/> could have been used but that
-		/// would result in a 2-byte array being allocated each time the bytes for a character are retrieved, and since
-		/// the whole point of this exercise is to avoid extraneous allocations for large strings, that would have been a
-		/// bit counterproductive.
+		/// The loop consists of picking up the next character from the string and extracting from it the appropriate byte by using some simple bit manipulation. <see
+		/// cref="BitConverter.GetBytes(char)"/> could have been used but that would result in a 2-byte array being allocated each time the bytes for a character are
+		/// retrieved, and since the whole point of this class is to avoid extraneous allocations for large strings, that would have been a bit counterproductive.
 		/// </remarks>
 		/// <seealso href="http://msdn.microsoft.com/en-us/magazine/cc163768.aspx" />
 		public override int Read(byte[] buffer, int offset, int count)

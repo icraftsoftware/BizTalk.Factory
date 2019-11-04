@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
+using Be.Stateless.BizTalk.Unit.Resources;
+using Be.Stateless.IO.Extensions;
+using Be.Stateless.Xml.Extensions;
 using NUnit.Framework;
 
 namespace Be.Stateless.IO
@@ -48,6 +52,50 @@ namespace Be.Stateless.IO
 		}
 
 		[Test]
+		public void Utf16EmbeddedResourceRoundTripping()
+		{
+			using (var stream = CreateXmlDocument(ResourceManager.LoadString("Data.utf-16.xml")).AsStream())
+			{
+				var actual = XDocument.Parse(stream.ReadToEnd());
+				Assert.That(XNode.DeepEquals(actual, XDocument.Parse(ResourceManager.LoadString("Data.utf-16.xml"))));
+			}
+		}
+
+		[Test]
+		public void Utf16XmlReaderRoundTripping()
+		{
+			using (var stream = CreateXmlDocument(ResourceManager.LoadString("Data.utf-16.xml")).AsStream())
+			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
+			{
+				xmlReader.MoveToContent();
+				var actual = XDocument.Parse(xmlReader.ReadOuterXml());
+				Assert.That(XNode.DeepEquals(actual, XDocument.Parse(ResourceManager.LoadString("Data.utf-16.xml"))));
+			}
+		}
+
+		[Test]
+		public void Utf8EmbeddedResourceRoundTripping()
+		{
+			using (var stream = CreateXmlDocument(ResourceManager.LoadString("Data.utf-8.xml")).AsStream())
+			{
+				var actual = XDocument.Parse(stream.ReadToEnd());
+				Assert.That(XNode.DeepEquals(actual, XDocument.Parse(ResourceManager.LoadString("Data.utf-8.xml"))));
+			}
+		}
+
+		[Test]
+		public void Utf8XmlReaderRoundTripping()
+		{
+			using (var stream = CreateXmlDocument(ResourceManager.LoadString("Data.utf-8.xml")).AsStream())
+			using (var xmlReader = XmlReader.Create(stream, new XmlReaderSettings { CloseInput = true }))
+			{
+				xmlReader.MoveToContent();
+				var actual = XDocument.Parse(xmlReader.ReadOuterXml());
+				Assert.That(XNode.DeepEquals(actual, XDocument.Parse(ResourceManager.LoadString("Data.utf-8.xml"))));
+			}
+		}
+
+		[Test]
 		public void XmlTextLengthIsByteCountPlusBom()
 		{
 			const string content = "<root><node>content</node></root>";
@@ -66,6 +114,13 @@ namespace Be.Stateless.IO
 				reader.MoveToContent();
 				Assert.That(reader.ReadOuterXml(), Is.EqualTo(content));
 			}
+		}
+
+		private XmlDocument CreateXmlDocument(string xmlContent)
+		{
+			var xmlDocument = new XmlDocument();
+			xmlDocument.LoadXml(xmlContent);
+			return xmlDocument;
 		}
 	}
 }

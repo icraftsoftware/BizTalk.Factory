@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2013 François Chabot, Yves Dierick
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
@@ -26,12 +27,11 @@ using Be.Stateless.Xml.Schema;
 namespace Be.Stateless.ServiceModel.Channels
 {
 	/// <summary>
-	/// Represents an <see cref="IXmlSerializable"/> unit of communication between endpoints in a distributed environment
-	/// whose content is defined by an <see cref="XmlSchema"/> that a <typeparamref name="TSchemaProvider"/> can provide.
+	/// Represents an <see cref="IXmlSerializable"/> unit of communication between endpoints in a distributed environment whose content is defined by an <see
+	/// cref="XmlSchema"/> that a <typeparamref name="TSchemaProvider"/> can provide.
 	/// </summary>
 	/// <remarks>
-	/// This class helps its derived classes to fulfill the <see cref="XmlSchemaProviderAttribute"/>'s contract, see <see
-	/// cref="ProvideSchema"/>.
+	/// This class helps its derived classes to fulfill the <see cref="XmlSchemaProviderAttribute"/>'s contract, see <see cref="ProvideSchema"/>.
 	/// </remarks>
 	/// <example>
 	/// <code><![CDATA[
@@ -52,9 +52,8 @@ namespace Be.Stateless.ServiceModel.Channels
 		where TSchemaProvider : IXmlSchemaProvider, new()
 	{
 		/// <summary>
-		/// Scaffolding method that helps a derived class to fulfill its <see cref="XmlSchemaProviderAttribute"/>'s
-		/// contract in providing the <see cref="XmlSchema"/> to the <paramref name="schemaSet"/> and the <see
-		/// cref="XmlSchemaType"/> that controls the serialization of the type.
+		/// Scaffolding method that helps a derived class to fulfill its <see cref="XmlSchemaProviderAttribute"/>'s contract in providing the <see cref="XmlSchema"/> to
+		/// the <paramref name="schemaSet"/> and the <see cref="XmlSchemaType"/> that controls the serialization of the type.
 		/// </summary>
 		/// <param name="schemaSet">
 		/// The <see cref="XmlSchemaSet"/> that will be populated with the <see cref="XmlSchema"/>.
@@ -63,8 +62,8 @@ namespace Be.Stateless.ServiceModel.Channels
 		/// The <see cref="XmlSchemaType"/> that defines its data type.
 		/// </returns>
 		/// <remarks>
-		/// This is a scaffolding method that is meant to be called from within the derived classes' static method
-		/// identified by the <see cref="XmlSchemaProviderAttribute"/>.
+		/// This is a scaffolding method that is meant to be called from within the derived classes' static method identified by the <see
+		/// cref="XmlSchemaProviderAttribute"/>.
 		/// </remarks>
 		/// <example>
 		/// <code><![CDATA[
@@ -94,14 +93,12 @@ namespace Be.Stateless.ServiceModel.Channels
 		protected XmlMessage() { }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="XmlMessage{TSchemaProvider}"/> class that will validate its XML
-		/// representation.
+		/// Initializes a new instance of the <see cref="XmlMessage{TSchemaProvider}"/> class that will validate its XML representation.
 		/// </summary>
 		/// <param name="schemaContentProcessing">
-		/// The <see cref="XmlSchemaContentProcessing"/>, or validation strictness, that will be applied when validating
-		/// the XML representation.
+		/// The <see cref="XmlSchemaContentProcessing"/>, or validation strictness, that will be applied when validating the XML representation.
 		/// </param>
-		/// <seealso cref="ValidatingXmlReaderSettings.Create"/>
+		/// <seealso cref="ValidatingXmlReaderSettings.Create(XmlSchemaContentProcessing,XmlSchema[])"/>
 		/// <seealso cref="XmlSchemaContentProcessing"/>
 		protected XmlMessage(XmlSchemaContentProcessing schemaContentProcessing)
 		{
@@ -112,8 +109,7 @@ namespace Be.Stateless.ServiceModel.Channels
 		#region Base Class Member Overrides
 
 		/// <summary>
-		/// Generates an object from its XML representation that will be validated while being read if validation has been
-		/// enforced at construction time.
+		/// Generates an object from its XML representation that will be validated while being read if validation has been enforced at construction time.
 		/// </summary>
 		/// <param name="reader">
 		/// The <see cref="XmlReader"/> stream from which the object is deserialized.
@@ -137,9 +133,8 @@ namespace Be.Stateless.ServiceModel.Channels
 
 		#endregion
 
-		// ReSharper disable StaticFieldInGenericType
+		[SuppressMessage("ReSharper", "StaticMemberInGenericType")]
 		private static XmlSchema _validatingSchema;
-		// ReSharper restore StaticFieldInGenericType
 		private readonly XmlSchemaContentProcessing _schemaContentProcessing;
 	}
 }
