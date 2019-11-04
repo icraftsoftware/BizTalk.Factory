@@ -18,10 +18,8 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
-using Be.Stateless.Extensions;
 using Be.Stateless.IO;
 
 namespace Be.Stateless.Xml.Extensions
@@ -31,11 +29,9 @@ namespace Be.Stateless.Xml.Extensions
 		public static Stream AsStream(this XmlDocument document)
 		{
 			if (document == null) throw new ArgumentNullException("document");
-			// remove XmlDeclaration to avoid misleading StringStream with an utf-8 declaration, for instance, as it assumes utf-16
-			document.ChildNodes.Cast<XmlNode>()
-				.SingleOrDefault(node => node.NodeType == XmlNodeType.XmlDeclaration)
-				.IfNotNull(node => document.RemoveChild(node));
-			return new StringStream(document.OuterXml);
+			if (document.DocumentElement == null) throw new ArgumentException("XmlDocument.DocumentElement is null.", "document");
+			// skip XmlDeclaration to avoid misleading StringStream with an utf-8 declaration, for instance, as it assumes utf-16
+			return new StringStream(document.DocumentElement.OuterXml);
 		}
 
 		public static XmlNamespaceManager GetNamespaceManager(this XmlDocument document)
