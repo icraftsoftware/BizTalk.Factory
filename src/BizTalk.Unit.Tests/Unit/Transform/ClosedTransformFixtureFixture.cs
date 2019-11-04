@@ -59,9 +59,19 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public void InvalidTransformOutputThrowsOutputRelatedXmlSchemaValidationExceptionWithEmbeddedXmlContent()
 		{
-			Assert.Fail("TODO");
+			using (var stream = _document.AsStream())
+			{
+				var setup = Given(input => input.Message(stream))
+					.Transform
+					.OutputsXml(output => output.ConformingTo<Envelope>().ConformingTo<Batch>().WithStrictConformanceLevel());
+
+				Assert.That(
+					() => setup.Validate(),
+					Throws.TypeOf<XmlSchemaValidationException>().With.Message.StartsWith("Transform's output failed schema(s) validation for the following reason:"));
+			}
 		}
 
 		[Test]

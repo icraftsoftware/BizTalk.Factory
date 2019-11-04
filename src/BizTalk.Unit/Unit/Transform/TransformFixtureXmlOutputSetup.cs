@@ -26,6 +26,7 @@ using System.Xml.XPath;
 using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.Xml.Extensions;
 using Be.Stateless.BizTalk.Xml.XPath.Extensions;
+using Be.Stateless.IO.Extensions;
 using Be.Stateless.Xml.XPath.Extensions;
 using Microsoft.XLANGs.BaseTypes;
 using ValidatingXmlReaderSettings = Be.Stateless.Xml.ValidatingXmlReaderSettings;
@@ -124,8 +125,25 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		private XmlReader CreateValidationAwareReader(Stream transformStream)
 		{
+			var validatingXmlReader = XmlReader.Create(
+				transformStream,
+				ValidatingXmlReaderSettings.Create(
+					ContentProcessing,
+					(sender, args) => {
+						throw new XmlSchemaValidationException(
+							string.Format(
+								"Transform's output failed schema(s) validation for the following reason:{0}{1}: {2}{0}{0}The message's content is:{0}{3}{0}",
+								Environment.NewLine,
+								args.Severity,
+								args.Message,
+								transformStream.ReadToEnd()),
+							args.Exception);
+					},
+					Schemas.ToArray()));
+			return validatingXmlReader;
+
 			// TODO validation exception should return xml content in exception and be specific about this TTransform transform's output stream
-			return XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()));
+			//return XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()));
 			// TODO ?? check if necessary ??
 			//return Schemas.Any()
 			//	? XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()))
