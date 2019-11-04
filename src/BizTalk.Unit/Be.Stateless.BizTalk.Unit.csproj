@@ -174,7 +174,9 @@
     <Compile Include="Xml\XPath\ValuednessValidator.cs" />
     <Compile Include="Xml\XPath\Extensions\XPathNavigatorExtensions.cs" />
     <Compile Include="Xml\XPath\Extensions\XPathNodeIteratorExtensions.cs" />
-    <Compile Include="Unit\Transform\IdentityTransform.cs" />
+    <Compile Include="Unit\Transform\IdentityTransform.cs">
+      <DependentUpon>IdentityTransform.xslt</DependentUpon>
+    </Compile>
     <Compile Include="Unit\Transform\IMapCustomXsltPathResolver.cs" />
     <Compile Include="Unit\ISystemUnderTestSetup.cs" />
     <Compile Include="Unit\Transform\ITransformFixtureInputSetup.cs" />

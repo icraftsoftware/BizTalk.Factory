@@ -89,7 +89,11 @@
     <Compile Include="Unit\ServiceModel\Stub\OperationCallSetupCollectionFixture.cs" />
     <Compile Include="Unit\ServiceModel\Stub\StubServiceClient.cs" />
     <Compile Include="Unit\ServiceModel\Stub\StubServiceFixture.cs" />
+    <Compile Include="Unit\Transform\TextTransformFixture.cs" />
     <Compile Include="Unit\Transform\ClosedTransformFixtureFixture.cs" />
+    <Compile Include="Unit\Transform\TextTransform.cs">
+      <DependentUpon>TextTransform.xslt</DependentUpon>
+    </Compile>
     <Compile Include="Xml\XPath\Extensions\XPathNavigatorExtensionsFixture.cs" />
     <Compile Include="Unit\Transform\MapCustomXsltPathResolverFixture.cs" />
     <Compile Include="Unit\Transform\TransformFixtureFixture.cs" />
@@ -140,7 +144,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Unit\Transform\TextTransform.xslt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
