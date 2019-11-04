@@ -141,13 +141,6 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 					},
 					Schemas.ToArray()));
 			return validatingXmlReader;
-
-			// TODO validation exception should return xml content in exception and be specific about this TTransform transform's output stream
-			//return XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()));
-			// TODO ?? check if necessary ??
-			//return Schemas.Any()
-			//	? XmlReader.Create(transformStream, ValidatingXmlReaderSettings.Create(ContentProcessing, Schemas.ToArray()))
-			//	: XmlReader.Create(transformStream);
 		}
 	}
 }

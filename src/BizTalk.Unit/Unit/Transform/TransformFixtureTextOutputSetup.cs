@@ -18,15 +18,21 @@
 
 using System;
 using System.IO;
+using System.Xml.XPath;
+using Be.Stateless.BizTalk.Xml.Extensions;
+using Be.Stateless.Xml.XPath.Extensions;
+using Microsoft.XLANGs.BaseTypes;
 
 namespace Be.Stateless.BizTalk.Unit.Transform
 {
-	internal class TransformFixtureTextOutputSetup : ISystemUnderTestSetup<ITransformFixtureTextResult>
+	internal class TransformFixtureTextOutputSetup<TTransform> : ISystemUnderTestSetup<ITransformFixtureTextResult>
+		where TTransform : TransformBase, new()
 	{
 		internal TransformFixtureTextOutputSetup(Stream xsltOutputStream)
 		{
 			if (xsltOutputStream == null) throw new ArgumentNullException("xsltOutputStream");
 			XsltOutputStream = xsltOutputStream;
+			ValidateSetup();
 		}
 
 		#region ISystemUnderTestSetup<ITransformFixtureTextResult> Members
@@ -42,5 +48,15 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		#endregion
 
 		private Stream XsltOutputStream { get; set; }
+
+		private void ValidateSetup()
+		{
+			using (var sr = new StringReader(new TTransform().XmlContent))
+			{
+				var navigator = new XPathDocument(sr).CreateNavigator();
+				var output = navigator.SelectSingleNode("/xsl:stylesheet/xsl:output/@method", navigator.GetNamespaceManager().AddNamespaces<TTransform>());
+				if (output != null && output.Value.Equals("xml", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Transform produces an XML output and not a text one.");
+			}
+		}
 	}
 }

@@ -17,8 +17,6 @@
 #endregion
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using Be.Stateless.BizTalk.Message;
@@ -66,7 +64,11 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			{
 				var setup = Given(input => input.Message(stream))
 					.Transform
-					.OutputsXml(output => output.ConformingTo<Envelope>().ConformingTo<Batch>().WithStrictConformanceLevel());
+					.OutputsXml(
+						output => output
+							.ConformingTo<Envelope>()
+							.ConformingTo<Batch>()
+							.WithStrictConformanceLevel());
 
 				Assert.That(
 					() => setup.Validate(),
@@ -108,34 +110,16 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		[Test]
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-		public void SetupTextTransform()
+		public void SetupTextTransformThrowsIfXsltOutputIsXml()
 		{
-			using (var stream1 = new MemoryStream(Encoding.Unicode.GetBytes(_document.OuterXml)))
-			using (var stream2 = new MemoryStream(Encoding.Unicode.GetBytes(_document.OuterXml)))
+			using (var stream = _document.AsStream())
 			{
-				var setup = Given(
-					input => input
-						.Arguments(new XsltArgumentList())
-						.Context(new MessageContextMock().Object)
-						.Message<Envelope>(stream1)
-						.Message(stream2))
-					.Transform
-					.OutputsText();
-
-				// TODO execute should throw if setup is invalid
-				// TODO should fail as output declared in transform is not text nor html
-				var result = setup.Validate();
-
-				//TODO assertion on setup
-				Assert.Fail("TODO");
+				Assert.That(
+					() => Given(input => input.Message(stream))
+						.Transform
+						.OutputsText(),
+					Throws.InvalidOperationException.With.Message.EqualTo("Transform produces an XML output and not a text one."));
 			}
-		}
-
-		[Test]
-		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-		public void SetupTextTransformThrowsIfXsltOutputIsNotText()
-		{
-			Assert.Fail("TODO");
 		}
 
 		[Test]
@@ -182,29 +166,24 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		[Test]
 		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-		public void SetupXmlTransform()
+		public void SetupXmlTransformWithMultipleInputs()
 		{
-			using (var stream1 = new MemoryStream(Encoding.Unicode.GetBytes(_document.OuterXml)))
-			using (var stream2 = new MemoryStream(Encoding.Unicode.GetBytes(_document.OuterXml)))
+			using (var stream1 = _document.AsStream())
+			using (var stream2 = _document.AsStream())
 			{
 				var setup = Given(
 					input => input
 						.Arguments(new XsltArgumentList())
 						.Context(new MessageContextMock().Object)
-						.Message<Envelope>(stream1)
+						.Message<btf2_services_header>(stream1)
 						.Message(stream2))
 					.Transform
 					.OutputsXml(
 						output => output
-							.ConformingTo<Any>()
-							.ConformingTo<Batch>()
-							.WithStrictConformanceLevel());
+							.ConformingTo<btf2_services_header>()
+							.WithLaxConformanceLevel());
 
-				// TODO execute should throw if setup is invalid
-				var result = setup.Validate();
-
-				//TODO assertion on setup
-				Assert.Fail("TODO");
+				Assert.That(() => setup.Validate(), Throws.Nothing);
 			}
 		}
 
@@ -230,7 +209,10 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			{
 				var setup = Given(input => input.Message(stream))
 					.Transform
-					.OutputsXml(output => output.WithValuednessValidationCallback((s, args) => args.Severity = XmlSeverityType.Warning).WithNoConformanceLevel());
+					.OutputsXml(
+						output => output
+							.WithValuednessValidationCallback((s, args) => args.Severity = XmlSeverityType.Warning)
+							.WithNoConformanceLevel());
 
 				Assert.That(() => setup.Validate(), Throws.Nothing);
 			}
@@ -310,9 +292,28 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 		}
 
 		[Test]
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]
 		public void XPathNavigatorResultingOfSelectCanBeReusedToSimplifyXPathExpression()
 		{
-			Assert.Fail("TODO");
+			using (var stream = _document.AsStream())
+			{
+				var setup = Given(
+					input => input
+						.Message(stream))
+					.Transform
+					.OutputsXml(
+						output => output
+							.ConformingTo<btf2_services_header>()
+							.WithStrictConformanceLevel());
+
+				var result = setup.Validate();
+
+				result.XmlNamespaceManager.AddNamespace("ns", typeof(btf2_services_header).GetMetadata().TargetNamespace);
+				var deliveryReceiptRequest = result.SelectSingleNode("/ns:services/ns:deliveryReceiptRequest");
+				Assert.That(deliveryReceiptRequest, Is.Not.Null);
+				Assert.That(deliveryReceiptRequest.SelectSingleNode("ns:sendBy").Value, Is.EqualTo("2012-04-12T12:13:14"));
+			}
 		}
 
 		private readonly XmlDocument _document = MessageFactory.CreateMessage<btf2_services_header>(ResourceManager.LoadString("Data.Message.xml"));

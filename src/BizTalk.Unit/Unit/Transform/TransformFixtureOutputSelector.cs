@@ -40,7 +40,7 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 
 		public ISystemUnderTestSetup<ITransformFixtureTextResult> OutputsText()
 		{
-			return new TransformFixtureTextOutputSetup(XsltOutputStream);
+			return new TransformFixtureTextOutputSetup<TTransform>(XsltOutputStream);
 		}
 
 		#endregion
