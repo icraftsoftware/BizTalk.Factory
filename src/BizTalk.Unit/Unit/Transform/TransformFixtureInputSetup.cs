@@ -20,10 +20,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Schema;
 using Be.Stateless.BizTalk.Streaming.Extensions;
-using Be.Stateless.BizTalk.Xml;
 using Be.Stateless.BizTalk.Xml.Extensions;
+using Be.Stateless.IO.Extensions;
 using Be.Stateless.Xml.Xsl;
 using Microsoft.BizTalk.Message.Interop;
 using Microsoft.XLANGs.BaseTypes;
@@ -76,8 +77,25 @@ namespace Be.Stateless.BizTalk.Unit.Transform
 			where TSchema : SchemaBase, new()
 		{
 			if (message == null) throw new ArgumentNullException("message");
-			// TODO validation exception should return xml content in exception and be specific about this input message
-			Messages.Add(ValidatingXmlReader.Create<TSchema>(message, contentProcessing).AsStream());
+			var partCount = Messages.Count;
+			var validatingXmlReader = XmlReader.Create(
+				message,
+				Be.Stateless.Xml.ValidatingXmlReaderSettings.Create(
+					contentProcessing,
+					(sender, args) => {
+						throw new XmlSchemaValidationException(
+							string.Format(
+								"Transform's input message #{0} failed '{1}' schema validation for the following reason:{2}{3}: {4}{2}{2}The message's content is:{2}{5}{2}",
+								partCount + 1,
+								typeof(TSchema).Name,
+								Environment.NewLine,
+								args.Severity,
+								args.Message,
+								message.ReadToEnd()),
+							args.Exception);
+					},
+					new TSchema().CreateResolvedSchema()));
+			Messages.Add(validatingXmlReader.AsStream());
 			return this;
 		}
 
