@@ -1,6 +1,6 @@
 ﻿#region Copyright & License
 
-// Copyright © 2012 - 2018 François Chabot
+// Copyright © 2012 - 2019 François Chabot
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;
 
-			Assert.That(collisionPercentage, Is.LessThan(1.3));
+			Assert.That(collisionPercentage, Is.LessThan(1.5));
 		}
 
 		[Test]
@@ -222,7 +222,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;
 
-			Assert.That(collisionPercentage, Is.LessThan(15));
+			Assert.That(collisionPercentage, Is.LessThan(21));
 		}
 
 		[Test]
@@ -240,7 +240,7 @@ namespace Be.Stateless.Logging.Appender
 			var hashCollisionsCount = computedHashesCount - uniqueHashesCount;
 			var collisionPercentage = decimal.Divide(hashCollisionsCount, computedHashesCount) * 100;
 
-			Assert.That(collisionPercentage, Is.LessThan(17));
+			Assert.That(collisionPercentage, Is.LessThan(25));
 		}
 
 		private IEnumerable<Type> ExceptionTypes
