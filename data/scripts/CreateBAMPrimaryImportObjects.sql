@@ -132,7 +132,7 @@ AS
     SET @QueryString = N''
 
     -- If the user gave a table extension, the dangling instances will be inserted
-    -- into that table. 
+    -- into that table.
     IF (isnull(@NewTableExtension, '') <> '')
     BEGIN
         SET @DanglingActiveTableName = @ActiveTableName + '_' + @NewTableExtension
@@ -154,7 +154,7 @@ AS
             EXEC sp_executesql @QueryString
         END
 
-        -- Now do what you did for the Active Instances table for the 
+        -- Now do what you did for the Active Instances table for the
         -- ActiveRelationships table
         EXEC sp_tables @table_name = @DanglingActiveRelationshipsTableName
         IF @@ROWCOUNT > 0
@@ -198,5 +198,5 @@ AS
 GO
 
 /****** Grant IIS BizTalkActivityMonitoring AppPool identity read access to BamPrimaryImport Database ******/
-EXEC dbo.sp_addrolemember @rolename=N'db_datareader', @membername=N'${BizTalkApplicationUserGroup}'
+EXEC dbo.sp_addrolemember @rolename=N'db_datareader', @membername=N'$(BizTalkApplicationUserGroup)'
 GO

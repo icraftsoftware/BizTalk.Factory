@@ -1,4 +1,4 @@
-﻿#region Copyright & License
+#region Copyright & License
 
 # Copyright © 2012 - 2020 François Chabot
 #
@@ -29,4 +29,4 @@ Import-Module Resource.Manifest -Force
 $manifest = .\BizTalk.Factory.Manifest.ps1 -Configuration Debug -IncludeTestArtifacts -ErrorAction Stop
 
 Import-Module BizTalk.Deployment -Force
-Install-BizTalkApplication -TargetEnvironment $TargetEnvironment -Manifest $manifest -InformationAction Continue #-SkipUndeploy
+Uninstall-BizTalkApplication -TargetEnvironment $TargetEnvironment -Manifest $manifest -InformationAction Continue

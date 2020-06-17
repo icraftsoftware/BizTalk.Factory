@@ -33,5 +33,5 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vw_Mess
 GO
 
 /****** Revoke IIS BizTalkActivityMonitoring  AppPool identity's read access to BamPrimaryImport Database ******/
-EXEC dbo.sp_droprolemember @rolename=N'db_datareader', @membername=N'${BizTalkApplicationUserGroup}'
+EXEC dbo.sp_droprolemember @rolename=N'db_datareader', @membername=N'$(BizTalkApplicationUserGroup)'
 GO

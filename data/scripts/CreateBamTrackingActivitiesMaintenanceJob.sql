@@ -19,7 +19,7 @@ GO
 
 UPDATE dbo.bam_Metadata_Activities
 SET OnlineWindowTimeUnit = 'DAY',
-OnlineWindowTimeLength = ${BamOnlineWindowTimeLength}
+OnlineWindowTimeLength = $(BamOnlineWindowTimeLength)
 WHERE ActivityName IN ('Process', 'ProcessingStep', 'ProcessMessagingStep', 'MessagingStep')
 GO
 
@@ -54,81 +54,81 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'BAM Tracking Activities Maintenance', 
-      @enabled=1, 
-      @notify_level_eventlog=3, 
-      @notify_level_email=2, 
-      @notify_level_netsend=0, 
-      @notify_level_page=0, 
-      @delete_level=0, 
-      @description=N'Job that runs BAM SSIS data maintenance packages for the Tracking Activity Model.', 
-      @category_name=N'Database Maintenance', 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'BAM Tracking Activities Maintenance',
+      @enabled=1,
+      @notify_level_eventlog=3,
+      @notify_level_email=2,
+      @notify_level_netsend=0,
+      @notify_level_page=0,
+      @delete_level=0,
+      @description=N'Job that runs BAM SSIS data maintenance packages for the Tracking Activity Model.',
+      @category_name=N'Database Maintenance',
       @owner_login_name = @JobOwner,
       @notify_email_operator_name=N'BizTalk Server Operator', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Purge Archived Tracking Activity Data]    Script Date: 08/05/2013 10:40:30 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Archived Tracking Activity Data', 
-      @step_id=1, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=3, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'TSQL', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Archived Tracking Activity Data',
+      @step_id=1,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=3,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'TSQL',
       @command=N'DECLARE @stmt NVARCHAR(MAX)
 SELECT @stmt = ISNULL( @stmt + char(10), '''' ) +
    ''DROP TABLE ['' + name + '']''
 FROM sys.tables
-WHERE create_date < CONVERT(DATE, DATEADD(D, -${BamArchiveWindowTimeLength}, SYSDATETIME())) AND (
+WHERE create_date < CONVERT(DATE, DATEADD(D, -$(BamArchiveWindowTimeLength), SYSDATETIME())) AND (
    name like ''bam_MessagingStep_%''
    OR name like ''bam_ProcessingStep_%''
    OR name like ''bam_Process_%''
    OR name like ''bam_ProcessMessagingStep_%''
 )
 
-exec sp_executesql @stmt', 
-      @database_name=N'BAMArchive', 
+exec sp_executesql @stmt',
+      @database_name=N'BAMArchive',
       @flags=4
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Purge Captured Large Message Bodies]    Script Date: 08/05/2013 15:03:42 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Captured Large Message Bodies', 
-      @step_id=2, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=3, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'ActiveScripting', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Captured Large Message Bodies',
+      @step_id=2,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=3,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'ActiveScripting',
       @command=N'Set fso = CreateObject("Scripting.FileSystemObject")
-For Each folder In fso.GetFolder("${ClaimStoreCheckOutDirectory}").SubFolders
-   If DateValue(folder.DateCreated) < DateValue(Now - ${BamArchiveWindowTimeLength}) Then
+For Each folder In fso.GetFolder("$(ClaimStoreCheckOutDirectory)").SubFolders
+   If DateValue(folder.DateCreated) < DateValue(Now - $(BamArchiveWindowTimeLength)) Then
       fso.DeleteFolder folder.Path
    End If
 Next
-Set fso = nothing', 
-      @database_name=N'VBScript', 
+Set fso = nothing',
+      @database_name=N'VBScript',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Remove Incomplete Tracking Activity Instances]    Script Date: 02/09/2013 10:27:55 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Remove Incomplete Tracking Activity Instances', 
-      @step_id=3, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'TSQL', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Remove Incomplete Tracking Activity Instances',
+      @step_id=3,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'TSQL',
       @command=N'DECLARE @threshold DATETIME
-SET @threshold = CONVERT(DATETIME, DATEADD(D, -${BamArchiveWindowTimeLength}, SYSDATETIME()))
+SET @threshold = CONVERT(DATETIME, DATEADD(D, -$(BamArchiveWindowTimeLength), SYSDATETIME()))
 EXEC RemoveDanglingInstances
    @ActivityName = ''Process'',
    @DateThreshold = @threshold
@@ -140,86 +140,86 @@ EXEC RemoveDanglingInstances
    @DateThreshold = @threshold
 EXEC RemoveDanglingInstances
    @ActivityName = ''MessagingStep'',
-   @DateThreshold = @threshold', 
-      @database_name=N'BAMPrimaryImport', 
+   @DateThreshold = @threshold',
+      @database_name=N'BAMPrimaryImport',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Perform Process Tracking Activity Maintenance]    Script Date: 08/05/2013 15:27:55 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform Process Tracking Activity Maintenance', 
-      @step_id=4, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_Process" /SERVER "${MonitoringDatabaseServer}" /WARNASERROR  /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
-      @database_name=N'master', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform Process Tracking Activity Maintenance',
+      @step_id=4,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'SSIS',
+      @command=N'/SQL "\BAM_DM_Process" /SERVER "$(MonitoringDatabaseServer)" /WARNASERROR  /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E',
+      @database_name=N'master',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Perform ProcessingStep Tracking Activity Maintenance]    Script Date: 08/05/2013 14:02:46 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform ProcessingStep Tracking Activity Maintenance', 
-      @step_id=5, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_ProcessingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
-      @database_name=N'master', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform ProcessingStep Tracking Activity Maintenance',
+      @step_id=5,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'SSIS',
+      @command=N'/SQL "\BAM_DM_ProcessingStep" /SERVER "$(MonitoringDatabaseServer)" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E',
+      @database_name=N'master',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Perform ProcessMessagingStep Tracking Activity Maintenance]    Script Date: 08/05/2013 15:27:55 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform ProcessMessagingStep Tracking Activity Maintenance', 
-      @step_id=6, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_ProcessMessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
-      @database_name=N'master', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform ProcessMessagingStep Tracking Activity Maintenance',
+      @step_id=6,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'SSIS',
+      @command=N'/SQL "\BAM_DM_ProcessMessagingStep" /SERVER "$(MonitoringDatabaseServer)" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E',
+      @database_name=N'master',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Perform MessagingStep Tracking Activity Maintenance]    Script Date: 08/05/2013 15:27:55 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform MessagingStep Tracking Activity Maintenance', 
-      @step_id=7, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'SSIS', 
-      @command=N'/SQL "\BAM_DM_MessagingStep" /SERVER "${MonitoringDatabaseServer}" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E', 
-      @database_name=N'master', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Perform MessagingStep Tracking Activity Maintenance',
+      @step_id=7,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'SSIS',
+      @command=N'/SQL "\BAM_DM_MessagingStep" /SERVER "$(MonitoringDatabaseServer)" /CHECKPOINTING OFF /LOGGER "{1E4F606D-382A-4812-8E08-C5D5A04FFE98}";3 /REPORTING E',
+      @database_name=N'master',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Update BAM Archive Activity Tracking Views]    Script Date: 08/05/2013 12:53:46 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Update BAM Archive Activity Tracking Views', 
-      @step_id=8, 
-      @cmdexec_success_code=0, 
-      @on_success_action=3, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'TSQL', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Update BAM Archive Activity Tracking Views',
+      @step_id=8,
+      @cmdexec_success_code=0,
+      @on_success_action=3,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'TSQL',
       @command=N'DECLARE @stmt NVARCHAR(MAX)
 
 -- [bam_Process_AllInstances]
@@ -310,42 +310,42 @@ SELECT @stmt = ''SELECT ActivityID AS MessagingStepActivityID, ReferenceType AS 
    + ''FROM [bam_MessagingStep_AllRelationships]'' + CHAR(10)
    + ''WHERE ReferenceType = ''''Claimed'''' OR ReferenceType = ''''Unclaimed''''''
 SELECT @stmt = ''CREATE VIEW [dbo].[vw_MessagingStepMessages]'' + CHAR(10) + ''AS'' + CHAR(10) + @stmt
-EXEC sp_executesql @stmt', 
-      @database_name=N'BAMArchive', 
+EXEC sp_executesql @stmt',
+      @database_name=N'BAMArchive',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 /****** Object:  Step [Purge Package Logging]    Script Date: 08/05/2013 15:27:55 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Package Logging', 
-      @step_id=9, 
-      @cmdexec_success_code=0, 
-      @on_success_action=1, 
-      @on_success_step_id=0, 
-      @on_fail_action=2, 
-      @on_fail_step_id=0, 
-      @retry_attempts=0, 
-      @retry_interval=0, 
-      @os_run_priority=0, @subsystem=N'TSQL', 
-      @command=N'DELETE FROM sysssislog WHERE StartTime < CONVERT(DATE, DATEADD(D, -${BamArchiveWindowTimeLength}, SYSDATETIME()))', 
-      @database_name=N'msdb', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Purge Package Logging',
+      @step_id=9,
+      @cmdexec_success_code=0,
+      @on_success_action=1,
+      @on_success_step_id=0,
+      @on_fail_action=2,
+      @on_fail_step_id=0,
+      @retry_attempts=0,
+      @retry_interval=0,
+      @os_run_priority=0, @subsystem=N'TSQL',
+      @command=N'DELETE FROM sysssislog WHERE StartTime < CONVERT(DATE, DATEADD(D, -$(BamArchiveWindowTimeLength), SYSDATETIME()))',
+      @database_name=N'msdb',
       @flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
-EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Daily', 
-      @enabled=1, 
-      @freq_type=4, 
-      @freq_interval=1, 
-      @freq_subday_type=1, 
-      @freq_subday_interval=0, 
-      @freq_relative_interval=0, 
-      @freq_recurrence_factor=0, 
-      @active_start_date=20130805, 
-      @active_end_date=99991231, 
-      @active_start_time=4800, 
-      @active_end_time=235959, 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Daily',
+      @enabled=1,
+      @freq_type=4,
+      @freq_interval=1,
+      @freq_subday_type=1,
+      @freq_subday_interval=0,
+      @freq_relative_interval=0,
+      @freq_recurrence_factor=0,
+      @active_start_date=20130805,
+      @active_end_date=99991231,
+      @active_start_time=4800,
+      @active_end_time=235959,
       @schedule_uid=N'0e239400-f91d-4625-ab0a-3758dfdb61dd'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 

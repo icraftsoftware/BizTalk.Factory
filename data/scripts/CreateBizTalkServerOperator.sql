@@ -19,15 +19,15 @@ GO
 
 /****** Object:  Operator [BizTalk Server Operator]    Script Date: 08/05/2013 13:26:29 ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.sysoperators WHERE name = N'BizTalk Server Operator')
-EXEC msdb.dbo.sp_add_operator @name=N'BizTalk Server Operator', 
-      @enabled=1, 
-      @weekday_pager_start_time=90000, 
-      @weekday_pager_end_time=180000, 
-      @saturday_pager_start_time=90000, 
-      @saturday_pager_end_time=180000, 
-      @sunday_pager_start_time=90000, 
-      @sunday_pager_end_time=180000, 
-      @pager_days=0, 
-      @email_address=N'${BizTalkServerOperatorEmail}', 
+EXEC msdb.dbo.sp_add_operator @name=N'BizTalk Server Operator',
+      @enabled=1,
+      @weekday_pager_start_time=90000,
+      @weekday_pager_end_time=180000,
+      @saturday_pager_start_time=90000,
+      @saturday_pager_end_time=180000,
+      @sunday_pager_start_time=90000,
+      @sunday_pager_end_time=180000,
+      @pager_days=0,
+      @email_address=N'$(BizTalkServerOperatorEmail)',
       @category_name=N'[Uncategorized]'
 GO
