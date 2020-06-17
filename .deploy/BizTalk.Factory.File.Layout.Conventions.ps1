@@ -41,9 +41,10 @@ function global:Get-ProjectItem {
       @(
          $Project | ForEach-Object -Process {
             $item = Get-ChildItem -Path ([System.IO.Path]::Combine($Path, $_, 'bin', $Configuration)) `
+               -File `
                -Filter "Be.Stateless.$_.*" `
-               -Include $Include -Recurse | Select-Object -ExpandProperty FullName
-            if ($item -eq $null -or $item.Length -eq 0) {
+               -Include $Include -Recurse
+            if ($null -eq $item) {
                throw "Project item not found [Path: '$Path', Project: '$Project', Configuration: '$Configuration', Include = '$Include']"
             }
             $item
