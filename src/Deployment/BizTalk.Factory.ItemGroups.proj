@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- 
+<!--
   Deployment Framework for BizTalk
   Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
@@ -132,9 +132,9 @@
     <!--
       <Server>, which denotes the name of the SQL server, will be used by DeployDatabases target to build
       a connection string as follows 'Server=$(%(Server));Initial Catalog=master;Integrated Security=True'.
-      
-      <BackupWithBizTalk> determins whether the BizTalk Backup Job will also backup the custom database.
-      
+
+      <BackupWithBizTalk> determines whether the BizTalk Backup Job will also backup the custom database.
+
       <LocationPath> is the path where the following three scripts are located:
       - $(ProjectName).Create%(Identity).sql,
       - $(ProjectName).Create%(Identity)Objects.sql, and
